@@ -19,12 +19,12 @@ author:
         ins: S. Raza
         name: Shahid Raza
         org: RISE AB
-        email: shahid.raza@ri.se        
+        email: shahid.raza@ri.se
       -
         ins: J. Höglund
         name: Joel Höglund
         org: RISE AB
-        email: joel.hoglund@ri.se   
+        email: joel.hoglund@ri.se
       -
         ins: G. Selander
         name: Göran Selander
@@ -85,7 +85,7 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding and profiling of X.509 public key certificate suitable for Internet of Things (IoT) deployments. The full X.509 public key certificate format and commonly used ASN.1 encoding is overly verbose for constrained IoT environments. Profiling together with CBOR encoding reduces the certificate size significantly with associated known performance benefits. 
+This document specifies a CBOR encoding and profiling of X.509 public key certificate suitable for Internet of Things (IoT) deployments. The full X.509 public key certificate format and commonly used ASN.1 encoding is overly verbose for constrained IoT environments. Profiling together with CBOR encoding reduces the certificate size significantly with associated known performance benefits.
 
 The CBOR certificates are compatible with the existing X.509 standard, enabling the use of profiled and compressed X.509 certificates without modifications in the existing X.509 standard.
 
@@ -101,8 +101,7 @@ CBOR data items are encoded to or decoded from byte strings using a type-length-
 
 This document specifies the CBOR certificate profile, which is a CBOR based encoding and compression of the X.509 certificate format. The profile is based on previous work on profiling of X.509 certificates for Internet of Things deployments {{X.509-IoT}} which retains backwards compatibility with X.509, and can be applied for lightweight certificate based authentication with e.g. DTLS {{RFC6347}} or EDHOC {{I-D.selander-ace-cose-ecdhe}}. The same profile can be used for "native" CBOR encoded certificates, which further optimizes the performance in constrained environments but are not backwards compatible with X.509, see {{native-CBOR}}.
 
-Other work has looked at reducing size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates. Further optimizations of this profile are known and will be included in future versions. 
-
+Other work has looked at reducing size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates. Further optimizations of this profile are known and will be included in future versions.
 
 * Terminology   {#terminology}
 
@@ -144,7 +143,7 @@ In order to comply with this certificate profile, the following restrictions MUS
 
 # CBOR Encoding {#encoding}
 
-This section specifies the CBOR certificates, which are the result of the CBOR encoding and lossless compression of the X.509 certificate profile of the previous section. The CDDL representation is given in {{appA}}. 
+This section specifies the CBOR certificates, which are the result of the CBOR encoding and lossless compression of the X.509 certificate profile of the previous section. The CDDL representation is given in {{appA}}.
 
 The encoding and compression has several components including: ASN.1 and base64 encoding is replaced with CBOR encoding, static fields are elided, and compression of elliptic curve points. The field encodings and associated savings are listed below. Combining these different components reduces the certificate size significantly, see {{fig-table}}.
 
@@ -176,12 +175,12 @@ For the currently used DTLS v1.2 protocol, where the handshake is sent unencrypt
 
 For the setting with constrained server and server-only authentication, the server only needs to be provisioned with the CBOR certificate and does not perform the conversion to X.509. This option is viable when client authentication can be asserted by other means.
 
-For DTLS v1.3, because certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the endcoding/decoding functionality to the server. A new certificate format or new certificate compression scheme needs to be added. While that requires changes on the server side, we believe it to be in line with other proposals utilizing cbor encoding for communication with resource constrained devices. 
+For DTLS v1.3, because certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the endcoding/decoding functionality to the server. A new certificate format or new certificate compression scheme needs to be added. While that requires changes on the server side, we believe it to be in line with other proposals utilizing cbor encoding for communication with resource constrained devices.
 
 
 # Expected Certificate Sizes
 
-The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appC}} resulting in the numbers shown in {{fig-table}}. 
+The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appC}} resulting in the numbers shown in {{fig-table}}.
 
 ~~~~~~~~~~~
 
@@ -209,7 +208,7 @@ Conversion between the certificate formats can be made in constant time to reduc
 The current version of the format hardcodes the signature algorithm which does not allow for crypto agility. A COSE crypto algorithm can be specified with small overhead, and this changed is proposed for a future version of the draft.
 
 
-# Privacy Considerations 
+# Privacy Considerations
 
 The mechanism in this draft does not reveal any additional information compared to X.509.
 
@@ -236,14 +235,14 @@ certificate = [
   public_key : bytes
   ? extensions : [+ extension],
   signature : bytes
-] 
+]
 
 extension = [
   oid : int,
   ? critical : bool,
   value : bytes
-] 
-~~~~~~~~~~~ 
+]
+~~~~~~~~~~~
 
 # X.509 Certificate Profile, ASN.1 {#appB}
 
@@ -293,7 +292,7 @@ AlgorithmIdentifier ::= SEQUENCE {
   parameters       OBJECT IDENTIFIER (prime256v1)
 }
   Extensions  ::= SEQUENCE SIZE (1..MAX) OF Extension
-  
+
 Extension  ::= SEQUENCE {
   extnId          OBJECT IDENTIFIER,
   critical        BOOLEAN DEFAULT FALSE,
@@ -338,16 +337,16 @@ Certificate:
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
                 Public-Key: (256 bit)
-                pub: 
+                pub:
                     .. .. ..
                 ASN1 OID: prime256v1
                 NIST CURVE: P-256
         X509v3 extensions:
             X509v3 Basic Constraints: critical
                 CA:FALSE
-            X509v3 Key Usage: 
+            X509v3 Key Usage:
                 Digital Signature, Key Encipherment
     Signature Algorithm: ecdsa-with-SHA256
          .. .. ...
-                  
+
 ~~~~~~~~~~~
