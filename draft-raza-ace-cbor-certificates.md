@@ -182,13 +182,22 @@ For DTLS v1.3, because certificates are encrypted, the proposed encoding needs t
 
 The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appC}} resulting in the numbers shown in {{fig-table}}.
 
+After profiling, no further size reduction can be reached with general compression mechanisms such as deflate.
+
 ~~~~~~~~~~~
 
 +---------------------------------------------------+
 |                   | X.509 Profiled | CBOR Encoded |
 +---------------------------------------------------+
-| Certificate Size  |      342       |     164      |
+| Certificate Size  |      313       |     144      |
 +---------------------------------------------------+
+
++-----------------------------------------------------------------+
+|                   | X.509 Profiled | CBOR Encoded |   Deflate   |
++-----------------------------------------------------------------+
+| Certificate Size  |      313       |     144      |     319     |
++-----------------------------------------------------------------+
+
 ~~~~~~~~~~~
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
 {: artwork-align="center"}
