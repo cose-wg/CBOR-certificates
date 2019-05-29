@@ -48,6 +48,7 @@ normative:
   I-D.ietf-cbor-7049bis:
   I-D.ietf-cbor-cddl:
   RFC8174:
+  I-D.ietf-tls-certificate-compression:
 
 
 informative:
@@ -55,6 +56,7 @@ informative:
   RFC7925:
   RFC6347:
   I-D.selander-ace-cose-ecdhe:
+  
 
 
   X.509-IoT:
@@ -229,7 +231,17 @@ The gateway solution described in {{dep-set}} requires unencrypted certificates.
 
 # IANA Considerations  {#iana}
 
-None.
+This document registers a compression algorithm in the registry entitled "Certificate Compression Algorithm IDs", under the "Transport Layer Security (TLS) Extensions" heading (see {{I-D.ietf-tls-certificate-compression}}).
+
+
+~~~~~~~~~~~
++------------------+--------------------------+
+| Algorithm Number | Description              |
++------------------+--------------------------+
+| 4                | cbor-iot                 |
++------------------+--------------------------+       
+~~~~~~~~~~~
+
 
 --- back
 
