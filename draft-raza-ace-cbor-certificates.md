@@ -238,7 +238,7 @@ This document registers a compression algorithm in the registry entitled "Certif
 +------------------+--------------------------+
 | Algorithm Number | Description              |
 +------------------+--------------------------+
-| 4                | cbor-iot                 |
+| TBD              | cbor-iot                 |
 +------------------+--------------------------+       
 ~~~~~~~~~~~
 
