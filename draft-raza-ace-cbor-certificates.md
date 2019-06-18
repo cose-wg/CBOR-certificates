@@ -121,7 +121,7 @@ In order to comply with this certificate profile, the following restrictions MUS
 
 * Serial number. The serial number together with the identity of the CA is the unique identifier of a certificate. The serial number MUST be an unsigned integer.
 
-* Signature algorithm. For the CBOR profile, the signature algorithm is fixed to ECDSA with SHA256.
+* Signature algorithm. For the CBOR profile, the signature algorithm is by default assumed to be ECDSA with SHA256.
 
 * Issuer. Used to identify the issuing CA through a sequence of name-value pairs. This profile is restricting this to one pair, common name and associated string value.  The common name MUST uniquely identify the CA. Other fields MUST NOT be used.
 
@@ -129,7 +129,7 @@ In order to comply with this certificate profile, the following restrictions MUS
 
 * Subject. The subject section has the same format as the issuer, identifying the receiver of the public key through a sequence of name-value pairs. This sequence is in the profile restricted to a single pair, subject name and associated (unique) value. For an IoT-device, the MAC-derived EUI-64 serves this purpose well.
 
-* Subject public key info. For the IoT devices, elliptic curve cryptography based algorithms have clear advantages. For the IoT profile the public key algorithm is fixed to prime256v1.
+* Subject public key info. For the IoT devices, elliptic curve cryptography based algorithms have clear advantages. For the IoT profile the public key algorithm is by default assumed to be prime256v1.
 
 * Issuer Unique ID and Subject Unique ID. These fields are optional in X.509 and MUST NOT be used with the CBOR profile.
 
@@ -138,8 +138,9 @@ In order to comply with this certificate profile, the following restrictions MUS
   * Subject Alternative Name
   * Basic Constraints
   * Extended Key Usage
+In addition an custom extension could be used to overrule the default profile signature and public key info algorithms.
 
-* Certificate signature algorithm. This field duplicates the info present in the signature algorithm field. Fixed to ECDSA with SHA256.
+* Certificate signature algorithm. This field duplicates the info present in the signature algorithm field. By default assumed to be ECDSA with SHA256.
 
 * Certificate Signature. The field corresponds to the signature done by the CA private key. For the CBOR profile, this is restricted to ECDSA type signatures with a signature length of 64 bits.
 
@@ -184,7 +185,7 @@ For DTLS v1.3, because certificates are encrypted, the proposed encoding needs t
 
 The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appC}} resulting in the numbers shown in {{fig-table}}.
 
-After profiling, no further size reduction can be reached with general compression mechanisms such as zlib.
+After profiling, all duplicated information has been removed, and remaining text strings are minimal in size. Therefore no further size reduction can be reached with general compression mechanisms. (In practice the size might even grow slightly due to the compression encoding information, as illustrated in the table below.)
 
 ~~~~~~~~~~~
 
