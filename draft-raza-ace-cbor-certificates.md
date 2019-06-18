@@ -138,7 +138,6 @@ In order to comply with this certificate profile, the following restrictions MUS
   * Subject Alternative Name
   * Basic Constraints
   * Extended Key Usage
-In addition an custom extension could be used to overrule the default profile signature and public key info algorithms.
 
 * Certificate signature algorithm. This field duplicates the info present in the signature algorithm field. By default assumed to be ECDSA with SHA256.
 
@@ -154,7 +153,7 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Serial number. The serial number is encoded as an unsigned integer. Encoding overhead is reduced by one byte.
 
-* Signature algorithm. The signature algorithm is known from the profile and is omitted in the ecoding. This saves 12 bytes.
+* Signature algorithm. If the signature algorithm is the default it is omitted in the ecoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
 
 * Issuer. Since the profile only allows the common name type, the common name type specifier is omitted. In total, the issuer field encoding overhead goes from 13 bytes to one byte.
 
@@ -162,11 +161,11 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Subject. An IoT subject is identified by a EUI-64, in turn based on a 48bit unique MAC id. This is encoded using only 7 bytes using CBOR. This is a reduction down from 36 bytes for the corresponding ASN.1 encoding.
 
-* Subject public key info. The algorithm identifier is known from the profile restrictions and is omitted. One of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together reduce size from 91 to 35 bytes.
+* Subject public key info. If the algorithm identifier is the default, it is omitted, otherwise encoded as a one byte COSE identifier. For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together, for the default algorithm, reduce size from 91 to 35 bytes.
 
 * Extensions. Minor savings are achieved by the compact CBOR encoding. In addition, the relevant X.509 extension OIDs always start with 0x551D, hence these two bytes can be omitted.
 
-* Certificate signature algorithm. The signature algorithm is known from the profile and is omitted in the ecoding.
+* Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the ecoding.
 
 * Signature. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. The overhead for encoding the 64-bit signature value is reduced from 11 to 2 bytes.
 
@@ -257,6 +256,7 @@ certificate = [
   public_key : bytes
   ? extensions : [+ extension],
   signature : bytes
+  ? signature_alg + public_key_info : bytes
 ]
 
 extension = [
