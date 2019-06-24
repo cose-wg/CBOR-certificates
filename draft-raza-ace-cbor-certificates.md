@@ -153,7 +153,7 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Serial number. The serial number is encoded as an unsigned integer. Encoding overhead is reduced by one byte.
 
-* Signature algorithm. If the signature algorithm is the default it is omitted in the ecoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
+* Signature algorithm. If the signature algorithm is the default it is omitted in the encoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
 
 * Issuer. Since the profile only allows the common name type, the common name type specifier is omitted. In total, the issuer field encoding overhead goes from 13 bytes to one byte.
 
@@ -165,7 +165,7 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Extensions. Minor savings are achieved by the compact CBOR encoding. In addition, the relevant X.509 extension OIDs always start with 0x551D, hence these two bytes can be omitted.
 
-* Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the ecoding.
+* Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the encoding.
 
 * Signature. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. The overhead for encoding the 64-bit signature value is reduced from 11 to 2 bytes.
 
@@ -177,7 +177,7 @@ For the currently used DTLS v1.2 protocol, where the handshake is sent unencrypt
 
 For the setting with constrained server and server-only authentication, the server only needs to be provisioned with the CBOR certificate and does not perform the conversion to X.509. This option is viable when client authentication can be asserted by other means.
 
-For DTLS v1.3, because certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the endcoding/decoding functionality to the server. A new certificate format or new certificate compression scheme needs to be added. While that requires changes on the server side, we believe it to be in line with other proposals utilizing cbor encoding for communication with resource constrained devices.
+For DTLS v1.3, because certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server. A new certificate format or new certificate compression scheme needs to be added. While that requires changes on the server side, we believe it to be in line with other proposals utilizing cbor encoding for communication with resource constrained devices.
 
 
 # Expected Certificate Sizes
