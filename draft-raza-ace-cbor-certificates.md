@@ -121,7 +121,7 @@ In order to comply with this certificate profile, the following restrictions MUS
 
 * Serial number. The serial number together with the identity of the CA is the unique identifier of a certificate. The serial number MUST be an unsigned integer.
 
-* Signature algorithm. For the CBOR profile, the signature algorithm is fixed to ECDSA with SHA256.
+* Signature algorithm. For the CBOR profile, the signature algorithm is by default assumed to be ECDSA with SHA256.
 
 * Issuer. Used to identify the issuing CA through a sequence of name-value pairs. This profile is restricting this to one pair, common name and associated string value.  The common name MUST uniquely identify the CA. Other fields MUST NOT be used.
 
@@ -129,7 +129,7 @@ In order to comply with this certificate profile, the following restrictions MUS
 
 * Subject. The subject section has the same format as the issuer, identifying the receiver of the public key through a sequence of name-value pairs. This sequence is in the profile restricted to a single pair, subject name and associated (unique) value. For an IoT-device, the MAC-derived EUI-64 serves this purpose well.
 
-* Subject public key info. For the IoT devices, elliptic curve cryptography based algorithms have clear advantages. For the IoT profile the public key algorithm is fixed to prime256v1.
+* Subject public key info. For the IoT devices, elliptic curve cryptography based algorithms have clear advantages. For the IoT profile the public key algorithm is by default assumed to be prime256v1.
 
 * Issuer Unique ID and Subject Unique ID. These fields are optional in X.509 and MUST NOT be used with the CBOR profile.
 
@@ -139,7 +139,7 @@ In order to comply with this certificate profile, the following restrictions MUS
   * Basic Constraints
   * Extended Key Usage
 
-* Certificate signature algorithm. This field duplicates the info present in the signature algorithm field. Fixed to ECDSA with SHA256.
+* Certificate signature algorithm. This field duplicates the info present in the signature algorithm field. By default assumed to be ECDSA with SHA256.
 
 * Certificate Signature. The field corresponds to the signature done by the CA private key. For the CBOR profile, this is restricted to ECDSA type signatures with a signature length of 64 bits.
 
@@ -153,7 +153,7 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Serial number. The serial number is encoded as an unsigned integer. Encoding overhead is reduced by one byte.
 
-* Signature algorithm. The signature algorithm is known from the profile and is omitted in the ecoding. This saves 12 bytes.
+* Signature algorithm. If the signature algorithm is the default it is omitted in the ecoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
 
 * Issuer. Since the profile only allows the common name type, the common name type specifier is omitted. In total, the issuer field encoding overhead goes from 13 bytes to one byte.
 
@@ -161,11 +161,11 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Subject. An IoT subject is identified by a EUI-64, in turn based on a 48bit unique MAC id. This is encoded using only 7 bytes using CBOR. This is a reduction down from 36 bytes for the corresponding ASN.1 encoding.
 
-* Subject public key info. The algorithm identifier is known from the profile restrictions and is omitted. One of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together reduce size from 91 to 35 bytes.
+* Subject public key info. If the algorithm identifier is the default, it is omitted, otherwise encoded as a one byte COSE identifier. For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together, for the default algorithm, reduce size from 91 to 35 bytes.
 
 * Extensions. Minor savings are achieved by the compact CBOR encoding. In addition, the relevant X.509 extension OIDs always start with 0x551D, hence these two bytes can be omitted.
 
-* Certificate signature algorithm. The signature algorithm is known from the profile and is omitted in the ecoding.
+* Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the ecoding.
 
 * Signature. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. The overhead for encoding the 64-bit signature value is reduced from 11 to 2 bytes.
 
@@ -184,7 +184,7 @@ For DTLS v1.3, because certificates are encrypted, the proposed encoding needs t
 
 The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appC}} resulting in the numbers shown in {{fig-table}}.
 
-After profiling, no further size reduction can be reached with general compression mechanisms such as zlib.
+After profiling, all duplicated information has been removed, and remaining text strings are minimal in size. Therefore no further size reduction can be reached with general compression mechanisms. (In practice the size might even grow slightly due to the compression encoding information, as illustrated in the table below.)
 
 ~~~~~~~~~~~
 
@@ -256,6 +256,7 @@ certificate = [
   public_key : bytes
   ? extensions : [+ extension],
   signature : bytes
+  ? signature_alg + public_key_info : bytes
 ]
 
 extension = [
