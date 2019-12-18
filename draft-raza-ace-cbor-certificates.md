@@ -208,7 +208,7 @@ After profiling, all duplicated information has been removed, and remaining text
 
 Further performance improvements can be achieved with the use of native CBOR certificates. In this case the signature is calculated over the CBOR encoded structure rather than the ASN.1 encoded structure. This removes entirely the need for ASN.1 and reduces the processing in the authenticating devices.
 
-This solution applies when the devices are only required to authenticate with a set of native CBOR certificate compatible servers, which may become a preferred approach for future deployments. The mapping between X.509 and CBOR certificates enables a migration path between the backwards compatible format and the fully optimized format.
+This solution applies when the devices are only required to authenticate with a set of native CBOR certificate compatible servers, which may become a preferred approach for future deployments. The mapping between X.509 and CBOR certificates enables a migration path between the backwards compatible format and the fully optimized format. This motivates introducing a type flag to indicate if the certificate should be restored to X.509 or kept cbor encoded.
 
 # Security Considerations  {#sec-cons}
 
@@ -238,7 +238,7 @@ This document registers a compression algorithm in the registry entitled "Certif
 +------------------+--------------------------+
 | Algorithm Number | Description              |
 +------------------+--------------------------+
-| TBD              | cbor-iot                 |
+| TBD              | cbor-cert                |
 +------------------+--------------------------+       
 ~~~~~~~~~~~
 
@@ -249,6 +249,7 @@ This document registers a compression algorithm in the registry entitled "Certif
 
 ~~~~~~~~~~~ CDDL
 certificate = [
+  type : uint,
   serial_number : uint,
   issuer : text,
   validity : [notBefore: int, notAfter: int],
