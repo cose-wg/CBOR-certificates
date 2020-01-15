@@ -1,7 +1,7 @@
 ---
 title: CBOR Certificate Algorithm for TLS Certificate Compression
 abbrev: CBOR Certificate Compression for TLS
-docname: draft-mattsson-tls-cbor-cert-compress-00
+docname: draft-mattsson-tls-cbor-cert-compress-latest
 
 ipr: trust200902
 cat: std
