@@ -111,63 +111,55 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This specification makes use of the terminology in {{RFC7228}}.
 
-# X.509 Certificate Profile
-
-This profile is inspired by {{RFC7925}} and mandates further restrictions to enable reduction of certificate size. In this section we list the required fields in an X.509 certificate needed by devices in IoT deployments. The corresponding ASN.1 schema is given in {{appB}}.
-
-In order to comply with this certificate profile, the following restrictions MUST be applied:
-
-* Version number. The X.509 standard has not moved beyond version 3 since 2008. With the introduction of certificate extensions new certificate fields can be added without breaking the format, making version changes less likely. Therefore this profile fixes the version number to 3.
-
-* Serial number. The serial number together with the identity of the CA is the unique identifier of a certificate. The serial number MUST be an unsigned integer.
-
-* Signature algorithm. For the CBOR profile, the signature algorithm is by default assumed to be ECDSA with SHA256.
-
-* Issuer. Used to identify the issuing CA through a sequence of name-value pairs. This profile is restricting this to one pair, common name and associated string value.  The common name MUST uniquely identify the CA. Other fields MUST NOT be used.
-
-* Validity. The following representation MUST be used: UTCTime-format, YYMMDDhhmmss. This is the most compact format allowed by the X.509 standard.
-
-* Subject. The subject section has the same format as the issuer, identifying the receiver of the public key through a sequence of name-value pairs. This sequence is in the profile restricted to a single pair, subject name and associated (unique) value. For an IoT-device, the MAC-derived EUI-64 serves this purpose well.
-
-* Subject public key info. For the IoT devices, elliptic curve cryptography based algorithms have clear advantages. For the IoT profile the public key algorithm is by default assumed to be prime256v1.
-
-* Issuer Unique ID and Subject Unique ID. These fields are optional in X.509 and MUST NOT be used with the CBOR profile.
-
-* Extensions. Extensions consist of three parts; an OID, a boolean telling if it is critical or not, and the value. To maintain forward compatibility, the CBOR profile does not restrict the use of extensions. By the X.509-standard, any device must be able to process eight extensions types. Since only four of them are critical for IoT, this profile is making the other four optional. Still mandatory to be understood are:
-  * Key Usage
-  * Subject Alternative Name
-  * Basic Constraints
-  * Extended Key Usage
-
-* Certificate signature algorithm. This field duplicates the info present in the signature algorithm field. By default assumed to be ECDSA with SHA256.
-
-* Certificate Signature. The field corresponds to the signature done by the CA private key. For the CBOR profile, this is restricted to ECDSA type signatures with a signature length of 64 bits.
-
 # CBOR Encoding {#encoding}
 
-This section specifies the CBOR certificates, which are the result of the CBOR encoding and lossless compression of the X.509 certificate profile of the previous section. The CDDL representation is given in {{appA}}.
+This section specifies the CBOR certificates. They can be of native type, in which case the signature is calculated on the cbor encoded data, or of compressed type, which is the outcome of CBOR encoding and lossless compression of X.509 certificates. In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}, with the additional constraint that the subject is restricted to use the Common Name field as identifier. 
 
-The encoding and compression has several components including: ASN.1 and base64 encoding is replaced with CBOR encoding, static fields are elided, and compression of elliptic curve points. The field encodings and associated savings are listed below. Combining these different components reduces the certificate size significantly, see {{fig-table}}.
+The corresponding ASN.1 schema is given in {{appA}}.
 
-* Version number. The version number field is omitted in the encoding. This saves 5 bytes.
+The encoding and compression has several components including: ASN.1 and base64 encoding is replaced with CBOR encoding, static fields are elided, and compression of elliptic curve points. The field encodings and associated savings compared with ASN1.1 encoding are listed below. Combining these different components reduces the certificate size significantly, see {{fig-table}}.
 
-* Serial number. The serial number is encoded as an unsigned integer. Encoding overhead is reduced by one byte.
+* Version number. The version number field is known (fixed to 3), and is omitted in the encoding. This saves 5 bytes.
 
-* Signature algorithm. If the signature algorithm is the default it is omitted in the encoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
+* Serial number. The serial number is encoded as byte string. Encoding overhead is reduced by one byte.
 
-* Issuer. Since the profile only allows the common name type, the common name type specifier is omitted. In total, the issuer field encoding overhead goes from 13 bytes to one byte.
+* Signature algorithm. If the signature algorithm is the default (ecdsa-with-SHA256) it is omitted in the encoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
 
-* Validity. The time is encoded as UnixTime in integer format. The validity is represented as a 'not before'-'not after' pair of integer. This reduces the size from 32 to 11 bytes.
+* Issuer. By encoding the Distinguished Name as CBOR map the issuer field encoding overhead goes from 13 bytes to XYZ bytes.
+TODO: decide if we want to mention the "if only CN is present the value can be encoded as a single text value"-optimization?
 
-* Subject. An IoT subject is identified by a EUI-64, in turn based on a 48bit unique MAC id. This is encoded using only 7 bytes using CBOR. This is a reduction down from 36 bytes for the corresponding ASN.1 encoding.
+* Validity. The time is encoded as UnixTime in unsigned integer format. The validity is represented with one integer for the 'not before' time, and one for 'not after'. The 'not after' field can be null, representing a certificate without expiry date. The encoding reduces the size from 32 to 10 bytes. 
+
+* Subject. The subject field is restricted to specifying the value of the common name. An IoT subject is identified by a EUI-64, in turn based on a 48bit unique MAC id. This is encoded using only 7 bytes using CBOR. This is a reduction down from 36 bytes for the corresponding ASN.1 encoding. 
+TODO: agree if we want to say/add something else, such as
+"For devices identified with a cbor text string the saving is 12 bytes" But please note that RFC7925 says:
+"4.4.2.  Certificates Used by Clients
+   For client certificates, the identifier used in the SubjectAltName or
+   in the leftmost CN component of subject name MUST be an EUI-64."
 
 * Subject public key info. If the algorithm identifier is the default, it is omitted, otherwise encoded as a one byte COSE identifier. For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together, for the default algorithm, reduce size from 91 to 35 bytes.
 
-* Extensions. Minor savings are achieved by the compact CBOR encoding. In addition, the relevant X.509 extension OIDs always start with 0x551D, hence these two bytes can be omitted.
+* Extensions. Minor savings are achieved by the compact CBOR encoding.
+TODO: decide if we want to go ahead and suggest a new type registry with ints, as discussed during the meeting, or stay with the previous general solution, where we actually encode the non-guessable part of the extension OID. Previously stated:
+In addition, the relevant X.509 extension OIDs always start with 0x551D, hence these two bytes can be omitted.
 
 * Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the encoding.
 
-* Signature. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. The overhead for encoding the 64-bit signature value is reduced from 11 to 2 bytes.
+* Signature value. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. The overhead for encoding the 64-bit signature value is reduced from 11 to 2 bytes.
+
+~~~~~~~~~~~ CDDL
+certificate = (
+   type : int,
+   serial_number : bytes,
+   issuer : {int => bytes},
+   validity_notBefore: uint,
+   validity_notAfter: uint / null,
+   subject : text / bytes
+   public_key : bytes
+   extensions : { * int => bytes },
+   signature : bytes,
+   ? ( signature_alg : int, public_key_info : int )
+)
 
 # Deployment settings {#dep-set}
 
@@ -177,7 +169,7 @@ For the currently used DTLS v1.2 protocol, where the handshake is sent unencrypt
 
 For the setting with constrained server and server-only authentication, the server only needs to be provisioned with the CBOR certificate and does not perform the conversion to X.509. This option is viable when client authentication can be asserted by other means.
 
-For DTLS v1.3, because certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server. A new certificate format or new certificate compression scheme needs to be added. While that requires changes on the server side, we believe it to be in line with other proposals utilizing cbor encoding for communication with resource constrained devices.
+For DTLS v1.3, because certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server. This corresponds to the proposed native mode, a new certificate compression scheme. The required changes on the server side are in line with recent protocols utilizing cbor encoding for communication with resource constrained devices {{RFC8613}}.
 
 
 # Expected Certificate Sizes
@@ -187,12 +179,6 @@ The profiling size saving mainly comes from enforcing removal of issuer and subj
 After profiling, all duplicated information has been removed, and remaining text strings are minimal in size. Therefore no further size reduction can be reached with general compression mechanisms. (In practice the size might even grow slightly due to the compression encoding information, as illustrated in the table below.)
 
 ~~~~~~~~~~~
-
-+---------------------------------------------------+
-|                   | X.509 Profiled | CBOR Encoded |
-+---------------------------------------------------+
-| Certificate Size  |      313       |     144      |
-+---------------------------------------------------+
 
 +-----------------------------------------------------------------+
 |                   | X.509 Profiled | CBOR Encoded |    Zlib     |
@@ -245,26 +231,19 @@ This document registers a compression algorithm in the registry entitled "Certif
 
 --- back
 
-# CBOR Certificate, CDDL {#appA}
+# CBOR example certificate {#appA}
 
-~~~~~~~~~~~ CDDL
-certificate = [
-  type : uint,
-  serial_number : uint,
-  issuer : text,
-  validity : [notBefore: int, notAfter: int],
-  subject : text / bytes
-  public_key : bytes
-  ? extensions : [+ extension],
-  signature : bytes
-  ? signature_alg + public_key_info : bytes
+[
+  1,
+  12826,
+  "CA-id",
+  [1513715838, 1593715838],
+  h'0123456789ABCDF0',
+  h'03E2145AF12D2509D6734A9D23F1F870F77E013C49E993669B03C9587599161F7D',
+  [[15, h'030205A0']],
+h'8DADC9723AC8643DB5787A7E4D6B2B0D93046AF99B4E2FB768D44B229FF38EFE59E101DEFA25B01B60F74EB01C5F3B161850FFF042F56685497EADFFA7196C38'
 ]
-
-extension = [
-  oid : int,
-  ? critical : bool,
-  value : bytes
-]
+*To discuss: include any extension or not?
 ~~~~~~~~~~~
 
 # X.509 Certificate Profile, ASN.1 {#appB}
@@ -296,8 +275,6 @@ DistinguishedName  ::= SET SIZE (1) OF CommonName
 CommonName  ::= SEQUENCE {
   type       OBJECT IDENTIFIER (id-at-commonName),
   value       UTF8String
-      -- For a CA, value is CA name, else EUI-64 in format
-      -- "01-23-54-FF-FE-AB-CD-EF"
 }
 
 Validity  ::= SEQUENCE {
