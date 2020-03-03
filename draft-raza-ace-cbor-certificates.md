@@ -125,18 +125,15 @@ The encoding and compression has several components including: ASN.1 and base64 
 
 * Signature algorithm. If the signature algorithm is the default (ecdsa-with-SHA256) it is omitted in the encoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
 
-* Issuer. By encoding the Distinguished Name as CBOR map the issuer field encoding overhead goes from 13 bytes to XYZ bytes.
-TODO: decide if we want to mention the "if only CN is present the value can be encoded as a single text value"-optimization?
+* Issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
 
 * Validity. The time is encoded as UnixTime in unsigned integer format. The validity is represented with one integer for the 'not before' time, and one for 'not after'. The 'not after' field can be null, representing a certificate without expiry date. The encoding reduces the size from 32 to 10 bytes. 
 
-* Subject. The subject field is restricted to specifying the value of the common name. By RFC7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. The EUI-64 is based on a 48bit unique MAC id. This is encoded using only 7 bytes using CBOR, a reduction down from 36 bytes for the corresponding ASN.1 encoding. For devices identified with a cbor text string the saving is 12 bytes.
+* Subject. The subject field is restricted to specifying the value of the common name. By RFC7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. The EUI-64 is based on a 48bit unique MAC id. This is encoded as a CBOR byte stringof length 6. For devices identified with a FQDN, a cbor text string is used.
 
 * Subject public key info. If the algorithm identifier is the default, it is omitted, otherwise encoded as a one byte COSE identifier. For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together, for the default algorithm, reduce size from 91 to 35 bytes.
 
-* Extensions. Minor savings are achieved by the compact CBOR encoding.
-TODO: decide if we want to go ahead and suggest a new type registry with ints, as discussed during the meeting, or stay with the previous general solution, where we actually encode the non-guessable part of the extension OID. Previously stated:
-In addition, the relevant X.509 extension OIDs always start with 0x551D, hence these two bytes can be omitted.
+* Extensions. The OIDs for the X.509 extensions mandated by rfc7925 always start with 2.5.29, hence only the trailing {15, 19, and 37, 17
 
 * Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the encoding.
 
