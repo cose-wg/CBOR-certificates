@@ -119,25 +119,27 @@ The corresponding ASN.1 schema is given in {{appA}}.
 
 The encoding and compression has several components including: ASN.1 and base64 encoding is replaced with CBOR encoding, static fields are elided, and compression of elliptic curve points. The field encodings and associated savings compared with ASN1.1 encoding are listed below. Combining these different components reduces the certificate size significantly, see {{fig-table}}.
 
-* Version number. The version number field is known (fixed to 3), and is omitted in the encoding. This saves 5 bytes.
+* Version number. The version number field is known (fixed to 3), and is omitted in the encoding.
 
-* Serial number. The serial number is encoded as byte string. Encoding overhead is reduced by one byte.
+* Serial number. The serial number is encoded as byte string. 
 
-* Signature algorithm. If the signature algorithm is the default (ecdsa-with-SHA256) it is omitted in the encoding, otherwise encoded as a one byte COSE identifier. This saves 11 or 12 bytes.
+* Signature algorithm. If the signature algorithm is the default (ecdsa-with-SHA256) it is omitted in the encoding, otherwise encoded as a int identifier (see {{iana}}). 
 
 * Issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
 
-* Validity. The time is encoded as UnixTime in unsigned integer format. The validity is represented with one integer for the 'not before' time, and one for 'not after'. The 'not after' field can be null, representing a certificate without expiry date. The encoding reduces the size from 32 to 10 bytes. 
+* Validity. The time is encoded as UnixTime in unsigned integer format. The validity is represented with one integer for the 'not before' time, and one for 'not after'. The 'not after' field can be null, representing a certificate without expiry date.
 
-* Subject. The subject field is restricted to specifying the value of the common name. By RFC7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. The EUI-64 is based on a 48bit unique MAC id. This is encoded as a CBOR byte stringof length 6. For devices identified with a FQDN, a cbor text string is used.
+* Subject. The subject field is restricted to specifying the value of the common name. By RFC7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48bit unique MAC id. This is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a cbor text string is used.
 
-* Subject public key info. If the algorithm identifier is the default, it is omitted, otherwise encoded as a one byte COSE identifier. For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}). These actions together, for the default algorithm, reduce size from 91 to 35 bytes.
+* Subject public key info. If the algorithm identifier is the default (prime256v1), it is omitted, otherwise encoded as a int identifier (see {{iana}}). For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}).
 
-* Extensions. The OIDs for the X.509 extensions mandated by rfc7925 always start with 2.5.29, hence only the trailing {15, 19, and 37, 17
+* Extensions. The OIDs for the X.509 extensions mandated by rfc7925 always start with 2.5.29, hence only the trailing integer is needed to be encoded. (The extensions mandated to be supported by rfc7925 are encoded as 15, 19, 37 and 17.)
 
 * Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the encoding.
 
-* Signature value. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. The overhead for encoding the 64-bit signature value is reduced from 11 to 2 bytes.
+* Signature value. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. 
+
+In addition to the above listed fields present in X.509, the cbor encoding introduces an additional type-field (single int) to indicate if the certificate is native cbor, or a compressed X.509 certificate.
 
 ~~~~~~~~~~~ CDDL
 certificate = (
@@ -217,7 +219,7 @@ This document registers a compression algorithm in the registry entitled "Certif
 | Algorithm Number | Description              |
 +------------------+--------------------------+
 | TBD              | cbor-cert                |
-+------------------+--------------------------+       
++------------------+--------------------------+  
 ~~~~~~~~~~~
 
 
@@ -225,17 +227,17 @@ This document registers a compression algorithm in the registry entitled "Certif
 
 # CBOR example certificate {#appA}
 
-[
+(
   1,
-  12826,
+  h'12826',
   "CA-id",
-  [1513715838, 1593715838],
-  h'0123456789ABCDF0',
+  1513715838,
+  1593715838,
+  h'0123456789AB',
   h'03E2145AF12D2509D6734A9D23F1F870F77E013C49E993669B03C9587599161F7D',
-  [[15, h'030205A0']],
+  {15: h'030205A0'},
 h'8DADC9723AC8643DB5787A7E4D6B2B0D93046AF99B4E2FB768D44B229FF38EFE59E101DEFA25B01B60F74EB01C5F3B161850FFF042F56685497EADFFA7196C38'
-]
-*To discuss: include any extension or not?
+)
 ~~~~~~~~~~~
 
 # X.509 Certificate Profile, ASN.1 {#appB}
