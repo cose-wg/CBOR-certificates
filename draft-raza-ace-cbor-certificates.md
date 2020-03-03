@@ -151,7 +151,7 @@ In addition, the relevant X.509 extension OIDs always start with 0x551D, hence t
 certificate = (
    type : int,
    serial_number : bytes,
-   issuer : {int => bytes},
+   issuer : { + int => bytes } / text,
    validity_notBefore: uint,
    validity_notAfter: uint / null,
    subject : text / bytes
