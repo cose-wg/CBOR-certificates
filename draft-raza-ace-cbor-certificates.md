@@ -301,7 +301,6 @@ id-at-commonName    OBJECT IDENTIFIER   ::=
          {joint-iso-itu-t(2) ds(5) attributeType(4) 3}
 
 END
-
 ~~~~~~~~~~~
 
 # Certificate Example {#appC}
@@ -311,7 +310,6 @@ TODO: Remove or use in compression example as explanation for the X.509 byte str
 This section shows an example of an X.509 profiled certificate before CBOR encoding.
 
 ~~~~~~~~~~~
-
 Certificate:
     Data:
         Version: 3 (0x2)
@@ -336,5 +334,4 @@ Certificate:
                 Digital Signature, Key Encipherment
     Signature Algorithm: ecdsa-with-SHA256
          .. .. ...
-
 ~~~~~~~~~~~
