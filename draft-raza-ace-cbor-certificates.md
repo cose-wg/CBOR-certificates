@@ -213,7 +213,9 @@ The gateway solution described in {{dep-set}} requires unencrypted certificates.
 
 --- back
 
-# CBOR example certificate {#appA}
+# Example CBOR encoding of DER encoded X.509 certificate {#appA}
+
+TODO: Add DER encoded certificate and the corresponding CBOR compression.
 
 (
   1,
@@ -301,6 +303,8 @@ END
 ~~~~~~~~~~~
 
 # Certificate Example {#appC}
+
+TODO: Remove or use in compression example as explanation for the X.509 byte string 0x83a4e73a.......
 
 This section shows an example of an X.509 profiled certificate before CBOR encoding.
 
