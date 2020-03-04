@@ -151,15 +151,15 @@ The Concise Data Definition Language (CDDL) for a CBOR certificate is:
 ~~~~~~~~~~~ CDDL
 certificate = (
    type : int,
-   serial_number : bytes,
+   serialNumber : bytes,
    issuer : { + int => bytes } / text,
    validity_notBefore: uint,
    validity_notAfter: uint / null,
    subject : text / bytes
-   public_key : bytes
+   subjectPublicKey : bytes
    extensions : { * int => bytes },
-   signature : bytes,
-   ? ( signature_alg : int, public_key_info : int )
+   signatureValue : bytes,
+   ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
 )
 ~~~~~~~~~~~
 
