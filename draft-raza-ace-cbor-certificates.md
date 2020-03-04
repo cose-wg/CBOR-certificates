@@ -221,6 +221,25 @@ The gateway solution described in {{dep-set}} requires unencrypted certificates.
 
 # IANA Considerations  {#iana}
 
+## CBOR Certificate Types Registry
+
+IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+---------------------------------------+-------------------+
+| Value | Description                           | Reference         |
++-------+---------------------------------------+-------------------+
+|     0 | Native CBOR Certificate.              | [[this document]] |
+|     1 | CBOR Compressed X.509 Certificate     | [[this document]] |
++-------+---------------------------------------+-------------------+
+~~~~~~~~~~~
+{: #fig-types title="CBOR Certificate Types"}
+{: artwork-align="center"}
+
+
+
+
+
 
 --- back
 
