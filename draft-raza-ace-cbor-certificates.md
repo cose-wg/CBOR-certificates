@@ -218,6 +218,7 @@ The gateway solution described in {{dep-set}} requires unencrypted certificates.
 
 TODO: Add DER encoded certificate and the corresponding CBOR compression.
 
+~~~~~~~~~~~
 (
   1,
   h'12826',
