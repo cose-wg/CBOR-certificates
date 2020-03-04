@@ -336,6 +336,10 @@ h'3044022001c022b20619d9ad40f5be103692d9e529c167992495c8be91ed86b254fb038d022043
 )
 ~~~~~~~~~~~
 
+TODO subjectPublicKey is bytes(32), should be bytes(33), or?
+
+TODO signatureValue is bytes(70), should be bytes(64), or?
+
 The CBOR encoding (CBOR sequence) of the CBOR certificate is the following byte string
 
 TODO
