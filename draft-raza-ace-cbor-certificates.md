@@ -78,15 +78,10 @@ informative:
         ins: S. Raza
     date: July 2018
 
-  PointCompression:
-    target: https://doi.org/10.1007/3-540-39799-X_31
-    title: Use of Elliptic Curves in Cryptography.
-    seriesinfo:
-      "Springer, Cham.": "Lecture Notes of the Institute for Computer Sciences, Social Informatics and Telecommunications Engineering, vol 218."
-    author:
-      -
-        ins: V.S. Miller
-    date: 1986
+  SECG:
+    title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
+    target: https://secg.org/sec1-v2.pdf
+    date: 2009
 
 --- abstract
 
@@ -134,7 +129,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48 bit unique MAC address. This is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a cbor text string is used.
 
-* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is point compressed as defined in Section X of {{PointCompression}}.
+* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is encoded as as a point compressed public key as defined in Section 2.3.3 of {{SECG}}.
 
 * extensions. The 'extensions' field is encoded as a CBOR map from int to bytes. The 'extnID' and the 'critical' fields are encoded as and CBOR integer. The OIDs for the four extensions mandated to be supported by RFC 7925 always start with 2.5.29. The trailing integer is encoded as the magnitude of the CBOR int. The extensions (non-critical) mandated by RFC 7925 are therefore encoded as magnitude 15, 17, 19, and 37. The 'critical' field is encoded as the sign of the CBOR int, with critical extensions having a negative sign. The 'extnValue' field is encoded as a CBOR byte string.
 
