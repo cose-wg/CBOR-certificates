@@ -46,18 +46,16 @@ normative:
 
   RFC2119:
   RFC8610:
-  I-D.ietf-cbor-7049bis:
   RFC8174:
+  I-D.ietf-cbor-7049bis:
   I-D.ietf-tls-certificate-compression:
 
-
 informative:
+  RFC6347:
   RFC7228:
   RFC7925:
-  RFC6347:
+  RFC8613:
   I-D.selander-ace-cose-ecdhe:
-  
-
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
