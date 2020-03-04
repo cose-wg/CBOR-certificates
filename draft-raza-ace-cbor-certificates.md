@@ -45,7 +45,9 @@ author:
 normative:
 
   RFC2119:
+  RFC5280:
   RFC7049:
+  RFC7925:
   RFC8174:
   RFC8610:
   I-D.ietf-tls-certificate-compression:
