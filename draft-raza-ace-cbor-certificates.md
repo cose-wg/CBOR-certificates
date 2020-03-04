@@ -116,33 +116,39 @@ This specification makes use of the terminology in {{RFC7228}}.
 
 # CBOR Encoding {#encoding}
 
-This section specifies the CBOR certificates. They can be of native type, in which case the signature is calculated on the cbor encoded data, or of compressed type, which is the outcome of CBOR encoding and lossless compression of X.509 certificates. In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}, with the additional constraint that the subject is restricted to use the Common Name field as identifier. 
+This section specifies CBOR certificates. The CBOR certificate can be a native CBOR certificate, in which case the signature is calculated on the CBOR encoded data, or a CBOR compressed X.509 certificates in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate. In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
 
-The corresponding ASN.1 schema is given in {{appA}}.
+The encoding and compression has several components including: ASN.1 and base64 encoding are replaced with CBOR encoding, static fields are elided, and elliptic curve points are compressed. The X.509 fields and there CBOR encodings are listed below. Combining these different components reduces the certificate size significantly, something that is not possible with general purpose compressions algorithms, see {{fig-table}}.
 
-The encoding and compression has several components including: ASN.1 and base64 encoding is replaced with CBOR encoding, static fields are elided, and compression of elliptic curve points. The field encodings and associated savings compared with ASN1.1 encoding are listed below. Combining these different components reduces the certificate size significantly, see {{fig-table}}.
+CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
-* Version number. The version number field is known (fixed to 3), and is omitted in the encoding.
+* version. The 'version' field is known (fixed to v3), and is omitted in the CBOR encoding.
 
-* Serial number. The serial number is encoded as byte string. 
+* serialNumber. The 'serialNumber' field is encoded as a CBOR byte string. 
 
-* Signature algorithm. If the signature algorithm is the default (ecdsa-with-SHA256) it is omitted in the encoding, otherwise encoded as a int identifier (see {{iana}}). 
+* signature. If the 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* Issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
+* signatureAlgorithm. This 'signatureAlgorithm' field is always the same as the above signature field, and is also omitted in the encoding.
 
-* Validity. The time is encoded as UnixTime in unsigned integer format. The validity is represented with one integer for the 'not before' time, and one for 'not after'. The 'not after' field can be null, representing a certificate without expiry date.
+* issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
 
-* Subject. The subject field is restricted to specifying the value of the common name. By RFC7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48bit unique MAC id. This is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a cbor text string is used.
+* validity. The 'notBefore' and 'notAfter' fields are encoded as as UnixTime in unsigned integer format. If the certificate has no well-defined expiration date this is CBOR encoded as notAfter = null.
 
-* Subject public key info. If the algorithm identifier is the default (prime256v1), it is omitted, otherwise encoded as a int identifier (see {{iana}}). For the allowed ECC type keys, one of the public key ECC curve point elements can be calculated from the other, hence only one of the curve points is needed (point compression, see {{PointCompression}}).
+* subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48 bit unique MAC address. This is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a cbor text string is used.
 
-* Extensions. The OIDs for the X.509 extensions mandated by rfc7925 always start with 2.5.29, hence only the trailing integer is needed to be encoded. (The extensions mandated to be supported by rfc7925 are encoded as 15, 19, 37 and 17.)
+* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is point compressed as defined in Section X of {{PointCompression}}.
 
-* Certificate signature algorithm. This algorithm field is always the same as the above signature algorithm, and is omitted in the encoding.
+* extensions. The 'extensions' field is encoded as a CBOR map from int to bytes. The 'extnID' and the 'critical' fields are encoded as and CBOR integer. The OIDs for the four extensions mandated to be supported by RFC 7925 always start with 2.5.29. The trailing integer is encoded as the magnitude of the CBOR int. The extensions (non-critical) mandated by RFC 7925 are therefore encoded as magnitude 15, 17, 19, and 37. The 'critical' field is encoded as the sign of the CBOR int, with critical extensions having a negative sign. The 'extnValue' field is encoded as a CBOR byte string.
 
-* Signature value. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted. 
+* signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
-In addition to the above listed fields present in X.509, the cbor encoding introduces an additional type-field (single int) to indicate if the certificate is native cbor, or a compressed X.509 certificate.
+* signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string.
+
+In addition to the above fields present in X.509, the CBOR ecoding introduces an additional field
+
+* type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a native CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
+
+The Concise Data Definition Language (CDDL) for a CBOR certificate is:
 
 ~~~~~~~~~~~ CDDL
 certificate = (
@@ -158,6 +164,13 @@ certificate = (
    ? ( signature_alg : int, public_key_info : int )
 )
 ~~~~~~~~~~~
+
+TODO - Specify exact content to sign when type = 0
+
+TODO - Specify exactly how issuer is encoded into a map / text and back again.
+
+TODO - UTCTime and GeneralizedTime, RFC 7925 says UTCTime only but null means GeneralizedTime
+
 
 # Deployment settings {#dep-set}
 
