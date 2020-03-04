@@ -49,6 +49,7 @@ normative:
   RFC8174:
   I-D.ietf-cbor-7049bis:
   I-D.ietf-tls-certificate-compression:
+  I-D.ietf-cbor-sequence:
 
 informative:
   RFC6347:
