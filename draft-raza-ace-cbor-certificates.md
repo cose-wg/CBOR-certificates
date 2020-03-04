@@ -210,17 +210,6 @@ The gateway solution described in {{dep-set}} requires unencrypted certificates.
 
 # IANA Considerations  {#iana}
 
-This document registers a compression algorithm in the registry entitled "Certificate Compression Algorithm IDs", under the "Transport Layer Security (TLS) Extensions" heading (see {{I-D.ietf-tls-certificate-compression}}).
-
-
-~~~~~~~~~~~
-+------------------+--------------------------+
-| Algorithm Number | Description              |
-+------------------+--------------------------+
-| TBD              | cbor-cert                |
-+------------------+--------------------------+  
-~~~~~~~~~~~
-
 
 --- back
 
