@@ -361,7 +361,7 @@ IOTCertificate DEFINITIONS EXPLICIT TAGS ::= BEGIN
 Certificate  ::= SEQUENCE {
   tbsCertificate       TBSCertificate,
   signatureAlgorithm   SignatureIdentifier,
-  signature            BIT STRING
+  signatureValue       BIT STRING
 }
 
 TBSCertificate  ::= SEQUENCE {
