@@ -124,7 +124,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
 
-* validity. The 'notBefore' and 'notAfter' fields are encoded as as UnixTime in unsigned integer format. If the certificate has no well-defined expiration date this is CBOR encoded as notAfter = null.
+* validity. The 'notBefore' and 'notAfter' fields are encoded as as UnixTime in unsigned integer format.
 
 * subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48 bit unique MAC address. This is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a cbor text string is used.
 
@@ -148,7 +148,7 @@ certificate = (
    serialNumber : bytes,
    issuer : { + int => bytes } / text,
    validity_notBefore: uint,
-   validity_notAfter: uint / null,
+   validity_notAfter: uint,
    subject : text / bytes
    subjectPublicKey : bytes
    extensions : { * int => bytes },
@@ -160,8 +160,6 @@ certificate = (
 TODO - Specify the exact content to sign when type = 0. This is not defined.
 
 TODO - Specify exactly how issuer is encoded into a map / text and back again.
-
-TODO - UTCTime and GeneralizedTime, RFC 7925 says UTCTime only but null means GeneralizedTime. Do we maybe skip certificates without well-defined expiration date
 
 
 # Deployment settings {#dep-set}
