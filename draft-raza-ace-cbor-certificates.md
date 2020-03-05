@@ -239,7 +239,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+-------------------+
-| Value | X.509 Algorithm                       | Reference         |
+| Value | X.509 Signature Algorithm             | Reference         |
 +-------+---------------------------------------+-------------------+
 |     0 | ecdsa-with-SHA384                     | [[this document]] |
 |     1 | ecdsa-with-SHA512                     | [[this document]] |
@@ -258,7 +258,7 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+-------------------+
-| Value | X.509 Algorithm                       | Reference         |
+| Value | X.509 Public Key Algorithm            | Reference         |
 +-------+---------------------------------------+-------------------+
 |     0 | id-ecPublicKey + prime384v1           | [[this document]] |
 |     1 | id-ecPublicKey + prime512v1           | [[this document]] |
