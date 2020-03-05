@@ -365,14 +365,14 @@ Certificate  ::= SEQUENCE {
 }
 
 TBSCertificate  ::= SEQUENCE {
-  version       \[0\] INTEGER {v3(2)},
-  serialNumber       INTEGER (1..MAX),
-  signature       SignatureIdentifier,
-  issuer       Name,
-  validity       Validity,
-  subject       Name,
-  subjectPublicKeyInfo       SubjectPublicKeyInfo,
-  extensions       \[3\] Extensions OPTIONAL
+  version           [0] INTEGER {v3(2)},
+  serialNumber          INTEGER (1..MAX),
+  signature             SignatureIdentifier,
+  issuer                Name,
+  validity              Validity,
+  subject               Name,
+  subjectPublicKeyInfo  SubjectPublicKeyInfo,
+  extensions        [3] Extensions OPTIONAL
 }
 
 SignatureIdentifier ::= SEQUENCE {
