@@ -389,21 +389,22 @@ Validity  ::= SEQUENCE {
   notAfter       UTCTime
 }
 
-SubjectPublicKeyInfo::= SEQUENCE {
+SubjectPublicKeyInfo. ::= SEQUENCE {
   algorithm         AlgorithmIdentifier,
-  subjectPublicKey          BIT STRING
+  subjectPublicKey  BIT STRING
 }
 
 AlgorithmIdentifier ::= SEQUENCE {
-  algorithm        OBJECT IDENTIFIER (id-ecPublicKey),
-  parameters       OBJECT IDENTIFIER (prime256v1)
+  algorithm         OBJECT IDENTIFIER (id-ecPublicKey),
+  parameters        OBJECT IDENTIFIER (prime256v1)
 }
-  Extensions  ::= SEQUENCE SIZE (1..MAX) OF Extension
+
+Extensions  ::= SEQUENCE SIZE (1..MAX) OF Extension
 
 Extension  ::= SEQUENCE {
-  extnId          OBJECT IDENTIFIER,
-  critical        BOOLEAN DEFAULT FALSE,
-  extnValue       OCTET STRING
+  extnId            OBJECT IDENTIFIER,
+  critical          BOOLEAN DEFAULT FALSE,
+  extnValue         OCTET STRING
  }
 
 ansi-X9-62          OBJECT IDENTIFIER   ::=
