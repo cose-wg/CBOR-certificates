@@ -177,7 +177,7 @@ For DTLS v1.3, because certificates are encrypted, the proposed encoding needs t
 
 The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appA}} resulting in the numbers shown in {{fig-table}}.
 
-After profiling, all duplicated information has been removed, and remaining text strings are minimal in size. Therefore no further size reduction can be reached with general compression mechanisms. (In practice the size might even grow slightly due to the compression encoding information, as illustrated in the table below.)
+After profiling, all duplicated information has been removed, and remaining text strings are minimal in size. Therefore the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 endcoding more compact.
 
 ~~~~~~~~~~~
 
