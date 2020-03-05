@@ -157,11 +157,11 @@ certificate = (
 )
 ~~~~~~~~~~~
 
-TODO - Specify exact content to sign when type = 0
+TODO - Specify the exact content to sign when type = 0. This is not defined.
 
 TODO - Specify exactly how issuer is encoded into a map / text and back again.
 
-TODO - UTCTime and GeneralizedTime, RFC 7925 says UTCTime only but null means GeneralizedTime
+TODO - UTCTime and GeneralizedTime, RFC 7925 says UTCTime only but null means GeneralizedTime. Do we maybe skip certificates without well-defined expiration date
 
 
 # Deployment settings {#dep-set}
