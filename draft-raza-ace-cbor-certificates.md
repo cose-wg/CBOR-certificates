@@ -126,7 +126,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * validity. The 'notBefore' and 'notAfter' UTCTime fields are encoded as as UnixTime in unsigned integer format.
 
-* subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48 bit unique MAC address. This is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a cbor text string is used.
+* subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. A EUI-64 is based on a 48 bit unique MAC address, which is encoded as a CBOR byte string of length 6. For devices identified with a FQDN, a CBOR text string is used.
 
 * subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is encoded as as a point compressed public key as defined in Section 2.3.3 of {{SECG}}.
 
