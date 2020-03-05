@@ -385,16 +385,16 @@ CommonName  ::= SEQUENCE {
 }
 
 Validity  ::= SEQUENCE {
-  notBefore       UTCTime,
-  notAfter       UTCTime
+  notBefore         UTCTime,
+  notAfter          UTCTime
 }
 
-SubjectPublicKeyInfo. ::= SEQUENCE {
+SubjectPublicKeyInfo  ::= SEQUENCE {
   algorithm         AlgorithmIdentifier,
   subjectPublicKey  BIT STRING
 }
 
-AlgorithmIdentifier ::= SEQUENCE {
+AlgorithmIdentifier  ::= SEQUENCE {
   algorithm         OBJECT IDENTIFIER (id-ecPublicKey),
   parameters        OBJECT IDENTIFIER (prime256v1)
 }
