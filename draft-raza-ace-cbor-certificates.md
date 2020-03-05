@@ -32,7 +32,7 @@ author:
         email: goran.selander@ericsson.com
       -
         ins: J. Mattsson
-        name: John Mattsson
+        name: John Preuß Mattsson
         org: Ericsson AB
         email: john.mattsson@ericsson.com
       -
@@ -100,7 +100,7 @@ CBOR data items are encoded to or decoded from byte strings using a type-length-
 
 This document specifies the CBOR certificate profile, which is a CBOR based encoding and compression of the X.509 certificate format. The profile is based on previous work on profiling of X.509 certificates for Internet of Things deployments {{RFC7925}} {{X.509-IoT}} which retains backwards compatibility with X.509, and can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, or EDHOC {{I-D.selander-ace-cose-ecdhe}}. The same profile can be used for "native" CBOR encoded certificates, which further optimizes the performance in constrained environments but are not backwards compatible with X.509, see {{native-CBOR}}.
 
-Other work has looked at reducing size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates. Further optimizations of this profile are known and will be included in future versions.
+Other work has looked at reducing size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates.
 
 # Terminology   {#terminology}
 
