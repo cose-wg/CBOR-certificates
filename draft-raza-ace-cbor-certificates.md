@@ -375,13 +375,17 @@ TBSCertificate  ::= SEQUENCE {
   extensions        [3] Extensions OPTIONAL
 }
 
-SignatureIdentifier ::= SEQUENCE {
-  algorithm       OBJECT IDENTIFIER (ecdsa-with-SHA256)
+SignatureIdentifier  ::= SEQUENCE {
+  algorithm          OBJECT IDENTIFIER (ecdsa-with-SHA256)
+}
+
 Name  ::= SEQUENCE SIZE (1) OF DistinguishedName
+
 DistinguishedName  ::= SET SIZE (1) OF CommonName
+
 CommonName  ::= SEQUENCE {
-  type       OBJECT IDENTIFIER (id-at-commonName),
-  value       UTF8String
+  type              OBJECT IDENTIFIER (id-at-commonName),
+  value             UTF8String
 }
 
 Validity  ::= SEQUENCE {
