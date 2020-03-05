@@ -376,7 +376,7 @@ TBSCertificate  ::= SEQUENCE {
 }
 
 SignatureIdentifier  ::= SEQUENCE {
-  algorithm          OBJECT IDENTIFIER (ecdsa-with-SHA256)
+  algorithm         OBJECT IDENTIFIER (ecdsa-with-SHA256)
 }
 
 Name  ::= SEQUENCE SIZE (1) OF DistinguishedName
