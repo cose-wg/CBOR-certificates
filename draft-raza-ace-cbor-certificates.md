@@ -276,7 +276,9 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 
 # Example CBOR Certificates {#appA}
 
-## Example RFC 7925 Profiled X.509 Certificate
+## Example X.509 Certificate
+
+Example RFC 7925 profiled X.509 certificate parsed with OpenSSL
 
 ~~~~~~~~~~~
 Certificate:
@@ -311,7 +313,7 @@ Certificate:
          
 ~~~~~~~~~~~
 
-The DER encoding of the above certificate is the following byte string
+The DER encoding of the above certificate is 314 bytes
 
 ~~~~~~~~~~~
 308201363081DEA003020102020301F50D300A06082A8648CE3D040302301631
@@ -345,7 +347,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is
 )
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is the following byte string
+The CBOR encoding (CBOR sequence) of the CBOR certificate is XXX bytes
 
 ~~~~~~~~~~~
 01431282696B52464320746573742043411A5E0BE1001A601896004601234567
@@ -361,7 +363,7 @@ The corresponfing native CBOR certificate in CBOR diagnostic format is
 
 TODO
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is the following byte string
+The CBOR encoding (CBOR sequence) of the CBOR certificate is XXX bytes
 
 TODO
 
