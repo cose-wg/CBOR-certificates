@@ -184,7 +184,7 @@ After profiling, all duplicated information has been removed, and remaining text
 +-----------------------------------------------------------------+
 |                   | X.509 Profiled | CBOR Encoded |    Zlib     |
 +-----------------------------------------------------------------+
-| Certificate Size  |      308       |     147      |     288     |
+| Certificate Size  |      314       |     142      |     295     |
 +-----------------------------------------------------------------+
 
 ~~~~~~~~~~~
@@ -288,7 +288,7 @@ Certificate:
         Validity
             Not Before: Jan  1 00:00:00 2020 GMT
             Not After : Feb  2 00:00:00 2021 GMT
-        Subject: CN=01-23-45-67-89-AB
+        Subject: CN=01-23-45-FF-FE-67-89-AB
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
                 Public-Key: (256 bit)
@@ -304,16 +304,18 @@ Certificate:
             X509v3 Key Usage: 
                 Digital Signature
     Signature Algorithm: ecdsa-with-SHA256
-         30:44:02:20:01:c0:22:b2:06:19:d9:ad:40:f5:be:10:36:92:
-         d9:e5:29:c1:67:99:24:95:c8:be:91:ed:86:b2:54:fb:03:8d:
-         02:20:43:c6:ef:1f:46:77:e3:45:b4:68:e8:68:de:26:9e:16:
-         07:30:16:12:de:51:cc:de:1b:61:d5:c4:1d:62:f9:2f
+         30:44:02:20:37:38:73:ef:87:81:b8:82:97:ef:23:5c:1f:ac:
+         cf:62:da:4e:44:74:0d:c2:a2:e6:a3:c6:c8:82:a3:23:8d:9c:
+         02:20:3a:d9:35:3b:a7:88:68:3b:06:bb:48:fe:ca:16:ea:71:
+         17:17:34:c6:75:c5:33:2b:2a:f1:cb:73:38:10:a1:fc
          
 ~~~~~~~~~~~
 
 The DER encoding of the above certificate is the following byte string
 
-TODO
+308201363081DEA003020102020301F50D300A06082A8648CE3D04030230163114301206035504030C0B5246432074657374204341301E170D3230303130313030303030305A170D3231303230323030303030305A30223120301E06035504030C1730312D32332D34352D46462D46452D36372D38392D41423059301306072A8648CE3D020106082A8648CE3D03010703420004AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845EE9A69FD4893149DAE3D3B15416D7532C387152B80B0DF3E1AF408A95D3071E58A30F300D300B0603551D0F040403020780300A06082A8648CE3D04030203470030440220373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3C6C882A3238D9C02203AD9353BA788683B06BB48FECA16EA71171734C675C5332B2AF1CB733810A1FC
+
+TODO *format as desired*
 
 ## Example CBOR Certificate Compression
 
@@ -329,17 +331,15 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is
   h'0123456789AB',
   h'ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba0080df678867845e',
   {15: h'03020780'},
-h'3044022001c022b20619d9ad40f5be103692d9e529c167992495c8be91ed86b254fb038d022043c6ef1f4677e345b468e868de269e1607301612de51ccde1b61d5c41d62f92f'
+h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71171734C675C5332B2AF1CB733810A1FC'
 )
 ~~~~~~~~~~~
 
-TODO subjectPublicKey is bytes(32), should be bytes(33), or?
-
-TODO signatureValue is bytes(70), should be bytes(64), or?
-
 The CBOR encoding (CBOR sequence) of the CBOR certificate is the following byte string
 
-TODO
+01431282696B52464320746573742043411A5E0BE1001A60189600460123456789AB582102AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845EA10F44030207805840373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71171734C675C5332B2AF1CB733810A1FC
+
+TODO *format as desired*
 
 ## Example Native CBOR Certificate
 
