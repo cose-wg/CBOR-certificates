@@ -51,10 +51,8 @@ normative:
   RFC8174:
   RFC8610:
   I-D.ietf-cbor-sequence:
-  I-D.ietf-tls-certificate-compression:
 
 informative:
-  RFC6347:
   RFC7228:
   RFC8446:
   RFC8613:
