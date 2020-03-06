@@ -130,7 +130,26 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is encoded as as a point compressed public key as defined in Section 2.3.3 of {{SECG}}.
 
-* extensions. The 'extensions' field is encoded as a CBOR map from int to bytes. The 'extnID' and the 'critical' fields are encoded as and CBOR integer. The OIDs for the four extensions mandated to be supported by RFC 7925 always start with 2.5.29. The trailing integer is encoded as the magnitude of the CBOR int. The extensions (non-critical) mandated by RFC 7925 are therefore encoded as magnitude 15, 17, 19, and 37. The 'critical' field is encoded as the sign of the CBOR int, with critical extensions having a negative sign. The 'extnValue' field is encoded as a CBOR byte string.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by RFC 7925 is encodeded as follows, where a critical extension is encoded with a negative sign.
+
+~~~~~~~~~~~
+subjectAltName = 1
+~~~~~~~~~~~
+~~~~~~~~~~~
+basicConstraints = 2 + cA
+~~~~~~~~~~~
+~~~~~~~~~~~
+keyUsage = 3 + digitalSignature
+         + 2 * keyAgreement + 4 * keyCertSign
+~~~~~~~~~~~
+~~~~~~~~~~~
+extKeyUsage = 10 + id-kp-serverAuth + 2 * id-kp-clientAuth
+            + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
+~~~~~~~~~~~
+
+I.e. non-critical keyUsage keyAgreement is encoded as 5, critical basicConstraints cA is encodes as -3, and non-criticical extKeyUsage id-kp-codeSigning + id-kp-OCSPSigning is encoded as 22.
+
+If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field. If the array contains a single int, extensions is encoded as the int instead of an array.
 
 * signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
@@ -151,7 +170,7 @@ certificate = (
    validity_notAfter: uint,
    subject : text / bytes
    subjectPublicKey : bytes
-   extensions : { * int => bytes },
+   extensions : [ *4 int, ? text / bytes ] / int,
    signatureValue : bytes,
    ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
 )
@@ -168,7 +187,7 @@ The signatureValue for native CBOR certificates is calculated over the CBOR sequ
    validity_notAfter: uint,
    subject : text / bytes
    subjectPublicKey : bytes
-   extensions : { * int => bytes },
+   extensions : [ *4 int, ? text / bytes ] / int,
    ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
 )
 ~~~~~~~~~~~
@@ -199,7 +218,7 @@ zlib-flate -compress < cert.der > cert.compressed
 +------------------+--------------+------------+--------------------+
 |                  |   RFC 7925   |    zlib    |  CBOR Certificate  |
 +------------------+---------------------------+--------------------+
-| Certificate Size |     314      |     295    |         142        |
+| Certificate Size |     314      |     295    |         136        |
 +------------------+--------------+------------+--------------------+
 ~~~~~~~~~~~
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
@@ -355,20 +374,20 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is
   1612224000,
   h'0123456789AB',
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba0080df678867845e',
-  {15: h'03020780'},
+  5,
   h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3C6C882A3238D9C
     3AD9353BA788683B06BB48FECA16EA71171734C675C5332B2AF1CB733810A1FC'
 )
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 142 bytes
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 136 bytes
 
 ~~~~~~~~~~~
 01431282696B52464320746573742043411A5E0BE1001A601896004601234567
 89AB582102AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF
-678867845EA10F44030207805840373873EF8781B88297EF235C1FACCF62DA4E
-44740DC2A2E6A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA711717
-34C675C5332B2AF1CB733810A1FC
+678867845E055840373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6
+A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71171734C675C5332B
+2AF1CB733810A1FC
 ~~~~~~~~~~~
 
 ## Example Native CBOR Certificate
@@ -384,20 +403,20 @@ The corresponfing native CBOR certificate in CBOR diagnostic format is equal exe
   1612224000,
   h'0123456789AB',
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba0080df678867845e',
-  {15: h'03020780'},
+  5,
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1577D9A35A295A874
     2E794258B76968C097F85542322A07960199C13CC0220A9BC729EF2ECA638CFE'
 )
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 142 bytes
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 136 bytes
 
 ~~~~~~~~~~~
 00431282696B52464320746573742043411A5E0BE1001A601896004601234567
 89AB582102AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF
-678867845EA10F440302078058407F10A063DA8DB2FD49414440CDF85070AC22
-A266C7F1DFB1577D9A35A295A8742E794258B76968C097F85542322A07960199
-C13CC0220A9BC729EF2ECA638CFE
+678867845E0558407F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1
+577D9A35A295A8742E794258B76968C097F85542322A07960199C13CC0220A9B
+C729EF2ECA638CFE
 ~~~~~~~~~~~
 
 # X.509 Certificate Profile, ASN.1 {#appB}
