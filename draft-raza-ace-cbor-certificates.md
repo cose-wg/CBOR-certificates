@@ -407,23 +407,19 @@ IOTCertificate DEFINITIONS EXPLICIT TAGS ::= BEGIN
 
 Certificate  ::= SEQUENCE {
   tbsCertificate        TBSCertificate,
-  signatureAlgorithm    SignatureIdentifier,
+  signatureAlgorithm    AlgorithmIdentifier,
   signatureValue        BIT STRING
 }
 
 TBSCertificate  ::= SEQUENCE {
   version           [0] INTEGER {v3(2)},
   serialNumber          INTEGER (1..MAX),
-  signature             SignatureIdentifier,
+  signature             AlgorithmIdentifier,
   issuer                Name,
   validity              Validity,
   subject               Name,
   subjectPublicKeyInfo  SubjectPublicKeyInfo,
   extensions        [3] Extensions OPTIONAL
-}
-
-SignatureIdentifier  ::= SEQUENCE {
-  algorithm         OBJECT IDENTIFIER (ecdsa-with-SHA256)
 }
 
 Name  ::= SEQUENCE SIZE (1) OF DistinguishedName
@@ -445,9 +441,9 @@ SubjectPublicKeyInfo  ::= SEQUENCE {
   subjectPublicKey  BIT STRING
 }
 
-AlgorithmIdentifier  ::= SEQUENCE {
-  algorithm         OBJECT IDENTIFIER (id-ecPublicKey),
-  parameters        OBJECT IDENTIFIER (prime256v1)
+AlgorithmIdentifier  ::=  SEQUENCE  {
+  algorithm               OBJECT IDENTIFIER,
+  parameters              ANY DEFINED BY algorithm OPTIONAL  }
 }
 
 Extensions  ::= SEQUENCE SIZE (1..MAX) OF Extension
@@ -457,18 +453,6 @@ Extension  ::= SEQUENCE {
   critical          BOOLEAN DEFAULT FALSE,
   extnValue         OCTET STRING
  }
-
-ansi-X9-62          OBJECT IDENTIFIER   ::=
-         {iso(1) member-body(2) us(840) 10045}
-
-id-ecPublicKey      OBJECT IDENTIFIER   ::=
-         {ansi-X9-62 keyType(2) 1}
-
-prime256v1          OBJECT IDENTIFIER   ::=
-         {ansi-X9-62 curves(3) prime(1) 7}
-
-ecdsa-with-SHA256   OBJECT IDENTIFIER   ::=
-         {ansi-X9-62 signatures(4) ecdsa-with-SHA2(3) 2}
 
 id-at-commonName    OBJECT IDENTIFIER   ::=
          {joint-iso-itu-t(2) ds(5) attributeType(4) 3}
