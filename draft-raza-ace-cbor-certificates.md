@@ -189,18 +189,18 @@ For DTLS v1.3, because certificates are encrypted, the proposed encoding needs t
 
 # Expected Certificate Sizes
 
-The profiling size saving mainly comes from enforcing removal of issuer and subject info fields besides the common name. The encoding savings are presented above in {{encoding}}, for a sample certificate given in {{appA}} resulting in the numbers shown in {{fig-table}}.
-
-After profiling, all duplicated information has been removed, and remaining text strings are minimal in size. Therefore the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 endcoding more compact.
+The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 endcoding more compact. The zlib number was calculated with zlib-flate.
 
 ~~~~~~~~~~~
+zlib-flate -compress < cert.der > cert.compressed
+~~~~~~~~~~~
 
-+-----------------------------------------------------------------+
-|                   | X.509 Profiled | CBOR Encoded |    Zlib     |
-+-----------------------------------------------------------------+
-| Certificate Size  |      314       |     142      |     295     |
-+-----------------------------------------------------------------+
-
+~~~~~~~~~~~
++------------------+--------------+------------+--------------------+
+|                  |   RFC 7925   |    zlib    |  CBOR Certificate  |
++------------------+---------------------------+--------------------+
+| Certificate Size |     314      |     295    |         142        |
++------------------+--------------+------------+--------------------+
 ~~~~~~~~~~~
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
 {: artwork-align="center"}
