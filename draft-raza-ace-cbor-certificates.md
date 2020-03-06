@@ -442,8 +442,8 @@ SubjectPublicKeyInfo  ::= SEQUENCE {
 }
 
 AlgorithmIdentifier  ::=  SEQUENCE  {
-  algorithm               OBJECT IDENTIFIER,
-  parameters              ANY DEFINED BY algorithm OPTIONAL  }
+  algorithm         OBJECT IDENTIFIER,
+  parameters        ANY DEFINED BY algorithm OPTIONAL  }
 }
 
 Extensions  ::= SEQUENCE SIZE (1..MAX) OF Extension
