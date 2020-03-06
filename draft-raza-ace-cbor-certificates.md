@@ -157,8 +157,6 @@ certificate = (
 )
 ~~~~~~~~~~~
 
-TODO - Specify the exact content to sign when type = 0. This is not defined.
-
 TODO - Specify exactly how issuer is encoded into a map / text and back again.
 
 
