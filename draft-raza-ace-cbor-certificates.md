@@ -140,7 +140,7 @@ In addition to the above fields present in X.509, the CBOR ecoding introduces an
 
 * type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a native CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
 
-The Concise Data Definition Language (CDDL) for a CBOR certificate is:
+The Concise Data Definition Language (CDDL) for  CBOR certificate is:
 
 ~~~~~~~~~~~ CDDL
 certificate = (
@@ -153,6 +153,22 @@ certificate = (
    subjectPublicKey : bytes
    extensions : { * int => bytes },
    signatureValue : bytes,
+   ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
+)
+~~~~~~~~~~~
+
+The signatureValue for native CBOR certificates is calculated over the CBOR sequence:
+
+~~~~~~~~~~~ CDDL
+(
+   type : int,
+   serialNumber : bytes,
+   issuer : { + int => bytes } / text,
+   validity_notBefore: uint,
+   validity_notAfter: uint,
+   subject : text / bytes
+   subjectPublicKey : bytes
+   extensions : { * int => bytes },
    ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
 )
 ~~~~~~~~~~~
@@ -371,21 +387,6 @@ The corresponfing native CBOR certificate in CBOR diagnostic format is equal exe
   {15: h'03020780'},
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1577D9A35A295A874
     2E794258B76968C097F85542322A07960199C13CC0220A9BC729EF2ECA638CFE'
-)
-~~~~~~~~~~~
-
-where signatureValue is calulated over 
-
-~~~~~~~~~~~
-(
-  0,
-  h'128269',
-  "RFC test CA",
-  1577836800,
-  1612224000,
-  h'0123456789AB',
-  h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba0080df678867845e',
-  {15: h'03020780'}
 )
 ~~~~~~~~~~~
 
