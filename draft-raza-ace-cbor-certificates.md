@@ -133,23 +133,23 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by RFC 7925 is encodeded as follows, where a critical extension is encoded with a negative sign.
 
 ~~~~~~~~~~~
-subjectAltName = 1
+   subjectAltName = 1
 ~~~~~~~~~~~
 ~~~~~~~~~~~
-basicConstraints = 2 + cA
+   basicConstraints = 2 + cA
 ~~~~~~~~~~~
 ~~~~~~~~~~~
-keyUsage = 3 + digitalSignature
-         + 2 * keyAgreement + 4 * keyCertSign
+   keyUsage = 3 + digitalSignature
+            + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 ~~~~~~~~~~~
-extKeyUsage = 10 + id-kp-serverAuth + 2 * id-kp-clientAuth
-            + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
+   extKeyUsage = 10 + id-kp-serverAuth + 2 * id-kp-clientAuth
+               + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
 ~~~~~~~~~~~
 
-I.e. non-critical keyUsage keyAgreement is encoded as 5, critical basicConstraints cA is encodes as -3, and non-criticical extKeyUsage id-kp-codeSigning + id-kp-OCSPSigning is encoded as 22.
+  I.e. non-critical keyUsage keyAgreement is encoded as 5, critical basicConstraints cA is encodes as -3, and non-criticical extKeyUsage id-kp-codeSigning + id-kp-OCSPSigning is encoded as 22.
 
-If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field. If the array contains a single int, extensions is encoded as the int instead of an array.
+  If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field. If the array contains a single int, extensions is encoded as the int instead of an array.
 
 * signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
