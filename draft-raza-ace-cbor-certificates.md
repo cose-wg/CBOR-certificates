@@ -184,7 +184,7 @@ After profiling, all duplicated information has been removed, and remaining text
 +-----------------------------------------------------------------+
 |                   | X.509 Profiled | CBOR Encoded |    Zlib     |
 +-----------------------------------------------------------------+
-| Certificate Size  |      314       |     142      |     295     |
+| Certificate Size  |      314       |     144      |     295     |
 +-----------------------------------------------------------------+
 
 ~~~~~~~~~~~
@@ -339,7 +339,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is
   "RFC test CA",
   1577836800,
   1612224000,
-  h'0123456789AB',
+  h'012345FFFE6789AB',
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba0080df678867845e',
   {15: h'03020780'},
   h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3C6C882A3238D9C
@@ -347,14 +347,14 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is
 )
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 142 bytes
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 144 bytes
 
 ~~~~~~~~~~~
-01431282696B52464320746573742043411A5E0BE1001A601896004601234567
-89AB582102AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF
-678867845EA10F44030207805840373873EF8781B88297EF235C1FACCF62DA4E
-44740DC2A2E6A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA711717
-34C675C5332B2AF1CB733810A1FC
+01431282696B52464320746573742043411A5E0BE1001A6018960048012345FF
+FE6789AB582102AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA00
+80DF678867845EA10F44030207805840373873EF8781B88297EF235C1FACCF62
+DA4E44740DC2A2E6A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71
+171734C675C5332B2AF1CB733810A1FC
 ~~~~~~~~~~~
 
 ## Example Native CBOR Certificate
