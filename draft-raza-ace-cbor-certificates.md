@@ -363,7 +363,7 @@ The corresponfing native CBOR certificate in CBOR diagnostic format is
 
 TODO
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is XXX bytes
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 142 bytes
 
 TODO
 
