@@ -134,7 +134,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
-* signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string.
+* signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For native CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
 In addition to the above fields present in X.509, the CBOR ecoding introduces an additional field
 
@@ -373,6 +373,21 @@ The corresponfing native CBOR certificate in CBOR diagnostic format is equal exe
   {15: h'03020780'},
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1577D9A35A295A874
     2E794258B76968C097F85542322A07960199C13CC0220A9BC729EF2ECA638CFE'
+)
+~~~~~~~~~~~
+
+where signatureValue is calulated over 
+
+~~~~~~~~~~~
+(
+  0,
+  h'128269',
+  "RFC test CA",
+  1577836800,
+  1612224000,
+  h'0123456789AB',
+  h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba0080df678867845e',
+  {15: h'03020780'}
 )
 ~~~~~~~~~~~
 
