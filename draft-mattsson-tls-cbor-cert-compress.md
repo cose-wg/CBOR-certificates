@@ -90,9 +90,9 @@ The algorithm works for all RFC 7925 profiled certificates and provide significa
 
 ~~~~~~~~~~~
 +------------------+--------------+------------+--------------------+
-|                  |   RFC 7925   |    Zlib    |  CBOR Certificate  |
+|                  |   RFC 7925   |    zlib    |  CBOR Certificate  |
 +------------------+---------------------------+--------------------+
-| Certificate Size |     308      |     288    |         147        |
+| Certificate Size |     314      |     295    |         136        |
 +------------------+--------------+------------+--------------------+
 ~~~~~~~~~~~
 
