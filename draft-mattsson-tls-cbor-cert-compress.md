@@ -44,11 +44,11 @@ author:
 normative:
 
   RFC2119:
+  RFC7049:
   RFC7925:
   RFC8174:
   RFC8446:
   I-D.ietf-tls-dtls13:
-  I-D.ietf-cbor-7049bis:
   I-D.ietf-tls-certificate-compression:
   I-D.raza-ace-cbor-certificates:
   I-D.ietf-cbor-sequence:
@@ -69,7 +69,7 @@ Certificate chains often take up the majority of the bytes transmitted in TLS ha
 
 As stated in {{I-D.ietf-tls-certificate-compression}}, certificate chains often take up the majority of the bytes transmitted in TLS handshakes. Large handshakes negatively affect latency, but can also result in that the handshake cannot be completed {{I-D.ietf-emu-eaptlscert}}. To reduce handshake sizes, {{I-D.ietf-tls-certificate-compression}} specifies a mechanism for lossless compression of certificate chains in TLS 1.3 and defines three general purpose compression algorithms.
 
-Large handshakes is particularly a problem for constrained IoT environments {{RFC7228}} {{I-D.ietf-lake-reqs}}. {{RFC7925}} defines a X.509 certificate profile for constrained IoT. The certificate profile in {{RFC7925}} is defined for TLS/DTLS 1.2 but works also for TLS 1.3 {{RFC8446}} and DTLS 1.3 {{I-D.ietf-tls-dtls13}}. For such profiled IoT certificates, general purpose compression algorithms such as zlib are however far from optimal and the general purpose compression algorithms defined in {{I-D.ietf-tls-certificate-compression}} can in many cases not compress RFC 7925 profiled certificates at all. {{I-D.raza-ace-cbor-certificates}} therefore defines a CBOR {{I-D.ietf-cbor-7049bis}} compression algorithm for RFC 7925 profiled certificates. The algorithm works for all RFC 7925 profiled certificates and provide significant reduction in size, in many cases over 50%.
+Large handshakes is particularly a problem for constrained IoT environments {{RFC7228}} {{I-D.ietf-lake-reqs}}. {{RFC7925}} defines a X.509 certificate profile for constrained IoT. The certificate profile in {{RFC7925}} is defined for TLS/DTLS 1.2 but works also for TLS 1.3 {{RFC8446}} and DTLS 1.3 {{I-D.ietf-tls-dtls13}}. For such profiled IoT certificates, general purpose compression algorithms such as zlib are however far from optimal and the general purpose compression algorithms defined in {{I-D.ietf-tls-certificate-compression}} can in many cases not compress RFC 7925 profiled certificates at all. {{I-D.raza-ace-cbor-certificates}} therefore defines a CBOR {{RFC7049}} compression algorithm for RFC 7925 profiled certificates. The algorithm works for all RFC 7925 profiled certificates and provide significant reduction in size, in many cases over 50%.
 
 This document specifies the CBOR certificate compression algorithm {{I-D.raza-ace-cbor-certificates}} for use with TLS Certificate Compression {{I-D.ietf-tls-certificate-compression}}. TLS Certificate Compression
 can be used in TLS 1.3 {{RFC8446}} and DTLS 1.3 {{I-D.ietf-tls-dtls13}}.
@@ -83,7 +83,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 This document specifies the CBOR certificate compression algorithm specified in Section 3 of {{I-D.raza-ace-cbor-certificates}} for use with TLS Certificate Compression {{I-D.ietf-tls-certificate-compression}}. TLS Certificate Compression
 can be used in TLS 1.3 {{RFC8446}} and DTLS 1.3 {{I-D.ietf-tls-dtls13}}. 
 
-The CBOR Certificate compression algorithm takes as input a RFC 7925 profiled X.509 certificate. The output of the CBOR compression algorithm is a CBOR Sequence {{I-D.ietf-cbor-sequence}}, i.e. a sequence of concatenated CBOR encoded CBOR data items {{I-D.ietf-cbor-7049bis}}. Compressed certificates can be analysed with any CBOR decoder and be validated against the CDDL specification defined in Section 3 of {{I-D.raza-ace-cbor-certificates}}.
+The CBOR Certificate compression algorithm takes as input a RFC 7925 profiled X.509 certificate. The output of the CBOR compression algorithm is a CBOR Sequence {{I-D.ietf-cbor-sequence}}, i.e. a sequence of concatenated CBOR encoded CBOR data items {{RFC7049}}. Compressed certificates can be analysed with any CBOR decoder and be validated against the CDDL specification defined in Section 3 of {{I-D.raza-ace-cbor-certificates}}.
 
 The algorithm works for all RFC 7925 profiled certificates and provide significant reduction in size, in many cases over 50%. An example compression of a RFC 7925 profiled certificate is given below.
 
