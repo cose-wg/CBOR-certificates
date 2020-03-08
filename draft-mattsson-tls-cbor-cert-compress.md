@@ -55,7 +55,6 @@ normative:
 
 informative:
 
-  RFC8610:
   RFC7228:
   I-D.ietf-emu-eaptlscert:
   I-D.ietf-lake-reqs:
