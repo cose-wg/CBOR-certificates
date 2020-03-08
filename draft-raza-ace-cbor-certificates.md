@@ -170,7 +170,8 @@ certificate = (
    subjectPublicKey : bytes
    extensions : [ *4 int, ? text / bytes ] / int,
    signatureValue : bytes,
-   ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
+   ? ( signatureAlgorithm : int,
+       subjectPublicKeyInfo_algorithm : int )
 )
 ~~~~~~~~~~~
 
@@ -186,7 +187,8 @@ The signatureValue for native CBOR certificates is calculated over the CBOR sequ
    subject : text / bytes
    subjectPublicKey : bytes
    extensions : [ *4 int, ? text / bytes ] / int,
-   ? ( signatureAlgorithm : int, subjectPublicKeyInfo_algorithm : int )
+   ? ( signatureAlgorithm : int,
+       subjectPublicKeyInfo_algorithm : int )
 )
 ~~~~~~~~~~~
 
