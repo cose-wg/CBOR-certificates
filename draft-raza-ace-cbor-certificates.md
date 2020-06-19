@@ -116,11 +116,11 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * version. The 'version' field is known (fixed to v3), and is omitted in the CBOR encoding.
 
-* serialNumber. The 'serialNumber' field is encoded as a CBOR byte string. 
+* serialNumber. The 'serialNumber' field is encoded as a CBOR unsigned integer.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
+* issuer. In the general case, the Distinguished Name is encoded as CBOR map. The value is represented as an array, including the original byte value and the value type used for canonical recomposition. If only CN is present the value can be encoded as a single byte value.
 
 * validity. The 'notBefore' and 'notAfter' UTCTime fields are encoded as as UnixTime in unsigned integer format.
 
@@ -155,24 +155,51 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 In addition to the above fields present in X.509, the CBOR ecoding introduces an additional field
 
-* type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a native CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
+* type (removed). A CBOR int used to indicate the type of CBOR certificate. Currently type can be a native CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
 
-The Concise Data Definition Language (CDDL) for  CBOR certificate is:
+The Concise Data Definition Language (CDDL) specification for TLS Profile X.509 pub-key certificates encoded in CBOR is defined below.
 
 ~~~~~~~~~~~ CDDL
-certificate = (
-   type : int,
-   serialNumber : bytes,
-   issuer : { + int => bytes } / text,
-   validity_notBefore: uint,
-   validity_notAfter: uint,
-   subject : text / bytes
-   subjectPublicKey : bytes
-   extensions : [ *4 int, ? text / bytes ] / int,
-   signatureValue : bytes,
-   ? ( signatureAlgorithm : int,
-       subjectPublicKeyInfo_algorithm : int )
+cbor-tls-pubkey-cert = [
+  serialNumber: uint,
+  issuer: hierarchical-name,
+  validity_notBefore: uint
+  validity_notAfter: uint,
+  subject: bytes / text, ; are we certain about the original text type here?
+  ? subjectAltName: bytes / text, ; are we certain about the original text type here?
+  subjectPublicKeyInfo: subject-pub-keys,
+  extensions: extensions,
+  signatureAlgorithm: algID-and-parameters,
+  signatureValue : bytes,
+]
+
+hierarchical-name = [ + [ [ + uint ], name ] ] ; we need oids here, I think
+
+name = [
+  name-value: bytes / text,
+  ? (directoryString: &directory-string) // (ai5: 5), ; retained type
+]
+
+directory-string = (
+  teletexString: 0,
+  printableString: 1,
+  universalString: 2,
+  utf8String: 3,
+  bmpString: 4,
 )
+
+subject-pub-keys = [
+  + [ ecc-public-key: bytes,
+      ? algID-and-parameters, ; this is allowed, is it ever used?
+    ],
+]
+
+algID-and-parameters = [ [ + uint ], ? [ + bytes ] ]
+
+extensions = [
+  1*4 [ int, ? text / bytes ] / int, ; known extensions (do we really need negative ints here?)
+  * [ [ + uint ], ? text / bytes ], ; generic extensions with oids
+]
 ~~~~~~~~~~~
 
 The signatureValue for native CBOR certificates is calculated over the CBOR sequence:
