@@ -120,7 +120,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the Distinguished Name is encoded as CBOR map. The value is represented as an array, including the original byte value and the value type used for canonical recomposition. If only CN is present the value can be encoded as a single byte value.
+* issuer. In the general case, the Distinguished Name is encoded as CBOR map. The value is represented as an array, including the original byte value and the value type used for canonical recomposition. If only CN is present the value can be encoded as a single byte or text value.
 
 * validity. The 'notBefore' and 'notAfter' UTCTime fields are encoded as as UnixTime in unsigned integer format.
 
