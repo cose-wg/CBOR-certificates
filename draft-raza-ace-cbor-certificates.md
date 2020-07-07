@@ -192,7 +192,7 @@ The signatureValue for native CBOR certificates is calculated over the CBOR sequ
 )
 ~~~~~~~~~~~
 
-TODO - Specify exactly how issuer is encoded into a map / text and back again.
+TODO - Specify exactly how issuer is encoded into a map / text and back again. This is a compromise between compactness and complete generality.
 
 
 # Deployment settings {#dep-set}
