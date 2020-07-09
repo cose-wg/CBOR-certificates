@@ -86,6 +86,8 @@ This document specifies a CBOR encoding and profiling of X.509 public key certif
 
 The CBOR certificates are compatible with the existing X.509 standard, enabling the use of profiled and compressed X.509 certificates without modifications in the existing X.509 standard.
 
+Note: This draft has been merged into draft-mattsson-cose-cbor-cert-compress-01 and will not be updated more
+
 --- middle
 
 # Introduction  {#intro}
