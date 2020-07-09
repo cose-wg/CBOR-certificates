@@ -61,7 +61,7 @@ informative:
   RFC7228:
   I-D.ietf-emu-eaptlscert:
   I-D.ietf-lake-reqs:
-  I-D.selander-ace-cose-ecdhe:
+  I-D.ietf-lake-edhoc:
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
@@ -100,7 +100,7 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and  {{I-D.ietf-cbor-sequence}}.
 
-This document specifies the CBOR encoding/compression of RFC 7925 profiled X.509 certificates based on {{X.509-IoT}}. RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments. The encoding retains backwards compatibility with X.509, and can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.selander-ace-cose-ecdhe}}. The same profile can be used for "native" CBOR encoded certificates, which further optimizes the performance in constrained environments but are not backwards compatible with X.509, see {{native-CBOR}}. Other work has looked at reducing size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates.
+This document specifies the CBOR encoding/compression of RFC 7925 profiled X.509 certificates based on {{X.509-IoT}}. RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments. The encoding retains backwards compatibility with X.509, and can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. The same profile can be used for "native" CBOR encoded certificates, which further optimizes the performance in constrained environments but are not backwards compatible with X.509, see {{native-CBOR}}. Other work has looked at reducing size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates.
 
 This document specifies COSE headers for use of the CBOR certificate compression algorithm for use with COSE. The document also specifies the use of the CBOR certificate compression algorithm with TLS Certificate Compression in TLS 1.3 and DTLS 1.3.
 
@@ -112,9 +112,9 @@ This specification makes use of the terminology in {{RFC7228}}.
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates. The CBOR certificate can be a native CBOR certificate, in which case the signature is calculated on the CBOR encoded data, or a CBOR compressed X.509 certificates in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate. In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation  of the certificate profile defined in {{RFC7925}}. The CBOR certificate can be a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a native CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
 
-The encoding and compression has several components including: ASN.1 DER and base64 encoding are replaced with CBOR encoding, static fields are elided, and elliptic curve points are compressed. The X.509 fields and there CBOR encodings are listed below. Combining these different components reduces the certificate size significantly, something that is not possible with general purpose compressions algorithms, see {{fig-table}}.
+The encoding and compression has several components including: ASN.1 DER and base64 encoding are replaced with CBOR encoding, static fields are elided, and elliptic curve points are compressed. The X.509 fields and their CBOR encodings are listed below. Combining these different components reduces the certificate size significantly, something that is not possible with general purpose compressions algorithms, see {{fig-table}}.
 
 CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
@@ -126,7 +126,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
 
-* validity. The 'notBefore' and 'notAfter' UTCTime fields are ASCII string of the form "yymmddHHMMSSZ". They are encoded as the unsigned integers using the following inversiable encoding. The resulting integer always fit in a 32 bit usigned integer.
+* validity. The 'notBefore' and 'notAfter' UTCTime fields are ASCII string of the form "yymmddHHMMSSZ". They are encoded as the unsigned integers using the following invertible encoding. The resulting integer always fit in a 32 bit usigned integer.
 
    SS + 60 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yy))))
 
@@ -208,7 +208,7 @@ For protocols like TLS/DTLS 1.2, where the handshake is sent unencrypted, the ac
 
 For the setting with constrained server and server-only authentication, the server only needs to be provisioned with the CBOR certificate and does not perform the conversion to X.509. This option is viable when client authentication can be asserted by other means.
 
-For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server. This corresponds to the proposed native mode, a new certificate compression scheme. The required changes on the server side are in line with recent protocols utilizing cbor encoding for communication with resource constrained devices {{RFC8613}}.
+For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server. This corresponds to the proposed native mode, a new certificate compression scheme. The required changes on the server side are in line with recent protocols utilizing CBOR encoding for communication with resource constrained devices {{RFC8613}}.
 
 # Expected Certificate Sizes
 
@@ -232,7 +232,7 @@ zlib-flate -compress < cert.der > cert.compressed
 
 Further performance improvements can be achieved with the use of native CBOR certificates. In this case the signature is calculated over the CBOR encoded structure rather than the ASN.1 encoded structure. This removes entirely the need for ASN.1 and reduces the processing in the authenticating devices.
 
-This solution applies when the devices are only required to authenticate with a set of native CBOR certificate compatible servers, which may become a preferred approach for future deployments. The mapping between X.509 and CBOR certificates enables a migration path between the backwards compatible format and the fully optimized format. This motivates introducing a type flag to indicate if the certificate should be restored to X.509 or kept cbor encoded.
+This solution applies when the devices are only required to authenticate with a set of native CBOR certificate compatible servers, which may become a preferred approach for future deployments. The mapping between X.509 and CBOR certificates enables a migration path between the backwards compatible format and the fully optimized format. This motivates introducing a type flag to indicate if the certificate should be restored to X.509 or kept CBOR encoded.
 
 # Security Considerations  {#sec-cons}
 
@@ -333,7 +333,7 @@ This document registers the following entry in the "Certificate Compression Algo
 
 ## Example X.509 Certificate
 
-Example RFC 7925 profiled X.509 certificate parsed with OpenSSL
+Example of RFC 7925 profiled X.509 certificate parsed with OpenSSL.
 
 ~~~~~~~~~~~
 Certificate:
@@ -368,7 +368,7 @@ Certificate:
          
 ~~~~~~~~~~~
 
-The DER encoding of the above certificate is 314 bytes
+The DER encoding of the above certificate is 314 bytes.
 
 ~~~~~~~~~~~
 308201363081DEA003020102020301F50D300A06082A8648CE3D040302301631
@@ -385,7 +385,7 @@ DC7F5C6D1D42C95647F061BA0080DF678867845EE9A69FD4893149DAE3D3B154
 
 ## Example CBOR Certificate Compression
 
-The CBOR certificate compression of the X.509 in CBOR diagnostic format is 
+The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
 ~~~~~~~~~~~
 (
@@ -404,7 +404,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is
 )
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 136 bytes
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 136 bytes.
 
 ~~~~~~~~~~~
 01431282696B52464320746573742043411A5E0BE1001A601896004601234567
@@ -416,7 +416,7 @@ A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71171734C675C5332B
 
 ## Example Native CBOR Certificate
 
-The corresponfing native CBOR certificate in CBOR diagnostic format is equal execpt for type and signatureValue
+The corresponding native CBOR certificate in CBOR diagnostic format is identical except for type and signatureValue.
 
 ~~~~~~~~~~~
 (
@@ -435,7 +435,7 @@ The corresponfing native CBOR certificate in CBOR diagnostic format is equal exe
 )
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 136 bytes
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 136 bytes.
 
 ~~~~~~~~~~~
 00431282696B52464320746573742043411A5E0BE1001A601896004601234567
