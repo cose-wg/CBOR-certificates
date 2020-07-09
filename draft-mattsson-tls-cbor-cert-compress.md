@@ -63,6 +63,8 @@ informative:
 
 Certificate chains often take up the majority of the bytes transmitted in TLS handshakes. Large handshakes can cause problems, particularly in constrained IoT environments. RFC 7925 defines a TLS certificate profile for constrained IoT. General purpose compression algorithms can in many cases not compress RFC 7925 profiled certificates at all. By using the fact that the certificates are profiled, the CBOR certificate compression algorithms can in many cases compress RFC 7925 profiled certificates with over 50%. This document specifies the CBOR certificate compression algorithm for use with TLS Certificate Compression in TLS 1.3 and DTLS 1.3.
 
+Note: This draft has been merged into draft-mattsson-cose-cbor-cert-compress-01 and will not be updated more
+
 --- middle
 
 # Introduction
