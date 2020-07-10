@@ -136,7 +136,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is encoded as as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by RFC 7925 is encodeded as specified below, where a critical extensions are encoded with a negative sign. TODO: need to make things mod 3 instead.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified below, where a critical extensions are encoded with a negative sign. TODO: need to make things mod 3 instead.
 
    I.e. non-critical keyUsage keyAgreement is encoded as 5, critical basicConstraints cA is encodes as -3, and non-criticical extKeyUsage id-kp-codeSigning + id-kp-OCSPSigning is encoded as 22.
 
