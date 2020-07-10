@@ -163,7 +163,7 @@ In addition to the above fields present in X.509, the CBOR ecoding introduces an
 
 * type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a native CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
 
-The following Concise Data Definition Language (CDDL) defines a group, the elements of which are to be used in an unadorned CBOR Sequence {{RFC8742}}.
+The following Concise Data Definition Language (CDDL) defines a group, the elements of which are to be used in an unadorned CBOR Sequence {{RFC8742}}. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
 certificate = (
