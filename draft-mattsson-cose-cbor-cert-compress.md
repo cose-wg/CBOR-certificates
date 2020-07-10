@@ -303,7 +303,7 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 
 ## COSE Header Parameters Registry
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading.
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5chain and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded.
 
 ~~~~~~~~~~~
 +-----------+-------+----------------+---------------------+
