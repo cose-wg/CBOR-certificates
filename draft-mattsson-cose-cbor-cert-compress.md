@@ -130,7 +130,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
    n = SS + 60 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yy))))
 
-   Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 60, MM = (n - SS) mod 60, etc.
+   Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 60, MM = ((n - SS) / 60) mod 60, etc.
 
 * subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. An EUI-64 mapped from a 48-bit MAC address is encoded as a CBOR byte string of length 6. Other EUI-64 is ncoded as a CBOR byte string of length 8. A FQDN is encoded as a CBOR text string.
 
