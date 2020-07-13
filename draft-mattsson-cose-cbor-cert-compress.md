@@ -51,16 +51,13 @@ normative:
   RFC8446:
   RFC8610:
   RFC8742:
-  I-D.ietf-cose-x509:
   I-D.ietf-tls-dtls13:
   I-D.ietf-tls-certificate-compression:
 
 informative:
 
-  RFC8613:
   RFC7228:
-  I-D.ietf-emu-eaptlscert:
-  I-D.ietf-lake-reqs:
+  I-D.ietf-cose-x509:
   I-D.ietf-lake-edhoc:
 
   X.509-IoT:
