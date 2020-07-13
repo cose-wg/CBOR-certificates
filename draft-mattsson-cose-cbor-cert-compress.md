@@ -139,11 +139,11 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
    Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 60, MM = ((n - SS) / 60) mod 60, etc.
 
-* subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. An EUI-64 mapped from a 48-bit MAC address is encoded as a CBOR byte string of length 6. Other EUI-64 is ncoded as a CBOR byte string of length 8. A FQDN is encoded as a CBOR text string.
+* subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. An EUI-64 mapped from a 48-bit MAC address is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8. A FQDN is encoded as a CBOR text string.
 
-* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding., otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as a int, (see {{iana}}). The 'subjectPublicKey' is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
+* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding, otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as an int, (see {{iana}}). The 'subjectPublicKey' is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified below, where a critical extensions are encoded with a negative sign. TODO: need to make things mod 3 instead.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified below, where critical extensions are encoded with a negative sign. TODO: need to make things mod 3 instead.
 
    I.e. non-critical keyUsage keyAgreement is encoded as 5, critical basicConstraints cA is encodes as -3, and non-criticical extKeyUsage id-kp-codeSigning + id-kp-OCSPSigning is encoded as 22.
 
