@@ -157,9 +157,9 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
                + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
 ~~~~~~~~~~~
 
-I.e. a non-critical subjectAltName is encoded as 1, a critical subjectAltName is encoded as -1, a critical basicConstraints (cA = 1) is encodes as -3 (-(2+1)), a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 5 (3 + 2), and a non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 22 (10 + 4 + 8). If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field.
+   I.e. a non-critical subjectAltName is encoded as 1, a critical subjectAltName is encoded as -1, a critical basicConstraints (cA = 1) is encodes as -3 (-(2+1)), a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 5 (3 + 2), and a non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 22 (10 + 4 + 8). If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field.
 
-If the array contains a single int, extensions is encoded as the int instead of an array. I.e. a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as [-3, 5], while a single non-critical basicConstraints (cA = 0) is encodes as 2 instead of [2].
+   If the array contains a single int, extensions is encoded as the int instead of an array. I.e. a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as [-3, 5], while a single non-critical basicConstraints (cA = 0) is encodes as 2 instead of [2].
 
 * signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
