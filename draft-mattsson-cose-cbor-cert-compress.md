@@ -148,9 +148,9 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
-In addition to the above fields present in X.509, the CBOR ecoding introduces an additional field
+In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
-* type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
+* type. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
 
 The following Concise Data Definition Language (CDDL) defines a group, the elements of which are to be used in an unadorned CBOR Sequence {{RFC8742}}. The member names therefore only have documentary value.
 
