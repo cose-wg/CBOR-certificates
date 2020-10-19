@@ -100,7 +100,7 @@ RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things depl
 
 * The CBOR compressed X.509 certificate, which can be decompressed into a certificate that can be verified by code compatible with RFC 7925. 
 
-* The "native" CBOR encoded certificate, which further optimizes the performance in constrained environments but is not backwards compatible with RFC 7925, see {{native-CBOR}}. 
+* The "natively signed" CBOR encoded certificate, which further optimizes the performance in constrained environments but is not backwards compatible with RFC 7925, see {{native-CBOR}}. 
 
 Other work has looked at reducing the size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates: what field values (in particular for 'issuer'/'subject') are relevant for constrained IoT applications, what 
 is the potential savings that can be expected with the proposed encoding, and what is the right trade-off between compactness and generality.
@@ -116,7 +116,7 @@ This specification makes use of the terminology in {{RFC7228}}.
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation of the certificate profile defined in {{RFC7925}}. The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a native CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation of the certificate profile defined in {{RFC7925}}. The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
 
 ## Message Fields
 
@@ -146,11 +146,11 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
-* signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For native CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
+* signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
 In addition to the above fields present in X.509, the CBOR ecoding introduces an additional field
 
-* type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a native CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
+* type. A CBOR int used to indicate the type of CBOR certificate. Currently type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
 
 The following Concise Data Definition Language (CDDL) defines a group, the elements of which are to be used in an unadorned CBOR Sequence {{RFC8742}}. The member names therefore only have documentary value.
 
@@ -170,7 +170,7 @@ certificate = (
 )
 ~~~~~~~~~~~
 
-The signatureValue for native CBOR certificates is calculated over the CBOR sequence:
+The signatureValue for natively signed CBOR certificates is calculated over the CBOR sequence:
 
 ~~~~~~~~~~~ CDDL
 (
@@ -253,14 +253,14 @@ zlib-flate -compress < cert.der > cert.compressed
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
 {: artwork-align="center"}
 
-# Native CBOR Certificates {#native-CBOR}
+# Natively Signed CBOR Certificates {#native-CBOR}
 
-The difference between CBOR compressed X.509 certificate and native CBOR certificate is that the signature is calculated over the CBOR encoding rather than the DER encoded ASN.1 data. This removes entirely the need for ASN.1 DER and base64 encoding which reduces the processing in the authenticating devices, and avoids known complexities with these encodings.
+The difference between CBOR compressed X.509 certificate and natively signed CBOR certificate is that the signature is calculated over the CBOR encoding rather than the DER encoded ASN.1 data. This removes entirely the need for ASN.1 DER and base64 encoding which reduces the processing in the authenticating devices, and avoids known complexities with these encodings.
 
-Native CBOR certificates can be applied in devices that are only required to authenticate to native CBOR certificate compatible servers.
+Natively signed CBOR certificates can be applied in devices that are only required to authenticate to natively signed CBOR certificate compatible servers.
 This is not a major restriction for many IoT deployments, where the parties issuing and verifying certificates can be a restricted ecosystem which not necessarily involves public CAs.
 
-CBOR compressed X.509 certificates provides an intermediate step between RFC 7925 profiled X.509 certificates and native CBOR certificates: An implementation of CBOR compressed X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for native CBOR certificates.
+CBOR compressed X.509 certificates provides an intermediate step between RFC 7925 profiled X.509 certificates and natively signed CBOR certificates: An implementation of CBOR compressed X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for natively signed CBOR certificates.
 
 
 # Security Considerations  {#sec-cons}
@@ -283,7 +283,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 +-------+---------------------------------------+
 | Value | Description                           |
 +=======+=======================================+
-|     0 | Native CBOR Certificate.              |
+|     0 | Natively Signed CBOR Certificate      |
 |     1 | CBOR Compressed X.509 Certificate     |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
@@ -443,9 +443,9 @@ A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71171734C675C5332B
 2AF1CB733810A1FC
 ~~~~~~~~~~~
 
-## Example Native CBOR Certificate
+## Example: Natively Signed CBOR Certificate
 
-The corresponding native CBOR certificate in CBOR diagnostic format is identical except for type and signatureValue.
+The corresponding natively signed CBOR certificate in CBOR diagnostic format is identical except for type and signatureValue.
 
 ~~~~~~~~~~~
 (
