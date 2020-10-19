@@ -118,6 +118,8 @@ This specification makes use of the terminology in {{RFC7228}}.
 
 This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation of the certificate profile defined in {{RFC7925}}. The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a native CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
 
+## Message Fields
+
 The encoding and compression has several components including: ASN.1 DER and base64 encoding are replaced with CBOR encoding, static fields are elided, and elliptic curve points are compressed. The X.509 fields and their CBOR encodings are listed below. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}.
 
 CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
@@ -140,26 +142,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding, otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as an int, (see {{iana}}). The 'subjectPublicKey' is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified below, where critical extensions are encoded with a negative sign. The boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.
-
-~~~~~~~~~~~
-   subjectAltName = 1
-~~~~~~~~~~~
-~~~~~~~~~~~
-   basicConstraints = 2 + cA
-~~~~~~~~~~~
-~~~~~~~~~~~
-   keyUsage = 3 + digitalSignature
-            + 2 * keyAgreement + 4 * keyCertSign
-~~~~~~~~~~~
-~~~~~~~~~~~
-   extKeyUsage = 10 + id-kp-serverAuth + 2 * id-kp-clientAuth
-               + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
-~~~~~~~~~~~
-
-   I.e. a non-critical subjectAltName is encoded as 1, a critical subjectAltName is encoded as -1, a critical basicConstraints (cA = 1) is encoded as -3 (-(2+1)), a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 5 (3 + 2), and a non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 22 (10 + 4 + 8). If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field.
-
-   If the array contains a single int, extensions is encoded as the int instead of an array. I.e. a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as \[-3, 5\], while a single non-critical basicConstraints (cA = 0) is encoded as 2 instead of \[2\]. A single critical subjectAltName (dNSName = "for.example") is encoded as \[-1, "for.example"\].
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified in {{ext-encoding}}.
 
 * signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
@@ -205,6 +188,42 @@ The signatureValue for native CBOR certificates is calculated over the CBOR sequ
 ~~~~~~~~~~~
 
 TODO - Specify exactly how issuer is encoded into a map / text and back again. This is a compromise between compactness and complete generality.
+
+## Encoding of Extensions {#ext-encoding}
+
+This section details the encoding of the 'extensions' field. 
+
+Each extension is represented with an int. Critical extensions are encoded with a negative sign. The boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.
+
+~~~~~~~~~~~
+   subjectAltName = 1
+~~~~~~~~~~~
+~~~~~~~~~~~
+   basicConstraints = 2 + cA
+~~~~~~~~~~~
+~~~~~~~~~~~
+   keyUsage = 3 + digitalSignature
+            + 2 * keyAgreement + 4 * keyCertSign
+~~~~~~~~~~~
+~~~~~~~~~~~
+   extKeyUsage = 10 + id-kp-serverAuth + 2 * id-kp-clientAuth
+               + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
+~~~~~~~~~~~
+
+Consequently: 
+
+* A non-critical subjectAltName is encoded as 1. A critical subjectAltName is encoded as -1.
+
+* A critical basicConstraints (cA = 1) is encoded as -3 (= -(2+1)).
+
+* A non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 5 (= 3 + 2). 
+
+* A non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 22 (= 10 + 4 + 8). 
+
+If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field. If the array contains a single int, 'extensions' is encoded as the int instead of an array. 
+
+Thus, a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as \[-3, 5\], while a single non-critical basicConstraints (cA = 0) is encoded as 2 instead of \[2\]. A single critical subjectAltName (dNSName = "for.example") is encoded as \[-1, "for.example"\].
+
 
 # Deployment settings {#dep-set}
 
