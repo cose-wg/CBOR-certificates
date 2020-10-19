@@ -128,6 +128,8 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * serialNumber. The 'serialNumber' field is encoded as a CBOR byte string. This allows encoding of all lengths with minimal overhead.
 
+* signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) then it is encoded as null (0xf6), otherwise it is included in the signatureAlgorithm field encoded as a CBOR int (see {{iana}}).
+
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
 * issuer. In the general case, the Distinguished Name is encoded as CBOR map, but if only CN is present the value can be encoded as a single text value.
@@ -140,11 +142,9 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. An EUI-64 mapped from a 48-bit MAC address is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8. A FQDN is encoded as a CBOR text string.
 
-* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1), it is omitted in the CBOR encoding, otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as an int, (see {{iana}}). The 'subjectPublicKey' is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
+* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1) then it is encoded as null (0xf6), otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as an int (see {{iana}}). The 'subjectPublicKey' is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified in {{ext-encoding}}.
-
-* signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) it is omitted in the CBOR encoding, otherwise it is included in the signatureAlgorithm field encoded as an CBOR int (see {{iana}}).
 
 * signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
@@ -158,15 +158,15 @@ The following Concise Data Definition Language (CDDL) defines a group, the eleme
 certificate = (
    type : int,
    serialNumber : bytes,
+   signatureAlgorithm : int / null,
    issuer : { + int => bytes } / text,
    validity_notBefore: uint,
    validity_notAfter: uint,
-   subject : text / bytes
-   subjectPublicKey : bytes
+   subject : text / bytes,
+   subjectPublicKey : bytes,
+   subjectPublicKeyInfo_algorithm : int / null,
    extensions : [ *4 int, ? text / bytes ] / int,
-   signatureValue : bytes,
-   ? ( signatureAlgorithm : int,
-       subjectPublicKeyInfo_algorithm : int )
+   signatureValue : bytes
 )
 ~~~~~~~~~~~
 
@@ -176,14 +176,14 @@ The signatureValue for natively signed CBOR certificates is calculated over the 
 (
    type : int,
    serialNumber : bytes,
+   signatureAlgorithm : int / null,
    issuer : { + int => bytes } / text,
    validity_notBefore: uint,
    validity_notAfter: uint,
-   subject : text / bytes
-   subjectPublicKey : bytes
-   extensions : [ *4 int, ? text / bytes ] / int,
-   ? ( signatureAlgorithm : int,
-       subjectPublicKeyInfo_algorithm : int )
+   subject : text / bytes,
+   subjectPublicKey : bytes,
+   subjectPublicKeyInfo_algorithm : int / null,
+   extensions : [ *4 int, ? text / bytes ] / int
 )
 ~~~~~~~~~~~
 
@@ -420,12 +420,14 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 (
   1,
   h'01f50d',
+  null,
   "RFC test CA",
   721699200,
   760492800,
   h'0123456789AB',
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba
     0080df678867845e',
+  null,
   5,
   h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3
     C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA711717
@@ -451,12 +453,14 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 (
   0,
   h'01f50d',
+  null,
   "RFC test CA",
   721699200,
   760492800,
   h'0123456789AB',
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061
     ba0080df678867845e',
+  null,
   5,
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1
     577D9A35A295A8742E794258B76968C097F85542322A0796
