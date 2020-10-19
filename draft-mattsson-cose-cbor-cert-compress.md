@@ -103,7 +103,7 @@ RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things depl
 * The "native" CBOR encoded certificate, which further optimizes the performance in constrained environments but is not backwards compatible with RFC 7925, see {{native-CBOR}}. 
 
 Other work has looked at reducing the size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates: what field values (in particular for 'issuer'/'subject') are relevant for constrained IoT applications, what 
-is the maximum compression that can be expected with CBOR, and what is the right trade-off between compactness and generality.
+is the potential savings that can be expected with the proposed encoding, and what is the right trade-off between compactness and generality.
 
 This document specifies COSE headers for use of the CBOR certificate encoding with COSE. The document also specifies the CBOR certificate compression algorithm for use as TLS Certificate Compression with TLS 1.3 and DTLS 1.3.
 
