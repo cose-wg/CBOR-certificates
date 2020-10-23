@@ -186,8 +186,21 @@ The signatureValue for natively signed CBOR certificates is calculated over the 
    extensions : [ *4 int, ? text / bytes ] / int
 )
 ~~~~~~~~~~~
-
-TODO - Specify exactly how issuer is encoded into a map / text and back again. This is a compromise between compactness and complete generality.
+The issuer map, when not only the common name is present, is built using the following indices. 
+~~~~~~~~~~~
++-------+-------------------------------------+
+| Index | Type                                |
++=======+=====================================+
+|     0 | Country                             |
+|     1 | Organization				                |
+|     2 | Organizational unit     	          |
+|     3 | Distinguished name qualifier	      |
+|     4 | State or province name			        |
+|     5 | Common name					                |
+|     6 | Serial number					              |
++-------+-------------------------------------+
+~~~~~~~~~~~
+TODO - More details on how issuer is encoded into a map / text and back again. This is a compromise between compactness and complete generality.
 
 ## Encoding of Extensions {#ext-encoding}
 
