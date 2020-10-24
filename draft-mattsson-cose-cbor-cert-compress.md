@@ -163,8 +163,8 @@ certificate = (
    validity_notBefore: uint,
    validity_notAfter: uint,
    subject : text / bytes,
-   subjectPublicKey : bytes,
    subjectPublicKeyInfo_algorithm : int / null,
+   subjectPublicKey : bytes,
    extensions : [ *4 int, ? text / bytes ] / int,
    signatureValue : bytes
 )
@@ -181,8 +181,8 @@ The signatureValue for natively signed CBOR certificates is calculated over the 
    validity_notBefore: uint,
    validity_notAfter: uint,
    subject : text / bytes,
-   subjectPublicKey : bytes,
    subjectPublicKeyInfo_algorithm : int / null,
+   subjectPublicKey : bytes,
    extensions : [ *4 int, ? text / bytes ] / int
 )
 ~~~~~~~~~~~
@@ -425,9 +425,9 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   721699200,
   760492800,
   h'0123456789AB',
+  null,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba
     0080df678867845e',
-  null,
   5,
   h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3
     C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA711717
@@ -458,9 +458,9 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
   721699200,
   760492800,
   h'0123456789AB',
+  null,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061
     ba0080df678867845e',
-  null,
   5,
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1
     577D9A35A295A8742E794258B76968C097F85542322A0796
