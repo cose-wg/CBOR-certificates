@@ -215,20 +215,20 @@ TODO - More details on how issuer is encoded into a map / text and back again. T
 
 This section details the encoding of the 'extensions' field. 
 
-Each extension is represented with an int. Critical extensions are encoded with a negative sign. The boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.
+Each extension is represented with an int. Critical extensions are encoded with a negative sign. The boolean values (digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding. If the array contains a single int, 'extensions' is encoded as the int instead of an array.  pathLenConstraint is limited to a max value of 10. If subjectAltName is present, the value is placed after the int the end of the array encoded as a byte or text string following the encoding rules for the subject field.
 
 ~~~~~~~~~~~
    subjectAltName = 1
 ~~~~~~~~~~~
 ~~~~~~~~~~~
-   basicConstraints = 2 + cA
+   basicConstraints = 2 + pathLenConstraint
 ~~~~~~~~~~~
 ~~~~~~~~~~~
-   keyUsage = 3 + digitalSignature
+   keyUsage = 12 + digitalSignature
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 ~~~~~~~~~~~
-   extKeyUsage = 10 + id-kp-serverAuth + 2 * id-kp-clientAuth
+   extKeyUsage = 19 + id-kp-serverAuth + 2 * id-kp-clientAuth
                + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
 ~~~~~~~~~~~
 
@@ -236,16 +236,13 @@ Consequently:
 
 * A non-critical subjectAltName is encoded as 1. A critical subjectAltName is encoded as -1.
 
-* A critical basicConstraints (cA = 1) is encoded as -3 (= -(2+1)).
+* A critical basicConstraints (cA = 1) without pathLenConstraint is encoded as -2.
 
-* A non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 5 (= 3 + 2). 
+* A non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 14 (= 12 + 2). 
 
-* A non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 22 (= 10 + 4 + 8). 
+* A non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 31 (= 19 + 4 + 8). 
 
-If subjectAltName is present, the value is placed at the end of the array encoded as a byte or text string following the encoding rules for the subject field. If the array contains a single int, 'extensions' is encoded as the int instead of an array. 
-
-Thus, a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as \[-3, 5\], while a single non-critical basicConstraints (cA = 0) is encoded as 2 instead of \[2\]. A single critical subjectAltName (dNSName = "for.example") is encoded as \[-1, "for.example"\].
-
+Thus, a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as \[-2, 14\]. A single critical subjectAltName (dNSName = "for.example") is encoded as \[-1, "for.example"\].
 
 # Deployment settings {#dep-set}
 
