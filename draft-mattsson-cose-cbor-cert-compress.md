@@ -162,7 +162,7 @@ certificate = (
    issuer : [ 2* DistinguishedName ] / DistinguishedName,
    validity_notBefore: uint,
    validity_notAfter: uint,
-   subject : [ 2* DistinguishedName ] / DistinguishedName,
+   subject : [ 2* DistinguishedName ] / DistinguishedName / null,
    subjectPublicKeyInfo_algorithm : int,
    subjectPublicKeyInfo_subjectPublicKey : bytes,
    extensions : [ 2* extension ] / extension,
