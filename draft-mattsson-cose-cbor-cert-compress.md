@@ -132,7 +132,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR maps, where each AttributeType is encoded as a CBOR int and each AttributeValue is encoded as a CBOR byte string. If only a single 'RelativeDistinguishedName' is present, the array is omitted and issuer is encoded as a CBOR map. If the RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name' , the AttributeValue is encoded as a CBOR text string.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR maps, where each AttributeType is encoded as a CBOR int and each AttributeValue is encoded as a CBOR byte string. If only a single 'RelativeDistinguishedName' is present, the array is omitted and issuer is encoded as a CBOR map. If a RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name' , the AttributeValue is encoded as a CBOR text string. If the utf8String encoded 'common name' contains an  EUI-64 mapped from a 48-bit MAC address it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
 * validity. The 'notBefore' and 'notAfter' UTCTime fields are ASCII string of the form "yymmddHHMMSSZ". They are encoded as the unsigned integers using the following invertible encoding (Horner's method with different bases). The resulting integer n always fit in a 32 bit usigned integer.
 
@@ -140,7 +140,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
    Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 60, MM = ((n - SS) / 60) mod 60, etc.
 
-* subject. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR maps, where each AttributeType is encoded as a CBOR int and each AttributeValue is encoded as a CBOR byte string. If only a single 'RelativeDistinguishedName' is present, the array is omitted and issuer is encoded as a CBOR map. If the RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name' , the AttributeValue is encoded as a CBOR text string. If the utf8String encoded 'common name' contains an  EUI-64 mapped from a 48-bit MAC address it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
+* subject. The 'subject' is encoded exactly like issuer.
 
 * subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). The 'subjectPublicKey' field is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
