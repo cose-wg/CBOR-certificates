@@ -165,13 +165,15 @@ certificate = (
    subject : Name,
    subjectPublicKeyInfo_algorithm : int,
    subjectPublicKeyInfo_subjectPublicKey : bytes,
-   extensions : [ *4 int, ? text / bytes ] / int,
+   extensions : [ 2* extension ] / extension,
    signatureValue : bytes
 )
 
 Name = [ 2* RelativeDistinguishedName ] / RelativeDistinguishedName / text / bytes
 
 RelativeDistinguishedName = { + int => bytes }
+
+extension = (int, ? text / bytes) 
 ~~~~~~~~~~~
 
 The signatureValue for natively signed CBOR certificates is calculated over the CBOR sequence:
@@ -187,7 +189,7 @@ The signatureValue for natively signed CBOR certificates is calculated over the 
    subject : text / bytes,
    subjectPublicKeyInfo_algorithm : int,
    subjectPublicKeyInfo_subjectPublicKey : bytes,
-   extensions : [ *4 int, ? text / bytes ] / int
+   extensions : [ 2* extension ] / extension,
 )
 ~~~~~~~~~~~
 
