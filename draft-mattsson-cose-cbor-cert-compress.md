@@ -156,6 +156,11 @@ The following Concise Data Definition Language (CDDL) defines a group, the eleme
 
 ~~~~~~~~~~~ CDDL
 certificate = (
+   tbsCertificate,
+   signatureValue : bytes,
+)
+
+tbsCertificate = (
    type : int,
    serialNumber : bytes,
    signatureAlgorithm : int,
@@ -166,29 +171,11 @@ certificate = (
    subjectPublicKeyInfo_algorithm : int,
    subjectPublicKeyInfo_subjectPublicKey : bytes,
    extensions : [ 2* extension ] / extension,
-   signatureValue : bytes
 )
 
 DistinguishedName = { + int => bytes } / text / bytes
 
 extension = (int, ? text / bytes) 
-~~~~~~~~~~~
-
-The signatureValue for natively signed CBOR certificates is calculated over the CBOR sequence:
-
-~~~~~~~~~~~ CDDL
-(
-   type : int,
-   serialNumber : bytes,
-   signatureAlgorithm : int,
-   issuer : [ 2* DistinguishedName ] / DistinguishedName,
-   validity_notBefore: uint,
-   validity_notAfter: uint,
-   subject : [ 2* DistinguishedName ] / DistinguishedName,
-   subjectPublicKeyInfo_algorithm : int,
-   subjectPublicKeyInfo_subjectPublicKey : bytes,
-   extensions : [ 2* extension ] / extension,
-)
 ~~~~~~~~~~~
 
 The issuer map, when not only the common name is present, is built using the following indices. 
