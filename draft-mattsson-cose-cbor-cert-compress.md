@@ -128,7 +128,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * serialNumber. The 'serialNumber' field is encoded as a CBOR byte string. This allows encoding of all lengths with minimal overhead.
 
-* signatureAlgorithm. If the 'signatureAlgorithm' field is the default (ecdsa-with-SHA256) then it is encoded as null (0xf6), otherwise it is included in the signatureAlgorithm field encoded as a CBOR int (see {{iana}}).
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{iana}}).
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
@@ -142,7 +142,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subject. The 'subject' field is restricted to specifying the value of the common name. By RFC 7925 an IoT subject is identified by either an EUI-64 for clients, or by a FQDN for servers. An EUI-64 mapped from a 48-bit MAC address is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8. A FQDN is encoded as a CBOR text string.
 
-* subjectPublicKeyInfo. If the 'algorithm' field is the default (id-ecPublicKey and prime256v1) then it is encoded as null (0xf6), otherwise it is included in the subjectPublicKeyInfo_algorithm field encoded as an int (see {{iana}}). The 'subjectPublicKey' is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). The 'subjectPublicKey' field is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. This is the most compact representation of the allowed extensions. The extensions mandated to be supported by RFC 7925 is encodeded as specified in {{ext-encoding}}.
 
@@ -158,13 +158,13 @@ The following Concise Data Definition Language (CDDL) defines a group, the eleme
 certificate = (
    type : int,
    serialNumber : bytes,
-   signatureAlgorithm : int / null,
+   signatureAlgorithm : int,
    issuer : { + int => bytes } / text,
    validity_notBefore: uint,
    validity_notAfter: uint,
    subject : text / bytes,
-   subjectPublicKeyInfo_algorithm : int / null,
-   subjectPublicKey : bytes,
+   subjectPublicKeyInfo_algorithm : int,
+   subjectPublicKeyInfo_subjectPublicKey : bytes,
    extensions : [ *4 int, ? text / bytes ] / int,
    signatureValue : bytes
 )
@@ -176,16 +176,17 @@ The signatureValue for natively signed CBOR certificates is calculated over the 
 (
    type : int,
    serialNumber : bytes,
-   signatureAlgorithm : int / null,
+   signatureAlgorithm : int,
    issuer : { + int => bytes } / text,
    validity_notBefore: uint,
    validity_notAfter: uint,
    subject : text / bytes,
-   subjectPublicKeyInfo_algorithm : int / null,
-   subjectPublicKey : bytes,
+   subjectPublicKeyInfo_algorithm : int,
+   subjectPublicKeyInfo_subjectPublicKey : bytes,
    extensions : [ *4 int, ? text / bytes ] / int
 )
 ~~~~~~~~~~~
+
 The issuer map, when not only the common name is present, is built using the following indices. 
 
 ~~~~~~~~~~~
@@ -313,12 +314,13 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
 +=======+=======================================+
-|     0 | ecdsa-with-SHA384                     |
-|     1 | ecdsa-with-SHA512                     |
-|     2 | id-ecdsa-with-shake128                |
-|     3 | id-ecdsa-with-shake256                |
-|     4 | id-Ed25519                            |
-|     5 | id-Ed448                              |
+|     0 | ecdsa-with-SHA256                     |
+|     1 | ecdsa-with-SHA384                     |
+|     2 | ecdsa-with-SHA512                     |
+|     3 | id-ecdsa-with-shake128                |
+|     4 | id-ecdsa-with-shake256                |
+|     5 | id-Ed25519                            |
+|     6 | id-Ed448                              |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
@@ -332,12 +334,13 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+---------------------------------------+
 | Value | X.509 Public Key Algorithm            |
 +=======+=======================================+
-|     0 | id-ecPublicKey + prime384v1           |
-|     1 | id-ecPublicKey + prime512v1           |
-|     2 | id-X25519                             |
-|     3 | id-X448                               |
-|     4 | id-Ed25519                            |
-|     5 | id-Ed448                              |
+|     0 | id-ecPublicKey + prime256v1           |
+|     1 | id-ecPublicKey + prime384v1           |
+|     2 | id-ecPublicKey + prime512v1           |
+|     3 | id-X25519                             |
+|     4 | id-X448                               |
+|     5 | id-Ed25519                            |
+|     6 | id-Ed448                              |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
@@ -435,12 +438,12 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 (
   1,
   h'01f50d',
-  null,
+  0,
   "RFC test CA",
   721699200,
   760492800,
   h'0123456789AB',
-  null,
+  0,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba
     0080df678867845e',
   5,
@@ -468,12 +471,12 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 (
   0,
   h'01f50d',
-  null,
+  0,
   "RFC test CA",
   721699200,
   760492800,
   h'0123456789AB',
-  null,
+  0,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061
     ba0080df678867845e',
   5,
