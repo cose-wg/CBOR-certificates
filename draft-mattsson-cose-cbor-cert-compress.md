@@ -300,7 +300,7 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 |    13 | id-at-generationQualifier             |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
-{: #fig-sigalgs title="CBOR Attribute Type Registry"}
+{: #fig-attrtype title="CBOR Attribute Type Registry"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry
