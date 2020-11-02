@@ -178,24 +178,6 @@ DistinguishedName = { + int => bytes } / text / bytes
 extension = (int, ? text / bytes) 
 ~~~~~~~~~~~
 
-The issuer map, when not only the common name is present, is built using the following indices. 
-
-~~~~~~~~~~~
-+-------+-------------------------------------+
-| Index | Type                                |
-+=======+=====================================+
-|     0 | id-at-countryName                             |
-|     1 | id-at-organizationName                        |
-|     2 | id-at-organizationalUnitName                 |
-|     3 | Distinguished name qualifier        |
-|     4 | State or province name              |
-|     5 | Common name                         |
-|     6 | Serial number                       |
-+-------+-------------------------------------+
-~~~~~~~~~~~
-
-TODO - More details on how issuer is encoded into a map / text and back again. This is a compromise between compactness and complete generality.
-
 ## Encoding of Extensions {#ext-encoding}
 
 This section details the encoding of the 'extensions' field. 
