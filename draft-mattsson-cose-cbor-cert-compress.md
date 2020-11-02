@@ -211,6 +211,12 @@ Consequently:
 
 Thus, a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as \[-2, 14\]. A single critical subjectAltName (dNSName = "for.example") is encoded as \[-1, "for.example"\].
 
+# Compliance Requirements for Constrained IoT
+
+For general purpose applications, the normative requirements of {{RFC5280}} applies. This section describes the mandatory to implement algorithms and OIDs for constrained IoT application; the values of the OIDs including certificate fields and extensions, time format, attributes in distinguished names, etc.
+
+TODO: Write this section
+
 # Deployment settings {#dep-set}
 
 CBOR certificates can be deployed with legacy X.509 certificates and CA infrastructure. In order to verify the signature, the CBOR certificate is used to recreate the original X.509 data structure to be able to verify the signature.
