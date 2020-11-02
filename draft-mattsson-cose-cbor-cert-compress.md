@@ -96,14 +96,14 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and  {{RFC8742}}.
 
-RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies the CBOR encoding/compression of RFC 7925 profiled X.509 certificates based on {{X.509-IoT}}. Two variants are defined using exactly the same CBOR encoding and differing only in what is being signed: 
+RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies the CBOR encoding/compression of {{rfc7925}} profiled X.509 certificates based on {{X.509-IoT}}. Two variants are defined using exactly the same CBOR encoding and differing only in what is being signed: 
 
-* The CBOR compressed X.509 certificate, which can be decompressed into a certificate that can be verified by code compatible with RFC 7925. 
+* The CBOR compressed X.509 certificate, which can be decompressed into a certificate that can be verified by code compatible with {{rfc7925}}. 
 
-* The "natively signed" CBOR encoded certificate, which further optimizes the performance in constrained environments but is not backwards compatible with RFC 7925, see {{native-CBOR}}. 
+* The "natively signed" CBOR encoded certificate, which further optimizes the performance in constrained environments but is not backwards compatible with {{rfc7925}}, see {{native-CBOR}}. 
 
 Other work has looked at reducing the size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates: what field values (in particular for 'issuer'/'subject') are relevant for constrained IoT applications, what 
-is the potential savings that can be expected with the proposed encoding, and what is the right trade-off between compactness and generality.
+is the potential savings that can be expected with the proposed encoding, and what is the right trade-off between compactness and generality. The current version specifies a certificate encoding which can support large parts of {{rfc5280}}, and at the same time can maintain a small message size for certificates compatible with {{rfc7925}}.
 
 This document specifies COSE headers for use of the CBOR certificate encoding with COSE. The document also specifies the CBOR certificate compression algorithm for use as TLS Certificate Compression with TLS 1.3 and DTLS 1.3.
 
@@ -122,7 +122,7 @@ This section specifies the content and encoding for CBOR certificates, with the 
 
 The encoding and compression has several components including: ASN.1 DER and base64 encoding are replaced with CBOR encoding, static fields are elided, and elliptic curve points are compressed. The X.509 fields and their CBOR encodings are listed below. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}.
 
-CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
+CBOR certificates are defined in terms of {{rfc7925}} profiled X.509 certificates:
 
 * version. The 'version' field is known (fixed to v3), and is omitted in the CBOR encoding.
 
@@ -144,7 +144,7 @@ CBOR certificates are defined in terms of RFC 7925 profiled X.509 certificates:
 
 * subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). The 'subjectPublicKey' field is encoded as a CBOR byte string. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by RFC 7925 is encodeded as specified in {{ext-encoding}}.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{rfc7925}} is encodeded as specified in {{ext-encoding}}.
 
 * signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
@@ -180,7 +180,7 @@ extension = (int, ? text / bytes)
 
 ## Encoding of Extensions {#ext-encoding}
 
-NOTE: The discussions in the COSE WG seems to indicate that a much larger set of extensions should be supported. This will likely result in a completly different encoding than the one below, which is very RFC 7925 focused.
+NOTE: The discussions in the COSE WG seems to indicate that a much larger set of extensions should be supported. This will likely result in a completly different encoding than the one below, which is very {{rfc7925}} focused.
 
 This section details the encoding of the 'extensions' field. Each extension is represented with an int. Critical extensions are encoded with a negative sign. The boolean values (digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding. If the array contains a single int, 'extensions' is encoded as the int instead of an array.  pathLenConstraint is limited to a max value of 10. If subjectAltName is present, the value is placed after the int the end of the array encoded as a byte or text string following the encoding rules for the subject field.
 
@@ -229,7 +229,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 endcoding more compact. The zlib number was calculated with zlib-flate.
+The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{rfc7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 endcoding more compact. The zlib number was calculated with zlib-flate.
 
 ~~~~~~~~~~~
 zlib-flate -compress < cert.der > cert.compressed
@@ -252,7 +252,7 @@ The difference between CBOR compressed X.509 certificate and natively signed CBO
 Natively signed CBOR certificates can be applied in devices that are only required to authenticate to natively signed CBOR certificate compatible servers.
 This is not a major restriction for many IoT deployments, where the parties issuing and verifying certificates can be a restricted ecosystem which not necessarily involves public CAs.
 
-CBOR compressed X.509 certificates provides an intermediate step between RFC 7925 profiled X.509 certificates and natively signed CBOR certificates: An implementation of CBOR compressed X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for natively signed CBOR certificates.
+CBOR compressed X.509 certificates provides an intermediate step between {{rfc7925}} profiled X.509 certificates and natively signed CBOR certificates: An implementation of CBOR compressed X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for natively signed CBOR certificates.
 
 
 # Security Considerations  {#sec-cons}
@@ -383,7 +383,7 @@ This document registers the following entry in the "Certificate Compression Algo
 
 ## Example X.509 Certificate
 
-Example of RFC 7925 profiled X.509 certificate parsed with OpenSSL.
+Example of {{rfc7925}} profiled X.509 certificate parsed with OpenSSL.
 
 ~~~~~~~~~~~
 Certificate:
