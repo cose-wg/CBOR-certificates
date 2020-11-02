@@ -184,9 +184,9 @@ The issuer map, when not only the common name is present, is built using the fol
 +-------+-------------------------------------+
 | Index | Type                                |
 +=======+=====================================+
-|     0 | Country                             |
-|     1 | Organization                        |
-|     2 | Organizational unit                 |
+|     0 | id-at-countryName                             |
+|     1 | id-at-organizationName                        |
+|     2 | id-at-organizationalUnitName                 |
 |     3 | Distinguished name qualifier        |
 |     4 | State or province name              |
 |     5 | Common name                         |
@@ -292,6 +292,33 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="CBOR Certificate Types"}
+{: artwork-align="center"}
+
+## CBOR Attribute Type Registry
+
+IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+---------------------------------------+
+| Value | X.509 Attribute Type                  |
++=======+=======================================+
+|     0 | id-at-countryName                     |
+|     1 | id-at-organizationName                |
+|     2 | id-at-organizationalUnitName          |
+|     3 | id-at-dnQualifier                     |
+|     4 | id-at-stateOrProvinceName             |
+|     5 | id-at-commonName                      |
+|     6 | id-at-serialNumber                    |
+|     7 | id-at-localityName                    |
+|     8 | id-at-title                           |
+|     9 | id-at-surname                         |
+|    10 | id-at-givenName                       |
+|    11 | id-at-initials                        |
+|    12 | id-at-pseudonym                       |
+|    13 | id-at-generationQualifier             |
++-------+---------------------------------------+
+~~~~~~~~~~~
+{: #fig-sigalgs title="CBOR Attribute Type Registry"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry
