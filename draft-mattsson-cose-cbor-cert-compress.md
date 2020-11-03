@@ -163,7 +163,7 @@ Certificate = (
 TBSCertificate = (
    type : int,
    serialNumber : bytes,
-   signatureAlgorithm : int,
+   issuerSignatureAlgorithm : int,
    issuer : [ 2* DistinguishedName ] / DistinguishedName,
    validityNotBefore: uint,
    validityNotAfter: uint,
