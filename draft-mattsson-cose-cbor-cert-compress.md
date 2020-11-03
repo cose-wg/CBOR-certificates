@@ -155,27 +155,27 @@ In addition to the above fields present in X.509, the CBOR encoding introduces a
 The following Concise Data Definition Language (CDDL) defines certificate and tbsCertificate as groups, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
-certificate = (
-   tbsCertificate,
+Certificate = (
+   tbsCertificate : TBSCertificate,
    signatureValue : bytes,
 )
 
-tbsCertificate = (
+TBSCertificate = (
    type : int,
    serialNumber : bytes,
    signatureAlgorithm : int,
    issuer : [ 2* DistinguishedName ] / DistinguishedName,
-   validity_notBefore: uint,
-   validity_notAfter: uint,
+   validityNotBefore: uint,
+   validityNotAfter: uint,
    subject : [ 2* DistinguishedName ] / DistinguishedName,
-   subjectPublicKeyInfo_algorithm : int,
-   subjectPublicKeyInfo_subjectPublicKey : bytes,
-   extensions : [ 2* extension ] / extension,
+   subjectPublicKeyAlgorithm : int,
+   subjectPublicKey : bytes,
+   extensions : [ 2* Extension ] / Extension,
 )
 
 DistinguishedName = { + int => bytes } / text / bytes
 
-extension = (int, ? text / bytes) 
+Extension = (int, ? text / bytes) 
 ~~~~~~~~~~~
 
 ## Encoding of Extensions {#ext-encoding}
