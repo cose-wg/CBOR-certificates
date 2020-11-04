@@ -383,24 +383,24 @@ This document registers the following entries in the "COSE Header Parameters" re
 +-----------+-------+----------------+---------------------+
 | Name      | Label | Value Type     | Description         |
 +===========+=======+================+=====================+
-| CBORchain | TBD1  | COSE_CBOR_Cert | An ordered chain of |
+| CBORchain |  TBD1 | COSE_CBOR_Cert | An ordered chain of |
 |           |       |                | CBOR certificates   |
 +-----------+-------+----------------+---------------------+
-| CBORu     | TBD2  | uri            | URI pointing to a   |
+| CBORu     |  TBD2 | uri            | URI pointing to a   |
 |           |       |                | CBOR certificate    |
 +-----------+-------+----------------+---------------------+
 ~~~~~~~~~~~
 
-## TLS Certificate Compression Algorithm IDs Registry
+## TLS Certificate Types Registry
 
-This document registers the following entry in the "Certificate Compression Algorithm IDs" registry under the "Transport Layer Security (TLS) Extensions" heading.
+This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading.
 
 ~~~~~~~~~~~
-+------------------+------------------------------+
-| Algorithm Number | Description                  |
-+==================+==============================+
-| TBD3             | CBOR Certificate             |
-+------------------+------------------------------+
++-------+------------------+-------------+---------+
+| Value | Name             | Recommended | Comment |
++=======+==================+-------------+---------+
+|  TBD3 | CBOR Certificate |           Y |         |         
++-------+------------------+-------------+---------+
 ~~~~~~~~~~~
 
 --- back
