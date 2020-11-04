@@ -398,7 +398,7 @@ This document registers the following entry in the "TLS Certificate Types" regis
 ~~~~~~~~~~~
 +-------+------------------+-------------+---------+
 | Value | Name             | Recommended | Comment |
-+=======+==================+-------------+---------+
++=======+==================+=============+=========+
 |  TBD3 | CBOR Certificate |           Y |         |         
 +-------+------------------+-------------+---------+
 ~~~~~~~~~~~
