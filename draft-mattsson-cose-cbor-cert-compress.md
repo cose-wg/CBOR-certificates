@@ -128,7 +128,7 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string. This allows encoding of all lengths with minimal overhead.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{iana}}).
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{iana}}). Algorithms with parameters are not supported. Note that some RSA signature algorithms use parameters = NULL instead of omitting parameters.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
@@ -144,7 +144,7 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}} and are therefore much shorter.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). Algorithms with parameters are not supported with the exception of id-ecPublicKey where the namedCurve parameter is encoded in the CBOR int. Note that some RSA signature algorithms use parameters = NULL instead of omitting parameters. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}} and are therefore much shorter.
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{RFC7925}} is encodeded as specified in {{ext-encoding}}.
 
