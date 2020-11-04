@@ -175,7 +175,7 @@ TBSCertificate = (
    extensions : [ 2* Extension ] / Extension,
 )
 
-DistinguishedName = { + int => bytes } / text / bytes
+DistinguishedName = { + int => text } / text / bytes
 
 Extension = (int, ? text / bytes) 
 ~~~~~~~~~~~
