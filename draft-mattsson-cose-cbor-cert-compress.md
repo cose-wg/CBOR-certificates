@@ -132,7 +132,7 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR maps, where each AttributeTypeAndValue is encoded as a (CBOR int, CBOR byte string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. If only a single 'RelativeDistinguishedName' is present, the array is omitted and issuer is encoded as a CBOR map. If a RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name', the AttributeValue is encoded as a CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR maps, where each AttributeTypeAndValue is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. If exacly one 'RelativeDistinguishedName' is present, the array is omitted and issuer is encoded as a CBOR map. If a RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name', the AttributeValue is encoded as a CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
 * validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
@@ -166,10 +166,10 @@ TBSCertificate = (
    type : int,
    serialNumber : bytes,
    issuerSignatureAlgorithm : int,
-   issuer : [ 2* DistinguishedName ] / DistinguishedName,
+   issuer : [ * DistinguishedName ] / DistinguishedName,
    validityNotBefore: bytes,
    validityNotAfter: bytes,
-   subject : [ 2* DistinguishedName ] / DistinguishedName,
+   subject : [ * DistinguishedName ] / DistinguishedName,
    subjectPublicKeyAlgorithm : int,
    subjectPublicKey : bytes,
    extensions : [ 2* Extension ] / Extension,
