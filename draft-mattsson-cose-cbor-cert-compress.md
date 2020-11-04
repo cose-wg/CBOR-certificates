@@ -148,7 +148,7 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{RFC7925}} is encodeded as specified in {{ext-encoding}}.
 
-* signatureValue. Since the signature algorithm and resulting signature length are known, padding and extra length fields which are present in the ASN.1 encoding are omitted and the 'signatureValue' field is encoded as a CBOR byte string. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
+* signatureValue. The 'signatureValue' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. ECDSA Signatures are compressed (padding and extra length fields which are present in the ASN.1 encoding are omitted) and are therefore much shorter. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
 In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
