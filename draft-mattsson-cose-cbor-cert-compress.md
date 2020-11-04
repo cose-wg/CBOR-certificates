@@ -134,11 +134,13 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR maps, where each AttributeTypeAndValue is encoded as a (CBOR int, CBOR byte string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. If only a single 'RelativeDistinguishedName' is present, the array is omitted and issuer is encoded as a CBOR map. If a RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name', the AttributeValue is encoded as a CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
-* validity. The 'notBefore' and 'notAfter' UTCTime fields are ASCII string of the form "yymmddHHMMSSZ". They are encoded as the unsigned integers using the following invertible encoding (Horner's method with different bases). The resulting integer n always fit in a 32 bit usigned integer.
+* validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
-   n = SS + 60 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yy))))
+   n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yy))))
+   
+   n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yyyy))))
 
-   Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 60, MM = ((n - SS) / 60) mod 60, etc.
+   They are encoded as a byte string, which is interpreted as an unsigned integer n in network byte order. UTCTime and GeneralizedTime are encoded as a byte strings of length 4 and 5 respectivly. Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
 
 * subject. The 'subject' is encoded exactly like issuer.
 
@@ -165,8 +167,8 @@ TBSCertificate = (
    serialNumber : bytes,
    issuerSignatureAlgorithm : int,
    issuer : [ 2* DistinguishedName ] / DistinguishedName,
-   validityNotBefore: uint,
-   validityNotAfter: uint,
+   validityNotBefore: bytes,
+   validityNotAfter: bytes,
    subject : [ 2* DistinguishedName ] / DistinguishedName,
    subjectPublicKeyAlgorithm : int,
    subjectPublicKey : bytes,
