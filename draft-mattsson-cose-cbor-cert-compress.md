@@ -317,13 +317,33 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
 +=======+=======================================+
-|     0 | ecdsa-with-SHA256                     |
-|     1 | ecdsa-with-SHA384                     |
-|     2 | ecdsa-with-SHA512                     |
-|     3 | id-ecdsa-with-shake128                |
-|     4 | id-ecdsa-with-shake256                |
-|     5 | id-Ed25519                            |
-|     6 | id-Ed448                              |
+|   -24 | sha-1WithRSAEncryption                |
+|   -23 | sha224WithRSAEncryption               |
+|   -22 | sha256WithRSAEncryption               |
+|   -21 | sha384WithRSAEncryption               |
+|   -20 | sha512WithRSAEncryption               |
+|   -19 | id-rsassa-pkcs1-v1_5-with-sha3-224    |
+|   -18 | id-rsassa-pkcs1-v1_5-with-sha3-256    |
+|   -17 | id-rsassa-pkcs1-v1_5-with-sha3-384    |
+|   -16 | id-rsassa-pkcs1-v1_5-with-sha3-512    |
+|   -15 | id-RSASSA-PSS-SHAKE128                |
+|   -14 | id-RSASSA-PSS-SHAKE256                |  
+|   -13 | ecdsa-with-SHA1                       |
+|   -12 | ecdsa-with-SHA224                     |
+|   -11 | ecdsa-with-SHA256                     |
+|   -10 | ecdsa-with-SHA384                     |
+|    -9 | ecdsa-with-SHA512                     |
+|    -8 | id-ecdsa-with-sha3-224                |
+|    -7 | id-ecdsa-with-sha3-256                |
+|    -6 | id-ecdsa-with-sha3-384                |
+|    -5 | id-ecdsa-with-sha3-512                |
+|    -4 | id-ecdsa-with-shake128                |
+|    -3 | id-ecdsa-with-shake256                |
+|    -2 | id-Ed25519                            |
+|    -1 | id-Ed448                              |
+|     0 | id-alg-hss-lms-hashsig                |
+|     1 | id-alg-xmss                           |
+|     2 | id-alg-xmssmt                         |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
@@ -337,13 +357,17 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+---------------------------------------+
 | Value | X.509 Public Key Algorithm            |
 +=======+=======================================+
-|     0 | id-ecPublicKey + prime256v1           |
-|     1 | id-ecPublicKey + prime384v1           |
-|     2 | id-ecPublicKey + prime512v1           |
-|     3 | id-X25519                             |
-|     4 | id-X448                               |
-|     5 | id-Ed25519                            |
-|     6 | id-Ed448                              |
+|   -24 | rsaEncryption                         |
+|   -23 | id-ecPublicKey + secp256r1            |
+|   -22 | id-ecPublicKey + secp384r1            |
+|   -21 | id-ecPublicKey + secp521r1            |
+|   -20 | id-X25519                             |
+|   -19 | id-X448                               |
+|   -18 | id-Ed25519                            |
+|   -17 | id-Ed448                              |  
+|   -16 | id-alg-hss-lms-hashsig                |
+|   -15 | id-alg-xmss                           |
+|   -14 | id-alg-xmssmt                         |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
