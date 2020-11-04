@@ -1,5 +1,5 @@
 ---
-title: "CBOR Profile of X.509 Certificates"
+title: "CBOR Encoding of X.509 Certificates (CBOR Certificates)"
 docname: draft-mattsson-cose-cbor-cert-compress-latest
 
 ipr: trust200902
@@ -83,8 +83,7 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding/compression of RFC 7925 profiled certificates. By using the fact that the certificates are profiled, the CBOR certificate compression algorithms can in many cases compress RFC 7925 profiled certificates with over 50%.
-This document also specifies COSE headers for CBOR encoded certificates as well as the use of the CBOR certificate compression algorithm with TLS Certificate Compression in TLS 1.3 and DTLS 1.3.
+This document specifies a CBOR encoding/compression of X.509 Certificates. The resulting certificates are called "CBOR certificates". The CBOR encoding supports a large subset of RFC 5280, while at the same time producing very small sizes for certificates compatible with RFC 7925. When uses to compress DER encoded X.509 certificates, the CBOR encoding can in many cases compress RFC 7925 profiled certificates with over 50%. The document also specifies COSE headers for CBOR certificates as well as a TLS certificate type for CBOR certificates.
 
 --- middle
 
@@ -96,23 +95,21 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and  {{RFC8742}}.
 
-RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies the CBOR encoding/compression of {{RFC7925}} profiled X.509 certificates based on {{X.509-IoT}}. Two variants are defined using exactly the same CBOR encoding and differing only in what is being signed: 
+RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies a CBOR encoding/compression which can support large parts of {{RFC5280}} based on {{X.509-IoT}}. The encoding support all {{RFC7925}} profiled X.509 certificates. Two variants are defined using exactly the same CBOR encoding and differing only in what is being signed: 
 
-* The CBOR compressed X.509 certificate, which can be decompressed into a certificate that can be verified by code compatible with {{RFC7925}}. 
+* CBOR compression of DER ecoded X.509 certificates {{RFC5280}}, which can be decompressed into the original DER ecoded X.509 certificate.
 
-* The "natively signed" CBOR encoded certificate, which further optimizes the performance in constrained environments but is not backwards compatible with {{RFC7925}}, see {{native-CBOR}}. 
+* Natively signed CBOR certificates, which further optimizes the performance in constrained environments but is not backwards compatible with {{RFC5280}}, see {{native-CBOR}}. 
 
-Other work has looked at reducing the size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates: what field values (in particular for 'issuer'/'subject') are relevant for constrained IoT applications, what 
-is the potential savings that can be expected with the proposed encoding, and what is the right trade-off between compactness and generality. The current version specifies a certificate encoding which can support large parts of {{RFC5280}}, and at the same time can maintain a small message size for certificates compatible with {{RFC7925}}.
+This document specifies COSE headers for use of the CBOR certificates with COSE, see {{cose}}. The document also specifies a TLS certificate type for use of the CBOR certificates with TLS (with or without additional TLS certificate compression), see {{tls}}.
 
-This document specifies COSE headers for use of the CBOR certificate encoding with COSE. The document also specifies the CBOR certificate compression algorithm for use as TLS Certificate Compression with TLS 1.3 and DTLS 1.3.
-
+EDITOR'S NOTE: Other work has looked at reducing the size of X.509 certificates. The purpose of this document is to stimulate a discussion on CBOR based certificates: what field values (in particular for 'issuer'/'subject') are relevant for constrained IoT applications, what is the potential savings that can be expected with the proposed encoding, and what is the right trade-off between compactness and generality.
 
 # Notational Conventions
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This specification makes use of the terminology in {{RFC7228}}.
+This specification makes use of the terminology in {{RFC5280}}, {{RFC7049}}, {{RFC7228}}, and {{RFC8610}}.
 
 # CBOR Encoding {#encoding}
 
@@ -375,7 +372,7 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 {: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
 {: artwork-align="center"}
 
-## COSE Header Parameters Registry
+## COSE Header Parameters Registry {#cose}
 
 This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5chain and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded.
 
@@ -391,7 +388,7 @@ This document registers the following entries in the "COSE Header Parameters" re
 +-----------+-------+----------------+---------------------+
 ~~~~~~~~~~~
 
-## TLS Certificate Types Registry
+## TLS Certificate Types Registry {#tls}
 
 This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading.
 
