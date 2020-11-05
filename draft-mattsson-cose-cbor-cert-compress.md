@@ -524,9 +524,7 @@ DFB1577D9A35A295A8742E794258B76968C097F85542322A07960199C13CC022
 
 # X.509 Certificate Profile, ASN.1 {#appB}
 
-NOTE: The ASN.1 below is not up to date with the rest of the specification
-
-TODO - This ASN.1 profile should probably be in a document that updates RFC 7925.
+EDITOR'S NOTE: The ASN.1 below is not up to date with the rest of the specification. The below ASN.1 for RFC 7925 profile should be in draft-ietf-uta-tls13-iot-profile instead.If CBOR Certificates support a large subset of RFC 5280, we should probably not duplicate all the ASN.1 in that document. Should be discussed what kind and how much (if any) ASN.1 this document needs. If possible, one option would be to have ASN.1 for the restrictions compared to RFC 5280.
 
 ~~~~~~~~~~~ ASN.1
 IOTCertificate DEFINITIONS EXPLICIT TAGS ::= BEGIN
