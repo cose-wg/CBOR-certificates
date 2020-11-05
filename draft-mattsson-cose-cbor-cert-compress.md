@@ -123,7 +123,7 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * version. The 'version' field is known (fixed to v3), and is omitted in the CBOR encoding.
 
-* serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string. This allows encoding of all lengths with minimal overhead.
+* serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string. Any leading 0x00 byte (to indicate that the number is not negative) is omitted.
 
 * signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{iana}}). Algorithms with parameters are not supported. Note that some RSA signature algorithms use parameters = NULL instead of omitting parameters.
 
