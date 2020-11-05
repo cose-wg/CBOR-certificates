@@ -125,7 +125,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string. Any leading 0x00 byte (to indicate that the number is not negative) is omitted.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{iana}}). Algorithms with parameters are not supported. Note that some RSA signature algorithms use parameters = NULL instead of omitting parameters.
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{sigalg}}). Algorithms with parameters are not supported. Note that some RSA algorithms use parameters = NULL instead of omitting parameters.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
@@ -141,7 +141,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). Algorithms with parameters are not supported with the exception of id-ecPublicKey where the namedCurve parameter is encoded in the CBOR int. Note that some RSA signature algorithms use parameters = NULL instead of omitting parameters. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}} and are therefore much shorter.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{pkalg}}). Algorithms with parameters are not supported with the exception of id-ecPublicKey where the namedCurve parameter is encoded in the CBOR int. Note that some RSA algorithms use parameters = NULL instead of omitting parameters. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}} and are therefore much shorter.
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{RFC7925}} is encodeded as specified in {{ext-encoding}}. If exacly one 'Extension' is present, the array is omitted.
 
@@ -151,10 +151,10 @@ In addition to the above fields present in X.509, the CBOR encoding introduces a
 
 * type. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
 
-The following Concise Data Definition Language (CDDL) defines certificate and tbsCertificate as groups, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
+The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate as groups, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
-Certificate = (
+CBORCertificate = (
    tbsCertificate : TBSCertificate,
    signatureValue : bytes,
 )
@@ -169,12 +169,12 @@ TBSCertificate = (
    subject : [ * DistinguishedName ] / DistinguishedName,
    subjectPublicKeyAlgorithm : int,
    subjectPublicKey : bytes,
-   extensions : [ * Extension ] / Extension,
+   extensions : [ * Extension ] / int,
 )
 
 DistinguishedName = { + int => text } / text / bytes
 
-Extension = (int, ? text / bytes) 
+Extension = (int, ? bytes) 
 ~~~~~~~~~~~
 
 ## Encoding of Extensions {#ext-encoding}
@@ -281,7 +281,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 {: #fig-types title="CBOR Certificate Types"}
 {: artwork-align="center"}
 
-## CBOR Attribute Type Registry
+## CBOR Attribute Type Registry {#atttype}
 
 IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
 
@@ -308,7 +308,7 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 {: #fig-attrtype title="CBOR Attribute Type Registry"}
 {: artwork-align="center"}
 
-## CBOR Certificate Signature Algorithms Registry
+## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
 IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
 
@@ -348,7 +348,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
 {: artwork-align="center"}
 
-## CBOR Certificate Public Key Algorithms Registry
+## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
 IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
 
