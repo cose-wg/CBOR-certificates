@@ -143,7 +143,7 @@ CBOR certificates are defined in terms of {{RFC7925}} profiled X.509 certificate
 
 * subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{iana}}). Algorithms with parameters are not supported with the exception of id-ecPublicKey where the namedCurve parameter is encoded in the CBOR int. Note that some RSA signature algorithms use parameters = NULL instead of omitting parameters. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}} and are therefore much shorter.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{RFC7925}} is encodeded as specified in {{ext-encoding}}.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{RFC7925}} is encodeded as specified in {{ext-encoding}}. If exacly one 'Extension' is present, the array is omitted.
 
 * signatureValue. The 'signatureValue' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. ECDSA Signatures are compressed (padding and extra length fields which are present in the ASN.1 encoding are omitted) and are therefore much shorter. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
@@ -169,7 +169,7 @@ TBSCertificate = (
    subject : [ * DistinguishedName ] / DistinguishedName,
    subjectPublicKeyAlgorithm : int,
    subjectPublicKey : bytes,
-   extensions : [ 2* Extension ] / Extension,
+   extensions : [ * Extension ] / Extension,
 )
 
 DistinguishedName = { + int => text } / text / bytes
