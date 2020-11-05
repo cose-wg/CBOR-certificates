@@ -149,7 +149,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
-* type. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{iana}}.
+* type. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{type}}.
 
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate as groups, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
@@ -266,7 +266,7 @@ The mechanism in this draft does not reveal any additional information compared 
 
 For all items, the 'Reference' field points to this document.
 
-## CBOR Certificate Types Registry
+## CBOR Certificate Types Registry {#type}
 
 IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
 
