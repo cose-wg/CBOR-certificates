@@ -113,7 +113,7 @@ This specification makes use of the terminology in {{RFC5280}}, {{RFC7049}}, {{R
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation of the certificate profile defined in {{RFC7925}}. The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC7925}}. The corresponding ASN.1 schema is given in {{appA}}.
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation of the certificate profile defined in {{RFC7925}}. The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. When used as for compression of an existing X.509 certificate, the encoding only works on canonical encoded certificates. The encoding is known to work with DER, but might work with other canonical encodings. The compression does not work for BER encoded certificates. 
 
 ## Message Fields
 
