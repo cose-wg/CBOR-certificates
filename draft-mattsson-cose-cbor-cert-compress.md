@@ -163,16 +163,18 @@ TBSCertificate = (
    type : int,
    serialNumber : bytes,
    issuerSignatureAlgorithm : int,
-   issuer : [ * DistinguishedName ] / DistinguishedName,
+   issuer : Name,
    validityNotBefore: bytes,
    validityNotAfter: bytes,
-   subject : [ * DistinguishedName ] / DistinguishedName,
+   subject : Name,
    subjectPublicKeyAlgorithm : int,
    subjectPublicKey : bytes,
    extensions : [ * Extension ] / int,
 )
 
-DistinguishedName = { + int => text } / text / bytes
+Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
+
+RelativeDistinguishedName = { + int => text } / text / bytes
 
 Extension = (int, ? bytes) 
 ~~~~~~~~~~~
