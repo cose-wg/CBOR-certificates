@@ -394,6 +394,8 @@ This document registers the following entries in the "COSE Header Parameters" re
 
 This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading.
 
+EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. When COSE WG has adopted work on CBOR certificates, it could be presented in the TLS WG. The TLS WG might e.g. want a separate draft.
+
 ~~~~~~~~~~~
 +-------+------------------+-------------+---------+
 | Value | Name             | Recommended | Comment |
