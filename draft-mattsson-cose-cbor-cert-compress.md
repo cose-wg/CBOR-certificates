@@ -153,11 +153,13 @@ In addition to the above fields present in X.509, the CBOR encoding introduces a
 
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate as groups, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
+
 ~~~~~~~~~~~ CDDL
-CBORCertificate = (
+; This defines an array, the elements of which are to be used in a CBOR Sequence:
+CBORCertificate = [
    tbsCertificate : TBSCertificate,
    signatureValue : bytes,
-)
+]
 
 TBSCertificate = (
    type : int,
