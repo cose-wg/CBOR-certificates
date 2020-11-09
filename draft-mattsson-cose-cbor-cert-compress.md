@@ -472,7 +472,8 @@ DC7F5C6D1D42C95647F061BA0080DF678867845EE9A69FD4893149DAE3D3B154
 The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
 ~~~~~~~~~~~
-(
+/This defines an array, the elements of which are to be used in a CBOR Sequence:/
+[
   1,
   h'01f50d',
   -11,
@@ -487,7 +488,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3
     C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA711717
     34C675C5332B2AF1CB733810A1FC'
-)
+]
 ~~~~~~~~~~~
 
 The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
@@ -505,7 +506,8 @@ A2E6A3C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA71171734C675C5
 The corresponding natively signed CBOR certificate in CBOR diagnostic format is identical except for type and signatureValue.
 
 ~~~~~~~~~~~
-(
+/This defines an array, the elements of which are to be used in a CBOR Sequence:/
+[
   0,
   h'01f50d',
   -11,
@@ -520,7 +522,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1
     577D9A35A295A8742E794258B76968C097F85542322A0796
     0199C13CC0220A9BC729EF2ECA638CFE'
-)
+]
 ~~~~~~~~~~~
 
 The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
