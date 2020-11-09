@@ -320,7 +320,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
 +=======+=======================================+
-|   -24 | sha-1WithRSAEncryption                |
+|   -24 | sha1WithRSAEncryption                |
 |   -23 | sha224WithRSAEncryption               |
 |   -22 | sha256WithRSAEncryption               |
 |   -21 | sha384WithRSAEncryption               |
