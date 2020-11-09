@@ -176,7 +176,12 @@ TBSCertificate = (
 
 Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 
-RelativeDistinguishedName = { + int => text } / text / bytes
+RelativeDistinguishedName = [ + AttributeTypeAndValue ] / text / bytes
+
+AttributeTypeAndValue = (
+   type: int,
+   value: text,
+)
 
 Extension = (int, ? bytes) 
 ~~~~~~~~~~~
