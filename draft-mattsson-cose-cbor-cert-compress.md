@@ -115,7 +115,7 @@ This section specifies the content and encoding for CBOR certificates, with the 
 
 ## Message Fields
 
-In the CBOR encoding, static fields are elided, and elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and reduntant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. The X.509 fields and their CBOR encodings are listed below.
+In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and reduntant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. The X.509 fields and their CBOR encodings are listed below.
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
