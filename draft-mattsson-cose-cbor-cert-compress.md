@@ -293,20 +293,20 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 +-------+---------------------------------------+
 | Value | X.509 Attribute Type                  |
 +=======+=======================================+
-|     1 | id-at-countryName                     |
-|     2 | id-at-organizationName                |
-|     3 | id-at-organizationalUnitName          |
-|     4 | id-at-dnQualifier                     |
-|     5 | id-at-stateOrProvinceName             |
-|     6 | id-at-commonName                      |
-|     7 | id-at-serialNumber                    |
-|     8 | id-at-localityName                    |
+|     1 | id-at-commonName                      |
+|     2 | id-at-surname                         |
+|     3 | id-at-serialNumber                    |
+|     4 | id-at-countryName                     |
+|     5 | id-at-localityName                    |
+|     6 | id-at-stateOrProvinceName             |
+|     7 | id-at-organizationName                |
+|     8 | id-at-organizationalUnitName          |
 |     9 | id-at-title                           |
-|    10 | id-at-surname                         |
-|    11 | id-at-givenName                       |
-|    12 | id-at-initials                        |
-|    13 | id-at-pseudonym                       |
-|    14 | id-at-generationQualifier             |
+|    10 | id-at-givenName                       |
+|    11 | id-at-initials                        |
+|    12 | id-at-generationQualifier             |
+|    13 | id-at-dnQualifier                     |
+|    14 | id-at-pseudonym                       |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Attribute Type Registry"}
