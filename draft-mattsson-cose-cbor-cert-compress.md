@@ -121,13 +121,13 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * version. The 'version' field is known (fixed to v3), and is omitted in the CBOR encoding.
 
-* serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string. Any leading 0x00 byte (to indicate that the number is not negative) is omitted.
+* serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is omitted.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{sigalg}}). Algorithms with parameters are not supported except ECDSA with named curves and the RSA algorithms that use parameters = NULL instead of omitting parameters.
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int 'issuerSignatureAlgorithm' (see {{sigalg}}). Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of AttributeTypeAndValues, where each AttributeTypeAndValue is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for utf8String, negative for printableString. If exacly one 'RelativeDistinguishedName' is present, the outer array is omitted and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single AttributeTypeAndValue containing an utf8String encoded 'common name', the int is omitted and the AttributeTypeAndValue is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for utf8String, negative for printableString. If exacly one 'RelativeDistinguishedName' is present, the outer array is omitted and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
 * validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
@@ -137,17 +137,17 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as a CBOR int (see {{pkalg}}). Algorithms with parameters are not supported with the exception of id-ecPublicKey where the namedCurve parameter is encoded in the CBOR int. Note that some RSA algorithms use parameters = NULL instead of omitting parameters. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}} and are therefore much shorter.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}). Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the unused bits byte is omitted. Public keys of type id-ecPublicKey are are point compressed as defined in Section 2.3.3 of {{SECG}}.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is represented with an int. The extensions mandated to be supported by {{RFC7925}} is encodeded as specified in {{ext-encoding}}. If exacly one 'Extension' is present, the array is omitted.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR byte string. If the arrau contains exacly one int, the array is omitted. Extensions are encodeded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
 
-* signatureValue. The 'signatureValue' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. ECDSA Signatures are compressed (padding and extra length fields which are present in the ASN.1 encoding are omitted) and are therefore much shorter. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
+* signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. ECDSA Signatures are compressed (padding and extra length fields which are present in the ASN.1 encoding are omitted) and are therefore much shorter. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
 
 In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
-* type. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (type = 0) or a CBOR compressed X.509 certificates (type = 1), see {{type}}.
+* cborCertificateType. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (cborCertificateType = 0) or a CBOR compressed X.509 certificates (cborCertificateType = 1), see {{type}}.
 
-The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate as groups, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
+The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
 
 ~~~~~~~~~~~ CDDL
