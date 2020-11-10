@@ -131,10 +131,8 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
-   n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yy))))
+   n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * (yy)yy))))
    
-   n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * yyyy))))
-
    They are encoded as a byte string, which is interpreted as an unsigned integer n in network byte order. UTCTime and GeneralizedTime are encoded as a byte strings of length 4 and 5 respectivly. Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
 
 * subject. The 'subject' is encoded exactly like issuer.
