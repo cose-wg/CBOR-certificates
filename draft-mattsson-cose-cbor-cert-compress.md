@@ -603,3 +603,8 @@ id-at-commonName    OBJECT IDENTIFIER   ::=
 
 END
 ~~~~~~~~~~~
+
+# Acknowledgments
+{: numbered="no"}
+
+The authors want to thank Russ Housley, Ilari Liusvaara, Michael Richardson, Jim Schaad for reviewing and commenting on intermediate versions of the draft.
