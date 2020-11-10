@@ -276,7 +276,7 @@ For all items, the 'Reference' field points to this document.
 
 ## CBOR Certificate Types Registry {#type}
 
-IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". The registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -314,6 +314,38 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Attribute Type Registry"}
+{: artwork-align="center"}
+
+## CBOR Extension Type Registry {#extype}
+
+IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer and the other columns are text strings. Only positive values can be regisrered. For values in the inteval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+---------------------------------------+
+| Value | X.509 Extension Type                  |
++=======+=======================================+
+|     1 | id-ce-keyUsage                        |
+|     2 | id-ce-subjectAltName                  |
+|     3 | id-ce-basicConstraints                |
+|     4 | id-ce-extKeyUsage                     |
+|     5 | id-ce-authorityKeyIdentifier          |
+|     6 | id-ce-subjectKeyIdentifier            |
+|     7 | id-ce-certificatePolicies             |
+|     8 | id-ce-nameConstraints                 |
+|     9 | id-ce-policyConstraints               |
+|    10 | id-ce-inhibitAnyPolicy                |
+|    11 | id-ce-authorityKeyIdentifier          |
+|    12 | id-ce-policyMappings                  |
+|    13 | id-ce-issuerAltName                   |
+|    14 | id-ce-subjectDirectoryAttributes      |
+|    15 | id-ce-cRLDistributionPoints           |
+|    16 | id-ce-freshestCRL                     |
+|    17 | id-pkix                               |
+|    18 | id-pe-authorityInfoAccess             |
+|    19 | id-pe-subjectInfoAccess               |
++-------+---------------------------------------+
+~~~~~~~~~~~
+{: #fig-attrtype title="CBOR Extension Type Registry"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
@@ -384,18 +416,22 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 
 ## COSE Header Parameters Registry {#cose}
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5chain and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded.
-
-EDITOR'S NOTE: SHould the document register CBORbag and CBORt as well?
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5bag, x5chain, x5t, and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded.
 
 ~~~~~~~~~~~
 +-----------+-------+----------------+---------------------+
 | Name      | Label | Value Type     | Description         |
 +===========+=======+================+=====================+
-| CBORchain |  TBD1 | COSE_CBOR_Cert | An ordered chain of |
+| c5bag     |  TBD1 | COSE_CBOR_Cert | An ordered chain of |
 |           |       |                | CBOR certificates   |
 +-----------+-------+----------------+---------------------+
-| CBORu     |  TBD2 | uri            | URI pointing to a   |
+| c5chain   |  TBD2 | COSE_CBOR_Cert | An ordered chain of |
+|           |       |                | CBOR certificates   |
++-----------+-------+----------------+---------------------+
+| c5t       |  TBD3 | COSE_CertHash  | Hash of an          |
+|           |       |                | CBOR certificate    |
++-----------+-------+----------------+---------------------+
+| c5u       |  TBD4 | uri            | URI pointing to a   |
 |           |       |                | CBOR certificate    |
 +-----------+-------+----------------+---------------------+
 ~~~~~~~~~~~
