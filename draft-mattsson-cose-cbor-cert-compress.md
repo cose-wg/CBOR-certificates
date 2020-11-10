@@ -156,11 +156,11 @@ The following Concise Data Definition Language (CDDL) defines CBORCertificate an
 ; This defines an array, the elements of which are to be used in a CBOR Sequence:
 CBORCertificate = [
    TBSCertificate,
-   signatureValue : bytes,
+   issuerSignatureValue : bytes,
 ]
 
 TBSCertificate = (
-   type : int,
+   cborCertificateType : int,
    certificateSerialNumber : bytes,
    issuerSignatureAlgorithm : int,
    issuer : Name,
@@ -174,16 +174,16 @@ TBSCertificate = (
 
 Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 
-RelativeDistinguishedName = [ + AttributeTypeAndValue ] / text / bytes
+RelativeDistinguishedName = [ + Attribute ] / text / bytes
 
-AttributeTypeAndValue = (
-   type : int,
-   value : text,
+Attribute = (
+   attributeType : int,
+   attributeValue : text,
 )
 
 Extension = (
-   type : int,
-   ? value : bytes,
+   extensionType : int,
+   ? extensionValue : bytes,
 ) 
 ~~~~~~~~~~~
 
