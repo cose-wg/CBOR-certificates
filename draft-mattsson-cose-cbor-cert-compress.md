@@ -727,4 +727,4 @@ END
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Russ Housley, Ilari Liusvaara, Michael Richardson, Jim Schaad for reviewing and commenting on intermediate versions of the draft.
+The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Ilari Liusvaara, Laurence Lundblade, Thomas Peterson, Michael Richardson, Jim Schaad for reviewing and commenting on intermediate versions of the draft.
