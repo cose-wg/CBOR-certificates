@@ -320,11 +320,13 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 
 IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
 
+EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe ecdsa-with-SHA1 can probably be removed.
+
 ~~~~~~~~~~~
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
 +=======+=======================================+
-|   -24 | sha1WithRSAEncryption                |
+|   -24 | sha1WithRSAEncryption                 |
 |   -23 | sha224WithRSAEncryption               |
 |   -22 | sha256WithRSAEncryption               |
 |   -21 | sha384WithRSAEncryption               |
@@ -383,6 +385,8 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 ## COSE Header Parameters Registry {#cose}
 
 This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5chain and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded.
+
+EDITOR'S NOTE: SHould the document register CBORbag and CBORt as well?
 
 ~~~~~~~~~~~
 +-----------+-------+----------------+---------------------+
