@@ -161,11 +161,11 @@ CBORCertificate = [
 
 TBSCertificate = (
    type : int,
-   serialNumber : bytes,
+   certificateSerialNumber : bytes,
    issuerSignatureAlgorithm : int,
    issuer : Name,
-   validityNotBefore: bytes,
-   validityNotAfter: bytes,
+   validityNotBefore : bytes,
+   validityNotAfter : bytes,
    subject : Name,
    subjectPublicKeyAlgorithm : int,
    subjectPublicKey : bytes,
@@ -177,11 +177,14 @@ Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 RelativeDistinguishedName = [ + AttributeTypeAndValue ] / text / bytes
 
 AttributeTypeAndValue = (
-   type: int,
-   value: text,
+   type : int,
+   value : text,
 )
 
-Extension = (int, ? bytes) 
+Extension = (
+   type : int,
+   ? value : bytes,
+) 
 ~~~~~~~~~~~
 
 ## Encoding of Extensions {#ext-encoding}
