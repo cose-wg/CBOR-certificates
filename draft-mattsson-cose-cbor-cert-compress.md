@@ -155,7 +155,7 @@ The following Concise Data Definition Language (CDDL) defines CBORCertificate an
 ~~~~~~~~~~~ CDDL
 ; This defines an array, the elements of which are to be used in a CBOR Sequence:
 CBORCertificate = [
-   tbsCertificate : TBSCertificate,
+   TBSCertificate,
    signatureValue : bytes,
 ]
 
