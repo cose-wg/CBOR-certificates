@@ -440,7 +440,7 @@ This document registers the following entries in the "COSE Header Parameters" re
 
 This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading.
 
-EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. When COSE WG has adopted work on CBOR certificates, it could be presented in the TLS WG. The TLS WG might e.g. want a separate draft.
+EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. When COSE WG has adopted work on CBOR certificates, it could perhaps be presented in the TLS WG. The TLS WG might e.g. want a separate draft in the TLS WG.
 
 ~~~~~~~~~~~
 +-------+------------------+-------------+---------+
@@ -660,7 +660,7 @@ ae ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 
 The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
-TODO
+EDITOR'S NOTE: TODO
 
 # X.509 Certificate Profile, ASN.1 {#appB}
 
