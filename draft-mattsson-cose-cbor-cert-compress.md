@@ -183,7 +183,7 @@ Attribute = (
 
 Extension = (
    extensionType : int,
-   ? extensionValue : bytes,
+   ? extensionValue : any,
 ) 
 ~~~~~~~~~~~
 
