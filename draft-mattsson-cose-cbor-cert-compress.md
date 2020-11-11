@@ -87,17 +87,17 @@ This document specifies a CBOR encoding of PKIX profiled X.509 Certificates. The
 
 --- middle
 
-# Introduction  {#intro}
+# Introduction {#intro}
 
 One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and encoding of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. More compact certificate representations are desirable. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) {{RFC7049}} reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc.
 
 CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. {{RFC8610}} also extends the diagnostic notation.
 
-CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and  {{RFC8742}}.
+CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and {{RFC8742}}.
 
-RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies a CBOR encoding which can support large parts of {{RFC5280}} based on {{X.509-IoT}}. The encoding support all {{RFC7925}} profiled X.509 certificates. Two variants are defined using exactly the same CBOR encoding and differing only in what is being signed: 
+RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies a CBOR encoding which can support large parts of {{RFC5280}} based on {{X.509-IoT}}. The encoding support all {{RFC7925}} profiled X.509 certificates. Two variants are defined using the same CBOR encoding and differing only in what is being signed: 
 
-* CBOR compression of DER ecoded X.509 certificates {{RFC5280}}, which can be decompressed into the original DER ecoded X.509 certificate.
+* CBOR compression of DER encoded X.509 certificates {{RFC5280}}, which can be decompressed into the original DER encoded X.509 certificate.
 
 * Natively signed CBOR certificates, which further optimizes the performance in constrained environments but is not backwards compatible with {{RFC5280}}, see {{native-CBOR}}. 
 
@@ -111,11 +111,11 @@ This specification makes use of the terminology in {{RFC5280}}, {{RFC7049}}, {{R
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}}. In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and reduntant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}}. In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
 
-The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. When used as for compression of an existing X.509 certificate, the encoding only works on canonical encoded certificates. The encoding is known to work with DER, but might work with other canonical encodings. The compression does not work for BER encoded certificates.
+The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. When used as for compression of an existing X.509 certificate, the encoding only works on canonical encoded certificates. The encoding is known to work with DER but might work with other canonical encodings. The compression does not work for BER encoded certificates.
 
-In the encoding described below, the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding. 
+In the encoding described below the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding. 
 
 ## Message Fields
 
@@ -123,7 +123,7 @@ The X.509 fields and their CBOR encodings are listed below.
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is known (fixed to v3), and is omitted in the CBOR encoding.
+* version. The 'version' field is known (fixed to v3) and is omitted in the CBOR encoding.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as a CBOR byte string 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is omitted.
 
@@ -131,21 +131,21 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. The string types teletexString, universalString, and bmpString are not supported. If exacly one 'RelativeDistinguishedName' is present, the outer array is omitted and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. The string types teletexString, universalString, and bmpString are not supported. If exactly one 'RelativeDistinguishedName' is present, the outer array is omitted, and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e. of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
 * validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
    n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * (yy)yy))))
    
-   They are encoded as a byte string, which is interpreted as an unsigned integer n in network byte order. UTCTime and GeneralizedTime are encoded as a byte strings of length 4 and 5 respectivly. Decoding can be done by a succession of modulo and substraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
+   They are encoded as a byte string, which is interpreted as an unsigned integer n in network byte order. UTCTime and GeneralizedTime are encoded as a byte strings of length 4 and 5 respectively. Decoding can be done by a succession of modulo and subtraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}). Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the unused bits byte is omitted. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. Certificates where the id-ecPublicKey is point compressed are not not supported.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}). Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. Certificates where the id-ecPublicKey is point compressed are not supported.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR item of any type. If the array contains exacly one int, the array is omitted. Extensions are encodeded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR item of any type. If the array contains exactly one int, the array is omitted. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
 
-* signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assume the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the order of the curve. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
+* signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the order of the curve. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
 In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
@@ -193,7 +193,7 @@ Extension = (
 
 EDITOR'S NOTE: The current specification encodes many common extensions with a DER encoded byte string. It should be discussed if more or all commonly active extensions should be natively encoded with CBOR. Would an specific CBOR encoding have to be specified for each extension or can a general CBOR encoding that apply to all remaining extensions be specified?
 
-This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR item of any type. Each 'extnID' field is encoded as a CBOR int (see {{extype}}), where the sign is used to encode if the extension 'critical' field. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign. If the array contains exacly one int, the array is omitted. The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue'.
+This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR item of any type. Each 'extnID' field is encoded as a CBOR int (see {{extype}}), where the sign is used to encode if the extension 'critical' field. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign. If the array contains exactly one int, the array is omitted. The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue'.
 
 The extensions mandated to be supported by {{RFC7925}} are given special treatment. Below the boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.:
 
@@ -206,9 +206,9 @@ The extensions mandated to be supported by {{RFC7925}} are given special treatme
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 
-* extKeyUsage. extensionValue is encoded as an array of ints where each int  encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
+* extKeyUsage. extensionValue is encoded as an array of ints where each int encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
 
-* subjectAltName. If subjectAltName contains a dNSName, extensionValue is the dNSName encoded as a CBOR text string. Otherwise extensionValue contatains the value of the 'GeneralNames' SEQUENCE encoded as a CBOR byte string. 
+* subjectAltName. If subjectAltName contains a dNSName, extensionValue is the dNSName encoded as a CBOR text string. Otherwise extensionValue contains the value of the 'GeneralNames' SEQUENCE encoded as a CBOR byte string. 
 
 Consequently: 
 
@@ -216,7 +216,7 @@ Consequently:
 
 * A non-critical keyUsage with only keyAgreement asserted is encoded as the CBOR int 6 (= 4 + 2). 
 
-* A non-criticical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ -21, -18 ].
+* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ -21, -18 ].
 
 * A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 13 followed by the CBOR text string "example.com".
 
@@ -240,7 +240,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 endcoding more compact. The zlib number was calculated with zlib-flate.
+The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 encoding more compact. The zlib number was calculated with zlib-flate.
 
 ~~~~~~~~~~~
 zlib-flate -compress < cert.der > cert.compressed
@@ -258,15 +258,15 @@ zlib-flate -compress < cert.der > cert.compressed
 
 # Natively Signed CBOR Certificates {#native-CBOR}
 
-The difference between CBOR compressed X.509 certificate and natively signed CBOR certificate is that the signature is calculated over the CBOR encoding of the CBOR sequence TBSCertficate rather than the DER encoded ASN.1 data. This removes entirely the need for ASN.1 DER and base64 encoding which reduces the processing in the authenticating devices, and avoids known complexities with these encoding.
+The difference between CBOR compressed X.509 certificate and natively signed CBOR certificate is that the signature is calculated over the CBOR encoding of the CBOR sequence TBSCertficate rather than the DER encoded ASN.1 data. This removes entirely the need for ASN.1 DER and base64 encoding which reduces the processing in the authenticating devices and avoids known complexities with these encoding.
 
 Natively signed CBOR certificates can be applied in devices that are only required to authenticate to natively signed CBOR certificate compatible servers. This is not a major restriction for many IoT deployments, where the parties issuing and verifying certificates can be a restricted ecosystem which not necessarily involves public CAs.
 
 CBOR compressed X.509 certificates provides an intermediate step between {{RFC7925}} profiled X.509 certificates and natively signed CBOR certificates: An implementation of CBOR compressed X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for natively signed CBOR certificates.
 
-The natively signed approch based on DER encoded X.509 certificatines described in this document has a lot of benefits. A CA can use existing ASN.1 machinery to create a DER encoded certificate, the DER encoded certificate can then be transform to CBOR before signing.
+The natively signed approach based on DER encoded X.509 certificates described in this document has a lot of benefits. A CA can use existing ASN.1 machinery to create a DER encoded certificate, the DER encoded certificate can then be transformed to CBOR before signing.
 
-# Security Considerations  {#sec-cons}
+# Security Considerations {#sec-cons}
 
 The CBOR profiling of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors.
 
@@ -274,13 +274,13 @@ Conversion between the certificate formats can be made in constant time to reduc
 
 The mechanism in this draft does not reveal any additional information compared to X.509. Because of difference in size, it will be possible to detect that this profile is used. The gateway solution described in {{dep-set}} requires unencrypted certificates and is not recommended.
 
-# IANA Considerations  {#iana}
+# IANA Considerations {#iana}
 
 For all items, the 'Reference' field points to this document.
 
 ## CBOR Certificate Types Registry {#type}
 
-IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -295,7 +295,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 
 ## CBOR Attribute Type Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer and the other columns are text strings. Only positive values can be regisrered. For values in the inteval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -322,7 +322,7 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 
 ## CBOR Extension Type Registry {#extype}
 
-IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer and the other columns are text strings. Only positive values can be regisrered. For values in the inteval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-------------------------------------+------------------+
@@ -363,7 +363,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 
 ## CBOR Extended Key Usage Purpose Registry {#EKU}
 
-IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer and the other columns are text strings. For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -383,7 +383,7 @@ IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe ecdsa-with-SHA1 can probably be removed.
 
@@ -425,7 +425,7 @@ EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe 
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
