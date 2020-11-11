@@ -197,11 +197,7 @@ This section details the encoding of the 'extensions' field. The 'extensions' fi
 
 The extensions mandated to be supported by {{RFC7925}} are given special treatment. Below the boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.:
 
-* basicConstraints. The extensionType is encoded as below, optionally followed by and int extensionValue encoding the value of 'pathLenConstraint'.
-
-~~~~~~~~~~~
-  extensionType = 1 + cA
-~~~~~~~~~~~
+* basicConstraints. A basic constrained with 'cA' = false is encoded as extensionType = 1, a basic constrained with 'cA' = true without 'pathLenConstraint' is encoded as extensionType = 2, and a basic constrained with 'cA' = true with 'pathLenConstraint' is encoded as extensionType = 3 followed by and int extensionValue encoding the value of 'pathLenConstraint'.
 
 * keyUsage. The extensionType is encoded as below. If none of the bits except digitalSignature, keyAgreement, and keyCertSign are set, the extensionValue is omitted. Otherwise the 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
