@@ -131,7 +131,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for utf8String, negative for printableString. The string types teletexString, universalString, and bmpString are not supported. If exacly one 'RelativeDistinguishedName' is present, the outer array is omitted and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. The string types teletexString, universalString, and bmpString are not supported. If exacly one 'RelativeDistinguishedName' is present, the outer array is omitted and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
 * validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
@@ -700,18 +700,18 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   h'A6A55C870E39B40E',
   -22,
   [
-    [-4, "US"],
-    [-6, "Arizona"], 
-    [-5, "Scottsdale"], 
-    [-7, "Starfield Technologies, Inc."], 
-    [-8, "http://certs.starfieldtech.com/repository/"],
-    [-1, "Starfield Secure Certificate Authority - G2"]
+    [4, "US"],
+    [6, "Arizona"], 
+    [5, "Scottsdale"], 
+    [7, "Starfield Technologies, Inc."], 
+    [8, "http://certs.starfieldtech.com/repository/"],
+    [1, "Starfield Secure Certificate Authority - G2"]
   ],
   h'2D3EE7F6',
   h'2F98B716',
   [
-    [-8, "Domain Control Validated"],
-    [1, "*.tools.ietf.org"]
+    [8, "Domain Control Validated"],
+    [-1, "*.tools.ietf.org"]
   ],
   -24,
   h'3082010A0282010100B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA10203010001',
