@@ -357,7 +357,27 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |    26 | id-pe-subjectInfoAccess               |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
-{: #fig-attrtype title="CBOR Extension Type Registry"}
+{: #fig-extype title="CBOR Extension Type Registry"}
+{: artwork-align="center"}
+
+## CBOR Extended Key Usage Purpose Registry {#EKU}
+
+IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer and the other columns are text strings. For values in the inteval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+---------------------------------------+
+| Value | Extended Key Usage Purpose            |
++=======+=======================================+
+|   -24 | anyExtendedKeyUsage                   |
+|   -23 | id-kp-serverAuth                      |
+|   -22 | id-kp-clientAuth                      |
+|   -21 | id-kp-codeSigning                     |
+|   -20 | id-kp-emailProtection                 |
+|   -19 | id-kp-timeStamping                    |
+|   -18 | id-kp-OCSPSigning                     |
++-------+---------------------------------------+
+~~~~~~~~~~~
+{: #fig-attrtype title="CBOR Extended Key Usage Purpose Registry"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
