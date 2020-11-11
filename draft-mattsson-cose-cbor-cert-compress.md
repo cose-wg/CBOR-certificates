@@ -331,37 +331,37 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer and the other columns are text strings. Only positive values can be regisrered. For values in the inteval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+---------------------------------------+
-| Value | X.509 Extension Type                  |
-+=======+=======================================+
-|     1 | id-ce-basicConstraints                |
-|     2 | id-ce-basicConstraints                |
-|     3 | id-ce-keyUsage                        |
-|     4 | id-ce-keyUsage                        |
-|     5 | id-ce-keyUsage                        |
-|     6 | id-ce-keyUsage                        |
-|     7 | id-ce-keyUsage                        |
-|     8 | id-ce-keyUsage                        |
-|     9 | id-ce-keyUsage                        |
-|    10 | id-ce-keyUsage                        |
-|    11 | id-ce-subjectAltName                  |
-|    12 | id-ce-extKeyUsage                     |
-|    13 | id-ce-authorityKeyIdentifier          |
-|    14 | id-ce-subjectKeyIdentifier            |
-|    15 | id-ce-certificatePolicies             |
-|    16 | id-ce-nameConstraints                 |
-|    17 | id-ce-policyConstraints               |
-|    18 | id-ce-inhibitAnyPolicy                |
-|    19 | id-ce-authorityKeyIdentifier          |
-|    20 | id-ce-policyMappings                  |
-|    21 | id-ce-issuerAltName                   |
-|    22 | id-ce-subjectDirectoryAttributes      |
-|    23 | id-ce-cRLDistributionPoints           |
-|    24 | id-ce-freshestCRL                     |
-|    25 | id-pe-authorityInfoAccess             |
-|    26 | id-pe-subjectInfoAccess               |
-|    27 | SCT List (1.3.6.1.4.1.11129.2.4.2)    |
-+-------+---------------------------------------+
++-------+-------------------------------------+----------------+
+| Value | X.509 Extension Type                | extensionValue |
++=======+=====================================+----------------+
+|     1 | id-ce-basicConstraints (cA = false) |                | 
+|     1 | id-ce-basicConstraints (cA = true)  |                |
+|     3 | id-ce-keyUsage                      | bytes          |
+|     4 | id-ce-keyUsage                      |                |
+|     5 | id-ce-keyUsage                      |                |
+|     6 | id-ce-keyUsage                      |                |
+|     7 | id-ce-keyUsage                      |                |
+|     8 | id-ce-keyUsage                      |                |
+|     9 | id-ce-keyUsage                      |                |
+|    10 | id-ce-keyUsage                      |                |
+|    11 | id-ce-subjectAltName                | bytes          |
+|    12 | id-ce-extKeyUsage                   | bytes          |
+|    13 | id-ce-authorityKeyIdentifier        | bytes          |
+|    14 | id-ce-subjectKeyIdentifier          | bytes          |
+|    15 | id-ce-certificatePolicies           | bytes          |
+|    16 | id-ce-nameConstraints               | bytes          |
+|    17 | id-ce-policyConstraints             | bytes          |
+|    18 | id-ce-inhibitAnyPolicy              | bytes          |
+|    19 | id-ce-authorityKeyIdentifier        | bytes          |
+|    20 | id-ce-policyMappings                | bytes          |
+|    21 | id-ce-issuerAltName                 | bytes          |
+|    22 | id-ce-subjectDirectoryAttributes    | bytes          |
+|    23 | id-ce-cRLDistributionPoints         | bytes          |
+|    24 | id-ce-freshestCRL                   | bytes          |
+|    25 | id-pe-authorityInfoAccess           | bytes          |
+|    26 | id-pe-subjectInfoAccess             | bytes          |
+|    27 | SCT List (1.3.6.1.4.1.11129.2.4.2)  | bytes          |
++-------+-------------------------------------+----------------+
 ~~~~~~~~~~~
 {: #fig-extype title="CBOR Extension Type Registry"}
 {: artwork-align="center"}
