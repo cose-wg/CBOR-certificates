@@ -111,11 +111,15 @@ This specification makes use of the terminology in {{RFC5280}}, {{RFC7049}}, {{R
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}}. The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. When used as for compression of an existing X.509 certificate, the encoding only works on canonical encoded certificates. The encoding is known to work with DER, but might work with other canonical encodings. The compression does not work for BER encoded certificates. 
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}}. In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and reduntant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
+
+The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. When used as for compression of an existing X.509 certificate, the encoding only works on canonical encoded certificates. The encoding is known to work with DER, but might work with other canonical encodings. The compression does not work for BER encoded certificates.
+
+In the encoding described below, the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding. 
 
 ## Message Fields
 
-In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and reduntant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. The X.509 fields and their CBOR encodings are listed below.
+The X.509 fields and their CBOR encodings are listed below.
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
@@ -137,11 +141,11 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}). Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the unused bits byte is omitted. Public keys of type id-ecPublicKey are are point compressed as defined in Section 2.3.3 of {{SECG}}.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}). Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assume the BIT STRING has zero unused bits and the unused bits byte is omitted. Public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. Certificates where the id-ecPublicKey is point compressed are not not supported.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR byte string. If the arrau contains exacly one int, the array is omitted. Extensions are encodeded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR byte string. If the array contains exacly one int, the array is omitted. Extensions are encodeded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
 
-* signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assume the BIT STRING has zero are zero unused bits and the length of the CBOR byte string will therefore in general be at least one byte shorter than the lenght of the BIT STRING. ECDSA Signatures are compressed (padding and extra length fields which are present in the ASN.1 encoding are omitted) and are therefore much shorter. For natively signed CBOR certificates the signatureValue is calculated over the certificate CBOR sequence excluding the signatureValue.
+* signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assume the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the order of the curve. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
 In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
