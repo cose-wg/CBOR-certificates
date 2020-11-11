@@ -329,25 +329,32 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 +-------+---------------------------------------+
 | Value | X.509 Extension Type                  |
 +=======+=======================================+
-|     1 | id-ce-keyUsage                        |
-|     2 | id-ce-subjectAltName                  |
-|     3 | id-ce-basicConstraints                |
-|     4 | id-ce-extKeyUsage                     |
-|     5 | id-ce-authorityKeyIdentifier          |
-|     6 | id-ce-subjectKeyIdentifier            |
-|     7 | id-ce-certificatePolicies             |
-|     8 | id-ce-nameConstraints                 |
-|     9 | id-ce-policyConstraints               |
-|    10 | id-ce-inhibitAnyPolicy                |
-|    11 | id-ce-authorityKeyIdentifier          |
-|    12 | id-ce-policyMappings                  |
-|    13 | id-ce-issuerAltName                   |
-|    14 | id-ce-subjectDirectoryAttributes      |
-|    15 | id-ce-cRLDistributionPoints           |
-|    16 | id-ce-freshestCRL                     |
-|    17 | id-pkix                               |
-|    18 | id-pe-authorityInfoAccess             |
-|    19 | id-pe-subjectInfoAccess               |
+|     1 | id-ce-basicConstraints                |
+|     2 | id-ce-basicConstraints                |
+|     3 | id-ce-keyUsage                        |
+|     4 | id-ce-keyUsage                        |
+|     5 | id-ce-keyUsage                        |
+|     6 | id-ce-keyUsage                        |
+|     7 | id-ce-keyUsage                        |
+|     8 | id-ce-keyUsage                        |
+|     9 | id-ce-keyUsage                        |
+|    10 | id-ce-keyUsage                        |
+|    11 | id-ce-subjectAltName                  |
+|    12 | id-ce-extKeyUsage                     |
+|    13 | id-ce-authorityKeyIdentifier          |
+|    14 | id-ce-subjectKeyIdentifier            |
+|    15 | id-ce-certificatePolicies             |
+|    16 | id-ce-nameConstraints                 |
+|    17 | id-ce-policyConstraints               |
+|    18 | id-ce-inhibitAnyPolicy                |
+|    19 | id-ce-authorityKeyIdentifier          |
+|    20 | id-ce-policyMappings                  |
+|    21 | id-ce-issuerAltName                   |
+|    22 | id-ce-subjectDirectoryAttributes      |
+|    23 | id-ce-cRLDistributionPoints           |
+|    24 | id-ce-freshestCRL                     |
+|    25 | id-pe-authorityInfoAccess             |
+|    26 | id-pe-subjectInfoAccess               |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Extension Type Registry"}
