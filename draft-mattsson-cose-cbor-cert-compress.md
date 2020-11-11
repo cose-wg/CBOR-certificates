@@ -202,26 +202,25 @@ The extensions mandated to be supported by {{RFC7925}} are given special treatme
 * keyUsage. The extensionType is encoded as below. If none of the bits except digitalSignature, keyAgreement, and keyCertSign are set, the extensionValue is omitted. Otherwise the 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
 ~~~~~~~~~~~
-   extensionType = 3 + digitalSignature
+   extensionType = 4 + digitalSignature
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 
-* subjectAltName. If subjectAltName contains a dNSName, extensionValue is the dNSName encoded as a CBOR text string. Otherwise extensionValue contatains the value of the 'GeneralNames' SEQUENCE encoded as a CBOR byte string. 
-
 * extKeyUsage. extensionValue is encoded as an array of ints where each int  encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
+
+* subjectAltName. If subjectAltName contains a dNSName, extensionValue is the dNSName encoded as a CBOR text string. Otherwise extensionValue contatains the value of the 'GeneralNames' SEQUENCE encoded as a CBOR byte string. 
 
 Consequently: 
 
 * A critical basicConstraints (cA = 1) without pathLenConstraint is encoded as the CBOR int -2.
 
-* A non-critical keyUsage with only keyAgreement asserted is encoded as the CBOR int 5 (= 3 + 2). 
-
-* A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 11 followed by the CBOR text string "example.com".
+* A non-critical keyUsage with only keyAgreement asserted is encoded as the CBOR int 6 (= 4 + 2). 
 
 * A non-criticical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ -21, -18 ].
 
+* A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 13 followed by the CBOR text string "example.com".
 
-Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array [ -2, 5, 11, "example.com", 12, [ -21, -18 ] ].
+Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array [ -2, 6, 12, [ -21, -18 ], 13, "example.com" ].
 
 # Compliance Requirements for Constrained IoT
 
@@ -340,8 +339,8 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     9 | id-ce-keyUsage + 33                 |                  |
 |    10 | id-ce-keyUsage + 48                 |                  |
 |    11 | id-ce-keyUsage + 49                 |                  |
-|    12 | id-ce-subjectAltName                | bytes / text     |
-|    13 | id-ce-extKeyUsage                   | [ *2 int ] / int |
+|    12 | id-ce-extKeyUsage                   | [ *2 int ] / int |
+|    13 | id-ce-subjectAltName                | bytes / text     |
 |    14 | id-ce-authorityKeyIdentifier        | bytes            |
 |    15 | id-ce-subjectKeyIdentifier          | bytes            |
 |    16 | id-ce-certificatePolicies           | bytes            |
