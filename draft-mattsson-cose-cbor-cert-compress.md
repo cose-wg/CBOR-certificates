@@ -216,11 +216,11 @@ Consequently:
 
 * A non-critical keyUsage with only keyAgreement asserted is encoded as the CBOR int 6 (= 4 + 2). 
 
-* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ -21, -18 ].
+* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ 3, 6 ].
 
 * A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 13 followed by the CBOR text string "example.com".
 
-Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array [ -2, 6, 12, [ -21, -18 ], 13, "example.com" ].
+Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array [ -2, 6, 12, [ 3, 6 ], 13, "example.com" ].
 
 # Compliance Requirements for Constrained IoT
 
@@ -369,13 +369,13 @@ IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry
 +-------+---------------------------------------+
 | Value | Extended Key Usage Purpose            |
 +=======+=======================================+
-|   -24 | anyExtendedKeyUsage                   |
-|   -23 | id-kp-serverAuth                      |
-|   -22 | id-kp-clientAuth                      |
-|   -21 | id-kp-codeSigning                     |
-|   -20 | id-kp-emailProtection                 |
-|   -19 | id-kp-timeStamping                    |
-|   -18 | id-kp-OCSPSigning                     |
+|     0 | anyExtendedKeyUsage                   |
+|     1 | id-kp-serverAuth                      |
+|     2 | id-kp-clientAuth                      |
+|     3 | id-kp-codeSigning                     |
+|     4 | id-kp-emailProtection                 |
+|     5 | id-kp-timeStamping                    |
+|     6 | id-kp-OCSPSigning                     |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Extended Key Usage Purpose Registry"}
