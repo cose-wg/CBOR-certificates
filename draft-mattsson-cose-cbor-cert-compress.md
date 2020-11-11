@@ -361,13 +361,13 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 {: #fig-extype title="CBOR Extension Type Registry"}
 {: artwork-align="center"}
 
-## CBOR Extended Key Usage Purpose Registry {#EKU}
+## CBOR Extended Key Usage Registry {#EKU}
 
-IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Extended Key Usage Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
-| Value | Extended Key Usage Purpose            |
+| Value | Extended Key Usage                    |
 +=======+=======================================+
 |     0 | anyExtendedKeyUsage                   |
 |     1 | id-kp-serverAuth                      |
@@ -378,7 +378,25 @@ IANA has created a new registry titled "CBOR Extended Key Usage Purpose Registry
 |     6 | id-kp-OCSPSigning                     |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
-{: #fig-attrtype title="CBOR Extended Key Usage Purpose Registry"}
+{: #fig-ekutype title="CBOR Extended Key Usage Registry"}
+{: artwork-align="center"}
+
+## CBOR Subject Alternative Name Registry {#SAN}
+
+IANA has created a new registry titled "CBOR Subject Alternative Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+-----------------------------------+------------------+
+| Value | Subject Alternative Name          |                  |
++=======+===================================+==================+
+|     0 | rfc822Name                        | text             |
+|     1 | dNSName                           | text             |
+|     2 | directoryName                     | Name             |
+|     3 | uniformResourceIdentifier         | text             |
+|     4 | iPAddress                         | bytes            |
++-------+-----------------------------------+------------------+
+~~~~~~~~~~~
+{: #fig-san title="CBOR Subject Alternative Name Registry"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
