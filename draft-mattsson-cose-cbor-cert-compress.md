@@ -133,7 +133,6 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for utf8String, negative for printableString. The string types teletexString, universalString, and bmpString are not supported. If exacly one 'RelativeDistinguishedName' is present, the outer array is omitted and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 mapped from a 48-bit MAC address (i.e of the form "hh-hh-hh-FF-FE-hh-hh-hh) it is encoded as a CBOR byte string of length 6. Other EUI-64 is encoded as a CBOR byte string of length 8.
 
-
 * validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
 
    n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * (yy)yy))))
@@ -204,7 +203,7 @@ The extensions mandated to be supported by {{RFC7925}} are given special treatme
   extensionType = 1 + cA
 ~~~~~~~~~~~
 
-* keyUsage. The extensionType is encoded as below. If none of the bits except digitalSignature, keyAgreement, and keyCertSign are set, the extensionValue is omitted. Otherwise extensionValue is a CBOR byte string of minimal length to encode the asserted bits in the BIT STRING value.
+* keyUsage. The extensionType is encoded as below. If none of the bits except digitalSignature, keyAgreement, and keyCertSign are set, the extensionValue is omitted. Otherwise the 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
 ~~~~~~~~~~~
    extensionType = 3 + digitalSignature
