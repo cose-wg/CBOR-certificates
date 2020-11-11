@@ -339,15 +339,10 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     4 | id-ce-keyUsage + 1                  |                |
 |     5 | id-ce-keyUsage + 16                 |                |
 |     6 | id-ce-keyUsage + 17                 |                |
-|     6 | id-ce-keyUsage + 32                 |                |
-|     6 | id-ce-keyUsage + 33                 |                |
-|     6 | id-ce-keyUsage + 48                 |                |
-|     6 | id-ce-keyUsage + 49                 |                |
-|     6 | id-ce-keyUsage                      |                |
-|     7 | id-ce-keyUsage                      |                |
-|     8 | id-ce-keyUsage                      |                |
-|     9 | id-ce-keyUsage                      |                |
-|    10 | id-ce-keyUsage                      |                |
+|     7 | id-ce-keyUsage + 32                 |                |
+|     8 | id-ce-keyUsage + 33                 |                |
+|     9 | id-ce-keyUsage + 48                 |                |
+|    10 | id-ce-keyUsage + 49                 |                |
 |    11 | id-ce-subjectAltName                | bytes          |
 |    12 | id-ce-extKeyUsage                   | bytes          |
 |    13 | id-ce-authorityKeyIdentifier        | bytes          |
