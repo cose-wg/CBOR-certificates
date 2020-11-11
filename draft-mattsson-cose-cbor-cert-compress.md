@@ -327,7 +327,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 ~~~~~~~~~~~
 +-------+-------------------------------------+------------------+
 | Value | X.509 Extension Type                | extensionValue   |
-+=======+=====================================+------------------+
++=======+=====================================+==================+
 |     1 | id-ce-basicConstraints (cA = false) |                  | 
 |     2 | id-ce-basicConstraints (cA = true)  |                  |
 |     3 | id-ce-basicConstraints (cA = true)  | int              |
