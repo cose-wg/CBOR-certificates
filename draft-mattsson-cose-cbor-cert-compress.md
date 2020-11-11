@@ -431,17 +431,17 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+---------------------------------------+
 | Value | X.509 Public Key Algorithm            |
 +=======+=======================================+
-|   -24 | rsaEncryption                         |
-|   -23 | id-ecPublicKey + secp256r1            |
-|   -22 | id-ecPublicKey + secp384r1            |
-|   -21 | id-ecPublicKey + secp521r1            |
-|   -20 | id-X25519                             |
-|   -19 | id-X448                               |
-|   -18 | id-Ed25519                            |
-|   -17 | id-Ed448                              |  
-|   -16 | id-alg-hss-lms-hashsig                |
-|   -15 | id-alg-xmss                           |
-|   -14 | id-alg-xmssmt                         |
+|     0 | rsaEncryption                         |
+|     1 | id-ecPublicKey + secp256r1            |
+|     2 | id-ecPublicKey + secp384r1            |
+|     3 | id-ecPublicKey + secp521r1            |
+|     4 | id-X25519                             |
+|     5 | id-X448                               |
+|     6 | id-Ed25519                            |
+|     7 | id-Ed448                              |  
+|     8 | id-alg-hss-lms-hashsig                |
+|     9 | id-alg-xmss                           |
+|    10 | id-alg-xmssmt                         |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
@@ -557,7 +557,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   h'2B044180',
   h'2D543300',
   h'0123456789AB',
-  -23,
+  1,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba
     0080df678867845e',
   5,
@@ -592,7 +592,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
   h'2B044180',
   h'2D543300',
   h'0123456789AB',
-  -23,
+  1,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061
     ba0080df678867845e',
   5,
@@ -713,7 +713,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
     [8, "Domain Control Validated"],
     [-1, "*.tools.ietf.org"]
   ],
-  -24,
+  0,
   h'3082010A0282010100B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA10203010001',
   TODO,
   h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADBB33F9DB3D7E0594C19A8E419A50CA770727763D5FE64510AD27AD650A58A9238ECCB2F0F5AC064584D5C06B9736368278B8934DC79C71D3AFD345F831441584980682980398A867269CC7937CEE397F7DCF39588ED81032900D2A2C7BAABD63A8ECA090BD9FB39264BFF03D88E2D3F6B21CA8A7DD85FFB94BA83DE9CFC158D61FA672DB0C7DB3D250A414A85D37F4946373CF4B175D052F3DDC766F14BFDAA00EDBFE47EED01EC7BE4F646FC31FD72FE03D2F265AF4D7EE2819B7AFD303CF552F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D',
