@@ -335,10 +335,15 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 | Value | X.509 Extension Type                | extensionValue |
 +=======+=====================================+----------------+
 |     1 | id-ce-basicConstraints (cA = false) |                | 
-|     1 | id-ce-basicConstraints (cA = true)  |                |
-|     3 | id-ce-keyUsage                      | bytes          |
-|     4 | id-ce-keyUsage                      |                |
-|     5 | id-ce-keyUsage                      |                |
+|     1 | id-ce-basicConstraints (cA = true)  | ? int          |
+|     3 | id-ce-keyUsage                      | int            |
+|     4 | id-ce-keyUsage + 1                  |                |
+|     5 | id-ce-keyUsage + 16                 |                |
+|     6 | id-ce-keyUsage + 17                 |                |
+|     6 | id-ce-keyUsage + 32                 |                |
+|     6 | id-ce-keyUsage + 33                 |                |
+|     6 | id-ce-keyUsage + 48                 |                |
+|     6 | id-ce-keyUsage + 49                 |                |
 |     6 | id-ce-keyUsage                      |                |
 |     7 | id-ce-keyUsage                      |                |
 |     8 | id-ce-keyUsage                      |                |
