@@ -391,33 +391,33 @@ EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe 
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
 +=======+=======================================+
-|   -24 | sha1WithRSAEncryption                 |
-|   -23 | sha224WithRSAEncryption               |
-|   -22 | sha256WithRSAEncryption               |
-|   -21 | sha384WithRSAEncryption               |
-|   -20 | sha512WithRSAEncryption               |
-|   -19 | id-rsassa-pkcs1-v1_5-with-sha3-224    |
-|   -18 | id-rsassa-pkcs1-v1_5-with-sha3-256    |
-|   -17 | id-rsassa-pkcs1-v1_5-with-sha3-384    |
-|   -16 | id-rsassa-pkcs1-v1_5-with-sha3-512    |
-|   -15 | id-RSASSA-PSS-SHAKE128                |
-|   -14 | id-RSASSA-PSS-SHAKE256                |  
-|   -13 | ecdsa-with-SHA1                       |
-|   -12 | ecdsa-with-SHA224                     |
-|   -11 | ecdsa-with-SHA256                     |
-|   -10 | ecdsa-with-SHA384                     |
-|    -9 | ecdsa-with-SHA512                     |
-|    -8 | id-ecdsa-with-sha3-224                |
-|    -7 | id-ecdsa-with-sha3-256                |
-|    -6 | id-ecdsa-with-sha3-384                |
-|    -5 | id-ecdsa-with-sha3-512                |
-|    -4 | id-ecdsa-with-shake128                |
-|    -3 | id-ecdsa-with-shake256                |
-|    -2 | id-Ed25519                            |
-|    -1 | id-Ed448                              |
-|     0 | id-alg-hss-lms-hashsig                |
-|     1 | id-alg-xmss                           |
-|     2 | id-alg-xmssmt                         |
+|     0 | sha1WithRSAEncryption                 |
+|     1 | sha256WithRSAEncryption               |
+|     2 | sha384WithRSAEncryption               |
+|     3 | sha512WithRSAEncryption               |
+|     4 | id-RSASSA-PSS-SHAKE128                |
+|     5 | id-RSASSA-PSS-SHAKE256                |  
+|     6 | ecdsa-with-SHA256                     |
+|     7 | ecdsa-with-SHA384                     |
+|     8 | ecdsa-with-SHA512                     |
+|     9 | id-ecdsa-with-shake128                |
+|    10 | id-ecdsa-with-shake256                |
+|    11 | id-Ed25519                            |
+|    12 | id-Ed448                              |
+|    13 | id-alg-hss-lms-hashsig                |
+|    14 | id-alg-xmss                           |
+|    15 | id-alg-xmssmt                         |
+|   245 | sha224WithRSAEncryption               |
+|   246 | id-rsassa-pkcs1-v1_5-with-sha3-224    |
+|   247 | id-rsassa-pkcs1-v1_5-with-sha3-256    |
+|   248 | id-rsassa-pkcs1-v1_5-with-sha3-384    |
+|   249 | id-rsassa-pkcs1-v1_5-with-sha3-512    |
+|   250 | ecdsa-with-SHA1                       |
+|   251 | ecdsa-with-SHA224                     |
+|   252 | id-ecdsa-with-sha3-224                |
+|   253 | id-ecdsa-with-sha3-256                |
+|   254 | id-ecdsa-with-sha3-384                |
+|   255 | id-ecdsa-with-sha3-512                |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
@@ -552,7 +552,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
   1,
   h'01f50d',
-  -11,
+  6,
   "RFC test CA",
   h'2B044180',
   h'2D543300',
@@ -587,7 +587,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 
   0,
   h'01f50d',
-  -11,
+  6,
   "RFC test CA",
   h'2B044180',
   h'2D543300',
@@ -698,7 +698,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
   1,
   h'A6A55C870E39B40E',
-  -22,
+  0,
   [
     [4, "US"],
     [6, "Arizona"], 
