@@ -355,6 +355,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |    24 | id-ce-freshestCRL                     |
 |    25 | id-pe-authorityInfoAccess             |
 |    26 | id-pe-subjectInfoAccess               |
+|    27 | SCT List (1.3.6.1.4.1.11129.2.4.2)    |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-extype title="CBOR Extension Type Registry"}
