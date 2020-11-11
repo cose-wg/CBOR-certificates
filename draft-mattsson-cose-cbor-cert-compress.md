@@ -192,36 +192,41 @@ Extension = (
 
 ## Encoding of Extensions {#ext-encoding}
 
-NOTE: The discussions in the COSE WG seems to indicate that a much larger set of extensions should be supported. This will likely result in a completly different encoding than the one below, which is very {{RFC7925}} focused.
+EDITOR'S NOTE: The current specification encodes many common extensions with a DER encoded byte string. It should be discussed if more or all commonly active extensions should be natively encoded with CBOR. Would an specific CBOR encoding have to be specified for each extension or can a general CBOR encoding that apply to all remaining extensions be specified?
 
-This section details the encoding of the 'extensions' field. Each extension is represented with an int. Critical extensions are encoded with a negative sign. The boolean values (digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding. If the array contains a single int, 'extensions' is encoded as the int instead of an array.  pathLenConstraint is limited to a max value of 10. If subjectAltName is present, the value is placed after the int the end of the array encoded as a byte or text string following the encoding rules for the subject field.
+This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extension is encoded with an CBOR int followed by an optional CBOR item of any type. Each 'extnID' field is encoded as a CBOR int (see {{extype}}), where the sign is used to encode if the extension 'critical' field. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign. If the array contains exacly one int, the array is omitted. The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue'.
+
+The extensions mandated to be supported by {{RFC7925}} are given special treatment. Below the boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.:
+
+* basicConstraints. The extensionType is encoded as below, optionally followed by and int extensionValue encoding the value of 'pathLenConstraint'.
 
 ~~~~~~~~~~~
-   subjectAltName = 1
+  extensionType = 1 + cA
 ~~~~~~~~~~~
+
+* keyUsage. The extensionType is encoded as below. If none of the bits except digitalSignature, keyAgreement, and keyCertSign are set, the extensionValue is omitted. Otherwise extensionValue is a CBOR byte string of minimal length to encode the asserted bits in the BIT STRING value.
+
 ~~~~~~~~~~~
-   basicConstraints = 2 + pathLenConstraint
-~~~~~~~~~~~
-~~~~~~~~~~~
-   keyUsage = 12 + digitalSignature
+   extensionType = 3 + digitalSignature
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
-~~~~~~~~~~~
-   extKeyUsage = 19 + id-kp-serverAuth + 2 * id-kp-clientAuth
-               + 4 * id-kp-codeSigning + 8 * id-kp-OCSPSigning
-~~~~~~~~~~~
+
+* subjectAltName. If subjectAltName contains a dNSName, extensionValue is the dNSName encoded as a CBOR text string. Otherwise extensionValue contatains the value of the 'GeneralNames' SEQUENCE encoded as a CBOR byte string. 
+
+* extKeyUsage. extensionValue is encoded as an array of ints where each int  encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
 
 Consequently: 
 
-* A non-critical subjectAltName is encoded as 1. A critical subjectAltName is encoded as -1.
+* A critical basicConstraints (cA = 1) without pathLenConstraint is encoded as the CBOR int -2.
 
-* A critical basicConstraints (cA = 1) without pathLenConstraint is encoded as -2.
+* A non-critical keyUsage with only keyAgreement asserted is encoded as the CBOR int 5 (= 3 + 2). 
 
-* A non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as 14 (= 12 + 2). 
+* A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 11 followed by the CBOR text string "example.com".
 
-* A non-criticical extKeyUsage (id-kp-serverAuth = 0, id-kp-clientAuth = 0, id-kp-codeSigning = 1, id-kp-OCSPSigning = 1) is encoded as 31 (= 19 + 4 + 8). 
+* A non-criticical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ -21, -18 ].
 
-Thus, a critical basicConstraints (cA = 1) followed by a non-critical keyUsage (digitalSignature = 0, keyAgreement = 1, keyCertSign = 0) is encoded as \[-2, 14\]. A single critical subjectAltName (dNSName = "for.example") is encoded as \[-1, "for.example"\].
+
+Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array [ -2, 5, 11, "example.com", 12, [ -21, -18 ] ].
 
 # Compliance Requirements for Constrained IoT
 
