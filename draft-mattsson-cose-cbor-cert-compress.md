@@ -206,9 +206,9 @@ The extensions mandated to be supported by {{RFC7925}} are given special treatme
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 
-* extKeyUsage. extensionType is encoded as defined by {{{extype}}} and extensionValue is encoded as an array of ints where each int encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
+* extKeyUsage. extensionType is encoded as defined by {{extype}} and extensionValue is encoded as an array of ints where each int encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
 
-* subjectAltName. extensionType is encoded as defined by {{{extype}}} and extensionValue is encoded as an [ * ( int, any ) ] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
+* subjectAltName. extensionType is encoded as defined by {{extype}} and extensionValue is encoded as an \[ * ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
 
 Consequently:
 
@@ -216,11 +216,11 @@ Consequently:
 
 * A non-critical keyUsage with only keyAgreement asserted is encoded as the CBOR int 6 (= 4 + 2). 
 
-* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array [ 3, 6 ].
+* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 12 followed by the CBOR array \[ 3, 6 \].
 
 * A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 13 followed by the CBOR text string "example.com".
 
-Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array [ -2, 6, 12, [ 3, 6 ], 13, "example.com" ].
+Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -2, 6, 12, \[ 3, 6 \], 13, "example.com" \].
 
 # Compliance Requirements for Constrained IoT
 
@@ -280,7 +280,7 @@ For all items, the 'Reference' field points to this document.
 
 ## CBOR Certificate Types Registry {#type}
 
-IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -295,7 +295,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 
 ## CBOR Attribute Type Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval \[1, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -322,7 +322,7 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 
 ## CBOR Extension Type Registry {#extype}
 
-IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval [1, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval \[1, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-------------------------------------+------------------+
@@ -363,7 +363,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 
 ## CBOR Extended Key Usage Registry {#EKU}
 
-IANA has created a new registry titled "CBOR Extended Key Usage Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Extended Key Usage Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
@@ -383,7 +383,7 @@ IANA has created a new registry titled "CBOR Extended Key Usage Registry" under 
 
 ## CBOR Subject Alternative Name Registry {#SAN}
 
-IANA has created a new registry titled "CBOR Subject Alternative Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Subject Alternative Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------+------------------+
@@ -401,7 +401,7 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe ecdsa-with-SHA1 can probably be removed.
 
@@ -443,7 +443,7 @@ EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe 
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+---------------------------------------+
