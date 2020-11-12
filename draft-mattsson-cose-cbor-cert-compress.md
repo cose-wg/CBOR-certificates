@@ -183,10 +183,18 @@ Attribute = (
    attributeValue : text,
 )
 
-Extension = (
+Extension = Extension1 // Extension2
+
+Extension1 = (
    extensionType : int,
-   ? extensionValue : any,
-) 
+   ? extensionValue : any, ; optionality and type known from extensionType
+)
+
+Extension2 = (
+   relativeOID : bytes,
+   ? critical : bool,
+   ? extensionValue : bytes,
+)
 ~~~~~~~~~~~
 
 ## Encoding of Extensions {#ext-encoding}
