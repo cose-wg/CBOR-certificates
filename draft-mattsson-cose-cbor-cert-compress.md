@@ -164,34 +164,38 @@ CBORCertificate = [
 TBSCertificate = (
    cborCertificateType : int,
    certificateSerialNumber : bytes,
-   issuerSignatureAlgorithm : int,
+   issuerSignatureAlgorithm : int / relativeOID,
    issuer : Name,
    validityNotBefore : bytes,
    validityNotAfter : bytes,
    subject : Name,
-   subjectPublicKeyAlgorithm : int,
+   subjectPublicKeyAlgorithm : int / relativeOID,
    subjectPublicKey : bytes,
    extensions : [ * Extension ] / int,
 )
+
+relativeOID = bytes
 
 Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 
 RelativeDistinguishedName = [ + Attribute ] / text / bytes
 
-Attribute = (
+Attribute = AttributeReg // relativeOID
+
+AttributeReg = (
    attributeType : int,
    attributeValue : text,
 )
 
-Extension = Extension1 // Extension2
+Extension = ExtensionReg // ExtensionRaw
 
-Extension1 = (
+ExtensionReg = (
    extensionType : int,
    ? extensionValue : any, ; optionality and type known from extensionType
 )
 
-Extension2 = (
-   relativeOID : bytes,
+ExtensionRaw = (
+   extensionID : relativeOID,
    ? critical : bool,
    ? extensionValue : bytes,
 )
@@ -214,7 +218,11 @@ The extensions mandated to be supported by {{RFC7925}} are given special treatme
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 
-* extKeyUsage. extensionType is encoded as defined by {{extype}} and extensionValue is encoded as an array of ints where each int encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
+* extKeyUsage. extensionType is encoded as defined by {{extype}} and extensionValue is encoded as an array of ints or relativeOID where each ints or relativeOID encodes a key usage purpose (see {{EKU}} for registered ints). If the array contains a single item, the array is omitted.  
+
+~~~~~~~~~~~
+   extensionValue = [ * int / relativeOID ] / int / relativeOID
+~~~~~~~~~~~
 
 * subjectAltName. extensionType is encoded as defined by {{extype}} and extensionValue is encoded as an \[ * ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
 
@@ -347,7 +355,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     9 | id-ce-keyUsage + 33                 |                  |
 |    10 | id-ce-keyUsage + 48                 |                  |
 |    11 | id-ce-keyUsage + 49                 |                  |
-|    12 | id-ce-extKeyUsage                   | [ *2 int ] / int |
+|    12 | id-ce-extKeyUsage                   | [] / int / rOID  |
 |    13 | id-ce-subjectAltName                | [] / text        |
 |    14 | id-ce-authorityKeyIdentifier        | bytes            |
 |    15 | id-ce-subjectKeyIdentifier          | bytes            |
