@@ -164,15 +164,17 @@ CBORCertificate = [
 TBSCertificate = (
    cborCertificateType : int,
    certificateSerialNumber : bytes,
-   issuerSignatureAlgorithm : int / relativeOID,
+   issuerSignatureAlgorithm : Algorithm,
    issuer : Name,
    validityNotBefore : bytes,
    validityNotAfter : bytes,
    subject : Name,
-   subjectPublicKeyAlgorithm : int / relativeOID,
+   subjectPublicKeyAlgorithm : Algorithm,
    subjectPublicKey : bytes,
    extensions : [ * Extension ] / int,
 )
+
+Algorithm = int / relativeOID
 
 relativeOID = bytes
 
