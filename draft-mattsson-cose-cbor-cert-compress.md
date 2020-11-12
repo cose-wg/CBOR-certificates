@@ -180,9 +180,7 @@ Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 
 RelativeDistinguishedName = [ + Attribute ] / text / bytes
 
-Attribute = AttributeReg // relativeOID
-
-AttributeReg = (
+Attribute = (
    attributeType : int,
    attributeValue : text,
 )
