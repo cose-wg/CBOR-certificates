@@ -206,11 +206,11 @@ The extensions mandated to be supported by {{RFC7925}} are given special treatme
             + 2 * keyAgreement + 4 * keyCertSign
 ~~~~~~~~~~~
 
-* extKeyUsage. extensionValue is encoded as an array of ints where each int encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
+* extKeyUsage. extensionType is encoded as defined by {{{extype}}} and extensionValue is encoded as an array of ints where each int encodes a key usage purpose  (see {{EKU}}). If the array contains a single int, the array is omitted.  
 
-* subjectAltName. If subjectAltName contains a dNSName, extensionValue is the dNSName encoded as a CBOR text string. Otherwise extensionValue contains the value of the 'GeneralNames' SEQUENCE encoded as a CBOR byte string. 
+* subjectAltName. extensionType is encoded as defined by {{{extype}}} and extensionValue is encoded as an [ * ( int, any ) ] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
 
-Consequently: 
+Consequently:
 
 * A critical basicConstraints (cA = 1) without pathLenConstraint is encoded as the CBOR int -2.
 
