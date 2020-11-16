@@ -332,6 +332,7 @@ IANA has created a new registry titled "CBOR Attribute Type Registry" under the 
 |    12 | id-at-generationQualifier             |
 |    13 | id-at-dnQualifier                     |
 |    14 | id-at-pseudonym                       |
+|    15 | id-at-organizationIdentifier          |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Attribute Type Registry"}
