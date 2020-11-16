@@ -304,7 +304,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 | Value | Description                           |
 +=======+=======================================+
 |     0 | Natively Signed CBOR Certificate      |
-|     1 | CBOR Compressed X.509 Certificate     |
+|     1 | CBOR Compressed X.509 v3 Certificate  |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="CBOR Certificate Types"}
