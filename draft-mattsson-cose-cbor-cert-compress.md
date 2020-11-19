@@ -183,7 +183,7 @@ Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 RelativeDistinguishedName = [ + Attribute ] / text / bytes
 
 Attribute = (
-   attributeType : int / OID,
+   attributeType : int,
    attributeValue : text,
 )
 
