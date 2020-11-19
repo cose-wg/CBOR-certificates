@@ -133,11 +133,11 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}), where the sign is used to represent the character string type; positive for printableString, negative for utf8String. The string types teletexString, universalString, and bmpString are not supported. If exactly one 'RelativeDistinguishedName' is present, the outer array is omitted, and issuer is encoded as a single CBOR array. If a RelativeDistinguishedName contains a single Attribute containing an utf8String encoded 'common name', the int is omitted and the Attribute is encoded as a single CBOR text string. If the utf8String encoded 'common name' contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6. All other EUI-64 is encoded as a CBOR byte string of length 8.
 
-* validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They are encoded as unsigned integers using the following invertible encoding (Horner's method with different bases).
+* validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They ASCII strings are converted to integers using the following invertible encoding (Horner's method with different bases).
 
    n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * (yy)yy))))
    
-   They are encoded as a byte string, which is interpreted as an unsigned integer n in network byte order. UTCTime and GeneralizedTime are encoded as a byte strings of length 4 and 5 respectively. Decoding can be done by a succession of modulo and subtraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
+   The integer n is encoded as the unwrapped CBOR positive bignum (~biguint). GeneralizedTime before the year 100 AD is not supported. Decoding can be done by a succession of modulo and subtraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
 
 * subject. The 'subject' is encoded exactly like issuer.
 
