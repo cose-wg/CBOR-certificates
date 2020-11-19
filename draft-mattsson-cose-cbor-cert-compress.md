@@ -149,7 +149,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
 
-* cborCertificateType. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (cborCertificateType = 0) or a CBOR compressed X.509 certificates (cborCertificateType = 1), see {{type}}.
+* cborCertificateType. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (cborCertificateType = 0) or a CBOR compressed X.509 v3 certificate (cborCertificateType = 1), see {{type}}.
 
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
