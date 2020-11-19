@@ -252,7 +252,7 @@ zlib-flate -compress < cert.der > cert.compressed
 +------------------+--------------+------------+--------------------+
 |                  |   RFC 7925   |    zlib    |  CBOR Certificate  |
 +------------------+---------------------------+--------------------+
-| Certificate Size |     314      |     295    |         138        |
+| Certificate Size |     314      |     295    |         140        |
 +------------------+--------------+------------+--------------------+
 ~~~~~~~~~~~
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
@@ -579,7 +579,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 140 bytes.
 
 ~~~~~~~~~~~
 01 43 01 F5 0D 2A 6B 52 46 43 20 74 65 73 74 20 43 41 44 2B 04 41 80 44
@@ -614,7 +614,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 140 bytes.
 
 ~~~~~~~~~~~
 00 43 01 F5 0D 2A 6B 52 46 43 20 74 65 73 74 20 43 41 44 2B 04 41 80 44
