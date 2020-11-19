@@ -125,9 +125,9 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * version. The 'version' field is known (fixed to v3) and is omitted in the CBOR encoding.
 
-* serialNumber. The 'serialNumber' INTEGER value field is encoded as a unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
+* serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int 'issuerSignatureAlgorithm' (see {{sigalg}}) or a relativeOID byte string. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int 'issuerSignatureAlgorithm' (see {{sigalg}}) or a CBOR OID tag. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
@@ -175,9 +175,9 @@ TBSCertificate = (
    extensions : [ * Extension ] / int,
 )
 
-Algorithm = int / relativeOID
+Algorithm = int / OID
 
-relativeOID = bytes
+OID = #6.6(bstr) ; tag number 6 is used here, but tag number is TBD
 
 Name = [ * RelativeDistinguishedName ] / RelativeDistinguishedName
 
@@ -196,7 +196,7 @@ ExtensionReg = (
 )
 
 ExtensionRaw = (
-   extensionID : relativeOID,
+   extensionID : OID,
    ? critical : bool,
    ? extensionValue : bytes,
 )
