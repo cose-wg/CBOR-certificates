@@ -171,7 +171,7 @@ TBSCertificate = (
    subject : Name,
    subjectPublicKeyAlgorithm : Algorithm,
    subjectPublicKey : bytes,
-   extensions : [ * Extension ] / int,
+   extensions : [ * Extension ],
 )
 
 Algorithm = int / OID
@@ -187,17 +187,10 @@ Attribute = (
    attributeValue : text,
 )
 
-Extension = ExtensionReg // ExtensionRaw
-
-ExtensionReg = (
-   extensionType : int,
-   ? extensionValue : any, ; optionality and type known from extensionType
-)
-
-ExtensionRaw = (
-   extensionID : OID,
-   ? critical : bool,
-   ? extensionValue : bytes,
+Extension = (
+   extensionID : int / OID,
+   ? critical : bool,    ; omitted if extensionID is an int
+   extensionValue : any, ; type known from extensionType
 )
 ~~~~~~~~~~~
 
@@ -345,25 +338,16 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 +-------+-------------------------------------+------------------+
 | Value | X.509 Extension Type                | extensionValue   |
 +=======+=====================================+==================+
-|     1 | id-ce-basicConstraints (cA = false) |                  | 
-|     2 | id-ce-basicConstraints (cA = true)  |                  |
-|     3 | id-ce-basicConstraints (cA = true)  | int              |
-|     4 | id-ce-keyUsage                      | int              |
-|     5 | id-ce-keyUsage + 1                  |                  |
-|     6 | id-ce-keyUsage + 16                 |                  |
-|     7 | id-ce-keyUsage + 17                 |                  |
-|     8 | id-ce-keyUsage + 32                 |                  |
-|     9 | id-ce-keyUsage + 33                 |                  |
-|    10 | id-ce-keyUsage + 48                 |                  |
-|    11 | id-ce-keyUsage + 49                 |                  |
-|    12 | id-ce-extKeyUsage                   | [] / int / rOID  |
-|    13 | id-ce-subjectAltName                | [] / text        |
-|    14 | id-ce-authorityKeyIdentifier        | bytes            |
-|    15 | id-ce-subjectKeyIdentifier          | bytes            |
-|    16 | id-ce-certificatePolicies           | bytes            |
-|    17 | id-ce-cRLDistributionPoints         | bytes            |
-|    18 | id-pe-authorityInfoAccess           | bytes            |
-|    19 | SCT List (1.3.6.1.4.1.11129.2.4.2)  | bytes            |
+|     1 | id-ce-basicConstraints              | int              | 
+|     2 | id-ce-keyUsage                      | int              |
+|     3 | id-ce-extKeyUsage                   | [] / int / OID   |
+|     4 | id-ce-subjectAltName                | [] / text        |
+|     5 | id-ce-authorityKeyIdentifier        | bytes            |
+|     6 | id-ce-subjectKeyIdentifier          | bytes            |
+|     7 | id-ce-certificatePolicies           | bytes            |
+|     8 | id-ce-cRLDistributionPoints         | bytes            |
+|     9 | id-pe-authorityInfoAccess           | bytes            |
+|    10 | SCT List (1.3.6.1.4.1.11129.2.4.2)  | bytes            |
 |   248 | id-ce-nameConstraints               | bytes            |
 |   249 | id-ce-policyConstraints             | bytes            |
 |   250 | id-ce-inhibitAnyPolicy              | bytes            |
