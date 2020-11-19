@@ -189,7 +189,7 @@ Attribute = (
 
 Extension = (
    extensionID : int / OID,
-   ? critical : bool,    ; omitted if extensionID is an int
+   ? critical : bool,    ; present if and only if extensionID is an OID
    extensionValue : any, ; type known from extensionType
 )
 ~~~~~~~~~~~
@@ -198,7 +198,7 @@ Extension = (
 
 EDITOR'S NOTE: The current specification encodes many common extensions with a DER encoded byte string. It should be discussed if more or all commonly active extensions should be natively encoded with CBOR. Would an specific CBOR encoding have to be specified for each extension or can a general CBOR encoding that apply to all remaining extensions be specified?
 
-This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a registered extension (an CBOR int followed by an optional CBOR item of any type) or a raw extension (a relative OID byte string, a bool, and a the DER encoved value of 'extnValue'). For registered extensions each 'extnID' field is encoded as a CBOR int (see {{extype}}), where the sign is used to encode if the extension 'critical' field. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign. If the array contains exactly one int, the array is omitted. The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below.
+This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign. The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below.
 
 The extensions mandated to be supported by {{RFC7925}} are given special treatment. Below the boolean values (cA, digitalSignature, keyAgreement, etc.) are set to 0 or 1 according to their value in the DER encoding.:
 
