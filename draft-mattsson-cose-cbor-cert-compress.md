@@ -51,8 +51,9 @@ normative:
   RFC8446:
   RFC8610:
   RFC8742:
-  I-D.ietf-tls-dtls13:
+  I-D.ietf-cbor-tags-oid:
   I-D.ietf-tls-certificate-compression:
+  I-D.ietf-tls-dtls13:
 
 informative:
 
