@@ -190,8 +190,8 @@ Extensions =   [ * Extension ] / int,
 
 Extension = (
    extensionID : int / OID,
-   ? critical : bool,    ; present if and only if extensionID is an OID
-   extensionValue : any, ; type known from extensionType
+   ? critical : bool,        ; present if and only if extensionID is an OID
+   extensionValue : any,     ; type known from extensionType
 )
 ~~~~~~~~~~~
 
