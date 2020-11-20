@@ -581,7 +581,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 140 bytes.
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 
 ~~~~~~~~~~~
 01 43 01 F5 0D 2A 6B 52 46 43 20 74 65 73 74 20 43 41 44 2B 04 41 80 44
@@ -616,7 +616,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 140 bytes.
+The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 
 ~~~~~~~~~~~
 00 43 01 F5 0D 2A 6B 52 46 43 20 74 65 73 74 20 43 41 44 2B 04 41 80 44
