@@ -254,7 +254,7 @@ zlib-flate -compress < cert.der > cert.compressed
 +------------------+--------------+------------+--------------------+
 |                  |   RFC 7925   |    zlib    |  CBOR Certificate  |
 +------------------+---------------------------+--------------------+
-| Certificate Size |     314      |     295    |         140        |
+| Certificate Size |     314      |     295    |         138        |
 +------------------+--------------+------------+--------------------+
 ~~~~~~~~~~~
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
