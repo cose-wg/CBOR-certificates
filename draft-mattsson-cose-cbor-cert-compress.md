@@ -48,18 +48,18 @@ normative:
   RFC7925:
   RFC8152:
   RFC8174:
-  RFC8446:
   RFC8610:
   RFC8742:
   I-D.ietf-cbor-tags-oid:
-  I-D.ietf-tls-certificate-compression:
-  I-D.ietf-tls-dtls13:
 
 informative:
 
   RFC7228:
+  RFC8446:
   I-D.ietf-cose-x509:
   I-D.ietf-lake-edhoc:
+  I-D.ietf-tls-certificate-compression:
+  I-D.ietf-tls-dtls13:
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
