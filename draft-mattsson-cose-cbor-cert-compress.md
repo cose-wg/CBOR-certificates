@@ -196,9 +196,9 @@ Extension = (
 
 ## Encoding of Extensions {#ext-encoding}
 
-EDITOR'S NOTE: The current specification encodes many common extensions with a DER encoded byte string. It should be discussed if more or all commonly active extensions should be natively encoded with CBOR. Would an specific CBOR encoding have to be specified for each extension or can a general CBOR encoding that apply to all remaining extensions be specified?
+EDITOR'S NOTE: The current specification encodes many common extensions with a DER encoded byte string. It should be discussed if more or all commonly active extensions should be natively encoded with CBOR. Would a specific CBOR encoding have to be specified for each extension or can a general CBOR encoding that apply to all remaining extensions be specified?
 
-This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign.
+This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign.
 
 The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. The 'extensionValue' for the extensions mandated to be supported by {{RFC7925}} are encoded as follows:
 
@@ -206,10 +206,10 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 
 * keyUsage. The 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
-* extKeyUsage. extensionValue is encoded as an array of ints or relativeOID where each ints or relativeOID encodes a key usage purpose (see {{EKU}} for registered ints). If the array contains a single item, the array is omitted.  
+* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags where each ints or OID tag encodes a key usage purpose. If the array contains a single item, the array is omitted.  
 
 ~~~~~~~~~~~
-   extensionValue = [ * int / relativeOID ] / int / relativeOID
+   extensionValue = [ * int / OID ] / int / OID
 ~~~~~~~~~~~
 
 * subjectAltName. extensionValue is encoded as an \[ * ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
