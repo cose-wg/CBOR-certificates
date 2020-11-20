@@ -400,8 +400,6 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 
 IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
-EDITOR'S NOTE: This is probably to many algorithms. All sha224, sha3, and maybe ecdsa-with-SHA1 can probably be removed.
-
 ~~~~~~~~~~~
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
