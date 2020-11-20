@@ -128,7 +128,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int 'issuerSignatureAlgorithm' (see {{sigalg}}) or a CBOR OID tag. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int 'issuerSignatureAlgorithm' (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
@@ -142,9 +142,9 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag. Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. Uncompressed public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent an even and odd y-coordinate respectively.
+* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} . Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. Uncompressed public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent an even and odd y-coordinate respectively.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment.
 
 * signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the size of the largest prime-order subgroup. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
@@ -207,7 +207,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 
 * keyUsage. The 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
-* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags where each ints or OID tag encodes a key usage purpose. If the array contains a single item, the array is omitted.  
+* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each ints or OID tag encodes a key usage purpose. If the array contains a single item, the array is omitted.  
 
 ~~~~~~~~~~~
    extensionValue = [ * int / OID ] / int / OID
