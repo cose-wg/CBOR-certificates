@@ -386,11 +386,12 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 +-------+-----------------------------------+------------------+
 | Value | Subject Alternative Name          |                  |
 +=======+===================================+==================+
-|     0 | rfc822Name                        | text             |
-|     1 | dNSName                           | text             |
-|     2 | directoryName                     | Name             |
-|     3 | uniformResourceIdentifier         | text             |
-|     4 | iPAddress                         | bytes            |
+|     0 | otherName                         | [ OID, bytes ]   |
+|     1 | rfc822Name                        | text             |
+|     2 | dNSName                           | text             |
+|     3 | directoryName                     | Name             |
+|     4 | uniformResourceIdentifier         | text             |
+|     5 | iPAddress                         | bytes            |
 +-------+-----------------------------------+------------------+
 ~~~~~~~~~~~
 {: #fig-san title="CBOR Subject Alternative Name Registry"}
@@ -752,7 +753,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
      7, h'305A304E060B6086480186FD6E01071701303F303D06082B060105050702011631687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F3008060667810C010201',
      9, h'3074302A06082B06010505073001861E687474703A2F2F6F6373702E737461726669656C64746563682E636F6D2F304606082B06010505073002863A687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F73666967322E637274',
      5, h'30168014254581685026383D3B2D2CBECD6AD9B63DB36663',
-     4, [ 1, "*.tools.ietf.org", 1, "tools.ietf.org" ],
+     4, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
      6, h'0414AD8AB41C0751D7928907B0B784622F36557A5F4D',
     10, h'0481F400F2007700F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E300000174E5AC711300000403004830460221008CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
   ],
