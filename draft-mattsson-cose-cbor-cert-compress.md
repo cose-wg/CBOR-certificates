@@ -188,7 +188,7 @@ Extensions =   [ * Extension ] / int,
 
 Extension = (
    extensionID : int / oid,
-   ? critical : bool,        ; present if and only if extensionID is an OID
+   ? critical : bool,        ; present if and only if extensionID is an oid
    extensionValue : any,     ; type known from extensionType
 )
 ~~~~~~~~~~~
@@ -205,10 +205,10 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 
 * keyUsage. The 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
-* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each ints or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.  
+* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.  
 
 ~~~~~~~~~~~
-   extensionValue = [ * int / OID ] / int
+   extensionValue = [ * int / oid ] / int
 ~~~~~~~~~~~
 
 * subjectAltName. extensionValue is encoded as an \[ * ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
@@ -386,7 +386,7 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 +-------+-----------------------------------+------------------+
 | Value | Subject Alternative Name          |                  |
 +=======+===================================+==================+
-|     0 | otherName                         | [ OID, bytes ]   |
+|     0 | otherName                         | [ oid, bytes ]   |
 |     1 | rfc822Name                        | text             |
 |     2 | dNSName                           | text             |
 |     3 | directoryName                     | Name             |
