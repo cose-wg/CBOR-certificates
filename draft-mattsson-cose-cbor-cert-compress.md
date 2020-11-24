@@ -493,7 +493,7 @@ EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS
 +-------+------------------+-------------+---------+
 | Value | Name             | Recommended | Comment |
 +=======+==================+=============+=========+
-|  TBD3 | CBOR Certificate |           Y |         |         
+|  TBD5 | CBOR Certificate |           Y |         |         
 +-------+------------------+-------------+---------+
 ~~~~~~~~~~~
 
