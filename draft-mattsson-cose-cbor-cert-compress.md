@@ -175,9 +175,7 @@ TBSCertificate = (
    extensions : Extensions,
 )
 
-Algorithm = int / OID
-
-OID = #6.6(bstr) ; tag number 6 is used here, but tag number is TBD
+Algorithm = int / oid
 
 Name = [ * [ + Attribute ] ] / text / bytes
 
@@ -189,7 +187,7 @@ Attribute = (
 Extensions =   [ * Extension ] / int,
 
 Extension = (
-   extensionID : int / OID,
+   extensionID : int / oid,
    ? critical : bool,        ; present if and only if extensionID is an OID
    extensionValue : any,     ; type known from extensionType
 )
