@@ -463,7 +463,7 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 
 ## COSE Header Parameters Registry {#cose}
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5bag, x5chain, x5t, and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded. CBOR certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5bag, x5chain, x5t, and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded. Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
 
 ~~~~~~~~~~~
 +-----------+-------+----------------+---------------------+
