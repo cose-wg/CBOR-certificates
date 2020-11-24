@@ -336,7 +336,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 +=======+=====================================+==================+
 |     1 | id-ce-basicConstraints              | int              | 
 |     2 | id-ce-keyUsage                      | int              |
-|     3 | id-ce-extKeyUsage                   | [] / int / OID   |
+|     3 | id-ce-extKeyUsage                   | [] / int         |
 |     4 | id-ce-subjectAltName                | [] / text        |
 |     5 | id-ce-authorityKeyIdentifier        | bytes            |
 |     6 | id-ce-subjectKeyIdentifier          | bytes            |
