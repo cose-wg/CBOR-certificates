@@ -134,11 +134,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}). The AttributeType id-emailAddress is always an IA5String. For the other AttributeTypes, the sign is used to represent the character string type; positive for printableString, negative for utf8String. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
 
-* validity. The 'notBefore' and 'notAfter' fields are ASCII string of the form "yymmddHHMMSSZ" for UTCTime and "yyyymmddHHMMSSZ" for GeneralizedTime. They ASCII strings are converted to integers using the following invertible encoding (Horner's method with different bases).
-
-   n = SS + 61 * (MM + 60 * (HH + 24 * (dd + 32 * (mm + 13 * (yy)yy))))
-   
-   The integer n is encoded as the unwrapped CBOR positive bignum (~biguint). GeneralizedTime before the year 100 AD is not supported. Decoding can be done by a succession of modulo and subtraction operations. I.e. SS = n mod 61, MM = ((n - SS) / 61) mod 60, etc.
+* validity. The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime and later dates as GeneralizedTime.
 
 * subject. The 'subject' is encoded exactly like issuer.
 
@@ -167,8 +163,8 @@ TBSCertificate = (
    certificateSerialNumber : ~biguint,
    issuerSignatureAlgorithm : Algorithm,
    issuer : Name,
-   validityNotBefore : ~biguint,
-   validityNotAfter : ~biguint,
+   validityNotBefore : ~time,
+   validityNotAfter : ~time,
    subject : Name,
    subjectPublicKeyAlgorithm : Algorithm,
    subjectPublicKey : bytes,
