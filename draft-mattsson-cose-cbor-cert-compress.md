@@ -204,7 +204,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.  
 
 ~~~~~~~~~~~
-   extensionValue = [ * int / oid ] / int
+   extensionValue = [ + int / oid ] / int
 ~~~~~~~~~~~
 
 * subjectAltName. extensionValue is encoded as an \[ * ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
