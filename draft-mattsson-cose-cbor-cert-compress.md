@@ -565,8 +565,8 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   h'01f50d',
   6,
   "RFC test CA",
-  h'2B044180',
-  h'2D543300',
+  1577836800,
+  1612224000,
   h'0123456789AB',
   1,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba
@@ -585,8 +585,8 @@ The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 43 01 F5 0D
 06
 6B 52 46 43 20 74 65 73 74 20 43 41
-44 2B 04 41 80
-44 2D 54 33 00
+1A 5E 0B E1 00
+1A 60 18 96 00
 46 01 23 45 67 89 AB
 01
 58 21 02 AE 4C DB 01 F6 14 DE FC 71 21 28 5F DC 7F 5C 6D 1D 42 C9 56 47
@@ -608,8 +608,8 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
   h'01f50d',
   6,
   "RFC test CA",
-  h'2B044180',
-  h'2D543300',
+  1577836800,
+  1612224000,
   h'0123456789AB',
   1,
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061
@@ -628,8 +628,8 @@ The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 43 01 F5 0D
 06
 6B 52 46 43 20 74 65 73 74 20 43 41
-44 2B 04 41 80
-44 2D 54 33 00
+1A 5E 0B E1 00
+1A 60 18 96 00
 46 01 23 45 67 89 AB
 01
 58 21 02 AE 4C DB 01 F6 14 DE FC 71 21 28 5F DC 7F 5C 6D 1D 42 C9 56 47
