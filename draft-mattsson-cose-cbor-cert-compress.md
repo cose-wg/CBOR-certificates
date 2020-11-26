@@ -66,6 +66,7 @@ informative:
   I-D.ietf-tls-certificate-compression:
   I-D.ietf-tls-dtls13:
   I-D.ietf-uta-tls13-iot-profile
+  I-D.ietf-tls-ctls
 
   IEEE-802.1AR:
     target: https://standards.ieee.org/standard/802_1AR-2018.html
@@ -95,21 +96,21 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding of PKIX profiled X.509 Certificates. The resulting certificates are called "CBOR certificates". The CBOR encoding supports a large subset of RFC 5280, while at the same time producing very small sizes for certificates compatible with RFC 7925. The CBOR encoding can be used to compress DER encoded X.509 certificates and to encode natively signed certificates. When uses to compress DER encoded X.509 certificates, the CBOR encoding can in many cases compress RFC 7925 profiled certificates with over 50%. The document also specifies COSE headers for CBOR certificates as well as a TLS certificate type for CBOR certificates.
+This document specifies a CBOR encoding of PKIX profiled X.509 Certificates. The resulting certificates are called "CBOR certificates". The CBOR encoding supports a large subset of RFC 5280, while at the same time producing very small sizes for certificates compatible with RFC 7925 and IEEE 802.1AR DevID. The CBOR encoding can be used to re-encode DER encoded X.509 certificates and to encode natively signed certificates. When uses to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%. The document also specifies COSE headers for CBOR certificates as well as a TLS certificate type for CBOR certificates.
 
 --- middle
 
 # Introduction {#intro}
 
-One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and encoding of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. More compact certificate representations are desirable. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) {{RFC7049}} reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc.
+One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. More compact certificate representations are desirable. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) {{RFC7049}} reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc.
 
 CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. {{RFC8610}} also extends the diagnostic notation.
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and {{RFC8742}}.
 
-RFC 7925 {{RFC7925}} specifies a certificate profile for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, or EDHOC {{I-D.ietf-lake-edhoc}}. This document specifies a CBOR encoding which can support large parts of {{RFC5280}} based on {{X.509-IoT}}. The encoding support all {{RFC7925}} profiled X.509 certificates. Two variants are defined using the same CBOR encoding and differing only in what is being signed: 
+RFC 7925 {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} specify certificate profiles for Internet of Things deployments which can be applied for lightweight certificate based authentication with e.g. TLS {{RFC8446}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, EDHOC {{I-D.ietf-lake-edhoc}} or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of {{RFC5280}}. The encoding support all {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} profiled X.509 certificates. Two variants are defined using the same CBOR encoding and differing only in what is being signed: 
 
-* CBOR compression of DER encoded X.509 certificates {{RFC5280}}, which can be decompressed into the original DER encoded X.509 certificate.
+* An inversible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
 
 * Natively signed CBOR certificates, which further optimizes the performance in constrained environments but is not backwards compatible with {{RFC5280}}, see {{native-CBOR}}. 
 
@@ -123,11 +124,11 @@ This specification makes use of the terminology in {{RFC5280}}, {{RFC7049}}, {{R
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}}. In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}} and {{IEEE-802.1AR}}. In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
 
-The CBOR certificate can be either a CBOR compressed X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. When used as for compression of an existing X.509 certificate, the encoding only works on canonical encoded certificates. The encoding is known to work with DER but might work with other canonical encodings. The compression does not work for BER encoded certificates.
+The CBOR certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
-In the encoding described below the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding. 
+In the encoding described below, the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding. 
 
 ## Message Fields
 
@@ -155,7 +156,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subjectUniqueID. Not supported.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
 * signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the size of the largest prime-order subgroup. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
@@ -210,7 +211,7 @@ EDITOR'S NOTE: The current specification encodes many common extensions with a D
 
 This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign.
 
-The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. The 'extensionValue' for the extensions mandated to be supported by {{RFC7925}} are encoded as follows:
+The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. The 'extensionValue' for the extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are encoded as follows:
 
 * basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
@@ -222,6 +223,10 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 ~~~~~~~~~~~
 
 * subjectAltName. extensionValue is encoded as an \[ + ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
+
+* authorityKeyIdentifier. TBD
+
+* subjectKeyIdentifier. TBD
 
 ### Example Encoding of Extensions
 
