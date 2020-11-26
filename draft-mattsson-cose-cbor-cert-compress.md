@@ -45,21 +45,37 @@ normative:
   RFC2119:
   RFC5280:
   RFC7049:
-  RFC7925:
   RFC8152:
   RFC8174:
   RFC8610:
   RFC8742:
+  I-D.ietf-cose-x509:
   I-D.ietf-cbor-tags-oid:
 
+  SECG:
+    title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
+    target: https://secg.org/sec1-v2.pdf
+    date: 2009
+    
 informative:
 
   RFC7228:
+  RFC7925:
   RFC8446:
-  I-D.ietf-cose-x509:
   I-D.ietf-lake-edhoc:
   I-D.ietf-tls-certificate-compression:
   I-D.ietf-tls-dtls13:
+  I-D.ietf-uta-tls13-iot-profile
+
+  IEEE-802.1AR:
+    target: https://standards.ieee.org/standard/802_1AR-2018.html
+    title: IEEE Standard for Local and metropolitan area networks–Secure Device Identity
+    seriesinfo:
+      IEEE Standard 802.1AR-2018
+    author:
+      -
+        ins: Institute of Electrical and Electronics Engineers
+    date: August 2018
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
@@ -76,11 +92,6 @@ informative:
       -
         ins: S. Raza
     date: July 2018
-
-  SECG:
-    title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
-    target: https://secg.org/sec1-v2.pdf
-    date: 2009
 
 --- abstract
 
