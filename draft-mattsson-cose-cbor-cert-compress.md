@@ -385,10 +385,11 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 |     0 | otherName                         | [ oid, bytes ]   |
 |     1 | rfc822Name                        | text             |
 |     2 | dNSName                           | text             |
-|     3 | directoryName                     | Name             |
-|     4 | uniformResourceIdentifier         | text             |
-|     5 | iPAddress                         | bytes            |
+|     4 | directoryName                     | Name             |
+|     6 | uniformResourceIdentifier         | text             |
+|     7 | iPAddress                         | bytes            |
 +-------+-----------------------------------+------------------+
+id-on-hardwareModuleName
 ~~~~~~~~~~~
 {: #fig-san title="CBOR Subject Alternative Name Registry"}
 {: artwork-align="center"}
