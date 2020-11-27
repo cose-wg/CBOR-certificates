@@ -217,7 +217,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
    extensionValue = [ + int / oid ] / int
 ~~~~~~~~~~~
 
-* subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
+* subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
 ~~~~~~~~~~~
    extensionValue = GeneralNames
    GeneralNames = [ + ( int, any ) ]
@@ -230,7 +230,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 
 ### Example Encoding of Extensions
 
-The examples below use values from {{extype}}, {{EKU}}, and {{SAN}}:
+The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 * A critical basicConstraints ('cA' = true) without pathLenConstraint is encoded as the two CBOR ints -1, -1.
 
@@ -394,13 +394,13 @@ IANA has created a new registry titled "CBOR Extended Key Usage Registry" under 
 {: #fig-ekutype title="CBOR Extended Key Usage Registry"}
 {: artwork-align="center"}
 
-## CBOR Subject Alternative Name Registry {#SAN}
+## CBOR General Name Registry {#GN}
 
-IANA has created a new registry titled "CBOR Subject Alternative Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR General Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------+------------------+
-| Value | Subject Alternative Name          |                  |
+| Value | General Name                      |                  |
 +=======+===================================+==================+
 |     0 | otherName                         | [ oid, bytes ]   |
 |     1 | rfc822Name                        | text             |
@@ -412,7 +412,7 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 +-------+-----------------------------------+------------------+
 id-on-hardwareModuleName
 ~~~~~~~~~~~
-{: #fig-san title="CBOR Subject Alternative Name Registry"}
+{: #fig-gn title="CBOR General Name Registry"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
