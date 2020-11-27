@@ -217,7 +217,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
    ExtValueEKU = [ + int / oid ] / int
 ~~~~~~~~~~~
 
-* subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
+* subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR.
 ~~~~~~~~~~~
    GeneralNames = [ + ( int, any ) ] / text
 ~~~~~~~~~~~
@@ -396,6 +396,7 @@ IANA has created a new registry titled "CBOR Extended Key Usage Registry" under 
 ## CBOR General Name Registry {#GN}
 
 IANA has created a new registry titled "CBOR General Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
 
 ~~~~~~~~~~~
 +-------+-----------------------------------+------------------+
