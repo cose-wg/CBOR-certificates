@@ -401,6 +401,7 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 +-------+-----------------------------------+------------------+
 | Value | General Name                      |                  |
 +=======+===================================+==================+
+|    -1 | otherName + hardwareModuleName    | [ oid, bytes ]   |
 |     0 | otherName                         | [ oid, bytes ]   |
 |     1 | rfc822Name                        | text             |
 |     2 | dNSName                           | text             |
