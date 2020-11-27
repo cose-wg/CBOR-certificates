@@ -217,11 +217,16 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
    extensionValue = [ + int / oid ] / int
 ~~~~~~~~~~~
 
-* subjectAltName. extensionValue is encoded as an \[ + ( int, any ) \] array where each (int, any) pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
+* subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{SAN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string.
+~~~~~~~~~~~
+   extensionValue = GeneralNames
+   GeneralNames = [ + ( int, any ) ]
+~~~~~~~~~~~
 
 * authorityKeyIdentifier. TBD
-
-* subjectKeyIdentifier. TBD
+~~~~~~~~~~~
+   extensionValue = [ bytes / null, GeneralNames / null, ~biguint / null ]
+~~~~~~~~~~~
 
 ### Example Encoding of Extensions
 
