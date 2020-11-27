@@ -403,6 +403,7 @@ IANA has created a new registry titled "CBOR Subject Alternative Name Registry" 
 |     4 | directoryName                     | Name             |
 |     6 | uniformResourceIdentifier         | text             |
 |     7 | iPAddress                         | bytes            |
+|     8 | registeredID                      | oid              |
 +-------+-----------------------------------+------------------+
 id-on-hardwareModuleName
 ~~~~~~~~~~~
