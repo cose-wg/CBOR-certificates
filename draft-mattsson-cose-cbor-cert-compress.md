@@ -136,11 +136,11 @@ The X.509 fields and their CBOR encodings are listed below.
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is known (fixed to v3) and is omitted in the CBOR encoding.
+* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. Currently only v3 is supported. The field 'cborCertificateType' also indicates the type of BOR certificate. Currently, type can be a natively signed CBOR certificate (cborCertificateType = 0) or a CBOR compressed X.509 v3 certificate (cborCertificateType = 1), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int 'issuerSignatureAlgorithm' (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
@@ -160,12 +160,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the size of the largest prime-order subgroup. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
-In addition to the above fields present in X.509, the CBOR encoding introduces an additional field:
-
-* cborCertificateType. A CBOR int used to indicate the type of CBOR certificate. Currently, type can be a natively signed CBOR certificate (cborCertificateType = 0) or a CBOR compressed X.509 v3 certificate (cborCertificateType = 1), see {{type}}.
-
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
-
 
 ~~~~~~~~~~~ CDDL
 ; This defines an array, the elements of which are to be used in a CBOR Sequence:
@@ -303,12 +298,12 @@ For all items, the 'Reference' field points to this document.
 IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+---------------------------------------+
-| Value | Description                           |
-+=======+=======================================+
-|     0 | Natively Signed CBOR Certificate      |
-|     1 | CBOR Compressed X.509 v3 Certificate  |
-+-------+---------------------------------------+
++-------+-----------------------------------------------------+
+| Value | Description                                         |
++=======+=====================================================+
+|     0 | Natively Signed CBOR Certificate following X.509 v3 |
+|     1 | CBOR re-encoding of X.509 v3 Certificate            |
++-------+-----------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="CBOR Certificate Types"}
 {: artwork-align="center"}
