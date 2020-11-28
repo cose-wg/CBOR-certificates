@@ -429,7 +429,8 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 +-------+---------------------------------------+
 | Value | X.509 Signature Algorithm             |
 +=======+=======================================+
-|     0 | sha1WithRSAEncryption                 |
+|  -255 | sha1WithRSAEncryption                 |
+|  -254 | ecdsa-with-SHA1                       |
 |     1 | sha256WithRSAEncryption               |
 |     2 | sha384WithRSAEncryption               |
 |     3 | sha512WithRSAEncryption               |
@@ -450,7 +451,6 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |   247 | id-rsassa-pkcs1-v1_5-with-sha3-256    |
 |   248 | id-rsassa-pkcs1-v1_5-with-sha3-384    |
 |   249 | id-rsassa-pkcs1-v1_5-with-sha3-512    |
-|   250 | ecdsa-with-SHA1                       |
 |   251 | ecdsa-with-SHA224                     |
 |   252 | id-ecdsa-with-sha3-224                |
 |   253 | id-ecdsa-with-sha3-256                |
@@ -767,7 +767,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
     [8, "Domain Control Validated"],
     [-1, "*.tools.ietf.org"]
   ],
-  0,
+  -255,
   h'3082010A0282010100B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA10203010001',
   [
     -1, -2,
