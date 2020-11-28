@@ -65,8 +65,8 @@ informative:
   I-D.ietf-lake-edhoc:
   I-D.ietf-tls-certificate-compression:
   I-D.ietf-tls-dtls13:
-  I-D.ietf-uta-tls13-iot-profile
-  I-D.ietf-tls-ctls
+  I-D.ietf-uta-tls13-iot-profile:
+  I-D.ietf-tls-ctls:
 
   IEEE-802.1AR:
     target: https://standards.ieee.org/standard/802_1AR-2018.html
