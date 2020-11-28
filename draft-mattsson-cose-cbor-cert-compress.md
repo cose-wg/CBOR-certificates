@@ -124,7 +124,7 @@ This specification makes use of the terminology in {{RFC5280}}, {{RFC7049}}, {{R
 
 # CBOR Encoding {#encoding}
 
-This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}} and {{IEEE-802.1AR}}. In the CBOR encoding, static fields are elided, elliptic curve points are compressed, OID are replaced with short integers, time values are compressed, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
+This section specifies the content and encoding for CBOR certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}} and everything in {{RFC7925}} and {{IEEE-802.1AR}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see {{fig-table}}. 
 
 The CBOR certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed CBOR certificate, in which case the signature is calculated directly on the CBOR encoded data (see {{native-CBOR}}). In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
@@ -136,7 +136,7 @@ The X.509 fields and their CBOR encodings are listed below.
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. Currently only v3 is supported. The field 'cborCertificateType' also indicates the type of BOR certificate. Currently, type can be a natively signed CBOR certificate (cborCertificateType = 0) or a CBOR compressed X.509 v3 certificate (cborCertificateType = 1), see {{type}}.
+* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. Only v3 is supported. The field 'cborCertificateType' also indicates the type of the CBOR certificate. Currently, type can be a natively signed CBOR certificate following X.509 v3 (cborCertificateType = 0) or a CBOR compressed X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
