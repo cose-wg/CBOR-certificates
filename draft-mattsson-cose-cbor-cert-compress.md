@@ -222,7 +222,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
    GeneralNames = [ + ( int, any ) ] / text
 ~~~~~~~~~~~
 
-* authorityKeyIdentifier. TBD
+* authorityKeyIdentifier. extensionValue is encoded as an array where keyIdentifier is encoded as CBOR bytes and AuthorityCertSerialNumber is encoded as ~biguint exactly like certificateSerialNumber.
 ~~~~~~~~~~~
    ExtValueAKI = [ bytes / null, GeneralNames / null, ~biguint / null ]
 ~~~~~~~~~~~
@@ -756,8 +756,8 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
     [8, "http://certs.starfieldtech.com/repository/"],
     [1, "Starfield Secure Certificate Authority - G2"]
   ],
-  h'2D3EE7F6',
-  h'2F98B716',
+  1601581116,
+  1635881916,
   [
     [8, "Domain Control Validated"],
     [-1, "*.tools.ietf.org"]
