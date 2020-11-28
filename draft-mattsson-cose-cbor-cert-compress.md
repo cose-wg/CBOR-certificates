@@ -213,16 +213,19 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * keyUsage. The 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
 * extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.  
+
 ~~~~~~~~~~~
    ExtValueEKU = [ + int / oid ] / int
 ~~~~~~~~~~~
 
 * subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR.
+
 ~~~~~~~~~~~
    GeneralNames = [ + ( int, any ) ] / text
 ~~~~~~~~~~~
 
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber.
+
 ~~~~~~~~~~~
    ExtValueAKI = [ bytes / null, GeneralNames / null, ~biguint / null ]
 ~~~~~~~~~~~
