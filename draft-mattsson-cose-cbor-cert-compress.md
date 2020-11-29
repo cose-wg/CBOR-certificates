@@ -136,7 +136,7 @@ The X.509 fields and their CBOR encodings are listed below.
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. Only v3 is supported. The field 'cborCertificateType' also indicates the type of the CBOR certificate. Currently, type can be a natively signed CBOR certificate following X.509 v3 (cborCertificateType = 0) or a CBOR compressed X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
+* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. The field 'cborCertificateType' also indicates the type of the CBOR certificate. Currently, type can be a natively signed CBOR certificate following X.509 v3 (cborCertificateType = 0) or a CBOR compressed X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
@@ -144,7 +144,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}). The AttributeType id-emailAddress is always an IA5String. For the other AttributeTypes, the sign is used to represent the character string type; positive for printableString, negative for utf8String. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}). The AttributeType id-emailAddress is always an IA5String. For the other AttributeTypes, the sign is used to represent the character string type; positive for utf8String, negative for printableString. In natively signed certificates the sign has no meaning. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
 
 * validity. The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime and later dates as GeneralizedTime.
 
@@ -171,16 +171,19 @@ CBORCertificate = [
 
 TBSCertificate = (
    cborCertificateType : int,
-   certificateSerialNumber : ~biguint,
+   certificateSerialNumber : CertificateSerialNumber,
    issuerSignatureAlgorithm : Algorithm,
    issuer : Name,
-   validityNotBefore : ~time,
-   validityNotAfter : ~time,
+   validityNotBefore : Time,
+   validityNotAfter : Time,
    subject : Name,
    subjectPublicKeyAlgorithm : Algorithm,
    subjectPublicKey : bytes,
    extensions : Extensions,
 )
+
+
+CertificateSerialNumber = ~biguint
 
 Algorithm = int / oid
 
@@ -190,6 +193,8 @@ Attribute = (
    attributeType : int,
    attributeValue : text,
 )
+
+Time = ~time
 
 Extensions =   [ * Extension ] / int,
 
@@ -227,7 +232,8 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber.
 
 ~~~~~~~~~~~
-   ExtValueAKI = [ bytes / null, GeneralNames / null, ~biguint / null ]
+   ExtValueAKI = [ keyIdentifier / null, GeneralNames / null, CertificateSerialNumber / null ]
+   keyIdentifier = bytes
 ~~~~~~~~~~~
 
 * subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
@@ -359,7 +365,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     3 | id-ce-extKeyUsage                   | ExtValueEKU      |
 |     4 | id-ce-subjectAltName                | GeneralNames     |
 |     5 | id-ce-authorityKeyIdentifier        | ExtValueAKI      |
-|     6 | id-ce-subjectKeyIdentifier          | bytes            |
+|     6 | id-ce-subjectKeyIdentifier          | keyIdentifier    |
 |     7 | id-ce-certificatePolicies           | bytes            |
 |     8 | id-ce-cRLDistributionPoints         | bytes            |
 |     9 | id-pe-authorityInfoAccess           | bytes            |
@@ -754,18 +760,18 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   h'A6A55C870E39B40E',
   0,
   [
-    [4, "US"],
-    [6, "Arizona"], 
-    [5, "Scottsdale"], 
-    [7, "Starfield Technologies, Inc."], 
-    [8, "http://certs.starfieldtech.com/repository/"],
-    [1, "Starfield Secure Certificate Authority - G2"]
+    [-4, "US"],
+    [-6, "Arizona"], 
+    [-5, "Scottsdale"], 
+    [-7, "Starfield Technologies, Inc."], 
+    [-8, "http://certs.starfieldtech.com/repository/"],
+    [-1, "Starfield Secure Certificate Authority - G2"]
   ],
   1601581116,
   1635881916,
   [
-    [8, "Domain Control Validated"],
-    [-1, "*.tools.ietf.org"]
+    [-8, "Domain Control Validated"],
+    [1, "*.tools.ietf.org"]
   ],
   -255,
   h'3082010A0282010100B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA10203010001',
