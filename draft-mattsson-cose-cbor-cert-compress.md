@@ -140,8 +140,6 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
-
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and always omitted from the CBOR encoding.
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as CBOR array of CBOR arrays of Attributes, where each Attribute type and value is encoded as a (CBOR int, CBOR text string) pair. Each AttributeType is encoded as a CBOR int (see {{fig-attrtype}}). The AttributeType id-emailAddress is always an IA5String. For the other AttributeTypes, the sign is used to represent the character string type; positive for utf8String, negative for printableString. In natively signed certificates the sign has no meaning. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
@@ -158,6 +156,8 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
+* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
+
 * signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the size of the largest prime-order subgroup. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
@@ -172,7 +172,6 @@ CBORCertificate = [
 TBSCertificate = (
    cborCertificateType : int,
    certificateSerialNumber : CertificateSerialNumber,
-   issuerSignatureAlgorithm : Algorithm,
    issuer : Name,
    validityNotBefore : Time,
    validityNotAfter : Time,
@@ -180,6 +179,7 @@ TBSCertificate = (
    subjectPublicKeyAlgorithm : Algorithm,
    subjectPublicKey : bytes,
    extensions : Extensions,
+   issuerSignatureAlgorithm : Algorithm,
 )
 
 CertificateSerialNumber = ~biguint
@@ -594,7 +594,6 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
   1,
   h'01f50d',
-  6,
   "RFC test CA",
   1577836800,
   1612224000,
@@ -603,6 +602,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061ba
     0080df678867845e',
   1,
+  6,
   h'373873EF8781B88297EF235C1FACCF62DA4E44740DC2A2E6A3
     C6C882A3238D9C3AD9353BA788683B06BB48FECA16EA711717
     34C675C5332B2AF1CB733810A1FC'
@@ -614,7 +614,6 @@ The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 ~~~~~~~~~~~
 01
 43 01 F5 0D
-06
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 5E 0B E1 00
 1A 60 18 96 00
@@ -623,6 +622,7 @@ The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 58 21 02 AE 4C DB 01 F6 14 DE FC 71 21 28 5F DC 7F 5C 6D 1D 42 C9 56 47
 F0 61 BA 00 80 DF 67 88 67 84 5E
 01
+06
 58 40 37 38 73 EF 87 81 B8 82 97 EF 23 5C 1F AC CF 62 DA 4E 44 74 0D C2
 A2 E6 A3 C6 C8 82 A3 23 8D 9C 3A D9 35 3B A7 88 68 3B 06 BB 48 FE CA 16
 EA 71 17 17 34 C6 75 C5 33 2B 2A F1 CB 73 38 10 A1 FC
@@ -637,7 +637,6 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 
   0,
   h'01f50d',
-  6,
   "RFC test CA",
   1577836800,
   1612224000,
@@ -646,6 +645,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
   h'02ae4cdb01f614defc7121285fdc7f5c6d1d42c95647f061
     ba0080df678867845e',
   1,
+  6,
   h'7F10A063DA8DB2FD49414440CDF85070AC22A266C7F1DFB1
     577D9A35A295A8742E794258B76968C097F85542322A0796
     0199C13CC0220A9BC729EF2ECA638CFE'
@@ -657,7 +657,6 @@ The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 ~~~~~~~~~~~
 00
 43 01 F5 0D
-06
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 5E 0B E1 00
 1A 60 18 96 00
@@ -666,6 +665,7 @@ The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
 58 21 02 AE 4C DB 01 F6 14 DE FC 71 21 28 5F DC 7F 5C 6D 1D 42 C9 56 47
 F0 61 BA 00 80 DF 67 88 67 84 5E
 01
+06
 58 40 7F 10 A0 63 DA 8D B2 FD 49 41 44 40 CD F8 50 70 AC 22 A2 66 C7 F1
 DF B1 57 7D 9A 35 A2 95 A8 74 2E 79 42 58 B7 69 68 C0 97 F8 55 42 32 2A
 07 96 01 99 C1 3C C0 22 0A 9B C7 29 EF 2E CA 63 8C FE
@@ -756,7 +756,6 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
   1,
   h'A6A55C870E39B40E',
-  1,
   [
     [-4, "US"],
     [-6, "Arizona"], 
@@ -785,6 +784,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
      6, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
     10, h'0481F400F2007700F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E300000174E5AC711300000403004830460221008CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
   ],
+  1,
   h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADBB33F9DB3D7E0594C19A8E419A50CA770727763D5FE64510AD27AD650A58A9238ECCB2F0F5AC064584D5C06B9736368278B8934DC79C71D3AFD345F831441584980682980398A867269CC7937CEE397F7DCF39588ED81032900D2A2C7BAABD63A8ECA090BD9FB39264BFF03D88E2D3F6B21CA8A7DD85FFB94BA83DE9CFC158D61FA672DB0C7DB3D250A414A85D37F4946373CF4B175D052F3DDC766F14BFDAA00EDBFE47EED01EC7BE4F646FC31FD72FE03D2F265AF4D7EE2819B7AFD303CF552F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D'
 
 ~~~~~~~~~~~
