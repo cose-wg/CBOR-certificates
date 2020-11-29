@@ -226,7 +226,8 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used indentifies a hardwareModuleName directly.
 
 ~~~~~~~~~~~
-   GeneralNames = [ + ( int, any ) ] / text
+   GeneralNames = [ + GeneralName ] / text
+   GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
 ~~~~~~~~~~~
 
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber.
@@ -412,7 +413,7 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 
 ~~~~~~~~~~~
 +-------+-----------------------------------+------------------+
-| Value | General Name                      |                  |
+| Value | General Name Type                 | Value            |
 +=======+===================================+==================+
 |    -1 | otherName + hardwareModuleName    | [ oid, bytes ]   |
 |     0 | otherName                         | [ oid, bytes ]   |
