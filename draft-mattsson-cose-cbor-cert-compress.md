@@ -182,7 +182,6 @@ TBSCertificate = (
    extensions : Extensions,
 )
 
-
 CertificateSerialNumber = ~biguint
 
 Algorithm = int / oid
@@ -193,7 +192,7 @@ Attribute = ( attributeType : int, attributeValue : text )
 
 Time = ~time
 
-Extensions =   [ * Extension ] / int,
+Extensions = [ * Extension ] / int
 
 Extension = (
    extensionID : int / oid,
