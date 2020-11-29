@@ -189,10 +189,7 @@ Algorithm = int / oid
 
 Name = [ * [ + Attribute ] ] / text / bytes
 
-Attribute = (
-   attributeType : int,
-   attributeValue : text,
-)
+Attribute = ( attributeType : int, attributeValue : text )
 
 Time = ~time
 
