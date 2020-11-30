@@ -137,7 +137,7 @@ The X.509 fields and their CBOR encodings are listed below, and used in the defi
 
 CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. The field 'cborCertificateType' also indicates the type of the CBOR certificate. Currently, type can be a natively signed CBOR certificate following X.509 v3 (cborCertificateType = 0) or a CBOR compressed X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
+* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. The field 'cborCertificateType' also indicates the type of the CBOR certificate. Currently, the type can be a natively signed CBOR certificate following X.509 v3 (cborCertificateType = 0) or a CBOR re-encoded X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR positive bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
@@ -288,17 +288,19 @@ zlib-flate -compress < cert.der > cert.compressed
 
 # Natively Signed CBOR Certificates {#native-CBOR}
 
-The difference between CBOR compressed X.509 certificate and natively signed CBOR certificate is that the signature is calculated over the CBOR encoding of the CBOR sequence TBSCertficate rather than the DER encoded ASN.1 data. This removes entirely the need for ASN.1 DER and base64 encoding which reduces the processing in the authenticating devices and avoids known complexities with these encoding.
+The difference between CBOR encoded X.509 certificate and natively signed CBOR certificate is that the signature is calculated over the CBOR encoding of the CBOR sequence TBSCertficate rather than the DER encoded ASN.1 data. This removes entirely the need for ASN.1 DER and base64 encodings which reduces the processing in the authenticating devices, and avoids known complexities and security issues with these encodings.
 
 Natively signed CBOR certificates can be applied in devices that are only required to authenticate to natively signed CBOR certificate compatible servers. This is not a major restriction for many IoT deployments, where the parties issuing and verifying certificates can be a restricted ecosystem which not necessarily involves public CAs.
 
-CBOR compressed X.509 certificates provides an intermediate step between {{RFC7925}} profiled X.509 certificates and natively signed CBOR certificates: An implementation of CBOR compressed X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for natively signed CBOR certificates.
+CBOR encoded X.509 certificates provides an intermediate step between {{RFC7925}} or {{IEEE-802.1AR}} profiled X.509 certificates and natively signed CBOR certificates: An implementation of CBOR encoded X.509 certificates contains both the CBOR encoding of the X.509 certificate and the signature operations sufficient for natively signed CBOR certificates.
 
-The natively signed approach based on DER encoded X.509 certificates described in this document has a lot of benefits. A CA can use existing ASN.1 machinery to create a DER encoded certificate, the DER encoded certificate can then be transformed to CBOR before signing.
+The natively signed approach based on DER encoded X.509 certificates described in this document has also other benefits. For example, a CA can use existing ASN.1 machinery to create a DER encoded certificate, the DER encoded certificate can then be transformed to CBOR before signing.
 
 # Security Considerations {#sec-cons}
 
 The CBOR profiling of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors.
+
+The use of natively signed CBOR certificates removes the need for ASN.1 encoding, which is a rich source of security vulnerabilities.
 
 Conversion between the certificate formats can be made in constant time to reduce risk of information leakage through side channels.
 
@@ -588,9 +590,9 @@ DA 4E 44 74 0D C2 A2 E6 A3 C6 C8 82 A3 23 8D 9C 02 20 3A D9 35 3B A7 88
 A1 FC
 ~~~~~~~~~~~
 
-### Example CBOR Certificate Compression
+### Example CBOR Certificate Encoding
 
-The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
+The CBOR encoding of the same X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -612,7 +614,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
+The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 
 ~~~~~~~~~~~
 01
@@ -633,7 +635,7 @@ EA 71 17 17 34 C6 75 C5 33 2B 2A F1 CB 73 38 10 A1 FC
 
 ### Example: Natively Signed CBOR Certificate
 
-The corresponding natively signed CBOR certificate in CBOR diagnostic format is identical except for type and signatureValue.
+The corresponding natively signed CBOR certificate in CBOR diagnostic format is identical, except for cborCertificateType and signatureValue.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -655,7 +657,7 @@ The corresponding natively signed CBOR certificate in CBOR diagnostic format is 
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 138 bytes.
+The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 
 ~~~~~~~~~~~
 00
@@ -750,9 +752,9 @@ bf e4 7e ed 01 ec 7b e4 f6 46 fc 31 fd 72 fe 03 d2 f2 65 af 4d 7e e2 81
 ae ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 ~~~~~~~~~~~
 
-### Example CBOR Certificate Compression
+### Example CBOR Certificate Encoding
 
-The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
+The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -792,7 +794,7 @@ The CBOR certificate compression of the X.509 in CBOR diagnostic format is:
 
 ~~~~~~~~~~~
 
-The CBOR encoding (CBOR sequence) of the CBOR certificate is 1370 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1370 bytes.
 
 # X.509 Certificate Profile, ASN.1 {#appB}
 
