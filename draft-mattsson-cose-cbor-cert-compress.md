@@ -232,13 +232,21 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber.
 
 ~~~~~~~~~~~
-   ExtValueAKI = [ KeyIdentifier / null, GeneralNames / null, CertificateSerialNumber / null ] / KeyIdentifier
    KeyIdentifier = bytes
 ~~~~~~~~~~~
 
 * subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
 
-* cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string
+* cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string.
+
+* authorityInfoAccess. If authorityInfoAccess consist of only uniformResourceIdentifiers it is encodes as an array of uris.
+~~~~~~~~~~~
+   ExtValueAIA = [ + ( ocsp / caIssuers, uri ) ]
+   ocsp = 1
+   caIssuers = 2
+   uri = text
+~~~~~~~~~~~
+
 
 ### Example Encoding of Extensions
 
@@ -373,8 +381,8 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     5 | id-ce-authorityKeyIdentifier        | ExtValueAKI      |
 |     6 | id-ce-subjectKeyIdentifier          | KeyIdentifier    |
 |     7 | id-ce-certificatePolicies           | bytes            |
-|     8 | id-ce-cRLDistributionPoints         | bytes            |
-|     9 | id-pe-authorityInfoAccess           | bytes            |
+|     8 | id-ce-cRLDistributionPoints         | GeneralNames     |
+|     9 | id-pe-authorityInfoAccess           | ExtValueAIA      |
 |    10 | SCT List (1.3.6.1.4.1.11129.2.4.2)  | bytes            |
 |   248 | id-ce-nameConstraints               | bytes            |
 |   249 | id-ce-policyConstraints             | bytes            |
