@@ -232,8 +232,8 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber.
 
 ~~~~~~~~~~~
-   ExtValueAKI = [ keyIdentifier / null, GeneralNames / null, CertificateSerialNumber / null ]
-   keyIdentifier = bytes
+   ExtValueAKI = [ KeyIdentifier / null, GeneralNames / null, CertificateSerialNumber / null ] / KeyIdentifier
+   KeyIdentifier = bytes
 ~~~~~~~~~~~
 
 * subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
@@ -367,7 +367,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     3 | id-ce-extKeyUsage                   | ExtValueEKU      |
 |     4 | id-ce-subjectAltName                | GeneralNames     |
 |     5 | id-ce-authorityKeyIdentifier        | ExtValueAKI      |
-|     6 | id-ce-subjectKeyIdentifier          | keyIdentifier    |
+|     6 | id-ce-subjectKeyIdentifier          | KeyIdentifier    |
 |     7 | id-ce-certificatePolicies           | bytes            |
 |     8 | id-ce-cRLDistributionPoints         | bytes            |
 |     9 | id-pe-authorityInfoAccess           | bytes            |
@@ -784,7 +784,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
      8, h'30343032a030a02e862c687474703a2f2f63726c2e737461726669656c64746563682e636f6d2f736669673273312d3234322e63726c',
      7, h'305A304E060B6086480186FD6E01071701303F303D06082B060105050702011631687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F3008060667810C010201',
      9, h'3074302A06082B06010505073001861E687474703A2F2F6F6373702E737461726669656C64746563682E636F6D2F304606082B06010505073002863A687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F73666967322E637274',
-     5, [ h'254581685026383D3B2D2CBECD6AD9B63DB36663', null, null ],
+     5, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
      4, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
      6, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
     10, h'0481F400F2007700F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E300000174E5AC711300000403004830460221008CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
@@ -794,7 +794,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1370 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1367 bytes.
 
 # X.509 Certificate Profile, ASN.1 {#appB}
 
