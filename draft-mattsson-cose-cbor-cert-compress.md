@@ -677,11 +677,12 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 59 57 59 53 BC 67 26 8A B0 E4 DD E9 9D 27 3E 04 E4 71 53 83 AB 22 57
 C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9 
 ~~~~~~~~~~~
-The above example certificate signatures, both for the encoded and the native, can be verified with the following key information.
+
+All of the the above example certificate signatures can be created or verified with the following key pair where the private key is encoded as in COSE {{RFC8152}}.
 ~~~~~~~~~~~
-subjectPublicKeyAlgorithm : 1 (id-ecPublicKey + secp256r1)
-subjectPublicKey  :	        h'02AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845E'
-subjectPrivateKey :	        h'DC66B3415456D649429B53223DF7532B942D6B0E0842C30BCA4C0ACF91547BB2'
+issuerPublicKeyAlgorithm : 1 (id-ecPublicKey + secp256r1)
+issuerPublicKey  :	        h'02AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845E'
+issuerPrivateKey :	        h'DC66B3415456D649429B53223DF7532B942D6B0E0842C30BCA4C0ACF91547BB2'
 ~~~~~~~~~~~
 
 ## Example HTPPS X.509 Certificate
