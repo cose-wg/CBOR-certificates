@@ -238,6 +238,8 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 
 * subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
 
+* cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string
+
 ### Example Encoding of Extensions
 
 The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
@@ -787,7 +789,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
     -1, -2,
      3, [ 1, 2 ],
     -2, 5,
-     8, h'30343032a030a02e862c687474703a2f2f63726c2e737461726669656c64746563682e636f6d2f736669673273312d3234322e63726c',
+     8, "http://crl.starfieldtech.com/sfig2s1-242.crl"
      7, h'305A304E060B6086480186FD6E01071701303F303D06082B060105050702011631687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F3008060667810C010201',
      9, h'3074302A06082B06010505073001861E687474703A2F2F6F6373702E737461726669656C64746563682E636F6D2F304606082B06010505073002863A687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F73666967322E637274',
      5, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
