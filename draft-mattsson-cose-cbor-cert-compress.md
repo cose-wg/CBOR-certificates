@@ -185,13 +185,13 @@ TBSCertificate = (
 
 CertificateSerialNumber = ~biguint
 
-Algorithm = int / oid
-
 Name = [ * [ + Attribute ] ] / text / bytes
 
 Attribute = ( attributeType : int, attributeValue : text )
 
 Time = ~time
+
+Algorithm = int / oid
 
 Extensions = [ * Extension ] / int
 
