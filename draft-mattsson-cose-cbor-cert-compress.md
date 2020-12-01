@@ -372,15 +372,13 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |     8 | id-ce-cRLDistributionPoints         | bytes            |
 |     9 | id-pe-authorityInfoAccess           | bytes            |
 |    10 | SCT List (1.3.6.1.4.1.11129.2.4.2)  | bytes            |
-|   246 | id-ce-nameConstraints               | bytes            |
-|   247 | id-ce-policyConstraints             | bytes            |
-|   248 | id-ce-inhibitAnyPolicy              | bytes            |
-|   249 | id-ce-authorityKeyIdentifier        | bytes            |
-|   250 | id-ce-policyMappings                | bytes            |
-|   251 | id-ce-issuerAltName                 | GeneralNames     |
-|   252 | id-ce-subjectDirectoryAttributes    | bytes            |
-|   253 | id-ce-freshestCRL                   | bytes            |
-|   254 | id-pe-authorityInfoAccess           | bytes            |
+|   248 | id-ce-nameConstraints               | bytes            |
+|   249 | id-ce-policyConstraints             | bytes            |
+|   250 | id-ce-inhibitAnyPolicy              | bytes            |
+|   251 | id-ce-policyMappings                | bytes            |
+|   252 | id-ce-issuerAltName                 | GeneralNames     |
+|   253 | id-ce-subjectDirectoryAttributes    | bytes            |
+|   254 | id-ce-freshestCRL                   | bytes            |
 |   255 | id-pe-subjectInfoAccess             | bytes            |
 +-------+-------------------------------------+------------------+
 ~~~~~~~~~~~
