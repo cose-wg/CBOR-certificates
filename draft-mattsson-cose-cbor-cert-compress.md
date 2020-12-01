@@ -169,9 +169,7 @@ CBORCertificate = [
    TBSCertificate,
    issuerSignatureValue : bytes,
 ]
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 TBSCertificate = (
    cborCertificateType : int,
    certificateSerialNumber : CertificateSerialNumber,
@@ -184,33 +182,19 @@ TBSCertificate = (
    extensions : Extensions,
    issuerSignatureAlgorithm : Algorithm,
 )
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 CertificateSerialNumber = ~biguint
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 Name = [ * [ + Attribute ] ] / text / bytes
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 Attribute = ( attributeType : int, attributeValue : text )
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 Time = ~time
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 Algorithm = int / oid
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 Extensions = [ * Extension ] / int
-~~~~~~~~~~~
 
-~~~~~~~~~~~ CDDL
 Extension = (
    extensionID : int / oid,
    ? critical : bool,        ; present if and only if extensionID is an oid
