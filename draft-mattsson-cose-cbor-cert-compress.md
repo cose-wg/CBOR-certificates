@@ -308,7 +308,9 @@ The mechanism in this draft does not reveal any additional information compared 
 
 # IANA Considerations {#iana}
 
-For all items, the 'Reference' field points to this document.
+This document creates several new registries under the new heading "CBOR Certificate". For all items, the 'Reference' field points to this document. 
+
+The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and the size of device it will be used on. Values in the interval \[-24, 23\] have a 1 byte encodings, other values in the interval \[-256, 255\] have a 2 byte encodings, and the remaning values in the interval \[-65536, 65535\] have 3 byte encodings. 
 
 ## CBOR Certificate Types Registry {#type}
 
