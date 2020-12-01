@@ -164,7 +164,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
-; This defines an array, the elements of which are to be used in a CBOR Sequence:
+; The elements of the following array are to be used in a CBOR Sequence:
 CBORCertificate = [
    TBSCertificate,
    issuerSignatureValue : bytes,
