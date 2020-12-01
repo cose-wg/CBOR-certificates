@@ -377,7 +377,7 @@ IANA has created a new registry titled "CBOR Extension Type Registry" under the 
 |   248 | id-ce-inhibitAnyPolicy              | bytes            |
 |   249 | id-ce-authorityKeyIdentifier        | bytes            |
 |   250 | id-ce-policyMappings                | bytes            |
-|   251 | id-ce-issuerAltName                 | bytes            |
+|   251 | id-ce-issuerAltName                 | GeneralNames     |
 |   252 | id-ce-subjectDirectoryAttributes    | bytes            |
 |   253 | id-ce-freshestCRL                   | bytes            |
 |   254 | id-pe-authorityInfoAccess           | bytes            |
