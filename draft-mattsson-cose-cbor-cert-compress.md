@@ -682,7 +682,7 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9 
 ~~~~~~~~~~~
 
-All of the the above example certificate signatures can be created or verified with the following key pair where the private key is encoded as in COSE {{RFC8152}}.
+All of the the above example certificate were signed and can be verified with the following key pair where the private key is encoded as in COSE {{RFC8152}}.
 ~~~~~~~~~~~
 issuerPublicKeyAlgorithm : 1 (id-ecPublicKey + secp256r1)
 issuerPublicKey  :         h'02AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845E'
