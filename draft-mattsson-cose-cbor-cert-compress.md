@@ -439,20 +439,42 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+
 
 ~~~~~~~~~~~
-+-------+---------------------------------------+
-| Value | X.509 Signature Algorithm             |
++-------+-----------------------------------------------------------+
+| Value | X.509 Signature Algorithms                                |
++=======+===========================================================+
+|  -256 | Identifier:  sha1WithRSAEncryption                        |
+|       | OID:         1.2.840.113549.1.1.5                         |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00 |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|  -255 | Identifier:  ecdsa-with-SHA1                              |
+|       | OID:         1.2.840.10045.4.1                            |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     0 | Identifier:  ecdsa-with-SHA256                            |
+|       | OID:         1.2.840.10045.4.3.2                          |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    24 | Identifier:  sha256WithRSAEncryption                      |
+|       | OID:         1.2.840.113549.1.1.11                        |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 +=======+=======================================+
-|  -256 | sha1WithRSAEncryption                 |
-|  -255 | ecdsa-with-SHA1                       |
-|     1 | sha256WithRSAEncryption               |
 |     2 | sha384WithRSAEncryption               |
 |     3 | sha512WithRSAEncryption               |
 |     4 | id-RSASSA-PSS-SHAKE128                |
 |     5 | id-RSASSA-PSS-SHAKE256                |  
-|     6 | ecdsa-with-SHA256                     |
 |     7 | ecdsa-with-SHA384                     |
 |     8 | ecdsa-with-SHA512                     |
 |     9 | id-ecdsa-with-shake128                |
@@ -479,11 +501,11 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "Subject Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
-| Value | X.509 Subject Public Key Algorithms                       |
+| Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
 |     0 | Identifier:  id-ecPublicKey                               |
 |       | OID:         1.2.840.10045.2.1                            |
