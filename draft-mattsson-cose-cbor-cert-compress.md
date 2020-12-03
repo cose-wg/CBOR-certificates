@@ -150,7 +150,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'algorithm' field is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} . Algorithms with parameters are not supported except id-ecPublicKey with named curves and the RSA algorithms that use parameters = NULL. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. Uncompressed public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
+* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. When an CBOR OID is used, parameters are not supported. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. Uncompressed public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
 
 * issuerUniqueID. Not supported.
 
@@ -158,8 +158,8 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field is encoded as a CBOR int (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. Algorithms with parameters are not supported except RSA algorithms that use parameters = NULL.
-
+* signatureAlgorithm. The 'signatureAlgorithm' field including parameters is encoded as a CBOR int (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. When an CBOR OID is used, parameters are not supported.      
+      
 * signatureValue. The 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. ECDSA signatures are given special treatment. For ECDSA signatures the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the size of the largest prime-order subgroup. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate.
 
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
@@ -178,10 +178,10 @@ TBSCertificate = (
    validityNotBefore : Time,
    validityNotAfter : Time / null,
    subject : Name,
-   subjectPublicKeyAlgorithm : Algorithm,
+   subjectPublicKeyAlgorithm : AlgorithmIdentifier,
    subjectPublicKey : bytes,
    extensions : Extensions,
-   issuerSignatureAlgorithm : Algorithm,
+   issuerSignatureAlgorithm : AlgorithmIdentifier,
 )
 
 CertificateSerialNumber = ~biguint
@@ -192,7 +192,7 @@ Attribute = ( attributeType : int, attributeValue : text )
 
 Time = ~time
 
-Algorithm = int / oid
+AlgorithmIdentifier = int / oid
 
 Extensions = [ * Extension ] / int
 
@@ -820,68 +820,6 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
 ~~~~~~~~~~~
 
 The size of the CBOR encoding (CBOR sequence) is 1332 bytes.
-
-# X.509 Certificate Profile, ASN.1 {#appB}
-
-EDITOR'S NOTE: The ASN.1 below is not up to date with the rest of the specification. The below ASN.1 for RFC 7925 profile should be in draft-ietf-uta-tls13-iot-profile instead. If CBOR Certificates support a large subset of RFC 5280, we should probably not duplicate all the ASN.1 in that document. Should be discussed what kind and how much (if any) ASN.1 this document needs. If possible, one option would be to have ASN.1 for the restrictions compared to RFC 5280.
-
-~~~~~~~~~~~ ASN.1
-IOTCertificate DEFINITIONS EXPLICIT TAGS ::= BEGIN
-
-Certificate  ::= SEQUENCE {
-  tbsCertificate        TBSCertificate,
-  signatureAlgorithm    AlgorithmIdentifier,
-  signatureValue        BIT STRING
-}
-
-TBSCertificate  ::= SEQUENCE {
-  version           [0] INTEGER {v3(2)},
-  serialNumber          INTEGER (1..MAX),
-  signature             AlgorithmIdentifier,
-  issuer                Name,
-  validity              Validity,
-  subject               Name,
-  subjectPublicKeyInfo  SubjectPublicKeyInfo,
-  extensions        [3] Extensions OPTIONAL
-}
-
-Name  ::= SEQUENCE SIZE (1) OF DistinguishedName
-
-DistinguishedName  ::= SET SIZE (1) OF CommonName
-
-CommonName  ::= SEQUENCE {
-  type              OBJECT IDENTIFIER (id-at-commonName),
-  value             UTF8String
-}
-
-Validity  ::= SEQUENCE {
-  notBefore         UTCTime,
-  notAfter          UTCTime
-}
-
-SubjectPublicKeyInfo  ::= SEQUENCE {
-  algorithm         AlgorithmIdentifier,
-  subjectPublicKey  BIT STRING
-}
-
-AlgorithmIdentifier  ::=  SEQUENCE  {
-  algorithm         OBJECT IDENTIFIER,
-  parameters        ANY DEFINED BY algorithm OPTIONAL  }
-}
-
-Extensions  ::= SEQUENCE SIZE (1..MAX) OF Extension
-
-Extension  ::= SEQUENCE {
-  extnId            OBJECT IDENTIFIER,
-  critical          BOOLEAN DEFAULT FALSE,
-  extnValue         OCTET STRING
- }
-
-id-at-commonName    OBJECT IDENTIFIER   ::=
-         {joint-iso-itu-t(2) ds(5) attributeType(4) 3}
-
-END
-~~~~~~~~~~~
 
 # Acknowledgments
 {: numbered="no"}
