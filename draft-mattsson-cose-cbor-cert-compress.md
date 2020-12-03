@@ -506,24 +506,34 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|    25 | Identifier:  sha384WithRSAEncryption                      |
+|       | OID:         1.2.840.113549.1.1.12                        |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    26 | Identifier:  sha512WithRSAEncryption                      |
+|       | OID:         1.2.840.113549.1.1.13                        |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    27 | Identifier:  id-RSASSA-PSS-SHAKE128                       |
+|       | OID:         1.3.6.1.5.5.7.6.30                           |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    28 | Identifier:  id-RSASSA-PSS-SHAKE256                       |
+|       | OID:         1.3.6.1.5.5.7.6.31                           |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 +=======+=======================================+
-|     2 | sha384WithRSAEncryption               |
-|     3 | sha512WithRSAEncryption               |
-|     4 | id-RSASSA-PSS-SHAKE128                |
-|     5 | id-RSASSA-PSS-SHAKE256                |  
 |    13 | id-alg-hss-lms-hashsig                |
 |    14 | id-alg-xmss                           |
 |    15 | id-alg-xmssmt                         |
-|   245 | sha224WithRSAEncryption               |
-|   246 | id-rsassa-pkcs1-v1_5-with-sha3-224    |
-|   247 | id-rsassa-pkcs1-v1_5-with-sha3-256    |
-|   248 | id-rsassa-pkcs1-v1_5-with-sha3-384    |
-|   249 | id-rsassa-pkcs1-v1_5-with-sha3-512    |
-|   251 | ecdsa-with-SHA224                     |
-|   252 | id-ecdsa-with-sha3-224                |
-|   253 | id-ecdsa-with-sha3-256                |
-|   254 | id-ecdsa-with-sha3-384                |
-|   255 | id-ecdsa-with-sha3-512                |
 +-------+---------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
