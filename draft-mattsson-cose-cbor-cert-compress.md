@@ -1016,7 +1016,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
      3, [ 1, 2 ],
     -2, 5,
      8, "http://crl.starfieldtech.com/sfig2s1-242.crl",
-     7, h'305A304E060B6086480186FD6E01071701303F303D06082B060105050702011631687474703A2F2F6365727469666963617465732E737461726669656C64746563682E636F6D2F7265706F7369746F72792F3008060667810C010201',
+     7, [ [ h'060b6086480186fd6e01071701', "http://certificates.starfieldtech.com/repository/" ], 1 ], 
      9, [ 1, "http://ocsp.starfieldtech.com/", 2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
      5, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
      4, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
@@ -1028,7 +1028,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1333 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1307 bytes.
 
 # Acknowledgments
 {: numbered="no"}
