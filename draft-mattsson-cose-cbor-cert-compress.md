@@ -325,12 +325,12 @@ The expert reviewers for the registries defined in this document are expected to
 IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+-----------------------------------------------------+
-| Value | Description                                         |
-+=======+=====================================================+
-|     0 | Natively Signed CBOR Certificate following X.509 v3 |
-|     1 | CBOR re-encoding of X.509 v3 Certificate            |
-+-------+-----------------------------------------------------+
++-------+-----------------------------------------------------------+
+| Value | Description                                               |
++=======+===========================================================+
+|     0 | Natively Signed CBOR Certificate following X.509 v3       |
+|     1 | CBOR re-encoding of X.509 v3 Certificate                  |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="CBOR Certificate Types"}
 {: artwork-align="center"}
@@ -716,21 +716,20 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing are the same as the corresponding x5bag, x5chain, x5t, and x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded. Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
 
 ~~~~~~~~~~~
-+-----------+-------+----------------+---------------------+
-| Name      | Label | Value Type     | Description         |
-+===========+=======+================+=====================+
-| c5bag     |  TBD1 | COSE_X509      | An unordered bag of |
-|           |       |                | CBOR certificates   |
-+-----------+-------+----------------+---------------------+
-| c5chain   |  TBD2 | COSE_X509      | An ordered chain of |
-|           |       |                | CBOR certificates   |
-+-----------+-------+----------------+---------------------+
-| c5t       |  TBD3 | COSE_CertHash  | Hash of an          |
-|           |       |                | CBOR certificate    |
-+-----------+-------+----------------+---------------------+
-| c5u       |  TBD4 | uri            | URI pointing to a   |
-|           |       |                | CBOR certificate    |
-+-----------+-------+----------------+---------------------+
++-----------+-------+----------------+------------------------------+
+| Name      | Label | Value Type     | Description                  |
++===========+=======+================+==============================+
+| c5bag     |  TBD1 | COSE_X509      | An unordered bag of CBOR     |
+|           |       |                | certificates                 |
++-----------+-------+----------------+------------------------------+
+| c5chain   |  TBD2 | COSE_X509      | An ordered chain of CBOR     |
+|           |       |                | certificates                 |
++-----------+-------+----------------+------------------------------+
+| c5t       |  TBD3 | COSE_CertHash  | Hash of a CBOR certificate   |
++-----------+-------+----------------+------------------------------+
+| c5u       |  TBD4 | uri            | URI pointing to a CBOR       |
+|           |       |                | certificate                  |
++-----------+-------+----------------+------------------------------+
 ~~~~~~~~~~~
 
 ## TLS Certificate Types Registry {#tls}
@@ -740,11 +739,11 @@ This document registers the following entry in the "TLS Certificate Types" regis
 EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. When COSE WG has adopted work on CBOR certificates, it could perhaps be presented in the TLS WG. The TLS WG might e.g. want a separate draft in the TLS WG.
 
 ~~~~~~~~~~~
-+-------+------------------+-------------+---------+
-| Value | Name             | Recommended | Comment |
-+=======+==================+=============+=========+
-|  TBD5 | CBOR Certificate |           Y |         |         
-+-------+------------------+-------------+---------+
++-------+------------------+-------------+--------------------------+
+| Value | Name             | Recommended | Comment                  |
++=======+==================+=============+==========================+
+|  TBD5 | CBOR Certificate |           Y |                          |         
++-------+------------------+-------------+--------------------------+
 ~~~~~~~~~~~
 
 --- back
@@ -1008,7 +1007,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
   1635881916,
   [
     [-8, "Domain Control Validated"],
-    [1, "*.tools.ietf.org"]
+    [ 1, "*.tools.ietf.org"]
   ],
   23,
   h'3082010A0282010100B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA10203010001',
