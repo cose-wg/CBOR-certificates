@@ -1029,7 +1029,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1332 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1333 bytes.
 
 # Acknowledgments
 {: numbered="no"}
