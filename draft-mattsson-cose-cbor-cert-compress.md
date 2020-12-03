@@ -518,7 +518,7 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -534,37 +534,37 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | OID:         1.2.840.10045.4.1                            |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
-|       | Comments:                                                 |
+|       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
 |     0 | Identifier:  ecdsa-with-SHA256                            |
 |       | OID:         1.2.840.10045.4.3.2                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          | 
-|       | Comments:                                                 |
+|       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
 |     1 | Identifier:  ecdsa-with-SHA384                            |
 |       | OID:         1.2.840.10045.4.3.3                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          | 
-|       | Comments:                                                 |
+|       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
 |     2 | Identifier:  ecdsa-with-SHA512                            |
 |       | OID:         1.2.840.10045.4.3.4                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          | 
-|       | Comments:                                                 |
+|       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
 |     3 | Identifier:  id-ecdsa-with-shake128                       |
 |       | OID:         1.3.6.1.5.5.7.6.32                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          | 
-|       | Comments:                                                 |
+|       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
 |     4 | Identifier:  id-ecdsa-with-shake256                       |
 |       | OID:         1.3.6.1.5.5.7.6.33                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          | 
-|       | Comments:                                                 |
+|       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
 |    12 | Identifier:  id-Ed25519                                   |
 |       | OID:         1.3.101.112                                  |
