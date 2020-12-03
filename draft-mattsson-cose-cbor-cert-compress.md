@@ -477,28 +477,85 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
 {: artwork-align="center"}
 
-## CBOR Certificate Public Key Algorithms Registry {#pkalg}
+## CBOR Certificate Public Key Algorithm Identifiers Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, X.509 Algorithm, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "Subject Public Key Algorithm Identifiers" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+---------------------------------------+
-| Value | X.509 Public Key Algorithm            |
-+=======+=======================================+
-|     0 | rsaEncryption                         |
-|     1 | id-ecPublicKey + secp256r1            |
-|     2 | id-ecPublicKey + secp384r1            |
-|     3 | id-ecPublicKey + secp521r1            |
-|     4 | id-X25519                             |
-|     5 | id-X448                               |
-|     6 | id-Ed25519                            |
-|     7 | id-Ed448                              |  
-|     8 | id-alg-hss-lms-hashsig                |
-|     9 | id-alg-xmss                           |
-|    10 | id-alg-xmssmt                         |
-+-------+---------------------------------------+
++-------+-----------------------------------------------------------+
+| Value | X.509 Subject Public Key Algorithm Identifiers            |
++=======+===========================================================+
+|     0 | Identifier:  rsaEncryption                                |
+|       | OID:         1.2.840.113549.1.1.1                         |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     1 | Identifier:  id-ecPublicKey                               |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
+|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
+|       |              48 CE 3D 03 01 07                            |
+|       | Comments:    Point compressed subjectPublicKey            |
++-------+-----------------------------------------------------------+
+|     2 | Identifier:  id-ecPublicKey                               |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
+|       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
+|       |              04 00 22                                     |
+|       | Comments:    Point compressed subjectPublicKey            |
++-------+-----------------------------------------------------------+
+|     3 | Identifier:  id-ecPublicKey                               |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
+|       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
+|       |              04 00 23                                     |
+|       | Comments:    Point compressed subjectPublicKey            |
++-------+-----------------------------------------------------------+
+|     4 | Identifier:  id-X25519                                    |
+|       | OID:         1.3.101.110                                  |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 05 06 03 2B 65 6E                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     5 | Identifier:  id-X448                                      |
+|       | OID:         1.3.101.111                                  |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 05 06 03 2B 65 6F                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     6 | Identifier:  id-Ed25519                                   |
+|       | OID:         1.3.101.112                                  |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 05 06 03 2B 65 70                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     7 | Identifier:  id-Ed448                                     |
+|       | OID:         1.3.101.113                                  |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 05 06 03 2B 65 71                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    24 | Identifier:  id-alg-hss-lms-hashsig                       |
+|       | OID:         1.2.840.113549.1.9.16.3.17                   |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    25 | Identifier:  id-alg-xmss                                  |
+|       | OID:         0.4.0.127.0.15.1.1.13.0                      |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    26 | Identifier:  id-alg-xmssmt                                |
+|       | OID:         0.4.0.127.0.15.1.1.14.0                      |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
+{: #fig-pkalgs title="CBOR Certificate Public Key Algorithms Identifiers"}
 {: artwork-align="center"}
 
 ## COSE Header Parameters Registry {#cose}
