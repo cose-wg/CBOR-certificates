@@ -176,7 +176,7 @@ TBSCertificate = (
    certificateSerialNumber : CertificateSerialNumber,
    issuer : Name,
    validityNotBefore : Time,
-   validityNotAfter : Time / null,
+   validityNotAfter : Time,
    subject : Name,
    subjectPublicKeyAlgorithm : AlgorithmIdentifier,
    subjectPublicKey : bytes,
@@ -190,7 +190,7 @@ Name = [ * [ + Attribute ] ] / text / bytes
 
 Attribute = ( attributeType : int, attributeValue : text )
 
-Time = ~time
+Time = ~time / null
 
 AlgorithmIdentifier = int / oid
 
