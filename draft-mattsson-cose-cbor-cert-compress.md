@@ -464,6 +464,42 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|     1 | Identifier:  ecdsa-with-SHA384                            |
+|       | OID:         1.2.840.10045.4.3.3                          |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     2 | Identifier:  ecdsa-with-SHA512                            |
+|       | OID:         1.2.840.10045.4.3.4                          |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     3 | Identifier:  id-ecdsa-with-shake128                       |
+|       | OID:         1.3.6.1.5.5.7.6.32                           |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     4 | Identifier:  id-ecdsa-with-shake256                       |
+|       | OID:         1.3.6.1.5.5.7.6.33                           |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    12 | Identifier:  id-Ed25519                                   |
+|       | OID:         1.3.101.112                                  |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 05 06 03 2B 65 70                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    13 | Identifier:  id-Ed448                                     |
+|       | OID:         1.3.101.113                                  |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 05 06 03 2B 65 71                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 |    24 | Identifier:  sha256WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
@@ -475,12 +511,6 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |     3 | sha512WithRSAEncryption               |
 |     4 | id-RSASSA-PSS-SHAKE128                |
 |     5 | id-RSASSA-PSS-SHAKE256                |  
-|     7 | ecdsa-with-SHA384                     |
-|     8 | ecdsa-with-SHA512                     |
-|     9 | id-ecdsa-with-shake128                |
-|    10 | id-ecdsa-with-shake256                |
-|    11 | id-Ed25519                            |
-|    12 | id-Ed448                              |
 |    13 | id-alg-hss-lms-hashsig                |
 |    14 | id-alg-xmss                           |
 |    15 | id-alg-xmssmt                         |
@@ -528,25 +558,25 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 |       |              04 00 23                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     4 | Identifier:  id-X25519                                    |
+|    10 | Identifier:  id-X25519                                    |
 |       | OID:         1.3.101.110                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6E                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|     5 | Identifier:  id-X448                                      |
+|    11 | Identifier:  id-X448                                      |
 |       | OID:         1.3.101.111                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6F                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|     6 | Identifier:  id-Ed25519                                   |
+|    12 | Identifier:  id-Ed25519                                   |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|     7 | Identifier:  id-Ed448                                     |
+|    13 | Identifier:  id-Ed448                                     |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
