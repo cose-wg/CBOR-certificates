@@ -477,13 +477,13 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 {: #fig-sigalgs title="CBOR Certificate Signature Algorithms"}
 {: artwork-align="center"}
 
-## CBOR Certificate Public Key Algorithm Identifiers Registry {#pkalg}
+## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "Subject Public Key Algorithm Identifiers" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "Subject Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
-| Value | X.509 Subject Public Key Algorithm Identifiers            |
+| Value | X.509 Subject Public Key Algorithms                       |
 +=======+===========================================================+
 |     0 | Identifier:  rsaEncryption                                |
 |       | OID:         1.2.840.113549.1.1.1                         |
@@ -555,7 +555,7 @@ IANA has created a new registry titled "Subject Public Key Algorithm Identifiers
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-pkalgs title="CBOR Certificate Public Key Algorithms Identifiers"}
+{: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
 {: artwork-align="center"}
 
 ## COSE Header Parameters Registry {#cose}
