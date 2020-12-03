@@ -318,7 +318,7 @@ The mechanism in this draft does not reveal any additional information compared 
 
 This document creates several new registries under the new heading "CBOR Certificate". For all items, the 'Reference' field points to this document. 
 
-The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and the size of device it will be used on. Values in the interval \[-24, 23\] have a 1 byte encodings, other values in the interval \[-256, 255\] have a 2 byte encodings, and the remaning values in the interval \[-65536, 65535\] have 3 byte encodings. 
+The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1 byte encodings, other values in the interval \[-256, 255\] have a 2 byte encodings, and the remaning values in the interval \[-65536, 65535\] have 3 byte encodings. 
 
 ## CBOR Certificate Types Registry {#type}
 
@@ -485,27 +485,21 @@ IANA has created a new registry titled "Subject Public Key Algorithms" under the
 +-------+-----------------------------------------------------------+
 | Value | X.509 Subject Public Key Algorithms                       |
 +=======+===========================================================+
-|     0 | Identifier:  rsaEncryption                                |
-|       | OID:         1.2.840.113549.1.1.1                         |
-|       | Parameters:  NULL                                         |
-|       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     1 | Identifier:  id-ecPublicKey                               |
+|     0 | Identifier:  id-ecPublicKey                               |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     2 | Identifier:  id-ecPublicKey                               |
+|     1 | Identifier:  id-ecPublicKey                               |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     3 | Identifier:  id-ecPublicKey                               |
+|     2 | Identifier:  id-ecPublicKey                               |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
@@ -536,19 +530,25 @@ IANA has created a new registry titled "Subject Public Key Algorithms" under the
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Identifier:  id-alg-hss-lms-hashsig                       |
+|    24 | Identifier:  rsaEncryption                                |
+|       | OID:         1.2.840.113549.1.1.1                         |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    25 | Identifier:  id-alg-hss-lms-hashsig                       |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    25 | Identifier:  id-alg-xmss                                  |
+|    26 | Identifier:  id-alg-xmss                                  |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    26 | Identifier:  id-alg-xmssmt                                |
+|    27 | Identifier:  id-alg-xmssmt                                |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
