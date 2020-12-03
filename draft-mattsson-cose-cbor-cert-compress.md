@@ -578,31 +578,31 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Identifier:  sha256WithRSAEncryption                      |
+|    23 | Identifier:  sha256WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    25 | Identifier:  sha384WithRSAEncryption                      |
+|    24 | Identifier:  sha384WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.12                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    26 | Identifier:  sha512WithRSAEncryption                      |
+|    25 | Identifier:  sha512WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.13                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    27 | Identifier:  id-RSASSA-PSS-SHAKE128                       |
+|    26 | Identifier:  id-RSASSA-PSS-SHAKE128                       |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    28 | Identifier:  id-RSASSA-PSS-SHAKE256                       |
+|    27 | Identifier:  id-RSASSA-PSS-SHAKE256                       |
 |       | OID:         1.3.6.1.5.5.7.6.31                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          | 
@@ -683,7 +683,7 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Identifier:  rsaEncryption                                |
+|    23 | Identifier:  rsaEncryption                                |
 |       | OID:         1.2.840.113549.1.1.1                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
@@ -820,11 +820,11 @@ The CBOR encoding of the same X.509 certificate is shown below in CBOR diagnosti
   1577836800,
   1612224000,
   h'0123456789AB',
-  1,
+  0,
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
   1,
-  6,
+  0,
   h'445D798C90E7F500DC747A654CEC6CFA6F037276E14E52ED07
     FC16294C84660D5A33985DFBD4BFDD6D4ACF3804C3D46EBF3B
     7FA62640674FC0354FA056DBAEA6
@@ -840,11 +840,11 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 1A 5E 0B E1 00
 1A 60 18 96 00
 46 01 23 45 67 89 AB
-01
+00
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
-06
+00
 58 40 44 5D 79 8C 90 E7 F5 00 DC 74 7A 65 4C EC 6C FA 6F 03 72 76 E1
 4E 52 ED 07 FC 16 29 4C 84 66 0D 5A 33 98 5D FB D4 BF DD 6D 4A CF 38
 04 C3 D4 6E BF 3B 7F A6 26 40 67 4F C0 35 4F A0 56 DB AE A6
@@ -883,11 +883,11 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 1A 5E 0B E1 00
 1A 60 18 96 00
 46 01 23 45 67 89 AB
-01
+00
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
-06
+00
 58 40 B2 7A 0B 78 14 55 F7 1B 68 29 0F 6C 2E C9 A8 97 F1 8F DE 9B 6C
 59 57 59 53 BC 67 26 8A B0 E4 DD E9 9D 27 3E 04 E4 71 53 83 AB 22 57
 C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9 
@@ -1010,7 +1010,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
     [-8, "Domain Control Validated"],
     [1, "*.tools.ietf.org"]
   ],
-  0,
+  23,
   h'3082010A0282010100B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA10203010001',
   [
     -1, -2,
@@ -1024,7 +1024,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
      6, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
     10, h'0481F400F2007700F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E300000174E5AC711300000403004830460221008CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
   ],
-  1,
+  23,
   h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADBB33F9DB3D7E0594C19A8E419A50CA770727763D5FE64510AD27AD650A58A9238ECCB2F0F5AC064584D5C06B9736368278B8934DC79C71D3AFD345F831441584980682980398A867269CC7937CEE397F7DCF39588ED81032900D2A2C7BAABD63A8ECA090BD9FB39264BFF03D88E2D3F6B21CA8A7DD85FFB94BA83DE9CFC158D61FA672DB0C7DB3D250A414A85D37F4946373CF4B175D052F3DDC766F14BFDAA00EDBFE47EED01EC7BE4F646FC31FD72FE03D2F265AF4D7EE2819B7AFD303CF552F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D'
 
 ~~~~~~~~~~~
