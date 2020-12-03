@@ -335,33 +335,112 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 {: #fig-types title="CBOR Certificate Types"}
 {: artwork-align="center"}
 
-## CBOR Attribute Type Registry {#atttype}
+## CBOR Certificate Attributes Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Attribute Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Attribute Type, and Reference, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, AttributeValue, DER, Comments, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+---------------------------------------+
-| Value | X.509 Attribute Type                  |
-+=======+=======================================+
-|     0 | id-emailAddress                       |
-|     1 | id-at-commonName                      |
-|     2 | id-at-surname                         |
-|     3 | id-at-serialNumber                    |
-|     4 | id-at-countryName                     |
-|     5 | id-at-localityName                    |
-|     6 | id-at-stateOrProvinceName             |
-|     7 | id-at-organizationName                |
-|     8 | id-at-organizationalUnitName          |
-|     9 | id-at-title                           |
-|    10 | id-at-givenName                       |
-|    11 | id-at-initials                        |
-|    12 | id-at-generationQualifier             |
-|    13 | id-at-dnQualifier                     |
-|    14 | id-at-pseudonym                       |
-|    15 | id-at-organizationIdentifier          |
-+-------+---------------------------------------+
++-------+-----------------------------------------------------------+
+| Value | X.509 Attributes                                          |
++=======+===========================================================+
+|     0 | Identifier:      emailAddress                             |
+|       | OID:             1.2.840.113549.1.9.1                     |
+|       | AttributeValue:  IA5String                                |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     1 | Identifier:      id-at-commonName                         |
+|       | OID:             2.5.4.3                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 03                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     2 | Identifier:      id-at-surname                            |
+|       | OID:             2.5.4.4                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 04                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     3 | Identifier:      id-at-serialNumber                       |
+|       | OID:             2.5.4.5                                  |
+|       | AttributeValue:  PrintableString                          |
+|       | DER:             06 03 55 04 05                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     4 | Identifier:      id-at-countryName                        |
+|       | OID:             2.5.4.6                                  |
+|       | AttributeValue:  PrintableString                          |
+|       | DER:             06 03 55 04 06                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     5 | Identifier:      id-at-localityName                       |
+|       | OID:             2.5.4.7                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 07                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     6 | Identifier:      id-at-stateOrProvinceName                |
+|       | OID:             2.5.4.8                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 08                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     7 | Identifier:      id-at-organizationName                   |
+|       | OID:             2.5.4.10                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 0A                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     8 | Identifier:      id-at-organizationalUnitName             |
+|       | OID:             2.5.4.11                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 0B                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     9 | Identifier:      id-at-title                              |
+|       | OID:             2.5.4.12                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 0C                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    10 | Identifier:      id-at-givenName                          |
+|       | OID:             2.5.4.42                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 2A                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    11 | Identifier:      id-at-initials                           |
+|       | OID:             2.5.4.43                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 2B                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    12 | Identifier:      id-at-generationQualifier                |
+|       | OID:             2.5.4.44                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 2C                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    13 | Identifier:      id-at-dnQualifier                        |
+|       | OID:             2.5.4.46                                 |
+|       | AttributeValue:  PrintableString                          |
+|       | DER:             06 03 55 04 2E                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    14 | Identifier:      id-at-pseudonym                          |
+|       | OID:             2.5.4.65                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 41                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    15 | Identifier:      id-at-organizationIdentifier             |
+|       | OID:             2.5.4.97                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
+|       | DER:             06 03 55 04 61                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-attrtype title="CBOR Attribute Type Registry"}
+{: #fig-attrtype title="CBOR Certificate Attributes"}
 {: artwork-align="center"}
 
 ## CBOR Extension Type Registry {#extype}
@@ -439,8 +518,7 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
-
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -554,7 +632,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
