@@ -1180,7 +1180,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
           1,
           h'8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90FBCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE6454995',
           h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
-          h'0174E5AC723C',
+          297,
           1,
           h'A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726DFC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
         ] 
@@ -1189,7 +1189,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1259 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1255 bytes.
 
 # Acknowledgments
 {: numbered="no"}
