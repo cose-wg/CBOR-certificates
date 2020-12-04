@@ -337,7 +337,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 
 ## CBOR Certificate Attributes Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comment, and AttributeValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and AttributeValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -346,97 +346,97 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 |     0 | Name:            Email Address                            |
 |       | OID:             1.2.840.113549.1.9.1                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
-|       | Comment:         Deprecated, use subjectAltName           |
+|       | Comments:        Deprecated, use subjectAltName           |
 |       | AttributeValue:  IA5String                                |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            Common Name                              |
 |       | OID:             2.5.4.3                                  |
 |       | DER:             06 03 55 04 03                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Surname                                  |
 |       | OID:             2.5.4.4                                  |
 |       | DER:             06 03 55 04 04                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Serial Number                            |
 |       | OID:             2.5.4.5                                  |
 |       | DER:             06 03 55 04 05                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Country                                  |
 |       | OID:             2.5.4.6                                  |
 |       | DER:             06 03 55 04 06                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            Locality                                 |
 |       | OID:             2.5.4.7                                  |
 |       | DER:             06 03 55 04 07                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            State or Province                        |
 |       | OID:             2.5.4.8                                  |
 |       | DER:             06 03 55 04 08                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Organization                             |
 |       | OID:             2.5.4.10                                 |
 |       | DER:             06 03 55 04 0A                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Organizational Unit                      |
 |       | OID:             2.5.4.11                                 |
 |       | DER:             06 03 55 04 0B                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Title                                    |
 |       | OID:             2.5.4.12                                 |
 |       | DER:             06 03 55 04 0C                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Given Name                               |
 |       | OID:             2.5.4.42                                 |
 |       | DER:             06 03 55 04 2A                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Initials                                 |
 |       | OID:             2.5.4.43                                 |
 |       | DER:             06 03 55 04 2B                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    12 | Name:            Generation Qualifier                     |
 |       | OID:             2.5.4.44                                 |
 |       | DER:             06 03 55 04 2C                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            DN Qualifier                             |
 |       | OID:             2.5.4.46                                 |
 |       | DER:             06 03 55 04 2E                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |    14 | Name:            Pseudonym                                |
 |       | OID:             2.5.4.65                                 |
 |       | DER:             06 03 55 04 41                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    15 | Name:            Organization Identifier                  |
 |       | OID:             2.5.4.97                                 |
 |       | DER:             06 03 55 04 61                           |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
@@ -445,7 +445,7 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 
 ## CBOR Certificate Extensions Registry {#extype}
 
-IANA has created a new registry titled "CBOR Certificate Extensions" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comment, extensionValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Extensions" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and extensionValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -463,98 +463,98 @@ IANA has created a new registry titled "CBOR Certificate Extensions" under the n
 |       | Comments:                                                 |
 |       | AttributeValue:  int                                      |
 +-------+-----------------------------------------------------------+
-|     2 | Identifier:      Subject Alternative Name                 |
+|     2 | Name:            Subject Alternative Name                 |
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( int, any ) ] / text                |
 +-------+-----------------------------------------------------------+
-|     3 | Identifier:      Basic Constraints                        |
+|     3 | Name:            Basic Constraints                        |
 |       | OID:             2.5.29.19                                |
 |       | DER:             06 03 55 1D 13                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
 +-------+-----------------------------------------------------------+
-|     4 | Identifier:      CRL Distribution Points                  |
+|     4 | Name:            CRL Distribution Points                  |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( int, any ) ] / text                |
 +-------+-----------------------------------------------------------+
-|     5 | Identifier:      Certificate Policies                     |
+|     5 | Name:            Certificate Policies                     |
 |       | OID:             2.5.29.32                                |
 |       | DER:             06 03 55 1D 20                           |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( oid, ? text ) ]                    |
 +-------+-----------------------------------------------------------+
-|     6 | Identifier:      Authority Key Identifier                 |
+|     6 | Name:            Authority Key Identifier                 |
 |       | OID:             2.5.29.35                                |
 |       | DER:             06 03 55 1D 23                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|     7 | Identifier:      Extended Key Usage                       |
+|     7 | Name:            Extended Key Usage                       |
 |       | OID:             2.5.29.37                                |
 |       | DER:             06 03 55 1D 25                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
 +-------+-----------------------------------------------------------+
-|     8 | Identifier:      Authority Information Access             |
+|     8 | Name:            Authority Information Access             |
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( 1 / 2 , text ) ]                   |
 +-------+-----------------------------------------------------------+
-|     9 | Identifier:      Signed Certificate Timestamp List        |
+|     9 | Name:            Signed Certificate Timestamp List        |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
 |       | extensionValue:  [ bytes, ~biguint,                       |
 |       |                    AlgorithmIdentifier, bytes]            |
 +-------+-----------------------------------------------------------+
-|    24 | Identifier:      Name Constraints                         |
+|    24 | Name:            Name Constraints                         |
 |       | OID:             2.5.29.30                                |
 |       | DER:             06 03 55 1D 1E                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    25 | Identifier:      Policy Constraints                       |
+|    25 | Name:            Policy Constraints                       |
 |       | OID:             2.5.29.36                                |
 |       | DER:             06 03 55 1D 24                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    26 | Identifier:      Inhibit anyPolicy                        |
+|    26 | Name:            Inhibit anyPolicy                        |
 |       | OID:             2.5.29.54                                |
 |       | DER:             06 03 55 1D 36                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    27 | Identifier:      Policy Mappings                          |
+|    27 | Name:            Policy Mappings                          |
 |       | OID:             2.5.29.33                                |
 |       | DER:             06 03 55 1D 21                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    28 | Identifier:      Issuer Alternative Name                  |
+|    28 | Name:            Issuer Alternative Name                  |
 |       | OID:             2.5.29.18                                |
 |       | DER:             06 03 55 1D 12                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    29 | Identifier:      Subject Directory Attributes             |
+|    29 | Name:            Subject Directory Attributes             |
 |       | OID:             2.5.29.9                                 |
 |       | DER:             06 03 55 1D 09                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    30 | Identifier:      Freshest CRL                             |
+|    30 | Name:            Freshest CRL                             |
 |       | OID:             2.5.29.46                                |
 |       | DER:             06 03 55 1D 2E                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    31 | Identifier:      Subject Information Access               |
+|    31 | Name:            Subject Information Access               |
 |       | OID:             1.3.6.1.5.5.7.1.11                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
 |       | Comments:                                                 |
@@ -722,7 +722,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, and Comment, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, and Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
