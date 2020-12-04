@@ -780,21 +780,21 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+-----------------------------------------------------------+
 | Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
-|     0 | Name:        ecPublicKey + secp256r1                      |
+|     0 | Name:        Weierstraß Curve secp256r1                   |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     1 | Name:        ecPublicKey + secp384r1                      |
+|     1 | Name:        Weierstraß Curve secp384r1                   |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     2 | Name:        ecPublicKey + secp521r1                      |
+|     2 | Name:        Weierstraß Curve secp521r1                   |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
@@ -825,25 +825,25 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    23 | Name:        rsaEncryption                                |
+|    23 | Name:        RSA                                          |
 |       | OID:         1.2.840.113549.1.1.1                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    42 | Name:        hss-lms-hashsig                              |
+|    42 | Name:        HSS / LMS                                    |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    43 | Name:        xmss                                         |
+|    43 | Name:        XMSS                                         |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    44 | Name:        xmssmt                                       |
+|    44 | Name:        XMSS^MT                                      |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
