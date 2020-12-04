@@ -512,21 +512,21 @@ IANA has created a new registry titled "CBOR Certificate Extensions" under the n
 |       | extensionValue:  [ bytes, ~biguint,                       |
 |       |                    AlgorithmIdentifier, bytes]            |
 +-------+-----------------------------------------------------------+
-|    24 | Name:            Name Constraints                         |
+|    24 | Name:            Subject Directory Attributes             |
+|       | OID:             2.5.29.9                                 |
+|       | DER:             06 03 55 1D 09                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    25 | Name:            Issuer Alternative Name                  |
+|       | OID:             2.5.29.18                                |
+|       | DER:             06 03 55 1D 12                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    26 | Name:            Name Constraints                         |
 |       | OID:             2.5.29.30                                |
 |       | DER:             06 03 55 1D 1E                           |
-|       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
-+-------+-----------------------------------------------------------+
-|    25 | Name:            Policy Constraints                       |
-|       | OID:             2.5.29.36                                |
-|       | DER:             06 03 55 1D 24                           |
-|       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
-+-------+-----------------------------------------------------------+
-|    26 | Name:            Inhibit anyPolicy                        |
-|       | OID:             2.5.29.54                                |
-|       | DER:             06 03 55 1D 36                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
@@ -536,21 +536,21 @@ IANA has created a new registry titled "CBOR Certificate Extensions" under the n
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    28 | Name:            Issuer Alternative Name                  |
-|       | OID:             2.5.29.18                                |
-|       | DER:             06 03 55 1D 12                           |
+|    28 | Name:            Policy Constraints                       |
+|       | OID:             2.5.29.36                                |
+|       | DER:             06 03 55 1D 24                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|    29 | Name:            Subject Directory Attributes             |
-|       | OID:             2.5.29.9                                 |
-|       | DER:             06 03 55 1D 09                           |
-|       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
-+-------+-----------------------------------------------------------+
-|    30 | Name:            Freshest CRL                             |
+|    29 | Name:            Freshest CRL                             |
 |       | OID:             2.5.29.46                                |
 |       | DER:             06 03 55 1D 2E                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    30 | Name:            Inhibit anyPolicy                        |
+|       | OID:             2.5.29.54                                |
+|       | DER:             06 03 55 1D 36                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
@@ -587,7 +587,7 @@ IANA has created a new registry titled "CBOR Extended Key Usages" under the new 
 |       | DER:             06 08 2B 06 01 05 05 07 03 03            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|     4 | Name:            Email protection  (S/MIME)               |
+|     4 | Name:            Email protection (S/MIME)                |
 |       | OID:             1.3.6.1.5.5.7.3.4                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 04            |
 |       | Comments:                                                 |
