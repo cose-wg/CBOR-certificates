@@ -385,55 +385,67 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|     7 | Name:            Organization                             |
+|     7 | Name:            Street Address                           |
+|       | OID:             2.5.4.9                                  |
+|       | DER:             06 03 55 04 09                           |
+|       | Comments:                                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|     8 | Name:            Organization                             |
 |       | OID:             2.5.4.10                                 |
 |       | DER:             06 03 55 04 0A                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|     8 | Name:            Organizational Unit                      |
+|     9 | Name:            Organizational Unit                      |
 |       | OID:             2.5.4.11                                 |
 |       | DER:             06 03 55 04 0B                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|     9 | Name:            Title                                    |
+|    10 | Name:            Title                                    |
 |       | OID:             2.5.4.12                                 |
 |       | DER:             06 03 55 04 0C                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|    10 | Name:            Given Name                               |
+|    11 | Name:            Postal Code                              |
+|       | OID:             2.5.4.17                                 |
+|       | DER:             06 03 55 04 11                           |
+|       | Comments:                                                 |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|    12 | Name:            Given Name                               |
 |       | OID:             2.5.4.42                                 |
 |       | DER:             06 03 55 04 2A                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|    11 | Name:            Initials                                 |
+|    13 | Name:            Initials                                 |
 |       | OID:             2.5.4.43                                 |
 |       | DER:             06 03 55 04 2B                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|    12 | Name:            Generation Qualifier                     |
+|    14 | Name:            Generation Qualifier                     |
 |       | OID:             2.5.4.44                                 |
 |       | DER:             06 03 55 04 2C                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|    13 | Name:            DN Qualifier                             |
+|    15 | Name:            DN Qualifier                             |
 |       | OID:             2.5.4.46                                 |
 |       | DER:             06 03 55 04 2E                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
-|    14 | Name:            Pseudonym                                |
+|    16 | Name:            Pseudonym                                |
 |       | OID:             2.5.4.65                                 |
 |       | DER:             06 03 55 04 41                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|    15 | Name:            Organization Identifier                  |
+|    17 | Name:            Organization Identifier                  |
 |       | OID:             2.5.4.97                                 |
 |       | DER:             06 03 55 04 61                           |
 |       | Comments:                                                 |
