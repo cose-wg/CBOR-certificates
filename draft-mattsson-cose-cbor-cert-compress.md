@@ -322,7 +322,7 @@ The expert reviewers for the registries defined in this document are expected to
 
 ## CBOR Certificate Types Registry {#type}
 
-IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Types" under the new heading "CBOR Certificate". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -337,7 +337,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 
 ## CBOR Certificate Attributes Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and AttributeValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, AttributeValue, and Reference, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -445,7 +445,7 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 
 ## CBOR Certificate Extensions Registry {#extype}
 
-IANA has created a new registry titled "CBOR Certificate Extensions" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and extensionValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Extensions" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, extensionValue, and Reference, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -564,24 +564,46 @@ IANA has created a new registry titled "CBOR Certificate Extensions" under the n
 {: #fig-extype title="CBOR Certificate Extensions"}
 {: artwork-align="center"}
 
-## CBOR Extended Key Usage Registry {#EKU}
+## CBOR Extended Key Usages Registry {#EKU}
 
-IANA has created a new registry titled "CBOR Extended Key Usage Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, Extended Key Usage Purpose, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Extended Key Usages" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+---------------------------------------+
-| Value | Extended Key Usage                    |
-+=======+=======================================+
-|     0 | anyExtendedKeyUsage                   |
-|     1 | id-kp-serverAuth                      |
-|     2 | id-kp-clientAuth                      |
-|     3 | id-kp-codeSigning                     |
-|     4 | id-kp-emailProtection                 |
-|     5 | id-kp-timeStamping                    |
-|     6 | id-kp-OCSPSigning                     |
-+-------+---------------------------------------+
++-------+-----------------------------------------------------------+
+| Value | Extended Key Usages                                       |
++=======+===========================================================+
+|     1 | Name:            TLS Server authentication                |
+|       | OID:             1.3.6.1.5.5.7.3.1                        |
+|       | DER:             06 08 2B 06 01 05 05 07 03 01            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     2 | Name:            TLS Client Authentication                |
+|       | OID:             1.3.6.1.5.5.7.3.2                        |
+|       | DER:             06 08 2B 06 01 05 05 07 03 02            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     3 | Name:            Code Signing                             |
+|       | OID:             1.3.6.1.5.5.7.3.3                        |
+|       | DER:             06 08 2B 06 01 05 05 07 03 03            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     4 | Name:            Email protection  (S/MIME)               |
+|       | OID:             1.3.6.1.5.5.7.3.4                        |
+|       | DER:             06 08 2B 06 01 05 05 07 03 04            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     8 | Name:            Time Stamping                            |
+|       | OID:             1.3.6.1.5.5.7.3.8                        |
+|       | DER:             06 08 2B 06 01 05 05 07 03 08            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     9 | Name:            OCSP Signing                             |
+|       | OID:             1.3.6.1.5.5.7.3.9                        |
+|       | DER:             06 08 2B 06 01 05 05 07 03 09            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-ekutype title="CBOR Extended Key Usage Registry"}
+{: #fig-ekutype title="CBOR Certificate Extended Key Usages"}
 {: artwork-align="center"}
 
 ## CBOR General Name Registry {#GN}
@@ -608,7 +630,7 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, and Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -722,7 +744,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, and Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
