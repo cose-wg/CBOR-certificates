@@ -443,35 +443,125 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 {: #fig-attrtype title="CBOR Certificate Attributes"}
 {: artwork-align="center"}
 
-## CBOR Extension Type Registry {#extype}
+## CBOR Certificate Extensions Registry {#extype}
 
-IANA has created a new registry titled "CBOR Extension Type Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, X.509 Extension Type, and Reference, where Value is an integer, and the other columns are text strings. Only positive values can be registered. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Extensions" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comment, extensionValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+-------------------------------------+------------------+
-| Value | X.509 Extension Type                | extensionValue   |
-+=======+=====================================+==================+
-|     1 | id-ce-basicConstraints              | int              | 
-|     2 | id-ce-keyUsage                      | int              |
-|     3 | id-ce-extKeyUsage                   | ExtValueEKU      |
-|     4 | id-ce-subjectAltName                | GeneralNames     |
-|     5 | id-ce-authorityKeyIdentifier        | ExtValueAKI      |
-|     6 | id-ce-subjectKeyIdentifier          | KeyIdentifier    |
-|     7 | id-ce-certificatePolicies           | bytes            |
-|     8 | id-ce-cRLDistributionPoints         | GeneralNames     |
-|     9 | id-pe-authorityInfoAccess           | ExtValueAIA      |
-|    10 | SCT List (1.3.6.1.4.1.11129.2.4.2)  | bytes            |
-|   248 | id-ce-nameConstraints               | bytes            |
-|   249 | id-ce-policyConstraints             | bytes            |
-|   250 | id-ce-inhibitAnyPolicy              | bytes            |
-|   251 | id-ce-policyMappings                | bytes            |
-|   252 | id-ce-issuerAltName                 | GeneralNames     |
-|   253 | id-ce-subjectDirectoryAttributes    | bytes            |
-|   254 | id-ce-freshestCRL                   | bytes            |
-|   255 | id-pe-subjectInfoAccess             | bytes            |
-+-------+-------------------------------------+------------------+
++-------+-----------------------------------------------------------+
+| Value | X.509 Extension Types                                     |
++=======+===========================================================+
+|     0 | Name:            Subject Key Identifier                   |
+|       | OID:             2.5.29.14                                |
+|       | DER:             06 03 55 1D 0E                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|     1 | Name:            Key Usage                                |
+|       | OID:             2.5.29.15                                |
+|       | DER:             06 03 55 1D 0F                           |
+|       | Comments:                                                 |
+|       | AttributeValue:  int                                      |
++-------+-----------------------------------------------------------+
+|     2 | Identifier:      Subject Alternative Name                 |
+|       | OID:             2.5.29.17                                |
+|       | DER:             06 03 55 1D 11                           |
+|       | Comments:                                                 |
+|       | extensionValue:  [ + ( int, any ) ] / text                |
++-------+-----------------------------------------------------------+
+|     3 | Identifier:      Basic Constraints                        |
+|       | OID:             2.5.29.19                                |
+|       | DER:             06 03 55 1D 13                           |
+|       | Comments:                                                 |
+|       | extensionValue:  int                                      |
++-------+-----------------------------------------------------------+
+|     4 | Identifier:      CRL Distribution Points                  |
+|       | OID:             2.5.29.31                                |
+|       | DER:             06 03 55 1D 1F                           |
+|       | Comments:                                                 |
+|       | extensionValue:  [ + ( int, any ) ] / text                |
++-------+-----------------------------------------------------------+
+|     5 | Identifier:      Certificate Policies                     |
+|       | OID:             2.5.29.32                                |
+|       | DER:             06 03 55 1D 20                           |
+|       | Comments:                                                 |
+|       | extensionValue:  [ + ( oid, ? text ) ]                    |
++-------+-----------------------------------------------------------+
+|     6 | Identifier:      Authority Key Identifier                 |
+|       | OID:             2.5.29.35                                |
+|       | DER:             06 03 55 1D 23                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|     7 | Identifier:      Extended Key Usage                       |
+|       | OID:             2.5.29.37                                |
+|       | DER:             06 03 55 1D 25                           |
+|       | Comments:                                                 |
+|       | extensionValue:  int                                      |
++-------+-----------------------------------------------------------+
+|     8 | Identifier:      Authority Information Access             |
+|       | OID:             1.3.6.1.5.5.7.1.1                        |
+|       | DER:             06 08 2B 06 01 05 05 07 01 01            |
+|       | Comments:                                                 |
+|       | extensionValue:  [ + ( 1 / 2 , text ) ]                   |
++-------+-----------------------------------------------------------+
+|     9 | Identifier:      Signed Certificate Timestamp List        |
+|       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
+|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
+|       | Comments:                                                 |
+|       | extensionValue:  [ bytes, ~biguint,                       |
+|       |                    AlgorithmIdentifier, bytes]            |
++-------+-----------------------------------------------------------+
+|    24 | Identifier:      Name Constraints                         |
+|       | OID:             2.5.29.30                                |
+|       | DER:             06 03 55 1D 1E                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    25 | Identifier:      Policy Constraints                       |
+|       | OID:             2.5.29.36                                |
+|       | DER:             06 03 55 1D 24                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    26 | Identifier:      Inhibit anyPolicy                        |
+|       | OID:             2.5.29.54                                |
+|       | DER:             06 03 55 1D 36                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    27 | Identifier:      Policy Mappings                          |
+|       | OID:             2.5.29.33                                |
+|       | DER:             06 03 55 1D 21                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    28 | Identifier:      Issuer Alternative Name                  |
+|       | OID:             2.5.29.18                                |
+|       | DER:             06 03 55 1D 12                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    29 | Identifier:      Subject Directory Attributes             |
+|       | OID:             2.5.29.9                                 |
+|       | DER:             06 03 55 1D 09                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    30 | Identifier:      Freshest CRL                             |
+|       | OID:             2.5.29.46                                |
+|       | DER:             06 03 55 1D 2E                           |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    31 | Identifier:      Subject Information Access               |
+|       | OID:             1.3.6.1.5.5.7.1.11                       |
+|       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-extype title="CBOR Extension Type Registry"}
+{: #fig-extype title="CBOR Certificate Extensions"}
 {: artwork-align="center"}
 
 ## CBOR Extended Key Usage Registry {#EKU}
