@@ -608,109 +608,109 @@ IANA has created a new registry titled "CBOR General Name Registry" under the ne
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, Parameters, DER, Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, and Comments, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | X.509 Signature Algorithms                                |
 +=======+===========================================================+
-|  -256 | Identifier:  sha1WithRSAEncryption                        |
+|  -256 | Name:        sha1WithRSAEncryption                        |
 |       | OID:         1.2.840.113549.1.1.5                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00 |
-|       | Comments:                                                 |
+|       | Comments:    Don't use                                    |
 +-------+-----------------------------------------------------------+
-|  -255 | Identifier:  ecdsa-with-SHA1                              |
+|  -255 | Name:        ecdsa-with-SHA1                              |
 |       | OID:         1.2.840.10045.4.1                            |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
-|       | Comments:    Compressed Signature Value                   |
+|       | Comments:    Don't use. Compressed signature value        |
 +-------+-----------------------------------------------------------+
-|     0 | Identifier:  ecdsa-with-SHA256                            |
+|     0 | Name:        ecdsa-with-SHA256                            |
 |       | OID:         1.2.840.10045.4.3.2                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          | 
-|       | Comments:    Compressed Signature Value                   |
+|       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     1 | Identifier:  ecdsa-with-SHA384                            |
+|     1 | Name:        ecdsa-with-SHA384                            |
 |       | OID:         1.2.840.10045.4.3.3                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          | 
-|       | Comments:    Compressed Signature Value                   |
+|       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     2 | Identifier:  ecdsa-with-SHA512                            |
+|     2 | Name:        ecdsa-with-SHA512                            |
 |       | OID:         1.2.840.10045.4.3.4                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          | 
-|       | Comments:    Compressed Signature Value                   |
+|       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     3 | Identifier:  ecdsa-with-shake128                          |
+|     3 | Name:        ecdsa-with-shake128                          |
 |       | OID:         1.3.6.1.5.5.7.6.32                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          | 
-|       | Comments:    Compressed Signature Value                   |
+|       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     4 | Identifier:  ecdsa-with-shake256                          |
+|     4 | Name:        ecdsa-with-shake256                          |
 |       | OID:         1.3.6.1.5.5.7.6.33                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          | 
-|       | Comments:    Compressed Signature Value                   |
+|       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|    12 | Identifier:  Ed25519                                      |
+|    12 | Name:        Ed25519                                      |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    13 | Identifier:  Ed448                                        |
+|    13 | Name:        Ed448                                        |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    23 | Identifier:  sha256WithRSAEncryption                      |
+|    23 | Name:        sha256WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Identifier:  sha384WithRSAEncryption                      |
+|    24 | Name:        sha384WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.12                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    25 | Identifier:  sha512WithRSAEncryption                      |
+|    25 | Name:        sha512WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.13                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    26 | Identifier:  RSASSA-PSS-SHAKE128                          |
+|    26 | Name:        RSASSA-PSS-SHAKE128                          |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    27 | Identifier:  RSASSA-PSS-SHAKE256                          |
+|    27 | Name:        RSASSA-PSS-SHAKE256                          |
 |       | OID:         1.3.6.1.5.5.7.6.31                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    42 | Identifier:  hss-lms-hashsig                              |
+|    42 | Name:        hss-lms-hashsig                              |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    43 | Identifier:  xmss                                         |
+|    43 | Name:        xmss                                         |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    44 | Identifier:  xmssmt                                       |
+|    44 | Name:        xmssmt                                       |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
