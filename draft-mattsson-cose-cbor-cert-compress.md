@@ -711,7 +711,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |    26 | Name:        RSASSA-PSS with SHA-256                      |
 |       | OID:         1.2.840.113549.1.1.10                        |
 |       | Parameters:  SHA-256, MGF-1 with SHA-256, saltLength = 32 |
-|       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0a 30 34 |
+|       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0A 30 34 |
 |       |              A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 01 |
 |       |              05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 |
 |       |              01 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 |
@@ -721,19 +721,27 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |    27 | Name:        RSASSA-PSS with SHA-384                      |
 |       | OID:         1.2.840.113549.1.1.10                        |
 |       | Parameters:  SHA-384, MGF-1 with SHA-384, saltLength = 48 |
-|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
+|       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0A 30 34 |
+|       |              A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 02 |
+|       |              05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 |
+|       |              01 08 30 0D 06 09 60 86 48 01 65 03 04 02 02 |
+|       |              05 00 A2 03 02 01 30                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    28 | Name:        RSASSA-PSS with SHA-512                      |
 |       | OID:         1.2.840.113549.1.1.10                        |
 |       | Parameters:  SHA-512, MGF-1 with SHA-512, saltLength = 64 |
-|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
+|       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0A 30 34 |
+|       |              A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 03 |
+|       |              05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 |
+|       |              01 08 30 0D 06 09 60 86 48 01 65 03 04 02 03 |
+|       |              05 00 A2 03 02 01 40                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    29 | Name:        RSASSA-PSS with SHAKE128                     |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    30 | Name:        RSASSA-PSS with SHAKE256                     |
