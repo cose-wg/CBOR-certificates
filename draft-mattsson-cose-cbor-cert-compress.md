@@ -337,107 +337,107 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 
 ## CBOR Certificate Attributes Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Identifier, OID, AttributeValue, DER, Comments, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comment, and AttributeValue, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | X.509 Attributes                                          |
 +=======+===========================================================+
-|     0 | Identifier:      emailAddress                             |
+|     0 | Name:            Email Address                            |
 |       | OID:             1.2.840.113549.1.9.1                     |
-|       | AttributeValue:  IA5String                                |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
-|       | Comments:                                                 |
+|       | Comment:         Deprecated, use subjectAltName           |
+|       | AttributeValue:  IA5String                                |
 +-------+-----------------------------------------------------------+
-|     1 | Identifier:      id-at-commonName                         |
+|     1 | Name:            Common Name                              |
 |       | OID:             2.5.4.3                                  |
-|       | AttributeValue:  PrintableString or UTF8String            |
 |       | DER:             06 03 55 04 03                           |
-|       | Comments:                                                 |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|     2 | Identifier:      id-at-surname                            |
+|     2 | Name:            Surname                                  |
 |       | OID:             2.5.4.4                                  |
-|       | AttributeValue:  PrintableString or UTF8String            |
 |       | DER:             06 03 55 04 04                           |
-|       | Comments:                                                 |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
-|     3 | Identifier:      id-at-serialNumber                       |
+|     3 | Name:            Serial Number                            |
 |       | OID:             2.5.4.5                                  |
-|       | AttributeValue:  PrintableString                          |
 |       | DER:             06 03 55 04 05                           |
-|       | Comments:                                                 |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
-|     4 | Identifier:      id-at-countryName                        |
+|     4 | Name:            Country                                  |
 |       | OID:             2.5.4.6                                  |
-|       | AttributeValue:  PrintableString                          |
 |       | DER:             06 03 55 04 06                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     5 | Identifier:      id-at-localityName                       |
-|       | OID:             2.5.4.7                                  |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 07                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     6 | Identifier:      id-at-stateOrProvinceName                |
-|       | OID:             2.5.4.8                                  |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 08                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     7 | Identifier:      id-at-organizationName                   |
-|       | OID:             2.5.4.10                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 0A                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     8 | Identifier:      id-at-organizationalUnitName             |
-|       | OID:             2.5.4.11                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 0B                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     9 | Identifier:      id-at-title                              |
-|       | OID:             2.5.4.12                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 0C                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    10 | Identifier:      id-at-givenName                          |
-|       | OID:             2.5.4.42                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 2A                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    11 | Identifier:      id-at-initials                           |
-|       | OID:             2.5.4.43                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 2B                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    12 | Identifier:      id-at-generationQualifier                |
-|       | OID:             2.5.4.44                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
-|       | DER:             06 03 55 04 2C                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    13 | Identifier:      id-at-dnQualifier                        |
-|       | OID:             2.5.4.46                                 |
+|       | Comment:                                                  |
 |       | AttributeValue:  PrintableString                          |
++-------+-----------------------------------------------------------+
+|     5 | Name:            Locality                                 |
+|       | OID:             2.5.4.7                                  |
+|       | DER:             06 03 55 04 07                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|     6 | Name:            State or Province                        |
+|       | OID:             2.5.4.8                                  |
+|       | DER:             06 03 55 04 08                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|     7 | Name:            Organization                             |
+|       | OID:             2.5.4.10                                 |
+|       | DER:             06 03 55 04 0A                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|     8 | Name:            Organizational Unit                      |
+|       | OID:             2.5.4.11                                 |
+|       | DER:             06 03 55 04 0B                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|     9 | Name:            Title                                    |
+|       | OID:             2.5.4.12                                 |
+|       | DER:             06 03 55 04 0C                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|    10 | Name:            Given Name                               |
+|       | OID:             2.5.4.42                                 |
+|       | DER:             06 03 55 04 2A                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|    11 | Name:            Initials                                 |
+|       | OID:             2.5.4.43                                 |
+|       | DER:             06 03 55 04 2B                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|    12 | Name:            Generation Qualifier                     |
+|       | OID:             2.5.4.44                                 |
+|       | DER:             06 03 55 04 2C                           |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|    13 | Name:            DN Qualifier                             |
+|       | OID:             2.5.4.46                                 |
 |       | DER:             06 03 55 04 2E                           |
-|       | Comments:                                                 |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
-|    14 | Identifier:      id-at-pseudonym                          |
+|    14 | Name:            Pseudonym                                |
 |       | OID:             2.5.4.65                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 |       | DER:             06 03 55 04 41                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    15 | Identifier:      id-at-organizationIdentifier             |
-|       | OID:             2.5.4.97                                 |
+|       | Comment:                                                  |
 |       | AttributeValue:  PrintableString or UTF8String            |
++-------+-----------------------------------------------------------+
+|    15 | Name:            Organization Identifier                  |
+|       | OID:             2.5.4.97                                 |
 |       | DER:             06 03 55 04 61                           |
-|       | Comments:                                                 |
+|       | Comment:                                                  |
+|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Certificate Attributes"}
@@ -644,25 +644,25 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          | 
 |       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
-|     3 | Identifier:  id-ecdsa-with-shake128                       |
+|     3 | Identifier:  ecdsa-with-shake128                          |
 |       | OID:         1.3.6.1.5.5.7.6.32                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          | 
 |       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
-|     4 | Identifier:  id-ecdsa-with-shake256                       |
+|     4 | Identifier:  ecdsa-with-shake256                          |
 |       | OID:         1.3.6.1.5.5.7.6.33                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          | 
 |       | Comments:    Compressed Signature Value                   |
 +-------+-----------------------------------------------------------+
-|    12 | Identifier:  id-Ed25519                                   |
+|    12 | Identifier:  Ed25519                                      |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    13 | Identifier:  id-Ed448                                     |
+|    13 | Identifier:  Ed448                                        |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
@@ -686,31 +686,31 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    26 | Identifier:  id-RSASSA-PSS-SHAKE128                       |
+|    26 | Identifier:  RSASSA-PSS-SHAKE128                          |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    27 | Identifier:  id-RSASSA-PSS-SHAKE256                       |
+|    27 | Identifier:  RSASSA-PSS-SHAKE256                          |
 |       | OID:         1.3.6.1.5.5.7.6.31                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    42 | Identifier:  id-alg-hss-lms-hashsig                       |
+|    42 | Identifier:  hss-lms-hashsig                              |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    43 | Identifier:  id-alg-xmss                                  |
+|    43 | Identifier:  xmss                                         |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    44 | Identifier:  id-alg-xmssmt                                |
+|    44 | Identifier:  xmssmt                                       |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
@@ -728,21 +728,21 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+-----------------------------------------------------------+
 | Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
-|     0 | Identifier:  id-ecPublicKey                               |
+|     0 | Identifier:  ecPublicKey                                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     1 | Identifier:  id-ecPublicKey                               |
+|     1 | Identifier:  ecPublicKey                                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     2 | Identifier:  id-ecPublicKey                               |
+|     2 | Identifier:  ecPublicKey                                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
