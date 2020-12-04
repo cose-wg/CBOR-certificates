@@ -740,13 +740,13 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 +-------+-----------------------------------------------------------+
 |    29 | Name:        RSASSA-PSS with SHAKE128                     |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
-|       | Parameters:  NULL                                         |
+|       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    30 | Name:        RSASSA-PSS with SHAKE256                     |
 |       | OID:         1.3.6.1.5.5.7.6.31                           |
-|       | Parameters:  NULL                                         |
+|       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
