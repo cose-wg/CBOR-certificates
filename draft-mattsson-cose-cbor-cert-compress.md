@@ -733,69 +733,69 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
-|       | Comment:     Point compressed subjectPublicKey            |
+|       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |     1 | Name:        ecPublicKey + secp384r1                      |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
-|       | Comment:     Point compressed subjectPublicKey            |
+|       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        ecPublicKey + secp521r1                      |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 23                                     |
-|       | Comment:     Point compressed subjectPublicKey            |
+|       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |    10 | Name:        X25519                                       |
 |       | OID:         1.3.101.110                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6E                         |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    11 | Name:        X448                                         |
 |       | OID:         1.3.101.111                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6F                         |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    12 | Name:        Ed25519                                      |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    13 | Name:        Ed448                                        |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    23 | Name:        rsaEncryption                                |
 |       | OID:         1.2.840.113549.1.1.1                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    42 | Name:        hss-lms-hashsig                              |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    43 | Name:        xmss                                         |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    44 | Name:        xmssmt                                       |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
-|       | Comment:                                                  |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="CBOR Certificate Public Key Algorithms"}
