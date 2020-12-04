@@ -636,43 +636,43 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 +-------+-----------------------------------------------------------+
 | Value | X.509 Signature Algorithms                                |
 +=======+===========================================================+
-|  -256 | Name:        sha1WithRSAEncryption                        |
+|  -256 | Name:        RSASSA-PKCS1-v1_5 with SHA-1                 |
 |       | OID:         1.2.840.113549.1.1.5                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00 |
 |       | Comments:    Don't use                                    |
 +-------+-----------------------------------------------------------+
-|  -255 | Name:        ecdsa-with-SHA1                              |
+|  -255 | Name:        ECDSA with SHA-1                             |
 |       | OID:         1.2.840.10045.4.1                            |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
 |       | Comments:    Don't use. Compressed signature value        |
 +-------+-----------------------------------------------------------+
-|     0 | Name:        ecdsa-with-SHA256                            |
+|     0 | Name:        ECDSA with SHA-256                           |
 |       | OID:         1.2.840.10045.4.3.2                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          | 
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     1 | Name:        ecdsa-with-SHA384                            |
+|     1 | Name:        ECDSA with SHA-384                           |
 |       | OID:         1.2.840.10045.4.3.3                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          | 
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     2 | Name:        ecdsa-with-SHA512                            |
+|     2 | Name:        ECDSA with SHA-512                           |
 |       | OID:         1.2.840.10045.4.3.4                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          | 
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     3 | Name:        ecdsa-with-shake128                          |
+|     3 | Name:        ECDSA with SHAKE128                          |
 |       | OID:         1.3.6.1.5.5.7.6.32                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          | 
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
-|     4 | Name:        ecdsa-with-shake256                          |
+|     4 | Name:        ECDSA with SHAKE256                          |
 |       | OID:         1.3.6.1.5.5.7.6.33                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          | 
@@ -690,49 +690,71 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    23 | Name:        sha256WithRSAEncryption                      |
+|    23 | Name:        RSASSA-PKCS1-v1_5 with SHA-256               |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Name:        sha384WithRSAEncryption                      |
+|    24 | Name:        RSASSA-PKCS1-v1_5 with SHA-384               |
 |       | OID:         1.2.840.113549.1.1.12                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    25 | Name:        sha512WithRSAEncryption                      |
+|    25 | Name:        RSASSA-PKCS1-v1_5 with SHA-512               |
 |       | OID:         1.2.840.113549.1.1.13                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    26 | Name:        RSASSA-PSS-SHAKE128                          |
+|    26 | Name:        RSASSA-PSS with SHA-256                      |
+|       | OID:         1.2.840.113549.1.1.10                        |
+|       | Parameters:  SHA-256, MGF-1 with SHA-256, saltLength = 32 |
+|       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0a 30 34 |
+|       |              A0 0F 30 0D 06 09 60 86 48 01 65 03 04 02 01 |
+|       |              05 00 A1 1C 30 1A 06 09 2A 86 48 86 F7 0D 01 |
+|       |              01 08 30 0D 06 09 60 86 48 01 65 03 04 02 01 |
+|       |              05 00 a2 03 02 01 20                         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    27 | Name:        RSASSA-PSS with SHA-384                      |
+|       | OID:         1.2.840.113549.1.1.10                        |
+|       | Parameters:  SHA-384, MGF-1 with SHA-384, saltLength = 48 |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    28 | Name:        RSASSA-PSS with SHA-512                      |
+|       | OID:         1.2.840.113549.1.1.10                        |
+|       | Parameters:  SHA-512, MGF-1 with SHA-512, saltLength = 64 |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    29 | Name:        RSASSA-PSS with SHAKE128                     |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    27 | Name:        RSASSA-PSS-SHAKE256                          |
+|    30 | Name:        RSASSA-PSS with SHAKE256                     |
 |       | OID:         1.3.6.1.5.5.7.6.31                           |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          | 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    42 | Name:        hss-lms-hashsig                              |
+|    42 | Name:        HSS / LMS                                    |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    43 | Name:        xmss                                         |
+|    43 | Name:        XMSS                                         |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    44 | Name:        xmssmt                                       |
+|    44 | Name:        XMSS^MT                                      |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
