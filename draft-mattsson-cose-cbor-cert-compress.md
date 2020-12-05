@@ -108,7 +108,7 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called CBOR Certificates. The CBOR encoding supports a large subset of RFC 5280, while at the same time significantly reduces the size of certificates compatible with RFC 7925 and IEEE 802.1AR (DevIDs). When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%. 
+This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called CBOR Certificates. The CBOR encoding supports a large subset of RFC 5280 and significantly reduces the size of certificates compatible with e.g. RFC 7925, IEEE 802.1AR (DevID), and CA/Browser Forum Baseline Requirements. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%. 
 The CBOR encoding can also be used encode "natively signed" CBOR certificates, which does not require re-encoding for the signature to be verified. The document also specifies COSE headers as well as a TLS certificate type for CBOR certificates.
 
 --- middle
