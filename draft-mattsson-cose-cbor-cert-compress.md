@@ -190,7 +190,7 @@ TBSCertificate = (
    validityNotAfter : Time,
    subject : Name,
    subjectPublicKeyAlgorithm : AlgorithmIdentifier,
-   subjectPublicKey : bytes,
+   subjectPublicKey : bytes / [ ~biguint, ~biguint ],
    extensions : Extensions,
    issuerSignatureAlgorithm : AlgorithmIdentifier,
 )
@@ -203,12 +203,12 @@ Attribute = ( attributeType : int, attributeValue : text )
 
 Time = ~time / null
 
-AlgorithmIdentifier = int / oid
+AlgorithmIdentifier = int / ~oid
 
 Extensions = [ * Extension ] / int
 
 Extension = (
-   extensionID : int / oid,
+   extensionID : int / ~oid,
    ? critical : bool,        ; present if and only if extensionID is an oid
    extensionValue : any,     ; type known from extensionID
 )
