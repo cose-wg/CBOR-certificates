@@ -1095,7 +1095,17 @@ issuerPrivateKey :
 h'DC66B3415456D649429B53223DF7532B942D6B0E0842C30BCA4C0ACF91547BB2'
 ~~~~~~~~~~~
 
-## Example HTPPS X.509 Certificate
+## Example IEEE 802.1AR profiled X.509 Certificate
+
+EDITOR'S NOTE: To do
+
+## Example CAB Baseline ECDSA HTTPS X.509 Certificate
+
+The DER encoding of the www.ietf.org certificate is xxxx bytes.
+
+EDITOR'S NOTE: To do
+
+## Example CAB Baseline RSA HTTPS X.509 Certificate
 
 The DER encoding of the tools.ietf.org certificate is 1647 bytes.
 
