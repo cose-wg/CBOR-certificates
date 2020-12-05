@@ -199,7 +199,7 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * [ + Attribute ] ] / text / bytes
 
-Attribute = ( attributeType : int, attributeValue : text )
+Attribute = ( attributeType : int, attributeValue : text ) // ( attributeType : ~oid, attributeValue : bytes ) 
 
 Time = ~time / null
 
