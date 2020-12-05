@@ -638,7 +638,7 @@ IANA has created a new registry titled "CBOR Certificate General Names" under th
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
-|    -1 | Name:            otherName + hardwareModuleName           |
+|    -1 | Name:            otherName with hardwareModuleName        |
 |       | Comments:                                                 |
 |       | Value:           [ ~oid, bytes ]                          |
 +-------+-----------------------------------------------------------+
@@ -826,21 +826,21 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+-----------------------------------------------------------+
 | Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
-|     0 | Name:        EC Public Key (Weierstraß) + secp256r1       |
+|     0 | Name:        EC Public Key (Weierstraß) with secp256r1    |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     0 | Name:        EC Public Key (Weierstraß) + secp384r1       |
+|     0 | Name:        EC Public Key (Weierstraß) with secp384r1    |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     0 | Name:        EC Public Key (Weierstraß) + secp521r1       |
+|     0 | Name:        EC Public Key (Weierstraß) with secp521r1    |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
