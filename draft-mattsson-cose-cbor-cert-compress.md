@@ -1170,7 +1170,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
 h'047FA1E31928EE403BA0B83A395673FC',
 [
   [-4, "US"],
-  [-7, "Cloudflare, Inc."],
+  [-8, "Cloudflare, Inc."],
   [-1, "Cloudflare Inc ECC CA-3"]
 ],
 1595980800,
@@ -1179,7 +1179,7 @@ h'047FA1E31928EE403BA0B83A395673FC',
   [-4, "US"],
   [-6, "CA"],
   [-5, "San Francisco"],
-  [-7, "Cloudflare, Inc."],
+  [-8, "Cloudflare, Inc."],
   [-1, "sni.cloudflaressl.com"]
 ],
 0,
