@@ -161,7 +161,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. When an CBOR OID is used, parameters are not supported. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. Uncompressed public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
+* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. When an CBOR OID is used, parameters are not supported. The 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For RSA public keys the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR positive bignum (~biguint). If the exponent is 65537, the array and the exponent is omitted. Uncompressed public keys of type id-ecPublicKey are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
 
 * issuerUniqueID. Not supported.
 
@@ -852,7 +852,7 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 |       | OID:         1.2.840.113549.1.1.1                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
-|       | Comments:                                                 |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    42 | Name:        HSS / LMS                                    |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
