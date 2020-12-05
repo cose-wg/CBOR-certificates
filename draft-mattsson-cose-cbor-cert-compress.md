@@ -340,6 +340,7 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 | Value | Description                                               |
 +=======+===========================================================+
 |     0 | Natively Signed CBOR Certificate following X.509 v3       |
++-------+-----------------------------------------------------------+
 |     1 | CBOR re-encoding of X.509 v3 Certificate                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
@@ -352,7 +353,7 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
-| Value | X.509 Attributes                                          |
+| Value | Attribute                                                 |
 +=======+===========================================================+
 |     0 | Name:            Email Address                            |
 |       | OID:             1.2.840.113549.1.9.1                     |
@@ -424,7 +425,7 @@ IANA has created a new registry titled "CBOR Certificate Attributes" under the n
 |       | OID:             2.5.4.17                                 |
 |       | DER:             06 03 55 04 11                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
+|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |    12 | Name:            Given Name                               |
 |       | OID:             2.5.4.42                                 |
@@ -472,7 +473,7 @@ IANA has created a new registry titled "CBOR Certificate Extensions" under the n
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
-| Value | X.509 Extension Types                                     |
+| Value | Extension                                                |
 +=======+===========================================================+
 |     0 | Name:            Subject Key Identifier                   |
 |       | OID:             2.5.29.14                                |
@@ -589,11 +590,11 @@ IANA has created a new registry titled "CBOR Certificate Extensions" under the n
 
 ## CBOR Extended Key Usages Registry {#EKU}
 
-IANA has created a new registry titled "CBOR Extended Key Usages" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Extended Key Usages" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
-| Value | Extended Key Usages                                       |
+| Value | Extended Key Usage                                        |
 +=======+===========================================================+
 |     1 | Name:            TLS Server authentication                |
 |       | OID:             1.3.6.1.5.5.7.3.1                        |
@@ -629,26 +630,48 @@ IANA has created a new registry titled "CBOR Extended Key Usages" under the new 
 {: #fig-ekutype title="CBOR Certificate Extended Key Usages"}
 {: artwork-align="center"}
 
-## CBOR General Name Registry {#GN}
+## CBOR Certificate General Names Registry {#GN}
 
-IANA has created a new registry titled "CBOR General Name Registry" under the new heading "CBOR Certificate". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
-
+IANA has created a new registry titled "CBOR Certificate General Names" under the new heading "CBOR Certificate". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+-----------------------------------+------------------+
-| Value | General Name Type                 | Value            |
-+=======+===================================+==================+
-|    -1 | otherName + hardwareModuleName    | [ oid, bytes ]   |
-|     0 | otherName                         | [ oid, bytes ]   |
-|     1 | rfc822Name                        | text             |
-|     2 | dNSName                           | text             |
-|     4 | directoryName                     | Name             |
-|     6 | uniformResourceIdentifier         | text             |
-|     7 | iPAddress                         | bytes            |
-|     8 | registeredID                      | oid              |
-+-------+-----------------------------------+------------------+
++-------+-----------------------------------------------------------+
+| Value | General Names                                             |
++=======+===========================================================+
+|    -1 | Name:            otherName + hardwareModuleName           |
+|       | Comments:                                                 |
+|       | Value:           [ ~oid, bytes ]                          |
++-------+-----------------------------------------------------------+
+|     0 | Name:            otherName                                |
+|       | Comments:                                                 |
+|       | Value:           [ ~oid, bytes ]                          |
++-------+-----------------------------------------------------------+
+|     1 | Name:            rfc822Name                               |
+|       | Comments:                                                 |
+|       | Value:           text                                     |
++-------+-----------------------------------------------------------+
+|     2 | Name:            dNSName                                  |
+|       | Comments:                                                 |
+|       | Value:           text                                     |
++-------+-----------------------------------------------------------+
+|     4 | Name:            directoryName                            |
+|       | Comments:                                                 |
+|       | Value:           Name                                     |
++-------+-----------------------------------------------------------+
+|     6 | Name:            uniformResourceIdentifier                |
+|       | Comments:                                                 |
+|       | Value:           text                                     |
++-------+-----------------------------------------------------------+
+|     7 | Name:            iPAddress                                |
+|       | Comments:                                                 |
+|       | Value:           bytes                                    |
++-------+-----------------------------------------------------------+
+|     8 | Name:            registeredID                             |
+|       | Comments:                                                 |
+|       | Value:           ~oid                                     |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-gn title="CBOR General Name Registry"}
+{: #fig-gn title="CBOR Certificate General Names"}
 {: artwork-align="center"}
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
