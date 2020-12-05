@@ -1161,6 +1161,34 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 
 ### Example CBOR Certificate Encoding
 
+The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic format.
+
+~~~~~~~~~~~
+/This defines a CBOR Sequence (RFC 8742):/
+
+1,
+h'047FA1E31928EE403BA0B83A395673FC',
+[
+  [-4, "US"],
+  [-7, "Cloudflare, Inc."],
+  [-1, "Cloudflare Inc ECC CA-3"]
+],
+1595980800,
+1627560000,
+[
+  [-4, "US"],
+  [-6, "CA"],
+  [-5, "San Francisco"],
+  [-7, "Cloudflare, Inc."],
+  [-1, "sni.cloudflaressl.com"]
+],
+0,
+h'03963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
+...,
+0,
+h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEAB5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
+~~~~~~~~~~~
+
 ## Example CAB Baseline RSA HTTPS X.509 Certificate
 
 The DER encoding of the tools.ietf.org certificate is 1647 bytes.
