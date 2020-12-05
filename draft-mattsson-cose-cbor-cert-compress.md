@@ -847,25 +847,25 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 |       |              04 00 23                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|    10 | Name:        X25519                                       |
+|    10 | Name:        X25519 (Montgomery)                          |
 |       | OID:         1.3.101.110                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6E                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    11 | Name:        X448                                         |
+|    11 | Name:        X448 (Montgomery)                            |
 |       | OID:         1.3.101.111                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6F                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    12 | Name:        Ed25519                                      |
+|    12 | Name:        Ed25519 (Twisted Edwards)                    |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    13 | Name:        Ed448                                        |
+|    13 | Name:        Ed448 (Edwards)                              |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
