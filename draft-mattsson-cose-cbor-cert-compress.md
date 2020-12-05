@@ -349,119 +349,96 @@ IANA has created a new registry titled "CBOR Certificate Types" under the new he
 
 ## CBOR Certificate Attributes Registry {#atttype}
 
-IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, AttributeValue, and Reference, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Attributes" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Attribute                                                 |
 +=======+===========================================================+
-|     0 | Name:            Email Address                            |
-|       | OID:             1.2.840.113549.1.9.1                     |
-|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
-|       | Comments:        Deprecated, use subjectAltName           |
-|       | AttributeValue:  IA5String                                |
-+-------+-----------------------------------------------------------+
 |     1 | Name:            Common Name                              |
 |       | OID:             2.5.4.3                                  |
 |       | DER:             06 03 55 04 03                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Surname                                  |
 |       | OID:             2.5.4.4                                  |
 |       | DER:             06 03 55 04 04                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Serial Number                            |
 |       | OID:             2.5.4.5                                  |
 |       | DER:             06 03 55 04 05                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Country                                  |
 |       | OID:             2.5.4.6                                  |
 |       | DER:             06 03 55 04 06                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            Locality                                 |
 |       | OID:             2.5.4.7                                  |
 |       | DER:             06 03 55 04 07                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            State or Province                        |
 |       | OID:             2.5.4.8                                  |
 |       | DER:             06 03 55 04 08                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Street Address                           |
 |       | OID:             2.5.4.9                                  |
 |       | DER:             06 03 55 04 09                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Organization                             |
 |       | OID:             2.5.4.10                                 |
 |       | DER:             06 03 55 04 0A                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Organizational Unit                      |
 |       | OID:             2.5.4.11                                 |
 |       | DER:             06 03 55 04 0B                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Title                                    |
 |       | OID:             2.5.4.12                                 |
 |       | DER:             06 03 55 04 0C                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Postal Code                              |
 |       | OID:             2.5.4.17                                 |
 |       | DER:             06 03 55 04 11                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |    12 | Name:            Given Name                               |
 |       | OID:             2.5.4.42                                 |
 |       | DER:             06 03 55 04 2A                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            Initials                                 |
 |       | OID:             2.5.4.43                                 |
 |       | DER:             06 03 55 04 2B                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    14 | Name:            Generation Qualifier                     |
 |       | OID:             2.5.4.44                                 |
 |       | DER:             06 03 55 04 2C                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    15 | Name:            DN Qualifier                             |
 |       | OID:             2.5.4.46                                 |
 |       | DER:             06 03 55 04 2E                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString                          |
 +-------+-----------------------------------------------------------+
 |    16 | Name:            Pseudonym                                |
 |       | OID:             2.5.4.65                                 |
 |       | DER:             06 03 55 04 41                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 |    17 | Name:            Organization Identifier                  |
 |       | OID:             2.5.4.97                                 |
 |       | DER:             06 03 55 04 61                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  PrintableString or UTF8String            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="CBOR Certificate Attributes"}
