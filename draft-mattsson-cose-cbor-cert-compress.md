@@ -69,6 +69,14 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
 
+  CAB-Baseline:
+    target: https://cabforum.org/baseline-requirements-documents/
+    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Certificates Version 1.7.3
+    author:
+      -
+        ins: CA/Browser Forum
+    date: October 2020
+
   IEEE-802.1AR:
     target: https://standards.ieee.org/standard/802_1AR-2018.html
     title: IEEE Standard for Local and metropolitan area networks–Secure Device Identity
