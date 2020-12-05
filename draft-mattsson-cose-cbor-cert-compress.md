@@ -68,6 +68,8 @@ informative:
   I-D.ietf-tls-dtls13:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
+  I-D.ietf-emu-eap-tls13:
+  I-D.ietf-emu-eaptlscert:
 
   CAB-Baseline:
     target: https://cabforum.org/baseline-requirements-documents/
