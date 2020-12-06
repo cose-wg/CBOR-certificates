@@ -179,7 +179,7 @@ The following Concise Data Definition Language (CDDL) defines CBORCertificate an
 ; The elements of the following array are to be used in a CBOR Sequence:
 CBORCertificate = [
    TBSCertificate,
-   issuerSignatureValue : bytes,
+   issuerSignatureValue : any,
 ]
 
 TBSCertificate = (
@@ -190,7 +190,7 @@ TBSCertificate = (
    validityNotAfter : Time,
    subject : Name,
    subjectPublicKeyAlgorithm : AlgorithmIdentifier,
-   subjectPublicKey : bytes / [ ~biguint, ~biguint ],
+   subjectPublicKey : any,
    extensions : Extensions,
    issuerSignatureAlgorithm : AlgorithmIdentifier,
 )
