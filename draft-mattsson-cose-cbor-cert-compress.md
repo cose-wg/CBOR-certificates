@@ -63,6 +63,7 @@ informative:
   RFC7228:
   RFC7925:
   RFC8446:
+  RFC8603:
   RFC8879:
   I-D.ietf-lake-edhoc:
   I-D.ietf-tls-dtls13:
@@ -108,7 +109,7 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called CBOR Certificates. The CBOR encoding supports a large subset of RFC 5280 and significantly reduces the size of certificates compatible with e.g. RFC 7925, IEEE 802.1AR (DevID), and CA/Browser Forum Baseline Requirements. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%. 
+This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called CBOR Certificates. The CBOR encoding supports a large subset of RFC 5280 and significantly reduces the size of certificates compatible with e.g. RFC 7925, IEEE 802.1AR (DevID), CNSA, and CA/Browser Forum Baseline Requirements. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%. 
 The CBOR encoding can also be used encode "natively signed" CBOR certificates, which does not require re-encoding for the signature to be verified. The document also specifies COSE headers as well as a TLS certificate type for CBOR certificates.
 
 --- middle
@@ -121,7 +122,7 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC7049}}, {{RFC8610}}, and {{RFC8742}}.
 
-CAB Baseline Requirements {{CAB-Baseline}}, RFC 7925 {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} specify certificate profiles which can be applied to lightweight certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{I-D.ietf-quic-transport}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, EDHOC {{I-D.ietf-lake-edhoc}} or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of {{RFC5280}}. The encoding support all {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} and CAB Baseline {{CAB-Baseline}} profiled X.509 certificates. Two variants are defined using the same CBOR encoding and differing only in what is being signed: 
+CAB Baseline Requirements {{CAB-Baseline}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA {{RFC8603}} specify certificate profiles which can be applied to lightweight certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{I-D.ietf-quic-transport}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, EDHOC {{I-D.ietf-lake-edhoc}} or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of {{RFC5280}}. The encoding support all {{RFC7925}} and IEEE 802.1AR {{IEEE-802.1AR}} and CAB Baseline {{CAB-Baseline}} profiled X.509 certificates. Two variants are defined using the same CBOR encoding and differing only in what is being signed: 
 
 * An invertible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
 
