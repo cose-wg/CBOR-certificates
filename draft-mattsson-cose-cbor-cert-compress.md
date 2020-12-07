@@ -804,70 +804,70 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 +-------+-----------------------------------------------------------+
 | Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
-|     0 | Name:        EC Public Key (Weierstraß) with secp256r1    |
+|     0 | Name:        RSA                                          |
+|       | OID:         1.2.840.113549.1.1.1                         |
+|       | Parameters:  NULL                                         |
+|       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
+|       | Comments:    Compressed subjectPublicKey                  |
++-------+-----------------------------------------------------------+
+|     1 | Name:        EC Public Key (Weierstraß) with secp256r1    |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     0 | Name:        EC Public Key (Weierstraß) with secp384r1    |
+|     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|     0 | Name:        EC Public Key (Weierstraß) with secp521r1    |
+|     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 23                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
-|    10 | Name:        X25519 (Montgomery)                          |
+|     8 | Name:        X25519 (Montgomery)                          |
 |       | OID:         1.3.101.110                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6E                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    11 | Name:        X448 (Montgomery)                            |
+|     9 | Name:        X448 (Montgomery)                            |
 |       | OID:         1.3.101.111                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6F                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    12 | Name:        Ed25519 (Twisted Edwards)                    |
+|    10 | Name:        Ed25519 (Twisted Edwards)                    |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    13 | Name:        Ed448 (Edwards)                              |
+|    11 | Name:        Ed448 (Edwards)                              |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    23 | Name:        RSA                                          |
-|       | OID:         1.2.840.113549.1.1.1                         |
-|       | Parameters:  NULL                                         |
-|       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
-|       | Comments:    Compressed subjectPublicKey                  |
-+-------+-----------------------------------------------------------+
-|    42 | Name:        HSS / LMS                                    |
+|    16 | Name:        HSS / LMS                                    |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    43 | Name:        XMSS                                         |
+|    17 | Name:        XMSS                                         |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    44 | Name:        XMSS^MT                                      |
+|    18 | Name:        XMSS^MT                                      |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
@@ -985,7 +985,7 @@ The CBOR encoding of the same X.509 certificate is shown below in CBOR diagnosti
   1577836800,
   1612224000,
   h'0123456789AB',
-  0,
+  1,
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
   1,
@@ -1005,7 +1005,7 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 1A 5E 0B E1 00
 1A 60 18 96 00
 46 01 23 45 67 89 AB
-00
+01
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
@@ -1048,7 +1048,7 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 1A 5E 0B E1 00
 1A 60 18 96 00
 46 01 23 45 67 89 AB
-00
+01
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
@@ -1160,7 +1160,7 @@ h'047FA1E31928EE403BA0B83A395673FC',
   [-8, "Cloudflare, Inc."],
   [-1, "sni.cloudflaressl.com"]
 ],
-0,
+1,
 h'03963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
 ...,
 0,
@@ -1269,7 +1269,7 @@ The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic for
     [-8, "Domain Control Validated"],
     [ 1, "*.tools.ietf.org"]
   ],
-  23, h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA1',
+  0, h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E5088793A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B82117C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E242BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7AAD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA1',
   [
     -1, -2,
      3, [ 1, 2 ],
