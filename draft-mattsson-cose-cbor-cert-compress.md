@@ -1157,23 +1157,30 @@ The CBOR encoding of the first X.509 certificateis shown below in CBOR diagnosti
 
 1,
 h'047FA1E31928EE403BA0B83A395673FC',
-[
-  [-4, "US"],
-  [-8, "Cloudflare, Inc."],
-  [-1, "Cloudflare Inc ECC CA-3"]
-],
+1,
 1595980800,
 1627560000,
 [
-  [-4, "US"],
-  [-6, "CA"],
-  [-5, "San Francisco"],
-  [-8, "Cloudflare, Inc."],
-  [-1, "sni.cloudflaressl.com"]
+ -4, "US",
+ -6, "CA",
+ -5, "San Francisco",
+ -8, "Cloudflare, Inc.",
+ -1, "sni.cloudflaressl.com"
 ],
 1,
 h'03963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
-...,
+[
+  6, 1,
+  0, h'CC0B50E7D837DBF243F3853D4860F53B39BE9B2A',
+  2, [2, "sni.cloudflaressl.com", 2, "www.ietf.org"],
+ -1, 1,
+  7, [1, 2],
+  4, ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl", "http://crl4.digicert.com/CloudflareIncECCCA-3.crl"],
+  5, [h'6086480186FD6C0101', "https://www.digicert.com/CPS", 2],
+  8, [1, "http://ocsp.digicert.com", 2, "http://cacerts.digicert.com/CloudflareIncECCCA-3.crt"],
+ -3, -2,
+  9, ...
+],
 0,
 h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEAB5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
 ~~~~~~~~~~~
