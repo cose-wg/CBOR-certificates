@@ -1090,7 +1090,7 @@ EDITOR'S NOTE: To do
 
 ## Example CAB Baseline ECDSA HTTPS X.509 Certificate
 
-The DER encoding of the www.ietf.org certificate is 1209 bytes.
+The www.ietf.org HTTPS server replies with a certificate message with 2 certificates. The DER encoding of the first certificate is 1209 bytes.
 
 ~~~~~~~~~~~
 30 82 04 b5 30 82 04 5a a0 03 02 01 02 02 10 04 7f a1 e3 19 28 ee 40
@@ -1150,7 +1150,7 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 
 ### Example CBOR Certificate Encoding
 
-The CBOR encoding of the X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding of the first X.509 certificateis shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -1180,7 +1180,7 @@ h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEAB5C06CC45854FA
 
 ## Example CAB Baseline RSA HTTPS X.509 Certificate
 
-The tools.ietf.org HTTPS server replies with a certificate chain/bag with 4 certificates. The DER encoding of the first certificate is 1647 bytes.
+The tools.ietf.org HTTPS server replies with a certificate message with 4 certificates. The DER encoding of the first certificate is 1647 bytes.
 
 ~~~~~~~~~~~
 30 82 06 6b 30 82 05 53 a0 03 02 01 02 02 09 00 a6 a5 5c 87 0e 39 b4
@@ -1259,7 +1259,7 @@ ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 
 ### Example CBOR Certificate Encoding
 
-The CBOR encoding of the first X.509 certificate in the chain/bag is shown below in CBOR diagnostic format.
+The CBOR encoding of the first X.509 certificateis shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
