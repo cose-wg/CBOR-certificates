@@ -226,7 +226,7 @@ For elliptic curve puclic keys in Weirstraß form (id-ecPublicKey), uncompressed
 
 ### Encoding of issuerSingatureValue
 
-For ECDSA signatures, the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields are padded to the fixed length L = ceil( log2(n) / 8 ), where n is the size of the largest prime-order subgroup. For secp256r1, secp384r1, and secp521r1, L is 32, 48, and 66 respectively. The resulting byte string is encoded as a CBOR byte string.
+For ECDSA signatures, the SEQUENCE and INTEGER type and length fields are omitted. If the two INTEGER value fields have different lengths, the shortest INTEGER value field is padded with zeroes so that the two fields have the same length. The resulting byte string is encoded as a CBOR byte string.
 
 ## Encoding of Extensions {#ext-encoding}
 
