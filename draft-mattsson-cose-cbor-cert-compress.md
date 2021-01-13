@@ -62,6 +62,7 @@ informative:
 
   RFC7228:
   RFC7925:
+  RFC7932:
   RFC8446:
   RFC8603:
   RFC8879:
@@ -301,17 +302,17 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 encoding more compact. The zlib number was calculated with zlib-flate.
+The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 encoding more compact. The brotli number was calculated with Brotli, see {{RFC7932}}.
 
 ~~~~~~~~~~~
-zlib-flate -compress < cert.der > cert.compressed
+brotli cert.der
 ~~~~~~~~~~~
 
 ~~~~~~~~~~~
 +------------------+--------------+------------+--------------------+
-|                  |   RFC 7925   |    zlib    |  CBOR Certificate  |
+|                  |   RFC 7925   |   brotli   |  CBOR Certificate  |
 +------------------+---------------------------+--------------------+
-| Certificate Size |     314      |     295    |         138        |
+| Certificate Size |     314      |     303    |         138        |
 +------------------+--------------+------------+--------------------+
 ~~~~~~~~~~~
 {: #fig-table title="Comparing Sizes of Certificates (bytes)"}
