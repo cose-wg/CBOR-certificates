@@ -73,6 +73,7 @@ informative:
   I-D.ietf-emu-eap-tls13:
   I-D.ietf-emu-eaptlscert:
   I-D.ietf-quic-transport:
+  I-D.ietf-tls-certificate-compression:
 
   CAB-Baseline:
     target: https://cabforum.org/baseline-requirements-documents/
