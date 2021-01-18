@@ -1088,13 +1088,13 @@ h'DC66B3415456D649429B53223DF7532B942D6B0E0842C30BCA4C0ACF91547BB2'
 
 The subject key pair is included in the same format
 ~~~~~~~~~~~
-issuerPublicKeyAlgorithm :
+subjectPublicKeyAlgorithm :
 1 (id-ecPublicKey + secp256r1)
 
-issuerPublicKey :
+subjectPublicKey :
 h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450B1019C2DFD3838AB'
 
-issuerPrivateKey :
+subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 ~~~~~~~~~~~
 
