@@ -73,7 +73,6 @@ informative:
   I-D.ietf-emu-eap-tls13:
   I-D.ietf-emu-eaptlscert:
   I-D.ietf-quic-transport:
-  I-D.ietf-tls-certificate-compression:
 
   CAB-Baseline:
     target: https://cabforum.org/baseline-requirements-documents/
@@ -913,7 +912,7 @@ This document registers the following entries in the "COSE Header Parameters" re
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with addtional TLS certificate compression {{I-D.ietf-tls-certificate-compression}}.
+This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with addtional TLS certificate compression {{RFC8879}}.
 
 EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. When COSE WG has adopted work on CBOR certificates, it could perhaps be presented in the TLS WG. The TLS WG might e.g. want a separate draft in the TLS WG.
 
