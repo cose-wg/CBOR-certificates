@@ -162,7 +162,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. For id-ecPublicKey the namedCurve parameter is encoded in the CBOR int. When an CBOR OID is used, parameters are not supported. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
+* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}} optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
 
 * issuerUniqueID. Not supported.
 
@@ -170,7 +170,7 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2, the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field including parameters is encoded as a CBOR int (see {{sigalg}}) or a CBOR OID tag {{I-D.ietf-cbor-tags-oid}}. When an CBOR OID is used, parameters are not supported.      
+* signatureAlgorithm. The 'signatureAlgorithm' field including parameters is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}} optionally followed by the parameters encoded as a CBOR byte string.
       
 * signatureValue. In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For natively signed CBOR certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}
 
@@ -184,16 +184,16 @@ CBORCertificate = [
 ]
 
 TBSCertificate = (
-   cborCertificateType : int,
-   certificateSerialNumber : CertificateSerialNumber,
-   issuer : Name,
-   validityNotBefore : Time,
-   validityNotAfter : Time,
-   subject : Name,
-   subjectPublicKeyAlgorithm : AlgorithmIdentifier,
-   subjectPublicKey : any,
-   extensions : Extensions,
-   issuerSignatureAlgorithm : AlgorithmIdentifier,
+   cborCertificateType: int,
+   certificateSerialNumber: CertificateSerialNumber,
+   issuer: Name,
+   validityNotBefore: Time,
+   validityNotAfter: Time,
+   subject: Name,
+   subjectPublicKeyAlgorithm: AlgorithmIdentifier,
+   subjectPublicKey: any,
+   extensions: Extensions,
+   issuerSignatureAlgorithm: AlgorithmIdentifier,
 )
 
 CertificateSerialNumber = ~biguint
@@ -202,17 +202,17 @@ Name = [ * RelativeDistinguishedName ] / text / bytes
 
 RelativeDistinguishedName = Attribute / [ 2* Attribute ]
 
-Attribute = ( attributeType : int, attributeValue : text ) //
-            ( attributeType : ~oid, attributeValue : bytes ) 
+Attribute = ( attributeType: int, attributeValue: text ) //
+            ( attributeType: ~oid, attributeValue: bytes ) 
 
 Time = ~time / null
 
-AlgorithmIdentifier = int / [ algorithm: ~oid, parameters: bytes ]
+AlgorithmIdentifier = int / [ algorithm: ~oid, ? parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
-Extension = ( extensionID : int, extensionValue : any ) //
-            ( extensionID : ~oid, critical : bool, extensionValue : bytes )
+Extension = ( extensionID: int, extensionValue: any ) //
+            ( extensionID: ~oid, critical: bool, extensionValue: bytes )
 )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for CBORCertificate."}
