@@ -1071,13 +1071,13 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9 
 ~~~~~~~~~~~
 
-### Example: Key Pairs
+### Example: Additonal Keys for the Example Certificates
 
-All of the above example certificates were signed and can be verified with the following key pair where the private key is encoded as in COSE {{RFC8152}}.
+Below are the issuer key pair and the subject private key belonging to the above example certificates. The private keys are encoded as in COSE {{RFC8152}}. These issuer key pair can be used to sign or verify the example certificates and the subject private key allows the exmaple certificates to be used in test vectors for other protocols like EDHOC.
 
 ~~~~~~~~~~~
 issuerPublicKeyAlgorithm :
-1 (id-ecPublicKey + secp256r1)
+1 (EC Public Key (Weierstraß) with secp256r1)
 
 issuerPublicKey :
 h'02AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845E'
@@ -1086,14 +1086,7 @@ issuerPrivateKey :
 h'DC66B3415456D649429B53223DF7532B942D6B0E0842C30BCA4C0ACF91547BB2'
 ~~~~~~~~~~~
 
-The subject key pair is included in the same format
 ~~~~~~~~~~~
-subjectPublicKeyAlgorithm :
-1 (id-ecPublicKey + secp256r1)
-
-subjectPublicKey :
-h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450B1019C2DFD3838AB'
-
 subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 ~~~~~~~~~~~
