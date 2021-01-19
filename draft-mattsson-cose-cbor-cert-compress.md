@@ -205,7 +205,7 @@ Attribute = ( attributeType : int, attributeValue : text ) // ( attributeType : 
 
 Time = ~time / null
 
-AlgorithmIdentifier = int / ~oid
+AlgorithmIdentifier = int / [ ~oid, bytes ]
 
 Extensions = [ * Extension ] / int
 
