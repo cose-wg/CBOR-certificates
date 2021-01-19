@@ -1285,7 +1285,7 @@ ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 
 ### Example CBOR Certificate Encoding
 
-The CBOR encoding of the first X.509 certificateis shown below in CBOR diagnostic format.
+The CBOR encoding of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
