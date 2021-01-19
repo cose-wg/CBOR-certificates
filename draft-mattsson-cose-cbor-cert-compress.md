@@ -222,7 +222,7 @@ Extension = (
 
 ### Encoding of subjectPublicKey
 
-For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. [ modulus : ~biguint, exponent : ~biguint]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as a unwrapped CBOR unsigned bignum (~biguint).
+For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. \[ modulus : ~biguint, exponent : ~biguint \]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as a unwrapped CBOR unsigned bignum (~biguint).
 
 For elliptic curve puclic keys in Weirstraß form (id-ecPublicKey), uncompressed keys are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
 
@@ -667,7 +667,7 @@ IANA has created a new registry titled "CBOR Certificate General Names" under th
 
 ## CBOR Certificate Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Signature Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -811,7 +811,7 @@ IANA has created a new registry titled "CBOR Certificate Signature Algorithms" u
 
 ## CBOR Certificate Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
+IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" under the new heading "CBOR Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
