@@ -212,7 +212,7 @@ Extensions = [ * Extension ] / int
 Extension = (
    extensionID : int / ~oid,
    ? critical : bool,        ; present if and only if extensionID is an oid
-   extensionValue : any,     ; type known from extensionID
+   extensionValue : any,     ; type known from extensionID, bytes when extensionID is an oid
 )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for CBORCertificate."}
