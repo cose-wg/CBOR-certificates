@@ -232,20 +232,18 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 ## Encoding of Extensions {#ext-encoding}
 
-EDITOR'S NOTE: The current specification encodes many common extensions with a DER encoded byte string. It should be discussed if more or all commonly active extensions should be natively encoded with CBOR. Would a specific CBOR encoding have to be specified for each extension or can a general CBOR encoding that apply to all remaining extensions be specified?
-
 This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign.
 
-The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. The 'extensionValue' for the extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are encoded as follows:
+The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. The 'extensionValue' for the extensions mandated to be supported by {{RFC7925}}, {{IEEE-802.1AR}}, and {{CAB-Baseline}} are encoded as follows:
 
 * basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
 * keyUsage. The 'KeyUsage' BIT STRING is interpreted as an unsigned integer n in network byte order and encoded as a CBOR int.
 
-* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.  
+* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.  
 
 ~~~~~~~~~~~
-   ExtValueEKU = [ + int / oid ] / int
+   ExtValueEKU = [ + int / ~oid ] / int
 ~~~~~~~~~~~
 
 * subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. 
