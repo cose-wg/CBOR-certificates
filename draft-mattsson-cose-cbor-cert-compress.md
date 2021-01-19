@@ -198,7 +198,9 @@ TBSCertificate = (
 
 CertificateSerialNumber = ~biguint
 
-Name = [ * [ + Attribute ] ] / text / bytes
+Name = [ * RelativeDistinguishedName ] / text / bytes
+
+RelativeDistinguishedName = Attribute / [ 2* Attribute ]
 
 Attribute = ( attributeType : int, attributeValue : text ) //
             ( attributeType : ~oid, attributeValue : bytes ) 
