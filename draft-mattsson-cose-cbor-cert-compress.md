@@ -1164,14 +1164,19 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 
 ### Example CBOR Certificate Encoding
 
-The CBOR encoding of the first X.509 certificateis shown below in CBOR diagnostic format.
+The CBOR encoding of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
 1,
 h'047FA1E31928EE403BA0B83A395673FC',
-1,
+[
+ -4, "IE",
+ -8, "Baltimore",
+ -9, "CyberTrust",
+ -1, "Baltimore CyberTrust Root"
+],
 1595980800,
 1627560000,
 [
@@ -1184,7 +1189,7 @@ h'047FA1E31928EE403BA0B83A395673FC',
 1,
 h'03963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
 [
-  6, 1,
+  6, h'A5CE37EAEBB0750E946788B445FAD9241087961F',
   0, h'CC0B50E7D837DBF243F3853D4860F53B39BE9B2A',
   2, [2, "sni.cloudflaressl.com", 2, "www.ietf.org"],
  -1, 1,
