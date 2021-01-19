@@ -263,7 +263,7 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 
 * subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
 
-* cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string.
+* cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string.
 
 * authorityInfoAccess. If authorityInfoAccess consist of only uniformResourceIdentifiers it is encoded as an array of uris.
 
@@ -1073,7 +1073,7 @@ C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9
 
 ### Example: Key Pairs
 
-All of the the above example certificates were signed and can be verified with the following key pair where the private key is encoded as in COSE {{RFC8152}}.
+All of the above example certificates were signed and can be verified with the following key pair where the private key is encoded as in COSE {{RFC8152}}.
 
 ~~~~~~~~~~~
 issuerPublicKeyAlgorithm :
