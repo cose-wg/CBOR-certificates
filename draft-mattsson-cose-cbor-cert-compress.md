@@ -200,18 +200,17 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * [ + Attribute ] ] / text / bytes
 
-Attribute = ( attributeType : int, attributeValue : text ) // ( attributeType : ~oid, attributeValue : bytes ) 
+Attribute = ( attributeType : int, attributeValue : text ) //
+            ( attributeType : ~oid, attributeValue : bytes ) 
 
 Time = ~time / null
 
-AlgorithmIdentifier = int / [ ~oid, bytes ]
+AlgorithmIdentifier = int / [ algorithm: ~oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
-Extension = (
-   extensionID : int / ~oid,
-   ? critical : bool,        ; present if and only if extensionID is an oid
-   extensionValue : any,     ; type known from extensionID, bytes when extensionID is an oid
+Extension = ( extensionID : int, extensionValue : any ) //
+            ( extensionID : ~oid, critical : bool, extensionValue : bytes )
 )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for CBORCertificate."}
