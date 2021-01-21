@@ -925,6 +925,27 @@ EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS
 +-------+------------------+-------------+--------------------------+
 ~~~~~~~~~~~
 
+## CBOR Tags Registry {#tags}
+
+This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.
+
+~~~~~~~~~~~
++------+------------------------------------------------------------+
+|  Tag | X.509 Public Key Algorithms                                |
++======+============================================================+
+| TDB6 | Data Item: [ CBORCertificate ]                             |
+|      | Semantics: The CBORCertificate CBOR sequence wrapped in an |
+|      |            array.                                          |
+|      | Reference: This document                                   |
++------+------------------------------------------------------------+
+| TDB7 | Data Item: COSE_X509                                       |
+|      | Semantics: The content of each bstr is the bytes of a CBOR |
+|      |            Certificate.                                    |
+|      | Reference: This document                                   |
++------+------------------------------------------------------------+
+~~~~~~~~~~~
+
+
 --- back
 
 # Example CBOR Certificates {#appA}
