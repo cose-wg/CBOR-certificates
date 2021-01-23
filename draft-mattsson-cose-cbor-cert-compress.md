@@ -177,11 +177,11 @@ CBOR certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
-; The elements of the following array are to be used in a CBOR Sequence:
-CBORCertificate = [
+; The elements of the following group are to be used in a CBOR Sequence:
+CBORCertificate = (
    TBSCertificate,
    issuerSignatureValue : any,
-]
+)
 
 TBSCertificate = (
    cborCertificateType: int,
@@ -888,7 +888,11 @@ IANA has created a new registry titled "CBOR Certificate Public Key Algorithms" 
 
 EDITORS NOTE: Should x5u refer to a bag or a chain? The text should be moved a section and not be in the IANA Section.
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5bag, c5chain, and c5t are the same as the corresponding x5bag, x5chain, and x5t defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded and that c5t MUST refer to an end-entity certificate. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_X509 item served with the application/cbor content format.
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded, uses a COSE_C5 structure instead of COSE_X509, and that c5t MUST refer to an end-entity certificate. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:
+
+~~~~~~~~~~~ CDDL
+COSE_C5 = [ + CBORCertificate ]
+~~~~~~~~~~~
 
 As the contents of c5bag, c5chain, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5bag, c5chain, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
 
@@ -898,19 +902,18 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 +-----------+-------+----------------+------------------------------+
 | Name      | Label | Value Type     | Description                  |
 +===========+=======+================+==============================+
-| c5bag     |  TBD1 | COSE_X509      | An unordered bag of CBOR     |
+| c5b       |  TBD1 | COSE_C5        | An unordered bag of CBOR     |
 |           |       |                | certificates                 |
 +-----------+-------+----------------+------------------------------+
-| c5chain   |  TBD2 | COSE_X509      | An ordered chain of CBOR     |
+| c5c       |  TBD2 | COSE_C5        | An ordered chain of CBOR     |
 |           |       |                | certificates                 |
 +-----------+-------+----------------+------------------------------+
-| c5t       |  TBD3 | COSE_CertHash  | Hash of a CBOR certificate   |
+| c5t       |  TBD3 | COSE_CertHash  | Hash of a CBORCertificate    |
 +-----------+-------+----------------+------------------------------+
-| c5u       |  TBD4 | uri            | URI pointing to a bag/chain  |
-|           |       |                | of CBOR certificates         |
+| c5u       |  TBD4 | uri            | URI pointing to a COSE_C5    |
 +-----------+-------+----------------+------------------------------+
 ~~~~~~~~~~~
-
+ 
 ## TLS Certificate Types Registry {#tls}
 
 This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with addtional TLS certificate compression {{RFC8879}}.
@@ -933,18 +936,11 @@ This document registers the following entries in the "CBOR Tags" registry under 
 +------+------------------------------------------------------------+
 |  Tag | X.509 Public Key Algorithms                                |
 +======+============================================================+
-| TDB6 | Data Item: [ CBORCertificate ]                             |
-|      | Semantics: The CBORCertificate CBOR sequence wrapped in an |
-|      |            array.                                          |
-|      | Reference: This document                                   |
-+------+------------------------------------------------------------+
-| TDB7 | Data Item: COSE_X509                                       |
-|      | Semantics: The content of each bstr is the bytes of a CBOR |
-|      |            Certificate.                                    |
+| TDB6 | Data Item: COSE_C5                                         |
+|      | Semantics:                                                 |
 |      | Reference: This document                                   |
 +------+------------------------------------------------------------+
 ~~~~~~~~~~~
-
 
 --- back
 
