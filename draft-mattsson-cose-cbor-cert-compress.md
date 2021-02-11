@@ -908,9 +908,11 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 | c5c       |  TBD2 | COSE_C5        | An ordered chain of CBOR     |
 |           |       |                | certificates                 |
 +-----------+-------+----------------+------------------------------+
-| c5t       |  TBD3 | COSE_CertHash  | Hash of a CBORCertificate    |
+| c5t       |  TBD3 | COSE_CertHash  | Hash of a CBOR certificate   |
 +-----------+-------+----------------+------------------------------+
 | c5u       |  TBD4 | uri            | URI pointing to a COSE_C5    |
+|           |       |                | containing a ordered chain   |
+|           |       |                | of certificates              |
 +-----------+-------+----------------+------------------------------+
 ~~~~~~~~~~~
  
@@ -937,7 +939,7 @@ This document registers the following entries in the "CBOR Tags" registry under 
 |  Tag | X.509 Public Key Algorithms                                |
 +======+============================================================+
 | TDB6 | Data Item: COSE_C5                                         |
-|      | Semantics:                                                 |
+|      | Semantics: An ordered chain of CBOR certificates           |
 |      | Reference: This document                                   |
 +------+------------------------------------------------------------+
 ~~~~~~~~~~~
