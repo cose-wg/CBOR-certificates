@@ -1,6 +1,7 @@
 ---
 title: "CBOR Encoding of X.509 Certificates (CXXX Certificates)"
 docname: draft-mattsson-cose-cbor-cert-compress-latest
+abbrev: CXXX Certificates
 
 ipr: trust200902
 cat: std
