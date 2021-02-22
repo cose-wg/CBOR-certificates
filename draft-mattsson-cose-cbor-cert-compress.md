@@ -263,7 +263,10 @@ The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'ext
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber. Omitted values are encoded as CBOR null.
 
 ~~~~~~~~~~~
-   ExtValueAKI = [ keyIdentifier: bytes / null, certIssuer: GeneralNames / null, certSerialNumber: CertificateSerialNumber / null ] / bytes
+   ExtValueAKI = [ keyIdentifier: bytes / null,
+                   certIssuer: GeneralNames / null,
+                   certSerialNumber: CertificateSerialNumber / null ]
+               / bytes
 ~~~~~~~~~~~
 
 * cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string.
