@@ -129,7 +129,7 @@ CAB Baseline Requirements {{CAB-Baseline}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {
 
 1. An invertible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
 
-2. Natively signed CXXX certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in 1. This removes entirely the need for ASN.1 DER and base64 encodings and the associated complexity and security issues, but they are not backwards compatible with {{RFC5280}}.
+2. Natively signed CXXX certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in 1. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER encoded X.509.
 
 Natively signed CXXX certificates can be applied in devices that are only required to authenticate to natively signed CXXX certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
