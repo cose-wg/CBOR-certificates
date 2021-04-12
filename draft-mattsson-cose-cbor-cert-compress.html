@@ -14,21 +14,21 @@
        This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and significantly reduces the size of certificates compatible with e.g. RFC 7925, IEEE 802.1AR (DevID), CNSA, and CA/Browser Forum Baseline Requirements. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%.  The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The document also specifies COSE headers as well as a TLS certificate type for C509 certificates. 
        NOTE: "C509" is a placeholder, name to be decided by the COSE WG. 
     ' name="description">
-<meta content="xml2rfc 3.5.0" name="generator">
+<meta content="xml2rfc 3.7.0" name="generator">
 <meta content="draft-mattsson-cose-cbor-cert-compress-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.5.0
+  xml2rfc 3.7.0
     Python 3.6.7
     appdirs 1.4.4
-    ConfigArgParse 1.3
+    ConfigArgParse 1.4
     google-i18n-address 2.4.0
     html5lib 1.1
     intervaltree 3.1.0
     Jinja2 2.11.3
     kitchen 1.2.6
-    lxml 4.6.2
+    lxml 4.6.3
     pycountry 20.7.3
-    pyflakes 2.2.0
+    pyflakes 2.3.1
     PyYAML 5.4.1
     requests 2.25.1
     setuptools 47.3.1
@@ -822,11 +822,11 @@ address div.right {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">C509 Certificates</td>
-<td class="right">February 2021</td>
+<td class="right">April 2021</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Raza, et al.</td>
-<td class="center">Expires 26 August 2021</td>
+<td class="center">Expires 14 October 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -839,12 +839,12 @@ address div.right {
 <dd class="internet-draft">draft-mattsson-cose-cbor-cert-compress-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2021-02-22" class="published">22 February 2021</time>
+<time datetime="2021-04-12" class="published">12 April 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-08-26">26 August 2021</time></dd>
+<dd class="expires"><time datetime="2021-10-14">14 October 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -895,7 +895,7 @@ address div.right {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 August 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 October 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -923,107 +923,107 @@ address div.right {
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.1">
-            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
+<nav class="toc"><ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-notational-conventions" class="xref">Notational Conventions</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-notational-conventions" class="xref">Notational Conventions</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-cbor-encoding" class="xref">CBOR Encoding</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-message-fields" class="xref">Message Fields</a><a href="#section-toc.1-1.3.2.1.1" class="pilcrow">¶</a></p>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-cbor-encoding" class="xref">CBOR Encoding</a></p>
+<ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-message-fields" class="xref">Message Fields</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-encoding-of-subjectpublicke" class="xref">Encoding of subjectPublicKey and issuerSingatureValue</a><a href="#section-toc.1-1.3.2.2.1" class="pilcrow">¶</a></p>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-encoding-of-subjectpublicke" class="xref">Encoding of subjectPublicKey and issuerSingatureValue</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-encoding-of-extensions" class="xref">Encoding of Extensions</a><a href="#section-toc.1-1.3.2.3.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-</li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-compliance-requirements-for" class="xref">Compliance Requirements for Constrained IoT</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-legacy-considerations" class="xref">Legacy Considerations</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-expected-certificate-sizes" class="xref">Expected Certificate Sizes</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-c509-certificate-types-regi" class="xref">C509 Certificate Types Registry</a><a href="#section-toc.1-1.8.2.1.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-c509-certificate-attributes" class="xref">C509 Certificate Attributes Registry</a><a href="#section-toc.1-1.8.2.2.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.3">
-                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="xref">8.3</a>.  <a href="#name-c509-certificate-extensions" class="xref">C509 Certificate Extensions Registry</a><a href="#section-toc.1-1.8.2.3.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.4">
-                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="xref">8.4</a>.  <a href="#name-c509-certificate-extended-k" class="xref">C509 Certificate Extended Key Usages Registry</a><a href="#section-toc.1-1.8.2.4.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.5">
-                <p id="section-toc.1-1.8.2.5.1"><a href="#section-8.5" class="xref">8.5</a>.  <a href="#name-c509-certificate-general-na" class="xref">C509 Certificate General Names Registry</a><a href="#section-toc.1-1.8.2.5.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.6">
-                <p id="section-toc.1-1.8.2.6.1"><a href="#section-8.6" class="xref">8.6</a>.  <a href="#name-c509-certificate-signature-" class="xref">C509 Certificate Signature Algorithms Registry</a><a href="#section-toc.1-1.8.2.6.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.7">
-                <p id="section-toc.1-1.8.2.7.1"><a href="#section-8.7" class="xref">8.7</a>.  <a href="#name-c509-certificate-public-key" class="xref">C509 Certificate Public Key Algorithms Registry</a><a href="#section-toc.1-1.8.2.7.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.8">
-                <p id="section-toc.1-1.8.2.8.1"><a href="#section-8.8" class="xref">8.8</a>.  <a href="#name-cose-header-parameters-regi" class="xref">COSE Header Parameters Registry</a><a href="#section-toc.1-1.8.2.8.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.9">
-                <p id="section-toc.1-1.8.2.9.1"><a href="#section-8.9" class="xref">8.9</a>.  <a href="#name-tls-certificate-types-regis" class="xref">TLS Certificate Types Registry</a><a href="#section-toc.1-1.8.2.9.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.10">
-                <p id="section-toc.1-1.8.2.10.1"><a href="#section-8.10" class="xref">8.10</a>. <a href="#name-cbor-tags-registry" class="xref">CBOR Tags Registry</a><a href="#section-toc.1-1.8.2.10.1" class="pilcrow">¶</a></p>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-encoding-of-extensions" class="xref">Encoding of Extensions</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.9.2.1.1" class="pilcrow">¶</a></p>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-compliance-requirements-for" class="xref">Compliance Requirements for Constrained IoT</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.9.2.2.1" class="pilcrow">¶</a></p>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-legacy-considerations" class="xref">Legacy Considerations</a></p>
+</li>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-expected-certificate-sizes" class="xref">Expected Certificate Sizes</a></p>
+</li>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
+<ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-c509-certificate-types-regi" class="xref">C509 Certificate Types Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-c509-certificate-attributes" class="xref">C509 Certificate Attributes Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.3">
+                <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="xref">8.3</a>.  <a href="#name-c509-certificate-extensions" class="xref">C509 Certificate Extensions Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.4">
+                <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="xref">8.4</a>.  <a href="#name-c509-certificate-extended-k" class="xref">C509 Certificate Extended Key Usages Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.5">
+                <p id="section-toc.1-1.8.2.5.1"><a href="#section-8.5" class="xref">8.5</a>.  <a href="#name-c509-certificate-general-na" class="xref">C509 Certificate General Names Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.6">
+                <p id="section-toc.1-1.8.2.6.1"><a href="#section-8.6" class="xref">8.6</a>.  <a href="#name-c509-certificate-signature-" class="xref">C509 Certificate Signature Algorithms Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.7">
+                <p id="section-toc.1-1.8.2.7.1"><a href="#section-8.7" class="xref">8.7</a>.  <a href="#name-c509-certificate-public-key" class="xref">C509 Certificate Public Key Algorithms Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.8">
+                <p id="section-toc.1-1.8.2.8.1"><a href="#section-8.8" class="xref">8.8</a>.  <a href="#name-cose-header-parameters-regi" class="xref">COSE Header Parameters Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.9">
+                <p id="section-toc.1-1.8.2.9.1"><a href="#section-8.9" class="xref">8.9</a>.  <a href="#name-tls-certificate-types-regis" class="xref">TLS Certificate Types Registry</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.8.2.10">
+                <p id="section-toc.1-1.8.2.10.1"><a href="#section-8.10" class="xref">8.10</a>. <a href="#name-cbor-tags-registry" class="xref">CBOR Tags Registry</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-example-c509-certificates" class="xref">Example C509 Certificates</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#section-a.1" class="xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="xref">Example RFC 7925 profiled X.509 Certificate</a><a href="#section-toc.1-1.10.2.1.1" class="pilcrow">¶</a></p>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-references" class="xref">References</a></p>
+<ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.10.2.2">
-                <p id="section-toc.1-1.10.2.2.1"><a href="#section-a.2" class="xref">A.2</a>.  <a href="#name-example-ieee-8021ar-profile" class="xref">Example IEEE 802.1AR profiled X.509 Certificate</a><a href="#section-toc.1-1.10.2.2.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.10.2.3">
-                <p id="section-toc.1-1.10.2.3.1"><a href="#section-a.3" class="xref">A.3</a>.  <a href="#name-example-cab-baseline-ecdsa-" class="xref">Example CAB Baseline ECDSA HTTPS X.509 Certificate</a><a href="#section-toc.1-1.10.2.3.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.10.2.4">
-                <p id="section-toc.1-1.10.2.4.1"><a href="#section-a.4" class="xref">A.4</a>.  <a href="#name-example-cab-baseline-rsa-ht" class="xref">Example CAB Baseline RSA HTTPS X.509 Certificate</a><a href="#section-toc.1-1.10.2.4.1" class="pilcrow">¶</a></p>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-example-c509-certificates" class="xref">Example C509 Certificates</a></p>
+<ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-a.1" class="xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="xref">Example RFC 7925 profiled X.509 Certificate</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-appendix.c" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-a.2" class="xref">A.2</a>.  <a href="#name-example-ieee-8021ar-profile" class="xref">Example IEEE 802.1AR profiled X.509 Certificate</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.10.2.3">
+                <p id="section-toc.1-1.10.2.3.1"><a href="#section-a.3" class="xref">A.3</a>.  <a href="#name-example-cab-baseline-ecdsa-" class="xref">Example CAB Baseline ECDSA HTTPS X.509 Certificate</a></p>
+</li>
+              <li class="compact toc ulEmpty" id="section-toc.1-1.10.2.4">
+                <p id="section-toc.1-1.10.2.4.1"><a href="#section-a.4" class="xref">A.4</a>.  <a href="#name-example-cab-baseline-rsa-ht" class="xref">Example CAB Baseline RSA HTTPS X.509 Certificate</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-appendix.c" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1062,7 +1062,7 @@ address div.right {
       <h2 id="name-cbor-encoding">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-cbor-encoding" class="section-name selfRef">CBOR Encoding</a>
       </h2>
-<p id="section-3-1">This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of <span>[<a href="#RFC5280" class="xref">RFC5280</a>]</span>, and everything in <span>[<a href="#RFC7925" class="xref">RFC7925</a>]</span>, <span>[<a href="#IEEE-802.1AR" class="xref">IEEE-802.1AR</a>]</span>, and CAB Baseline <span>[<a href="#CAB-Baseline" class="xref">CAB-Baseline</a>]</span>. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compressions algorithms, see <a href="#fig-table" class="xref">Figure 2</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of <span>[<a href="#RFC5280" class="xref">RFC5280</a>]</span>, and everything in <span>[<a href="#RFC7925" class="xref">RFC7925</a>]</span>, <span>[<a href="#IEEE-802.1AR" class="xref">IEEE-802.1AR</a>]</span>, and CAB Baseline <span>[<a href="#CAB-Baseline" class="xref">CAB-Baseline</a>]</span>. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see <a href="#fig-table" class="xref">Figure 2</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by <span>[<a href="#RFC5280" class="xref">RFC5280</a>]</span>. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">In the encoding described below, the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="message-fields">
@@ -1079,7 +1079,7 @@ address div.right {
 </li>
           <li class="normal" id="section-3.1-3.3">signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and therefore omitted from the CBOR encoding.<a href="#section-3.1-3.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-3.1-3.4">issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically each RelativeDistinguishedName only contains a single attribute and the sequence is then ecoded as a CBOR array of Attributes. Each Attribute is encoded as a (CBOR int, CBOR text string) pair or as a (unwrapped CBOR OID, CBOR bytes) pair. The absolute value of the CBOR int (see <a href="#fig-attrtype" class="xref">Figure 4</a>) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributes SHALL have a positive sign. Text strings SHALL still adhere to any X.509 restrictions, i.e. serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'-'9' or 'A'-'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.<a href="#section-3.1-3.4" class="pilcrow">¶</a>
+          <li class="normal" id="section-3.1-3.4">issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as a (CBOR int, CBOR text string) pair or as a (unwrapped CBOR OID, CBOR bytes) pair. The absolute value of the CBOR int (see <a href="#fig-attrtype" class="xref">Figure 4</a>) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributes SHALL have a positive sign. Text strings SHALL still adhere to any X.509 restrictions, i.e. serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'-'9' or 'A'-'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.<a href="#section-3.1-3.4" class="pilcrow">¶</a>
 </li>
           <li class="normal" id="section-3.1-3.5">validity. The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as CBOR null.<a href="#section-3.1-3.5" class="pilcrow">¶</a>
 </li>
@@ -1159,7 +1159,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
 <a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-encoding-of-subjectpublickey" class="section-name selfRef">Encoding of subjectPublicKey</a>
           </h4>
 <p id="section-3.2.1-1">For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. [ modulus : ~biguint, exponent : ~biguint ]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-2">For elliptic curve public keys in Weirstrass form (id-ecPublicKey), uncompressed keys are point compressed as defined in Section 2.3.3 of <span>[<a href="#SECG" class="xref">SECG</a>]</span>. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">For elliptic curve public keys in Weierstrass form (id-ecPublicKey), uncompressed keys are point compressed as defined in Section 2.3.3 of <span>[<a href="#SECG" class="xref">SECG</a>]</span>. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="encoding-of-issuersingaturevalue">
@@ -1310,7 +1310,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <p id="section-8-1">This document creates several new registries under the new heading "C509 Certificate". For all items, the 'Reference' field points to this document.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval [-24, 23] have a 1 byte encodings, other values in the interval [-256, 255] have a 2 byte encodings, and the remaning values in the interval [-65536, 65535] have 3 byte encodings.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-2">The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval [-24, 23] have a 1 byte encodings, other values in the interval [-256, 255] have a 2 byte encodings, and the remaining values in the interval [-65536, 65535] have 3 byte encodings.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <div id="type">
 <section id="section-8.1">
         <h3 id="name-c509-certificate-types-regi">
@@ -1959,7 +1959,7 @@ COSE_C5 = [ + CBORCertificate ]
         <h3 id="name-tls-certificate-types-regis">
 <a href="#section-8.9" class="section-number selfRef">8.9. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
         </h3>
-<p id="section-8.9-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with addtional TLS certificate compression <span>[<a href="#RFC8879" class="xref">RFC8879</a>]</span>.<a href="#section-8.9-1" class="pilcrow">¶</a></p>
+<p id="section-8.9-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="xref">RFC8879</a>]</span>.<a href="#section-8.9-1" class="pilcrow">¶</a></p>
 <p id="section-8.9-2">EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. When COSE WG has adopted work on C509 certificates, it could perhaps be presented in the TLS WG. The TLS WG might e.g. want a separate draft in the TLS WG.<a href="#section-8.9-2" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-8.9-3">
 <pre>
@@ -2004,7 +2004,7 @@ COSE_C5 = [ + CBORCertificate ]
 <dl class="references">
 <dt id="I-D.ietf-cbor-tags-oid">[I-D.ietf-cbor-tags-oid]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span><span class="refAuthor"> and S. Leonard</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Tags for Object Identifiers"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-tags-oid-04</span>, <time datetime="2021-01-26" class="refDate">26 January 2021</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-cbor-tags-oid-04.txt">http://www.ietf.org/internet-drafts/draft-ietf-cbor-tags-oid-04.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">S. Leonard</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Tags for Object Identifiers"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-tags-oid-04</span>, <time datetime="2021-01-26" class="refDate">26 January 2021</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-cbor-tags-oid-04.txt">http://www.ietf.org/internet-drafts/draft-ietf-cbor-tags-oid-04.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-cose-x509">[I-D.ietf-cose-x509]</dt>
         <dd>
@@ -2020,7 +2020,7 @@ COSE_C5 = [ + CBORCertificate ]
 <dd class="break"></dd>
 <dt id="RFC5280">[RFC5280]</dt>
         <dd>
-<span class="refAuthor">Cooper, D.</span><span class="refAuthor">, Santesson, S.</span><span class="refAuthor">, Farrell, S.</span><span class="refAuthor">, Boeyen, S.</span><span class="refAuthor">, Housley, R.</span><span class="refAuthor">, and W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5280">https://www.rfc-editor.org/info/rfc5280</a>&gt;</span>. </dd>
+<span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Santesson, S.</span>, <span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Boeyen, S.</span>, <span class="refAuthor">Housley, R.</span>, and <span class="refAuthor">W. Polk</span>, <span class="refTitle">"Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 5280</span>, <span class="seriesInfo">DOI 10.17487/RFC5280</span>, <time datetime="2008-05" class="refDate">May 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5280">https://www.rfc-editor.org/info/rfc5280</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8152">[RFC8152]</dt>
         <dd>
@@ -2032,7 +2032,7 @@ COSE_C5 = [ + CBORCertificate ]
 <dd class="break"></dd>
 <dt id="RFC8610">[RFC8610]</dt>
         <dd>
-<span class="refAuthor">Birkholz, H.</span><span class="refAuthor">, Vigano, C.</span><span class="refAuthor">, and C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06" class="refDate">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8610">https://www.rfc-editor.org/info/rfc8610</a>&gt;</span>. </dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Vigano, C.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06" class="refDate">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8610">https://www.rfc-editor.org/info/rfc8610</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8742">[RFC8742]</dt>
         <dd>
@@ -2040,7 +2040,7 @@ COSE_C5 = [ + CBORCertificate ]
 <dd class="break"></dd>
 <dt id="RFC8949">[RFC8949]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span><span class="refAuthor"> and P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SECG">[SECG]</dt>
       <dd>
@@ -2059,31 +2059,31 @@ COSE_C5 = [ + CBORCertificate ]
 <dd class="break"></dd>
 <dt id="I-D.ietf-emu-eap-tls13">[I-D.ietf-emu-eap-tls13]</dt>
         <dd>
-<span class="refAuthor">Mattsson, J.</span><span class="refAuthor"> and M. Sethi</span>, <span class="refTitle">"Using EAP-TLS with TLS 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-eap-tls13-13</span>, <time datetime="2020-11-19" class="refDate">19 November 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-emu-eap-tls13-13.txt">http://www.ietf.org/internet-drafts/draft-ietf-emu-eap-tls13-13.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Mattsson, J.</span> and <span class="refAuthor">M. Sethi</span>, <span class="refTitle">"Using EAP-TLS with TLS 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-eap-tls13-13</span>, <time datetime="2020-11-19" class="refDate">19 November 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-emu-eap-tls13-13.txt">http://www.ietf.org/internet-drafts/draft-ietf-emu-eap-tls13-13.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-emu-eaptlscert">[I-D.ietf-emu-eaptlscert]</dt>
         <dd>
-<span class="refAuthor">Sethi, M.</span><span class="refAuthor">, Mattsson, J.</span><span class="refAuthor">, and S. Turner</span>, <span class="refTitle">"Handling Large Certificates and Long Certificate Chains in TLS-based EAP Methods"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-eaptlscert-08</span>, <time datetime="2020-11-20" class="refDate">20 November 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-emu-eaptlscert-08.txt">http://www.ietf.org/internet-drafts/draft-ietf-emu-eaptlscert-08.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Sethi, M.</span>, <span class="refAuthor">Mattsson, J.</span>, and <span class="refAuthor">S. Turner</span>, <span class="refTitle">"Handling Large Certificates and Long Certificate Chains in TLS-based EAP Methods"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-emu-eaptlscert-08</span>, <time datetime="2020-11-20" class="refDate">20 November 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-emu-eaptlscert-08.txt">http://www.ietf.org/internet-drafts/draft-ietf-emu-eaptlscert-08.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lake-edhoc">[I-D.ietf-lake-edhoc]</dt>
         <dd>
-<span class="refAuthor">Selander, G.</span><span class="refAuthor">, Mattsson, J.</span><span class="refAuthor">, and F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-03</span>, <time datetime="2020-12-18" class="refDate">18 December 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-lake-edhoc-03.txt">http://www.ietf.org/internet-drafts/draft-ietf-lake-edhoc-03.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-03</span>, <time datetime="2020-12-18" class="refDate">18 December 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-lake-edhoc-03.txt">http://www.ietf.org/internet-drafts/draft-ietf-lake-edhoc-03.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-quic-transport">[I-D.ietf-quic-transport]</dt>
         <dd>
-<span class="refAuthor">Iyengar, J.</span><span class="refAuthor"> and M. Thomson</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-transport-34</span>, <time datetime="2021-01-14" class="refDate">14 January 2021</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-quic-transport-34.txt">http://www.ietf.org/internet-drafts/draft-ietf-quic-transport-34.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Iyengar, J.</span> and <span class="refAuthor">M. Thomson</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-transport-34</span>, <time datetime="2021-01-14" class="refDate">14 January 2021</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-quic-transport-34.txt">http://www.ietf.org/internet-drafts/draft-ietf-quic-transport-34.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-tls-ctls">[I-D.ietf-tls-ctls]</dt>
         <dd>
-<span class="refAuthor">Rescorla, E.</span><span class="refAuthor">, Barnes, R.</span><span class="refAuthor">, and H. Tschofenig</span>, <span class="refTitle">"Compact TLS 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-ctls-01</span>, <time datetime="2020-11-02" class="refDate">2 November 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-tls-ctls-01.txt">http://www.ietf.org/internet-drafts/draft-ietf-tls-ctls-01.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Barnes, R.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Compact TLS 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-ctls-01</span>, <time datetime="2020-11-02" class="refDate">2 November 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-tls-ctls-01.txt">http://www.ietf.org/internet-drafts/draft-ietf-tls-ctls-01.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-tls-dtls13">[I-D.ietf-tls-dtls13]</dt>
         <dd>
-<span class="refAuthor">Rescorla, E.</span><span class="refAuthor">, Tschofenig, H.</span><span class="refAuthor">, and N. Modadugu</span>, <span class="refTitle">"The Datagram Transport Layer Security (DTLS) Protocol Version 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-dtls13-40</span>, <time datetime="2021-01-20" class="refDate">20 January 2021</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-tls-dtls13-40.txt">http://www.ietf.org/internet-drafts/draft-ietf-tls-dtls13-40.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refAuthor">Tschofenig, H.</span>, and <span class="refAuthor">N. Modadugu</span>, <span class="refTitle">"The Datagram Transport Layer Security (DTLS) Protocol Version 1.3"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-tls-dtls13-40</span>, <time datetime="2021-01-20" class="refDate">20 January 2021</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-tls-dtls13-40.txt">http://www.ietf.org/internet-drafts/draft-ietf-tls-dtls13-40.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-uta-tls13-iot-profile">[I-D.ietf-uta-tls13-iot-profile]</dt>
         <dd>
-<span class="refAuthor">Tschofenig, H.</span><span class="refAuthor"> and T. Fossati</span>, <span class="refTitle">"TLS/DTLS 1.3 Profiles for the Internet of Things"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-uta-tls13-iot-profile-00</span>, <time datetime="2020-06-05" class="refDate">5 June 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-uta-tls13-iot-profile-00.txt">http://www.ietf.org/internet-drafts/draft-ietf-uta-tls13-iot-profile-00.txt</a>&gt;</span>. </dd>
+<span class="refAuthor">Tschofenig, H.</span> and <span class="refAuthor">T. Fossati</span>, <span class="refTitle">"TLS/DTLS 1.3 Profiles for the Internet of Things"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-uta-tls13-iot-profile-00</span>, <time datetime="2020-06-05" class="refDate">5 June 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-uta-tls13-iot-profile-00.txt">http://www.ietf.org/internet-drafts/draft-ietf-uta-tls13-iot-profile-00.txt</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IEEE-802.1AR">[IEEE-802.1AR]</dt>
         <dd>
@@ -2091,15 +2091,15 @@ COSE_C5 = [ + CBORCertificate ]
 <dd class="break"></dd>
 <dt id="RFC7228">[RFC7228]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span><span class="refAuthor">, Ersue, M.</span><span class="refAuthor">, and A. Keranen</span>, <span class="refTitle">"Terminology for Constrained-Node Networks"</span>, <span class="seriesInfo">RFC 7228</span>, <span class="seriesInfo">DOI 10.17487/RFC7228</span>, <time datetime="2014-05" class="refDate">May 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7228">https://www.rfc-editor.org/info/rfc7228</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Ersue, M.</span>, and <span class="refAuthor">A. Keranen</span>, <span class="refTitle">"Terminology for Constrained-Node Networks"</span>, <span class="seriesInfo">RFC 7228</span>, <span class="seriesInfo">DOI 10.17487/RFC7228</span>, <time datetime="2014-05" class="refDate">May 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7228">https://www.rfc-editor.org/info/rfc7228</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7925">[RFC7925]</dt>
         <dd>
-<span class="refAuthor">Tschofenig, H., Ed.</span><span class="refAuthor"> and T. Fossati</span>, <span class="refTitle">"Transport Layer Security (TLS) / Datagram Transport Layer Security (DTLS) Profiles for the Internet of Things"</span>, <span class="seriesInfo">RFC 7925</span>, <span class="seriesInfo">DOI 10.17487/RFC7925</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7925">https://www.rfc-editor.org/info/rfc7925</a>&gt;</span>. </dd>
+<span class="refAuthor">Tschofenig, H., Ed.</span> and <span class="refAuthor">T. Fossati</span>, <span class="refTitle">"Transport Layer Security (TLS) / Datagram Transport Layer Security (DTLS) Profiles for the Internet of Things"</span>, <span class="seriesInfo">RFC 7925</span>, <span class="seriesInfo">DOI 10.17487/RFC7925</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7925">https://www.rfc-editor.org/info/rfc7925</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7932">[RFC7932]</dt>
         <dd>
-<span class="refAuthor">Alakuijala, J.</span><span class="refAuthor"> and Z. Szabadka</span>, <span class="refTitle">"Brotli Compressed Data Format"</span>, <span class="seriesInfo">RFC 7932</span>, <span class="seriesInfo">DOI 10.17487/RFC7932</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7932">https://www.rfc-editor.org/info/rfc7932</a>&gt;</span>. </dd>
+<span class="refAuthor">Alakuijala, J.</span> and <span class="refAuthor">Z. Szabadka</span>, <span class="refTitle">"Brotli Compressed Data Format"</span>, <span class="seriesInfo">RFC 7932</span>, <span class="seriesInfo">DOI 10.17487/RFC7932</span>, <time datetime="2016-07" class="refDate">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7932">https://www.rfc-editor.org/info/rfc7932</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8446">[RFC8446]</dt>
         <dd>
@@ -2107,15 +2107,15 @@ COSE_C5 = [ + CBORCertificate ]
 <dd class="break"></dd>
 <dt id="RFC8603">[RFC8603]</dt>
         <dd>
-<span class="refAuthor">Jenkins, M.</span><span class="refAuthor"> and L. Zieglar</span>, <span class="refTitle">"Commercial National Security Algorithm (CNSA) Suite Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 8603</span>, <span class="seriesInfo">DOI 10.17487/RFC8603</span>, <time datetime="2019-05" class="refDate">May 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8603">https://www.rfc-editor.org/info/rfc8603</a>&gt;</span>. </dd>
+<span class="refAuthor">Jenkins, M.</span> and <span class="refAuthor">L. Zieglar</span>, <span class="refTitle">"Commercial National Security Algorithm (CNSA) Suite Certificate and Certificate Revocation List (CRL) Profile"</span>, <span class="seriesInfo">RFC 8603</span>, <span class="seriesInfo">DOI 10.17487/RFC8603</span>, <time datetime="2019-05" class="refDate">May 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8603">https://www.rfc-editor.org/info/rfc8603</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8879">[RFC8879]</dt>
         <dd>
-<span class="refAuthor">Ghedini, A.</span><span class="refAuthor"> and V. Vasiliev</span>, <span class="refTitle">"TLS Certificate Compression"</span>, <span class="seriesInfo">RFC 8879</span>, <span class="seriesInfo">DOI 10.17487/RFC8879</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8879">https://www.rfc-editor.org/info/rfc8879</a>&gt;</span>. </dd>
+<span class="refAuthor">Ghedini, A.</span> and <span class="refAuthor">V. Vasiliev</span>, <span class="refTitle">"TLS Certificate Compression"</span>, <span class="seriesInfo">RFC 8879</span>, <span class="seriesInfo">DOI 10.17487/RFC8879</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8879">https://www.rfc-editor.org/info/rfc8879</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X.509-IoT">[X.509-IoT]</dt>
       <dd>
-<span class="refAuthor">Forsby, F.</span><span class="refAuthor">, Furuhed, M.</span><span class="refAuthor">, Papadimitratos, P.</span><span class="refAuthor">, and S. Raza</span>, <span class="refTitle">"Lightweight X.509 Digital Certificates for the Internet of Things."</span>, <span class="seriesInfo">Springer, Cham. Lecture Notes of the Institute for Computer Sciences, Social Informatics and Telecommunications Engineering, vol 242.</span>, <time datetime="2018-07" class="refDate">July 2018</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-319-93797-7_14">https://doi.org/10.1007/978-3-319-93797-7_14</a>&gt;</span>. </dd>
+<span class="refAuthor">Forsby, F.</span>, <span class="refAuthor">Furuhed, M.</span>, <span class="refAuthor">Papadimitratos, P.</span>, and <span class="refAuthor">S. Raza</span>, <span class="refTitle">"Lightweight X.509 Digital Certificates for the Internet of Things."</span>, <span class="seriesInfo">Springer, Cham. Lecture Notes of the Institute for Computer Sciences, Social Informatics and Telecommunications Engineering, vol 242.</span>, <time datetime="2018-07" class="refDate">July 2018</time>, <span>&lt;<a href="https://doi.org/10.1007/978-3-319-93797-7_14">https://doi.org/10.1007/978-3-319-93797-7_14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
