@@ -5,12 +5,12 @@
 Network Working Group                                            S. Raza
 Internet-Draft                                                J. Höglund
 Intended status: Standards Track                                 RISE AB
-Expires: 14 October 2021                                     G. Selander
+Expires: 24 October 2021                                     G. Selander
                                                              J. Mattsson
                                                              Ericsson AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                           12 April 2021
+                                                           22 April 2021
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -48,12 +48,12 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 October 2021.
+   This Internet-Draft will expire on 24 October 2021.
 
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 1]
+Raza, et al.             Expires 24 October 2021                [Page 1]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 2]
+Raza, et al.             Expires 24 October 2021                [Page 2]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -165,7 +165,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 3]
+Raza, et al.             Expires 24 October 2021                [Page 3]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -210,7 +210,9 @@ Internet-Draft              C509 Certificates                 April 2021
    capitals, as shown here.
 
    This specification makes use of the terminology in [RFC5280],
-   [RFC7228], [RFC8610], and [RFC8949].
+   [RFC7228], [RFC8610], and [RFC8949].  When referring to CBOR, this
+   specification always refer to Deterministically Encoded CBOR as
+   specified in Sections 4.2.1 and 4.2.2 of [RFC8949].
 
 
 
@@ -219,9 +221,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-
-
-Raza, et al.             Expires 14 October 2021                [Page 4]
+Raza, et al.             Expires 24 October 2021                [Page 4]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -277,7 +277,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 5]
+Raza, et al.             Expires 24 October 2021                [Page 5]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -333,7 +333,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 6]
+Raza, et al.             Expires 24 October 2021                [Page 6]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -389,7 +389,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 7]
+Raza, et al.             Expires 24 October 2021                [Page 7]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -445,7 +445,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 8]
+Raza, et al.             Expires 24 October 2021                [Page 8]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -501,7 +501,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021                [Page 9]
+Raza, et al.             Expires 24 October 2021                [Page 9]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -557,7 +557,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 10]
+Raza, et al.             Expires 24 October 2021               [Page 10]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -613,7 +613,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 11]
+Raza, et al.             Expires 24 October 2021               [Page 11]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -669,7 +669,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 12]
+Raza, et al.             Expires 24 October 2021               [Page 12]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -725,7 +725,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 13]
+Raza, et al.             Expires 24 October 2021               [Page 13]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -781,7 +781,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 14]
+Raza, et al.             Expires 24 October 2021               [Page 14]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -837,7 +837,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 15]
+Raza, et al.             Expires 24 October 2021               [Page 15]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -893,7 +893,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 16]
+Raza, et al.             Expires 24 October 2021               [Page 16]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -949,7 +949,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 17]
+Raza, et al.             Expires 24 October 2021               [Page 17]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1005,7 +1005,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 18]
+Raza, et al.             Expires 24 October 2021               [Page 18]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1061,7 +1061,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 19]
+Raza, et al.             Expires 24 October 2021               [Page 19]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1117,7 +1117,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 20]
+Raza, et al.             Expires 24 October 2021               [Page 20]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1173,7 +1173,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 21]
+Raza, et al.             Expires 24 October 2021               [Page 21]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1229,7 +1229,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 22]
+Raza, et al.             Expires 24 October 2021               [Page 22]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1285,7 +1285,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 23]
+Raza, et al.             Expires 24 October 2021               [Page 23]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1341,7 +1341,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 24]
+Raza, et al.             Expires 24 October 2021               [Page 24]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1397,7 +1397,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 25]
+Raza, et al.             Expires 24 October 2021               [Page 25]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1453,7 +1453,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 26]
+Raza, et al.             Expires 24 October 2021               [Page 26]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1509,7 +1509,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 27]
+Raza, et al.             Expires 24 October 2021               [Page 27]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1565,7 +1565,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 28]
+Raza, et al.             Expires 24 October 2021               [Page 28]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1621,7 +1621,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 29]
+Raza, et al.             Expires 24 October 2021               [Page 29]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1677,7 +1677,7 @@ Appendix A.  Example C509 Certificates
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 30]
+Raza, et al.             Expires 24 October 2021               [Page 30]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1733,7 +1733,7 @@ A.1.  Example RFC 7925 profiled X.509 Certificate
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 31]
+Raza, et al.             Expires 24 October 2021               [Page 31]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1789,7 +1789,7 @@ A.1.1.  Example C509 Certificate Encoding
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 32]
+Raza, et al.             Expires 24 October 2021               [Page 32]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1845,7 +1845,7 @@ A.1.2.  Example: Natively Signed C509 Certificate
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 33]
+Raza, et al.             Expires 24 October 2021               [Page 33]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1901,7 +1901,7 @@ A.3.  Example CAB Baseline ECDSA HTTPS X.509 Certificate
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 34]
+Raza, et al.             Expires 24 October 2021               [Page 34]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -1957,7 +1957,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 35]
+Raza, et al.             Expires 24 October 2021               [Page 35]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -2013,7 +2013,7 @@ A.3.1.  Example C509 Certificate Encoding
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 36]
+Raza, et al.             Expires 24 October 2021               [Page 36]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -2069,7 +2069,7 @@ A.4.  Example CAB Baseline RSA HTTPS X.509 Certificate
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 37]
+Raza, et al.             Expires 24 October 2021               [Page 37]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -2125,7 +2125,7 @@ Internet-Draft              C509 Certificates                 April 2021
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 38]
+Raza, et al.             Expires 24 October 2021               [Page 38]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -2181,7 +2181,7 @@ h'A6A55C870E39B40E',
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 39]
+Raza, et al.             Expires 24 October 2021               [Page 39]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -2237,7 +2237,7 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 40]
+Raza, et al.             Expires 24 October 2021               [Page 40]
 
 Internet-Draft              C509 Certificates                 April 2021
 
@@ -2293,4 +2293,4 @@ Authors' Addresses
 
 
 
-Raza, et al.             Expires 14 October 2021               [Page 41]
+Raza, et al.             Expires 24 October 2021               [Page 41]
