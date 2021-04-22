@@ -139,7 +139,7 @@ This document specifies COSE headers for use of the C509 certificates with COSE,
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
-This specification makes use of the terminology in {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}.
+This specification makes use of the terminology in {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refer to Deterministically Encoded CBOR as specified in Sections 4.2.1 and 4.2.2 of {{RFC8949}}.
 
 # CBOR Encoding {#encoding}
 
