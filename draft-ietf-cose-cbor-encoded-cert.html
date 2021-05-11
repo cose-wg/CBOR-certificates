@@ -1924,11 +1924,11 @@ Extension = ( extensionID: int, extensionValue: any ) //
         <h3 id="name-cose-header-parameters-regi">
 <a href="#section-8.8" class="section-number selfRef">8.8. </a><a href="#name-cose-header-parameters-regi" class="section-name selfRef">COSE Header Parameters Registry</a>
         </h3>
-<p id="section-8.8-1">EDITORS NOTE: Should x5u refer to a bag or a chain? The text should be moved a section and not be in the IANA Section.<a href="#section-8.8-1" class="pilcrow">¶</a></p>
-<p id="section-8.8-2">This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#I-D.ietf-cose-x509" class="xref">I-D.ietf-cose-x509</a>]</span> except that the certificates are CBOR encoded instead of DER encoded, uses a COSE_C5 structure instead of COSE_X509, and that c5t MUST refer to an end-entity certificate. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:<a href="#section-8.8-2" class="pilcrow">¶</a></p>
+<p id="section-8.8-1">EDITORS NOTE: The text should be moved a section and not be in the IANA Section.<a href="#section-8.8-1" class="pilcrow">¶</a></p>
+<p id="section-8.8-2">This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#I-D.ietf-cose-x509" class="xref">I-D.ietf-cose-x509</a>]</span> except that the certificates are CBOR encoded instead of DER encoded and uses a COSE_C5 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:<a href="#section-8.8-2" class="pilcrow">¶</a></p>
 <div id="section-8.8-3">
 <pre class="sourcecode lang-CDDL">
-COSE_C5 = [ + CBORCertificate ]
+COSE_C5 = [ + [ C509Certificate ] ]
 </pre><a href="#section-8.8-3" class="pilcrow">¶</a>
 </div>
 <p id="section-8.8-4">As the contents of c5bag, c5chain, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-8.8-4" class="pilcrow">¶</a></p>

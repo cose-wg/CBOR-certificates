@@ -1391,8 +1391,8 @@ Internet-Draft              C509 Certificates                   May 2021
 
 8.8.  COSE Header Parameters Registry
 
-   EDITORS NOTE: Should x5u refer to a bag or a chain?  The text should
-   be moved a section and not be in the IANA Section.
+   EDITORS NOTE: The text should be moved a section and not be in the
+   IANA Section.
 
 
 
@@ -1407,14 +1407,13 @@ Internet-Draft              C509 Certificates                   May 2021
    (COSE)" heading.  The formatting and processing for c5b, c5c, and
    c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in
    [I-D.ietf-cose-x509] except that the certificates are CBOR encoded
-   instead of DER encoded, uses a COSE_C5 structure instead of
-   COSE_X509, and that c5t MUST refer to an end-entity certificate. c5u
-   provides an alternative way to identify an untrusted certificate bag/
-   chain by reference with a URI.  The content is a COSE_C5 item served
-   with the application/cbor content format.  The COSE_C5 structure used
-   in c5b, c5c, and c5u is defined as:
+   instead of DER encoded and uses a COSE_C5 structure instead of
+   COSE_X509. c5u provides an alternative way to identify an untrusted
+   certificate bag/chain by reference with a URI.  The content is a
+   COSE_C5 item served with the application/cbor content format.  The
+   COSE_C5 structure used in c5b, c5c, and c5u is defined as:
 
-   COSE_C5 = [ + CBORCertificate ]
+   COSE_C5 = [ + [ C509Certificate ] ]
 
    As the contents of c5bag, c5chain, c5t, and c5u are untrusted input,
    the header parameters can be in either the protected or unprotected
@@ -1449,6 +1448,7 @@ Internet-Draft              C509 Certificates                   May 2021
    Types" registry under the "Transport Layer Security (TLS) Extensions"
    heading.  The new certificate type can be used with additional TLS
    certificate compression [RFC8879].
+
 
 
 
