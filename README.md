@@ -1,10 +1,10 @@
-# CBOR Profile of X.509 Certificates
+# CBOR Encoded X.509 Certificates
 
-This is the working area for the individual Internet-Draft, "CBOR Profile of X.509 Certificates".
+This is the working area for the individual Internet-Draft, "CBOR Encoded X.509 Certificates".
 
-* [Editor's Copy](https://EricssonResearch.github.io/CBOR-certificates/#go.draft-raza-ace-cbor-certificates.html)
-* [Individual Draft](https://tools.ietf.org/html/draft-raza-ace-cbor-certificates)
-* [Compare Editor's Copy to Individual Draft](https://EricssonResearch.github.io/CBOR-certificates/#go.draft-raza-ace-cbor-certificates.diff)
+* [Editor's Copy](https://EricssonResearch.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
+* [Individual Draft](https://tools.ietf.org/html/draft-ietf-cose-cbor-encoded-cert.html)
+* [Compare Editor's Copy to Individual Draft](https://EricssonResearch.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
 ## Building the Draft
 
