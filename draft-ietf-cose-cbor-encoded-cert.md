@@ -179,11 +179,11 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signatureValue. In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}
 
-The following Concise Data Definition Language (CDDL) defines CBORCertificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
+The following Concise Data Definition Language (CDDL) defines C509Certificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
 ; The elements of the following group are to be used in a CBOR Sequence:
-CBORCertificate = (
+C509Certificate = (
    TBSCertificate,
    issuerSignatureValue : any,
 )
@@ -220,7 +220,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
             ( extensionID: ~oid, critical: bool, extensionValue: bytes )
 )
 ~~~~~~~~~~~
-{: #fig-CBORCertCDDL title="CDDL for CBORCertificate."}
+{: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
 
 ## Encoding of subjectPublicKey and issuerSingatureValue {#alg-encoding}
