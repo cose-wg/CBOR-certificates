@@ -15,7 +15,7 @@
        NOTE: "C509" is a placeholder, name to be decided by the COSE WG. 
     ' name="description">
 <meta content="xml2rfc 3.7.0" name="generator">
-<meta content="draft-mattsson-cose-cbor-cert-compress-latest" name="ietf.draft">
+<meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.7.0
     Python 3.6.7
@@ -34,7 +34,7 @@
     setuptools 47.3.1
     six 1.11.0
 -->
-<link href="draft-mattsson-cose-cbor-cert-compress.xml" rel="alternate" type="application/rfc+xml">
+<link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
 <style type="text/css">@import url('https://martinthomson.github.io/i-d-template/fonts.css');
 
@@ -836,7 +836,7 @@ address div.right {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">Network Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-mattsson-cose-cbor-cert-compress-latest</dd>
+<dd class="internet-draft">draft-ietf-cose-cbor-encoded-cert-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
 <time datetime="2021-05-11" class="published">11 May 2021</time>
@@ -923,106 +923,106 @@ address div.right {
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.1">
+<nav class="toc"><ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.2">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-notational-conventions" class="xref">Notational Conventions</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.3">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-cbor-encoding" class="xref">CBOR Encoding</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.3.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-message-fields" class="xref">Message Fields</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="xref">3.2</a>.  <a href="#name-encoding-of-subjectpublicke" class="xref">Encoding of subjectPublicKey and issuerSingatureValue</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.3.2.3">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="xref">3.3</a>.  <a href="#name-encoding-of-extensions" class="xref">Encoding of Extensions</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.4">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-compliance-requirements-for" class="xref">Compliance Requirements for Constrained IoT</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.5">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-legacy-considerations" class="xref">Legacy Considerations</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.6">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-expected-certificate-sizes" class="xref">Expected Certificate Sizes</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.7">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.8">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-iana-considerations" class="xref">IANA Considerations</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.8.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.8.2.1">
                 <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-c509-certificate-types-regi" class="xref">C509 Certificate Types Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-c509-certificate-attributes" class="xref">C509 Certificate Attributes Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.3">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.3">
                 <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="xref">8.3</a>.  <a href="#name-c509-certificate-extensions" class="xref">C509 Certificate Extensions Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.4">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.4">
                 <p id="section-toc.1-1.8.2.4.1"><a href="#section-8.4" class="xref">8.4</a>.  <a href="#name-c509-certificate-extended-k" class="xref">C509 Certificate Extended Key Usages Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.5">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.5">
                 <p id="section-toc.1-1.8.2.5.1"><a href="#section-8.5" class="xref">8.5</a>.  <a href="#name-c509-certificate-general-na" class="xref">C509 Certificate General Names Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.6">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.6">
                 <p id="section-toc.1-1.8.2.6.1"><a href="#section-8.6" class="xref">8.6</a>.  <a href="#name-c509-certificate-signature-" class="xref">C509 Certificate Signature Algorithms Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.7">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.7">
                 <p id="section-toc.1-1.8.2.7.1"><a href="#section-8.7" class="xref">8.7</a>.  <a href="#name-c509-certificate-public-key" class="xref">C509 Certificate Public Key Algorithms Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.8">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.8">
                 <p id="section-toc.1-1.8.2.8.1"><a href="#section-8.8" class="xref">8.8</a>.  <a href="#name-cose-header-parameters-regi" class="xref">COSE Header Parameters Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.9">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.9">
                 <p id="section-toc.1-1.8.2.9.1"><a href="#section-8.9" class="xref">8.9</a>.  <a href="#name-tls-certificate-types-regis" class="xref">TLS Certificate Types Registry</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.8.2.10">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.8.2.10">
                 <p id="section-toc.1-1.8.2.10.1"><a href="#section-8.10" class="xref">8.10</a>. <a href="#name-cbor-tags-registry" class="xref">CBOR Tags Registry</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.9">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-references" class="xref">References</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.9.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.1">
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.9.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.9.2.2">
                 <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.10">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-example-c509-certificates" class="xref">Example C509 Certificates</a></p>
-<ul class="toc ulEmpty compact">
-<li class="toc ulEmpty compact" id="section-toc.1-1.10.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.10.2.1">
                 <p id="section-toc.1-1.10.2.1.1"><a href="#section-a.1" class="xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="xref">Example RFC 7925 profiled X.509 Certificate</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.10.2.2">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.10.2.2">
                 <p id="section-toc.1-1.10.2.2.1"><a href="#section-a.2" class="xref">A.2</a>.  <a href="#name-example-ieee-8021ar-profile" class="xref">Example IEEE 802.1AR profiled X.509 Certificate</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.10.2.3">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.10.2.3">
                 <p id="section-toc.1-1.10.2.3.1"><a href="#section-a.3" class="xref">A.3</a>.  <a href="#name-example-cab-baseline-ecdsa-" class="xref">Example CAB Baseline ECDSA HTTPS X.509 Certificate</a></p>
 </li>
-              <li class="toc ulEmpty compact" id="section-toc.1-1.10.2.4">
+              <li class="toc compact ulEmpty" id="section-toc.1-1.10.2.4">
                 <p id="section-toc.1-1.10.2.4.1"><a href="#section-a.4" class="xref">A.4</a>.  <a href="#name-example-cab-baseline-rsa-ht" class="xref">Example CAB Baseline RSA HTTPS X.509 Certificate</a></p>
 </li>
             </ul>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.11">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-acknowledgments" class="xref">Acknowledgments</a></p>
 </li>
-          <li class="toc ulEmpty compact" id="section-toc.1-1.12">
+          <li class="toc compact ulEmpty" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#section-appendix.c" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a></p>
 </li>
         </ul>
