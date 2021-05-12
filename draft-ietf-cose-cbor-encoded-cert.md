@@ -155,7 +155,7 @@ The X.509 fields and their CBOR encodings are listed below, and used in the defi
 
 C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is encoded in the 'cborCertificateType' CBOR int. The field 'cborCertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (cborCertificateType = 0) or a CBOR re-encoded X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
+* version. The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'cborCertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (cborCertificateType = 0) or a CBOR re-encoded X.509 v3 DER certificate (cborCertificateType = 1), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
@@ -189,7 +189,7 @@ C509Certificate = (
 )
 
 TBSCertificate = (
-   cborCertificateType: int,
+   c509CertificateType: int,
    certificateSerialNumber: CertificateSerialNumber,
    issuer: Name,
    validityNotBefore: Time,
