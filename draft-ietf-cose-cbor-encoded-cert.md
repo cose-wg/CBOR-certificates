@@ -216,7 +216,6 @@ Extensions = [ * Extension ] / int
 
 Extension = ( extensionID: int, extensionValue: any ) //
             ( extensionID: ~oid, critical: bool, extensionValue: bytes )
-)
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
