@@ -177,15 +177,15 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signatureValue. In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}
 
-The following Concise Data Definition Language (CDDL) defines C509Certificate and TBSCertificate, which are encoded as CBOR Sequences {{RFC8742}}. The member names therefore only have documentary value.
+The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value.
 
 ~~~~~~~~~~~ CDDL
-; The elements of the following group are to be used in a CBOR Sequence:
-C509Certificate = (
+C509Certificate = [
    TBSCertificate,
    issuerSignatureValue : any,
-)
+]
 
+; The elements of the following group are to be used in a CBOR Sequence:
 TBSCertificate = (
    c509CertificateType: int,
    certificateSerialNumber: CertificateSerialNumber,
@@ -887,7 +887,7 @@ EDITORS NOTE: The text should be moved a section and not be in the IANA Section.
 This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded and uses a COSE_C5 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ CDDL
-COSE_C5 = [ + [ C509Certificate ] ]
+COSE_C5 = C509Certificate / [ 2* C509Certificate ]
 ~~~~~~~~~~~
 
 As the contents of c5bag, c5chain, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
