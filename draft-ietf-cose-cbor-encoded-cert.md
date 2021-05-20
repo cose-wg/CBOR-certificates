@@ -884,7 +884,7 @@ IANA has created a new registry titled "C509 Certificate Public Key Algorithms" 
 
 EDITORS NOTE: The text should be moved a section and not be in the IANA Section.
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are CBOR encoded instead of DER encoded and uses a COSE_C5 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C5 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ CDDL
 COSE_C5 = C509Certificate / [ 2* C509Certificate ]
