@@ -904,7 +904,7 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 | c5c       |  TBD2 | COSE_C5        | An ordered chain of C509     |
 |           |       |                | certificates                 |
 +-----------+-------+----------------+------------------------------+
-| c5t       |  TBD3 | COSE_CertHash  | Hash of a C509 certificate   |
+| c5t       |  TBD3 | COSE_CertHash  | Hash of a C509Certificate    |
 +-----------+-------+----------------+------------------------------+
 | c5u       |  TBD4 | uri            | URI pointing to a COSE_C5    |
 |           |       |                | containing a ordered chain   |
