@@ -883,10 +883,10 @@ IANA has created a new registry titled "C509 Certificate Public Key Algorithms" 
 
 EDITORS NOTE: The text should be moved a section and not be in the IANA Section.
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C5 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C5 item served with the application/cbor content format. The COSE_C5 structure used in c5b, c5c, and c5u is defined as:
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cbor content format. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ CDDL
-COSE_C5 = C509Certificate / [ 2* C509Certificate ]
+COSE_C509 = C509Certificate / [ 2* C509Certificate ]
 ~~~~~~~~~~~
 
 As the contents of c5bag, c5chain, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
@@ -897,15 +897,15 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 +-----------+-------+----------------+------------------------------+
 | Name      | Label | Value Type     | Description                  |
 +===========+=======+================+==============================+
-| c5b       |  TBD1 | COSE_C5        | An unordered bag of C509     |
+| c5b       |  TBD1 | COSE_C509      | An unordered bag of C509     |
 |           |       |                | certificates                 |
 +-----------+-------+----------------+------------------------------+
-| c5c       |  TBD2 | COSE_C5        | An ordered chain of C509     |
+| c5c       |  TBD2 | COSE_C509      | An ordered chain of C509     |
 |           |       |                | certificates                 |
 +-----------+-------+----------------+------------------------------+
 | c5t       |  TBD3 | COSE_CertHash  | Hash of a C509Certificate    |
 +-----------+-------+----------------+------------------------------+
-| c5u       |  TBD4 | uri            | URI pointing to a COSE_C5    |
+| c5u       |  TBD4 | uri            | URI pointing to a COSE_C509  |
 |           |       |                | containing a ordered chain   |
 |           |       |                | of certificates              |
 +-----------+-------+----------------+------------------------------+
@@ -933,7 +933,7 @@ This document registers the following entries in the "CBOR Tags" registry under 
 +------+------------------------------------------------------------+
 |  Tag | X.509 Public Key Algorithms                                |
 +======+============================================================+
-| TDB6 | Data Item: COSE_C5                                         |
+| TDB6 | Data Item: COSE_C509                                       |
 |      | Semantics: An ordered chain of C509 certificates           |
 |      | Reference: This document                                   |
 +------+------------------------------------------------------------+
