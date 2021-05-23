@@ -308,14 +308,32 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 encoding more compact. For Brtoli {{RFC7932}}, the brotli command line tool 1.09 was used with the default best compression level.
 
+~~~~~~~~~
++---------------------------------------+------------+-----------+
+|                                       |  COSE_X509 | COSE_C509 |
++---------------------------------------+------------+-----------+
+| RFC 7925 profiled IoT Certificate     |        317 |       139 |
++---------------------------------------+------------+-----------+
+| ECDSA HTTPS Certificate Chain         |       2193 |      1309 |
++---------------------------------------+------------+-----------+
+| RSA HTTPS Certificate Chain           |       5175 |      3852 |
++---------------------------------------+------------+-----------+
 ~~~~~~~~~~~
-+------------------+--------------+------------+--------------------+
-|                  |   RFC 7925   |   Brotli   |  C509 Certificate  |
-+------------------+---------------------------+--------------------+
-| Certificate Size |     314      |     303    |         138        |
-+------------------+--------------+------------+--------------------+
+{: #fig-table title="Comparing Sizes of Certificates in COSE (bytes)"}
+{: artwork-align="center"}
+
+~~~~~~~~~~~ 
++-------------------+------+---------------+------+---------------+
+|                   | X509 | X509 + Brotli | C509 | C509 + Brotli |
++-------------------+------+---------------+------+---------------+
+| RFC 7925 Cert     |  327 |           324 |  151 |           167 |
++-------------------+------+---------------+------+---------------+
+| ECDSA HTTPS Chain | 2204 |          1455 | 1324 |          1066 |
++-------------------+------+---------------+------+---------------+
+| RSA HTTPS Chain   | 5190 |          3244 | 3875 |          2837 |
++-------------------+------+---------------+------+---------------+
 ~~~~~~~~~~~
-{: #fig-table title="Comparing Sizes of Certificates (bytes)"}
+{: #fig-table2 title="Comparing Sizes of Certificates TLS (bytes)"}
 {: artwork-align="center"}
 
 # Security Considerations {#sec-cons}
