@@ -1001,7 +1001,7 @@ E7 F5 00 DC 74 7A 65 4C EC 6C FA 6F 03 72 76 E1 4E 52 ED 07 FC 16 29
 
 ### Example C509 Certificate Encoding
 
-The CBOR encoding of the same X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -1171,7 +1171,7 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 
 ### Example C509 Certificate Encoding
 
-The CBOR encoding of the first X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -1295,7 +1295,7 @@ ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 
 ### Example C509 Certificate Encoding
 
-The CBOR encoding of the first X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
