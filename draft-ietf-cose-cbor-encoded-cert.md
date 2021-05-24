@@ -234,7 +234,7 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 ## Encoding of Extensions {#ext-encoding}
 
-This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a positive sign and non-critical extensions are encoded with a negative sign.
+This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or a CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}),the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign.
 
 The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. The 'extensionValue' for the extensions mandated to be supported by {{RFC7925}}, {{IEEE-802.1AR}}, and {{CAB-Baseline}} are encoded as follows:
 
