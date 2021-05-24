@@ -30,7 +30,7 @@ author:
         org: Ericsson AB
         email: goran.selander@ericsson.com
       -
-        ins: J. Mattsson
+        ins: J. Preuß Mattsson
         name: John Preuß Mattsson
         org: Ericsson AB
         email: john.mattsson@ericsson.com
@@ -263,7 +263,15 @@ The following extensions are partly supported:
 
 * cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string.
 
-* cert pol
+~~~~~~~~~~~
+   ExtValueCDP = [ 2* text ] / text
+~~~~~~~~~~~
+
+* certificatePolicies
+
+~~~~~~~~~~~
+   ExtValueCP =
+~~~~~~~~~~~
 
 * authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber. Omitted values are encoded as CBOR null.
 
@@ -280,7 +288,11 @@ The following extensions are partly supported:
    ExtValueAIA = [ + ( ocsp : 1 // caIssuers : 2 , uri : text ) ]
 ~~~~~~~~~~~
 
-* SCT
+* signedCertificateTimestamp
+
+~~~~~~~~~~~
+   ExtValueSCT =
+~~~~~~~~~~~
 
 ### Example Encoding of Extensions
 
