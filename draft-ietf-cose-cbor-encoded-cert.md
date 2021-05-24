@@ -471,7 +471,7 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
-| Value | Extension                                                |
+| Value | Extension                                                 |
 +=======+===========================================================+
 |     1 | Name:            Subject Key Identifier                   |
 |       | OID:             2.5.29.14                                |
