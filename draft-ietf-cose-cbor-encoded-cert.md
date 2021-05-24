@@ -605,6 +605,33 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 {: #fig-extype title="C509 Certificate Extensions"}
 {: artwork-align="center"}
 
+## C509 Certificate Certificate Policies Registry {#CP}
+
+IANA has created a new registry titled "C509 Certificate Certificate Policies" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+-----------------------------------------------------------+
+| Value | Certificate Policy                                        |
++=======+===========================================================+
+|     1 | Name:            Domain Validation (DV)                   |
+|       | OID:             2.23.140.1.2.1                           |
+|       | DER:             06 06 67 81 0C 01 02 01                  |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     2 | Name:            Organization Validation (OV              |
+|       | OID:             2.23.140.1.2.2                           |
+|       | DER:             06 06 67 81 0C 01 02 02                  |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     3 | Name:            Extended Validation (EV)                 |
+|       | OID:             2.23.140.1.1                             |
+|       | DER:             06 05 67 81 0C 01 01                     |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-ekutype title="C509 Certificate Certificate Policies"}
+{: artwork-align="center"}
+
 ## C509 Certificate Extended Key Usages Registry {#EKU}
 
 IANA has created a new registry titled "C509 Certificate Extended Key Usages" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
