@@ -238,7 +238,7 @@ This section details the encoding of the 'extensions' field. The 'extensions' fi
 
 The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions mandated to be supported by {{RFC7925}}, {{IEEE-802.1AR}}, and {{CAB-Baseline}} which are encoded as specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
 
-The following extensions are fully supported:
+CBOR encoding of the following extension values are fully supported:
 
 * subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
 
@@ -252,16 +252,16 @@ The following extensions are fully supported:
    ExtValueEKU = [ + int / ~oid ] / int
 ~~~~~~~~~~~
 
-The following extensions are partly supported:
+CBOR encoding of the following extension values are partly supported:
 
-* subjectAltName. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* subjectAltName. If the subject alternatice name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~
    ExtValueSAN = [ + GeneralName ] / text
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
 ~~~~~~~~~~~
 
-* cRLDistributionPoints. If the cRLDistributionPoints is a sequence of DistributionPointName, it is encoded like subjectAltName, with the difference that if cRLDistributionPoints contains exactly one uniformResourceIdentifier, the array and the int are omitted and extensionValue is the uniformResourceIdentifier encoded as a CBOR text string.
+* cRLDistributionPoints. If the CRL Distribution Points is a sequence of DistributionPointName of type uniformResourceIdentifier the extension value can be CBOR encoded. The extensionValue is encoded as an array of CBOR text strings where each CBOR text string encodes a uniformResourceIdentifier. If the array contains exactly one text string, the array is omitted.
 
 ~~~~~~~~~~~
    ExtValueCDP = [ 2* text ] / text
