@@ -267,7 +267,7 @@ CBOR encoding of the following extension values are partly supported:
    ExtValueCDP = [ 2* text ] / text
 ~~~~~~~~~~~
 
-* certificatePolici
+* certificatePolicies
 
 ~~~~~~~~~~~
    ExtValueCP =
