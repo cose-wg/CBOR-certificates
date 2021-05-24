@@ -618,12 +618,17 @@ IANA has created a new registry titled "C509 Certificate Certificate Policies" u
 |       | DER:             06 06 67 81 0C 01 02 01                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|     2 | Name:            Organization Validation (OV              |
+|     2 | Name:            Organization Validation (OV)             |
 |       | OID:             2.23.140.1.2.2                           |
 |       | DER:             06 06 67 81 0C 01 02 02                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|     3 | Name:            Extended Validation (EV)                 |
+|     3 | Name:            Individual Validation (IV)               |
+|       | OID:             2.23.140.1.2.3                           |
+|       | DER:             06 06 67 81 0C 01 02 03                  |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     4 | Name:            Extended Validation (EV)                 |
 |       | OID:             2.23.140.1.1                             |
 |       | DER:             06 05 67 81 0C 01 01                     |
 |       | Comments:                                                 |
