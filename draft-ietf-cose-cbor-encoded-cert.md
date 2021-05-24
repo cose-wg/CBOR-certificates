@@ -1197,10 +1197,9 @@ The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown bel
 1,
 h'047FA1E31928EE403BA0B83A395673FC',
 [
- -4, "IE",
- -8, "Baltimore",
- -9, "CyberTrust",
- -1, "Baltimore CyberTrust Root"
+ -4, "US",
+ -8, "Cloudflare, Inc.",
+ -1, "Cloudflare Inc ECC CA-3"
 ],
 1595980800,
 1627560000,
