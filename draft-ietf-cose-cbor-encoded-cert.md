@@ -282,10 +282,10 @@ CBOR encoding of the following extension values are partly supported:
                  / bytes
 ~~~~~~~~~~~
 
-* authorityInfoAccess. If authorityInfoAccess consist of only uniformResourceIdentifiers it is encoded as an array of uris.
-
+* authorityInfoAccess. If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. The accessMethod is encoded as an CBOR int (1 for ocsp and 2 for caIssuers). The uniformResourceIdentifiers are encoded as CBOR text strings.
+ 
 ~~~~~~~~~~~
-   ExtValueAIA = [ + ( ocsp : 1 // caIssuers : 2 , uri : text ) ]
+   ExtValueAIA = [ + ( accessMethod : 1 / 2 , uri : text ) ]
 ~~~~~~~~~~~
 
 * signedCertificateTimestamp. TODO
