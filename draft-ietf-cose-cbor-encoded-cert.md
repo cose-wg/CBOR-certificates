@@ -288,7 +288,7 @@ CBOR encoding of the following extension values are partly supported:
    ExtValueAIA = [ + ( ocsp : 1 // caIssuers : 2 , uri : text ) ]
 ~~~~~~~~~~~
 
-* signedCertificateTimestamp
+* signedCertificateTimestamp. TODO
 
 ~~~~~~~~~~~
    ExtValueSCT =
