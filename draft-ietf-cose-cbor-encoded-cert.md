@@ -370,7 +370,7 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 
 ## C509 Certificate Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Certificate Attributes" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an positive integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Attributes" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -467,67 +467,67 @@ IANA has created a new registry titled "C509 Certificate Attributes" under the n
 
 ## C509 Certificate Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Certificate Extensions" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, extensionValue, and Reference, where Value is an integer, and the other columns are text strings. Only non-negative values can be registered. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Extensions" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Extension                                                |
 +=======+===========================================================+
-|     0 | Name:            Subject Key Identifier                   |
+|     1 | Name:            Subject Key Identifier                   |
 |       | OID:             2.5.29.14                                |
 |       | DER:             06 03 55 1D 0E                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|     1 | Name:            Key Usage                                |
+|     2 | Name:            Key Usage                                |
 |       | OID:             2.5.29.15                                |
 |       | DER:             06 03 55 1D 0F                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  int                                      |
 +-------+-----------------------------------------------------------+
-|     2 | Name:            Subject Alternative Name                 |
+|     3 | Name:            Subject Alternative Name                 |
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( int, any ) ] / text                |
 +-------+-----------------------------------------------------------+
-|     3 | Name:            Basic Constraints                        |
+|     4 | Name:            Basic Constraints                        |
 |       | OID:             2.5.29.19                                |
 |       | DER:             06 03 55 1D 13                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
 +-------+-----------------------------------------------------------+
-|     4 | Name:            CRL Distribution Points                  |
+|     5 | Name:            CRL Distribution Points                  |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( int, any ) ] / text                |
 +-------+-----------------------------------------------------------+
-|     5 | Name:            Certificate Policies                     |
+|     6 | Name:            Certificate Policies                     |
 |       | OID:             2.5.29.32                                |
 |       | DER:             06 03 55 1D 20                           |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( oid, ? text ) ]                    |
 +-------+-----------------------------------------------------------+
-|     6 | Name:            Authority Key Identifier                 |
+|     7 | Name:            Authority Key Identifier                 |
 |       | OID:             2.5.29.35                                |
 |       | DER:             06 03 55 1D 23                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
-|     7 | Name:            Extended Key Usage                       |
+|     8 | Name:            Extended Key Usage                       |
 |       | OID:             2.5.29.37                                |
 |       | DER:             06 03 55 1D 25                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
 +-------+-----------------------------------------------------------+
-|     8 | Name:            Authority Information Access             |
+|     9 | Name:            Authority Information Access             |
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
 |       | extensionValue:  [ + ( 1 / 2 , text ) ]                   |
 +-------+-----------------------------------------------------------+
-|     9 | Name:            Signed Certificate Timestamp List        |
+|    10 | Name:            Signed Certificate Timestamp List        |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
