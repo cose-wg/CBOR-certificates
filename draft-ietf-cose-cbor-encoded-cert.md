@@ -210,12 +210,12 @@ Attribute = ( attributeType: int, attributeValue: text ) //
 
 Time = ~time / null
 
-AlgorithmIdentifier = int / [ algorithm: ~oid, ? parameters: bytes ]
+AlgorithmIdentifier = int / ~oid / [ algorithm: ~oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
 Extension = ( extensionID: int, extensionValue: any ) //
-            ( extensionID: ~oid, critical: bool, extensionValue: bytes )
+            ( extensionID: ~oid, ? critical: true, extensionValue: bytes )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
