@@ -1352,7 +1352,7 @@ h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
  -2, 5,
   5, "http://crl.starfieldtech.com/sfig2s1-242.crl",
   6, [ h'6086480186fd6e01071701',
-       "http://certificates.starfieldtech.com/repository/", 1 ],
+       "http://certificates.starfieldtech.com/repository/", h'67810C010201' ],
   9, [ 1, "http://ocsp.starfieldtech.com/",
        2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
   7, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
