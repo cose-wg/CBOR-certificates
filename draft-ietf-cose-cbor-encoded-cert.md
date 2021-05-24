@@ -497,31 +497,31 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
 |       | Comments:                                                 |
-|       | extensionValue:  [ + ( int, any ) ] / text                |
+|       | extensionValue:  ExtValueSAN                              |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Basic Constraints                        |
 |       | OID:             2.5.29.19                                |
 |       | DER:             06 03 55 1D 13                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
-+-------+-----------------------------------------------------------+
++-------+------------------------------------------er-----------------+
 |     5 | Name:            CRL Distribution Points                  |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
 |       | Comments:                                                 |
-|       | extensionValue:  [ + ( int, any ) ] / text                |
+|       | extensionValue:  ExtValueCDP                              |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            Certificate Policies                     |
 |       | OID:             2.5.29.32                                |
 |       | DER:             06 03 55 1D 20                           |
 |       | Comments:                                                 |
-|       | extensionValue:  [ + ( oid, ? text ) ]                    |
+|       | extensionValue:  ExtValueCP                               |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Authority Key Identifier                 |
 |       | OID:             2.5.29.35                                |
 |       | DER:             06 03 55 1D 23                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  ExtValueAKI                              |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Extended Key Usage                       |
 |       | OID:             2.5.29.37                                |
@@ -533,14 +533,13 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
-|       | extensionValue:  [ + ( 1 / 2 , text ) ]                   |
+|       | extensionValue:  ExtValueAIA                              |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Signed Certificate Timestamp List        |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
-|       | extensionValue:  [ bytes, ~biguint,                       |
-|       |                    AlgorithmIdentifier, bytes]            |
+|       | extensionValue:  ExtValueSCT                             |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | OID:             2.5.29.9                                 |
