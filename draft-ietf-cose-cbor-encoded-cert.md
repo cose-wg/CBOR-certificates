@@ -306,7 +306,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate given in {{appA}} results in the numbers shown in {{fig-table}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms will be small, mainly corresponding to making the ASN.1 encoding more compact. For Brtoli {{RFC7932}}, the brotli command line tool 1.09 was used with the default best compression level.
+The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the chain. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
 ~~~~~~~~~
 +---------------------------------------+------------+-----------+
@@ -319,7 +319,7 @@ The CBOR encoding of the sample certificate given in {{appA}} results in the num
 | RSA HTTPS Certificate Chain           |       5175 |      3852 |
 +---------------------------------------+------------+-----------+
 ~~~~~~~~~~~
-{: #fig-table title="Comparing Sizes of Certificates in COSE (bytes)"}
+{: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE (bytes)"}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~ 
@@ -333,7 +333,7 @@ The CBOR encoding of the sample certificate given in {{appA}} results in the num
 | RSA HTTPS Chain   | 5190 |          3244 | 3875 |          2837 |
 +-------------------+------+---------------+------+---------------+
 ~~~~~~~~~~~
-{: #fig-table2 title="Comparing Sizes of Certificates TLS (bytes)"}
+{: #fig-size-TLS title="Comparing Sizes of Certificate Chains TLS (bytes)"}
 {: artwork-align="center"}
 
 # Security Considerations {#sec-cons}
