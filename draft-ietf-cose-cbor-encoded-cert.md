@@ -267,19 +267,19 @@ CBOR encoding of the following extension values are partly supported:
    ExtValueCDP = [ 2* text ] / text
 ~~~~~~~~~~~
 
-* certificatePolicies
+* certificatePolici
 
 ~~~~~~~~~~~
    ExtValueCP =
 ~~~~~~~~~~~
 
-* authorityKeyIdentifier. extensionValue is encoded as an array where the value of the 'keyIdentifier' is encoded as a CBOR byte string, 'GeneralNames' is encoded like in subjectAltName, and 'AuthorityCertSerialNumber' is encoded as ~biguint exactly like certificateSerialNumber. Omitted values are encoded as CBOR null.
+* authorityKeyIdentifier. If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumberm or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present a CBOR byte string is used.
 
 ~~~~~~~~~~~
-   ExtValueAKI = [ keyIdentifier: bytes / null,
-                   certIssuer: GeneralNames / null,
-                   certSerialNumber: CertificateSerialNumber / null ]
-               / bytes
+   ExtValueAKI = [ keyIdentifier: bytes,
+                   certIssuer: GeneralNames,
+                   certSerialNumber: CertificateSerialNumber ]
+                 / bytes
 ~~~~~~~~~~~
 
 * authorityInfoAccess. If authorityInfoAccess consist of only uniformResourceIdentifiers it is encoded as an array of uris.
