@@ -527,7 +527,7 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | OID:             2.5.29.37                                |
 |       | DER:             06 03 55 1D 25                           |
 |       | Comments:                                                 |
-|       | extensionValue:  int                                      |
+|       | extensionValue:  [ + int / ~oid ] / int                   |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Authority Information Access             |
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
