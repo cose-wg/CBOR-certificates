@@ -309,15 +309,15 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the chain. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
 ~~~~~~~~~
-+---------------------------------------+------------+-----------+
-|                                       |  COSE_X509 | COSE_C509 |
-+---------------------------------------+------------+-----------+
-| RFC 7925 profiled IoT Certificate     |        317 |       139 |
-+---------------------------------------+------------+-----------+
-| ECDSA HTTPS Certificate Chain         |       2193 |      1309 |
-+---------------------------------------+------------+-----------+
-| RSA HTTPS Certificate Chain           |       5175 |      3852 |
-+---------------------------------------+------------+-----------+
++---------------------------------------+-----------+-----------+
+|                                       | COSE_X509 | COSE_C509 |
++---------------------------------------+-----------+-----------+
+| RFC 7925 profiled IoT Certificate     |       317 |       139 |
++---------------------------------------+-----------+-----------+
+| ECDSA HTTPS Certificate Chain         |      2193 |      1309 |
++---------------------------------------+-----------+-----------+
+| RSA HTTPS Certificate Chain           |      5175 |      3852 |
++---------------------------------------+-----------+-----------+
 ~~~~~~~~~~~
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE (bytes)"}
 {: artwork-align="center"}
