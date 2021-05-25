@@ -1293,6 +1293,8 @@ h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
   B5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
 ~~~~~~~~~~~
 
+The size of the CBOR encoding (CBOR sequence) is 781 bytes.
+
 ## Example CAB Baseline RSA HTTPS X.509 Certificate
 
 The tools.ietf.org HTTPS server replies with a certificate message with 4 certificates. The DER encoding of the first certificate is 1647 bytes.
