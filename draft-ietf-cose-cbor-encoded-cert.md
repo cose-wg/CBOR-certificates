@@ -228,7 +228,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
 
-## Encoding of subjectPublicKey and issuerSingatureValue {#alg-encoding}
+## Encoding of subjectPublicKey and issuerSignatureValue {#alg-encoding}
 
 ### Encoding of subjectPublicKey
 
@@ -236,7 +236,7 @@ For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fi
 
 For elliptic curve public keys in Weierstraß form (id-ecPublicKey), uncompressed keys are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
 
-### Encoding of issuerSingatureValue
+### Encoding of issuerSignatureValue
 
 For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as the any leading 0x00 byte (to indicate that the number is not negative) are omitted. If the two INTEGER value fields have different lengths, the shortest INTEGER value field is padded with zeroes so that the two fields have the same length. The resulting byte string is encoded as a CBOR byte string.
 
