@@ -317,27 +317,27 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 17, 8, \[ 3, 6 \], 3, "example.com" \].
 
-# C509 Certification Requests {#cr}
+# C509 Certificate Signing Request {#CSR}
 
 ~~~~~~~~~~~ CDDL
-C509CertificationRequest = [
-   TBSCertificationRequest,
-   subjectPoPValue: any,
+C509CertificateSigningRequest = [
+   TBS CertificateSigningRequest,
+   subjectProofOfPossesionValue: any,
 ]
 
 ; The elements of the following group are to be used in a CBOR Sequence:
-TBSCertificationRequest = (
-   c509CertificationRequestType: int,
+TBS CertificateSigningRequest = (
+   c509 CertificateSigningRequest Type: int,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    attributes: [ * Attribute ],
-   subjectPoPAlgorithm: AlgorithmIdentifier,
+   subjectProofOfPossesionAlgorithm: AlgorithmIdentifier,
 )
 
 Attribute = ( attributeType: int, attributeValue: any )
 ~~~~~~~~~~~
-{: #fig-CBORCertCDDL title="CDDL for C509ertificationRequest."}
+{: #fig-CBORCertCDDL title="CDDL for C509CertificateSigningRequest."}
 {: artwork-align="center"}
 
 # Compliance Requirements for Constrained IoT
