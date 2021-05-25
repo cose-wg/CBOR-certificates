@@ -362,7 +362,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 | RSA HTTPS Chain   | 5190 |          3244 | 3957 |          2841 |
 +-------------------+------+---------------+------+---------------+
 ~~~~~~~~~~~
-{: #fig-size-TLS title="Comparing Sizes of Certificate Chains TLS (bytes)"}
+{: #fig-size-TLS title="Comparing Sizes of Certificate Chains in TLS (bytes)"}
 {: artwork-align="center"}
 
 # Security Considerations {#sec-cons}
@@ -525,7 +525,7 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | DER:             06 03 55 1D 13                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
-+-------+------------------------------------------er-----------------+
++-------+-----------------------------------------------------------+
 |     5 | Name:            CRL Distribution Points                  |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
@@ -560,7 +560,7 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueSCT                             |
+|       | extensionValue:  ExtValueSCT                              |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | OID:             2.5.29.9                                 |
