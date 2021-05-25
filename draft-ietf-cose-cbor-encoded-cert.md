@@ -634,7 +634,7 @@ IANA has created a new registry titled "C509 Certificate Certificate Policies" u
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-ekutype title="C509 Certificate Certificate Policies"}
+{: #fig-cptype title="C509 Certificate Certificate Policies"}
 {: artwork-align="center"}
 
 ## C509 Certificate Extended Key Usages Registry {#EKU}
