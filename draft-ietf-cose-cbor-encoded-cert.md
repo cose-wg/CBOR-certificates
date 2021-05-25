@@ -1113,7 +1113,7 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes.
 
 ### Example: Natively Signed C509 Certificate
 
-The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for cborCertificateType and signatureValue.
+The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for c509CertificateType and signatureValue.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
