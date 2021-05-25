@@ -147,7 +147,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This specification makes use of the terminology in {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refer to Deterministically Encoded CBOR as specified in Sections 4.2.1 and 4.2.2 of {{RFC8949}}.
 
-# CBOR Encoding {#encoding}
+# C509 Certificates {#encoding}
 
 This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, and CAB Baseline {{CAB-Baseline}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
@@ -316,6 +316,29 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 * A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 3 followed by the CBOR text string "example.com".
 
 Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 17, 8, \[ 3, 6 \], 3, "example.com" \].
+
+# C509 Certification Requests {#cr}
+
+~~~~~~~~~~~ CDDL
+C509CertificationRequest = [
+   TBSCertificationRequest,
+   subjectPoPValue: any,
+]
+
+; The elements of the following group are to be used in a CBOR Sequence:
+TBSCertificationRequest = (
+   c509CertificationRequestType: int,
+   subject: Name,
+   subjectPublicKeyAlgorithm: AlgorithmIdentifier,
+   subjectPublicKey: any,
+   attributes: [ * Attribute ],
+   subjectPoPAlgorithm: AlgorithmIdentifier,
+)
+
+Attribute = ( attributeType: int, attributeValue: any )
+~~~~~~~~~~~
+{: #fig-CBORCertCDDL title="CDDL for C509ertificationRequest."}
+{: artwork-align="center"}
 
 # Compliance Requirements for Constrained IoT
 
