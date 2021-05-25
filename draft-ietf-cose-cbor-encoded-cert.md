@@ -288,10 +288,11 @@ CBOR encoding of the following extension values are partly supported:
    ExtValueAIA = [ + ( accessMethod : 1 / 2 , uri : text ) ]
 ~~~~~~~~~~~
 
-* signedCertificateTimestamp. TODO
+* signedCertificateTimestamp. If all the SCTs are version 1, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as and CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
 ~~~~~~~~~~~
-   ExtValueSCT = [ + ( bstr, int, AlgorithmIdentifier, bstr ) ]
+   ExtValueSCT = [ + ( LogID : bstr, timestamp : int,
+                       alg : AlgorithmIdentifier, signature : any ) ]
 ~~~~~~~~~~~
 
 ### Example Encoding of Extensions
