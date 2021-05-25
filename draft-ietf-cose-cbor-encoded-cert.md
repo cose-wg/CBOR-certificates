@@ -371,7 +371,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 | RSA HTTPS Certificate Chain           |      5175 |      3934 |
 +---------------------------------------+-----------+-----------+
 ~~~~~~~~~~~
-{: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE (bytes)"}
+{: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE (bytes)."}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~ 
@@ -385,7 +385,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 | RSA HTTPS Chain   | 5190 |          3244 | 3957 |          2841 |
 +-------------------+------+---------------+------+---------------+
 ~~~~~~~~~~~
-{: #fig-size-TLS title="Comparing Sizes of Certificate Chains in TLS (bytes)"}
+{: #fig-size-TLS title="Comparing Sizes of Certificate Chains in TLS (bytes). X509 and C509 are Certificate messages.  X509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
 {: artwork-align="center"}
 
 # Security Considerations {#sec-cons}
