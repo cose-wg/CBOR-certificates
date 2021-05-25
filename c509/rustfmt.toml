@@ -1,0 +1,4 @@
+edition = "2018"
+max_width = 240
+use_small_heuristics = "Max"
+newline_style = "Unix"

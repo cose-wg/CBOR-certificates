@@ -1,0 +1,16 @@
+[package]
+name = "c509"
+version = "0.1.0"
+authors = ["John Preuß Mattsson <john.mattsson@ericsson.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+brotli = "3.3.0"
+chrono = "0.4"
+hex = "0.4"
+regex = "1"
+rustls = "0.19"
+webpki = "0.21"
+webpki-roots = "0.21"
