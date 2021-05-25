@@ -322,7 +322,7 @@ Thus, the extension field of a certificate containing all of the above extension
 ~~~~~~~~~~~ CDDL
 C509CertificateSigningRequest = [
    TBS CertificateSigningRequest,
-   subjectProofOfPossesionValue: any,
+   subjectProofOfPossessionValue: any,
 ]
 
 ; The elements of the following group are to be used in a CBOR Sequence:
@@ -332,7 +332,7 @@ TBS CertificateSigningRequest = (
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    attributes: [ * Attribute ],
-   subjectProofOfPossesionAlgorithm: AlgorithmIdentifier,
+   subjectProofOfPossessionAlgorithm: AlgorithmIdentifier,
 )
 
 Attribute = ( attributeType: int, attributeValue: any )
