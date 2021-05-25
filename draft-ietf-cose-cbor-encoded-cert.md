@@ -291,7 +291,7 @@ CBOR encoding of the following extension values are partly supported:
 * signedCertificateTimestamp. TODO
 
 ~~~~~~~~~~~
-   ExtValueSCT =
+   ExtValueSCT = [ + ( bstr, int, AlgorithmIdentifier, bstr ) ]
 ~~~~~~~~~~~
 
 ### Example Encoding of Extensions
