@@ -244,7 +244,7 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or an unwrapped CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}), the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign.
 
-The 'extnValue' OCTET STREAM value field is encoded as the CBOR byte string 'extensionValue' except for the extensions mandated to be supported by {{RFC7925}}, {{IEEE-802.1AR}}, and {{CAB-Baseline}} which are encoded as specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
+The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions mandated to be supported by {{RFC7925}}, {{IEEE-802.1AR}}, and {{CAB-Baseline}} which are encoded as specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
 
 CBOR encoding of the following extension values are fully supported:
 
@@ -281,7 +281,7 @@ CBOR encoding of the following extension values are partly supported:
    ExtValueCP = [ + ( CertPolicyId: oid / int, ? CPSuri: text ) ]
 ~~~~~~~~~~~
 
-* authorityKeyIdentifier. If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumberm or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present a CBOR byte string is used.
+* authorityKeyIdentifier. If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present a CBOR byte string is used.
 
 ~~~~~~~~~~~
    ExtValueAKI = [ keyIdentifier: bytes,
