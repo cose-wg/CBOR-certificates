@@ -334,9 +334,9 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +---------------------------------------+-----------+-----------+
 | RFC 7925 profiled IoT Certificate     |       317 |       139 |
 +---------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain         |      2193 |      1309 |
+| ECDSA HTTPS Certificate Chain         |      2193 |      1394 |
 +---------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain           |      5175 |      3852 |
+| RSA HTTPS Certificate Chain           |      5175 |      3934 |
 +---------------------------------------+-----------+-----------+
 ~~~~~~~~~~~
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE (bytes)"}
@@ -348,9 +348,9 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +-------------------+------+---------------+------+---------------+
 | RFC 7925 Cert     |  327 |           324 |  151 |           167 |
 +-------------------+------+---------------+------+---------------+
-| ECDSA HTTPS Chain | 2204 |          1455 | 1324 |          1066 |
+| ECDSA HTTPS Chain | 2204 |          1455 | 1409 |          1058 |
 +-------------------+------+---------------+------+---------------+
-| RSA HTTPS Chain   | 5190 |          3244 | 3875 |          2837 |
+| RSA HTTPS Chain   | 5190 |          3244 | 3957 |          2841 |
 +-------------------+------+---------------+------+---------------+
 ~~~~~~~~~~~
 {: #fig-size-TLS title="Comparing Sizes of Certificate Chains TLS (bytes)"}
