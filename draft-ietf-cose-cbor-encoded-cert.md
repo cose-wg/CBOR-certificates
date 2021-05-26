@@ -44,6 +44,7 @@ author:
 normative:
 
   RFC2119:
+  RFC2986:
   RFC4108:
   RFC5280:
   RFC8152:
@@ -319,15 +320,17 @@ Thus, the extension field of a certificate containing all of the above extension
 
 # C509 Certificate Signing Request {#CSR}
 
+The section defines the C509 Certificate Signing Request (CSR) format based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{encoding}}. The only c509CertificateSigningRequestType currently defined is 509CertificateSigningRequestType = 0 which requests a c509CertificateType = 0. subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm as defined in e.g. RFC 6955. CSR attributes other than extensionRequest is not supported by 509CertificateSigningRequestType = 0.
+
 ~~~~~~~~~~~ CDDL
 C509CertificateSigningRequest = [
-   TBS CertificateSigningRequest,
+   TBSCertificateSigningRequest,
    subjectProofOfPossessionValue: any,
 ]
 
 ; The elements of the following group are to be used in a CBOR Sequence:
-TBS CertificateSigningRequest = (
-   c509 CertificateSigningRequest Type: int,
+TBSCertificateSigningRequest = (
+   c509CertificateSigningRequestType: int,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
@@ -337,6 +340,8 @@ TBS CertificateSigningRequest = (
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509CertificateSigningRequest."}
 {: artwork-align="center"}
+
+After verifying the subjectProofOfPossessionValue, the CA MAY transform the C509CertificateSigningRequest into a RFC 2985 CertificationRequestInfo for compatibility with existing procedures and code.
 
 # Compliance Requirements for Constrained IoT
 
