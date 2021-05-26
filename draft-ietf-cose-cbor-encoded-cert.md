@@ -331,11 +331,12 @@ TBS CertificateSigningRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
-   attributes: [ * Attribute ],
+   extensionsRequest : Extensions,
+   cSRattributes: [ * CSRAttribute ],
    subjectProofOfPossessionAlgorithm: AlgorithmIdentifier,
 )
 
-Attribute = ( attributeType: int, attributeValue: any )
+CSRAttribute = ( cSRattributeType: int, cSRattributeValue: any )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509CertificateSigningRequest."}
 {: artwork-align="center"}
