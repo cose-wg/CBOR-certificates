@@ -148,7 +148,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 This specification makes use of the terminology in {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refer to Deterministically Encoded CBOR as specified in Sections 4.2.1 and 4.2.2 of {{RFC8949}}.
 
-# C509 Certificates {#encoding}
+# C509 Certificate {#certificate}
 
 This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, and CAB Baseline {{CAB-Baseline}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
@@ -320,7 +320,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 # C509 Certificate Signing Request {#CSR}
 
-The section defines the C509 Certificate Signing Request (CSR) format based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{encoding}}. The only c509CertificateSigningRequestType currently defined is 509CertificateSigningRequestType = 0 which requests a c509CertificateType = 0. subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm as defined in e.g. RFC 6955. CSR attributes other than extensionRequest is not supported by 509CertificateSigningRequestType = 0.
+The section defines the C509 Certificate Signing Request (CSR) format based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateSigningRequestTypes defined, c509CertificateSigningRequestType = 0 requests a c509CertificateType = 0 and c509CertificateSigningRequestType = 1 requests a c509CertificateType = 1 . subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm as defined in e.g. RFC 6955. CSR attributes other than extensionRequest are not supported.
 
 ~~~~~~~~~~~ CDDL
 C509CertificateSigningRequest = [
