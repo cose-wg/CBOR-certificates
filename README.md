@@ -2,9 +2,9 @@
 
 This is the working area for the individual Internet-Draft, "CBOR Encoded X.509 Certificates".
 
-* [Editor's Copy](https://EricssonResearch.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
+* [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
 * [Individual Draft](https://tools.ietf.org/html/draft-ietf-cose-cbor-encoded-cert.html)
-* [Compare Editor's Copy to Individual Draft](https://EricssonResearch.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
+* [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
 ## Building the Draft
 
@@ -21,4 +21,4 @@ This requires that you have the necessary software installed.  See
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/EricssonResearch/CBOR-certificates/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/cose-wg/CBOR-certificates/blob/master/CONTRIBUTING.md).
