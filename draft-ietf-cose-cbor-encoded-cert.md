@@ -338,7 +338,7 @@ TBSCertificateSigningRequest = (
    subjectProofOfPossessionAlgorithm: AlgorithmIdentifier,
 )
 ~~~~~~~~~~~
-{: #fig-CBORCertCDDL title="CDDL for C509CertificateSigningRequest."}
+{: #fig-C509CSRCDDL title="CDDL for C509CertificateSigningRequest."}
 {: artwork-align="center"}
 
 After verifying the subjectProofOfPossessionValue, the CA MAY transform the C509CertificateSigningRequest into a RFC 2985 CertificationRequestInfo for compatibility with existing procedures and code.
