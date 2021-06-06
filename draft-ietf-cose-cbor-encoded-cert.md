@@ -270,10 +270,11 @@ CBOR encoding of the following extension values are partly supported:
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
 ~~~~~~~~~~~
 
-* cRLDistributionPoints. If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName contains a single uniformResourceIdentifier, the extension value can be CBOR encoded. The extensionValue is encoded as an array of CBOR text strings where each CBOR text string encodes a uniformResourceIdentifier. If the array contains exactly one text string, the array is omitted.
+* cRLDistributionPoints. If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. The extensionValue is encoded as an array of CBOR text strings where each CBOR text string encodes a uniformResourceIdentifier. If the array contains exactly one text string, the array is omitted.
 
 ~~~~~~~~~~~
-   ExtValueCDP = [ 2* text ] / text
+   DistributionPointName = [ 2* text ] / text
+   ExtValueCDP = [ + DistributionPointName ]
 ~~~~~~~~~~~
 
 * certificatePolicies. If each PolicyInformation contains at most one PolicyQualifierInfo, where all present policyQualifierId are of type id-qt-cps and all present qualifiers are of type cPSuri, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int.
