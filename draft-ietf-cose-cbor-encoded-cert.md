@@ -669,6 +669,11 @@ IANA has created a new registry titled "C509 Certificate Certificate Policies" u
 +-------+-----------------------------------------------------------+
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
+|     0 | Name:            Any Policy                               |
+|       | OID:             2.5.29.32.0                              |
+|       | DER:             06 04 55 1D 20 00                        |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 |     1 | Name:            Domain Validation (DV)                   |
 |       | OID:             2.23.140.1.2.1                           |
 |       | DER:             06 06 67 81 0C 01 02 01                  |
