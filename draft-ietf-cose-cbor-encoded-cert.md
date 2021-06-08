@@ -277,10 +277,11 @@ CBOR encoding of the following extension values are partly supported:
    ExtValueCDP = [ + DistributionPointName ]
 ~~~~~~~~~~~
 
-* certificatePolicies. If each PolicyInformation contains at most one PolicyQualifierInfo, where all present policyQualifierId are of type id-qt-cps and all present qualifiers are of type cPSuri, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int.
+* certificatePolicies. If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int.  The policyQualifierId is encoded as an CBOR int (1 for csp and 2 for unotice).
 
 ~~~~~~~~~~~
-   ExtValueCP = [ + ( CertPolicyId: oid / int, ? CPSuri: text ) ]
+PolicyQualifierInfos = [+ ( qualifierId: 1 / 2, qualifier: text )]
+ExtValueCP = [ + ( policyId: oid / int, ? PolicyQualifierInfos ) ]
 ~~~~~~~~~~~
 
 * authorityKeyIdentifier. If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present a CBOR byte string is used.
