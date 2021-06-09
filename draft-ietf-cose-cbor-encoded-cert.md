@@ -296,8 +296,10 @@ ExtValueCP = [ + ( policyId: oid / int, ? PolicyQualifierInfos ) ]
 * authorityInfoAccess. If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. The accessMethod is encoded as an CBOR int (1 for ocsp and 2 for caIssuers). The uniformResourceIdentifiers are encoded as CBOR text strings.
  
 ~~~~~~~~~~~
-   ExtValueAIA = [ + ( accessMethod : 1 / 2 , uri : text ) ]
+   ExtValueAIA = [ + ( accessMethod : int / ~oid , uri : text ) ]
 ~~~~~~~~~~~
+
+* subjectInfoAccess. Encoded exactly like authorityInfoAccess.
 
 * signedCertificateTimestamp. If all the SCTs are version 1, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as and CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
