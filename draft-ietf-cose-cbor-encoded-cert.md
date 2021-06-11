@@ -294,10 +294,10 @@ ExtValueCP = [ + ( policyId: oid / int, ? PolicyQualifierInfos ) ]
                  / bytes
 ~~~~~~~~~~~
 
-* authorityInfoAccess. If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. The accessMethod is encoded as an CBOR int (1 for ocsp and 2 for caIssuers). The uniformResourceIdentifiers are encoded as CBOR text strings.
+* authorityInfoAccess. If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
  
 ~~~~~~~~~~~
-   ExtValueAIA = [ + ( accessMethod : int / ~oid , uri : text ) ]
+   ExtValueIA = [ + ( accessMethod : int / ~oid , uri : text ) ]
 ~~~~~~~~~~~
 
 * subjectInfoAccess. Encoded exactly like authorityInfoAccess.
@@ -428,9 +428,9 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 {: #fig-types title="C509 Certificate Types"}
 {: artwork-align="center"}
 
-## C509 Certificate Attributes Registry {#atttype}
+## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Certificate Attributes" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -542,12 +542,12 @@ IANA has created a new registry titled "C509 Certificate Attributes" under the n
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-attrtype title="C509 Certificate Attributes"}
+{: #fig-attrtype title="C509 Attributes"}
 {: artwork-align="center"}
 
-## C509 Certificate Extensions Registry {#extype}
+## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Certificate Extensions" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -605,7 +605,7 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueAIA                              |
+|       | extensionValue:  ExtValueIA                              |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Signed Certificate Timestamp List        |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
@@ -659,15 +659,15 @@ IANA has created a new registry titled "C509 Certificate Extensions" under the n
 |       | OID:             1.3.6.1.5.5.7.1.11                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:   ExtValueIA                              |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-extype title="C509 Certificate Extensions"}
+{: #fig-extype title="C509 Extensions"}
 {: artwork-align="center"}
 
-## C509 Certificate Certificate Policies Registry {#CP}
+## C509 Certificate Policies Registry {#CP}
 
-IANA has created a new registry titled "C509 Certificate Certificate Policies" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -699,12 +699,59 @@ IANA has created a new registry titled "C509 Certificate Certificate Policies" u
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-cptype title="C509 Certificate Certificate Policies"}
+{: #fig-cptype title="C509 Certificate Policies"}
 {: artwork-align="center"}
 
-## C509 Certificate Extended Key Usages Registry {#EKU}
+## C509 Information Access Registry {#IA}
 
-IANA has created a new registry titled "C509 Certificate Extended Key Usages" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+-----------------------------------------------------------+
+| Value | Information Access                                        |
++=======+===========================================================+
+|     1 | Name:            OCSP                                     |
+|       | OID:             1.3.6.1.5.5.7.48.1                       |
+|       | DER:             06 08 2B 06 01 05 05 07 30 01            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     2 | Name:            CA Issuers                               |
+|       | OID:             1.3.6.1.5.5.7.48.2                       |
+|       | DER:             06 08 2B 06 01 05 05 07 30 02            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     3 | Name:            Time Stamping                            |
+|       | OID:             1.3.6.1.5.5.7.48.3                       |
+|       | DER:             06 08 2B 06 01 05 05 07 30 03            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     5 | Name:            CA Repository                            |
+|       | OID:             1.3.6.1.5.5.7.48.5                       |
+|       | DER:             06 08 2B 06 01 05 05 07 30 05            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    10 | Name:            RPKI Manifest                            |
+|       | OID:             1.3.6.1.5.5.7.48.10                      |
+|       | DER:             06 08 2B 06 01 05 05 07 30 0A            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    11 | Name:            Signed Object                            |
+|       | OID:             1.3.6.1.5.5.7.48.11                      |
+|       | DER:             06 08 2B 06 01 05 05 07 30 0B            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    13 | Name:            RPKI Notify                              |
+|       | OID:             1.3.6.1.5.5.7.48.13                      |
+|       | DER:             06 08 2B 06 01 05 05 07 30 0D            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-cptype title="C509 Information Accesses"}
+{: artwork-align="center"}
+
+## C509 Extended Key Usages Registry {#EKU}
+
+IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -741,12 +788,11 @@ IANA has created a new registry titled "C509 Certificate Extended Key Usages" un
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-ekutype title="C509 Certificate Extended Key Usages"}
+{: #fig-ekutype title="C509 Extended Key Usages"}
 {: artwork-align="center"}
 
-## C509 Certificate General Names Registry {#GN}
-
-IANA has created a new registry titled "C509 Certificate General Names" under the new heading "C509 Certificate". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+## C509 General Names Registry {#GN}
+IANA has created a new registry titled "C509 General Names Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -785,12 +831,12 @@ IANA has created a new registry titled "C509 Certificate General Names" under th
 |       | Value:           ~oid                                     |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-gn title="C509 Certificate General Names"}
+{: #fig-gn title="C509 General Names"}
 {: artwork-align="center"}
 
-## C509 Certificate Signature Algorithms Registry {#sigalg}
+## C509 Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "C509 Certificate Signature Algorithms" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -929,12 +975,12 @@ IANA has created a new registry titled "C509 Certificate Signature Algorithms" u
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-sigalgs title="C509 Certificate Signature Algorithms"}
+{: #fig-sigalgs title="C509 Signature Algorithms"}
 {: artwork-align="center"}
 
-## C509 Certificate Public Key Algorithms Registry {#pkalg}
+## C509 Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "C509 Certificate Public Key Algorithms" under the new heading "C509 Certificate". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
+IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -1010,7 +1056,7 @@ IANA has created a new registry titled "C509 Certificate Public Key Algorithms" 
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-pkalgs title="C509 Certificate Public Key Algorithms"}
+{: #fig-pkalgs title="C509 Public Key Algorithms"}
 {: artwork-align="center"}
 
 ## COSE Header Parameters Registry {#cose}
