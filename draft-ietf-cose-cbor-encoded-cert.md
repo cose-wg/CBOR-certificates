@@ -62,6 +62,7 @@ normative:
 
 informative:
 
+  RFC6487:
   RFC7228:
   RFC7925:
   RFC7932:
@@ -120,13 +121,13 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%.  The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The document also specifies COSE headers as well as a TLS certificate type for C509 certificates.
+This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA, RPKI, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%.  The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The document also specifies COSE headers as well as a TLS certificate type for C509 certificates.
 
 --- middle
 
 # Introduction {#intro}
 
-One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS {{I-D.ietf-emu-eap-tls13}} {{I-D.ietf-emu-eaptlscert}} where authenticators typically drop an EAP session after only 40 - 50 round-trips and QUIC {{I-D.ietf-quic-transport}} where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) {{RFC8949}} reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc.
+One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS {{I-D.ietf-emu-eap-tls13}} {{I-D.ietf-emu-eaptlscert}} where authenticators typically drop an EAP session after only 40 - 50 round-trips, QUIC {{I-D.ietf-quic-transport}} where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI {{RFC6487}} where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) {{RFC8949}} reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc.
 
 CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.
 
