@@ -169,7 +169,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and therefore omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as a (CBOR int, CBOR text string) pair or as a (unwrapped CBOR OID, CBOR bytes) pair. The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributes SHALL have a positive sign. Text strings SHALL still adhere to any X.509 restrictions, i.e. serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as a (CBOR int, CBOR text string) pair or as a (unwrapped CBOR OID, CBOR bytes) pair. The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. The Attribute Email Address is always an IA5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL have be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e. serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbol '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e. of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
 
 * validity. The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as CBOR null.
 
@@ -436,6 +436,11 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 +-------+-----------------------------------------------------------+
 | Value | Attribute                                                 |
 +=======+===========================================================+
+|     0 | Name:            Email Address                            |
+|       | OID:             1.2.840.113549.1.9.1                     |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 |     1 | Name:            Common Name                              |
 |       | OID:             2.5.4.3                                  |
 |       | DER:             06 03 55 04 03                           |
@@ -798,8 +803,14 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
+|    -2 | Name:            otherName with SmtpUTF8Mailbox           |
+|       | Comments:        1.3.6.1.5.5.7.8.9                        |
+|       |                  06 08 2B 06 01 05 05 07 08 09            |
+|       | Value:           text                                     |
++-------+-----------------------------------------------------------+
 |    -1 | Name:            otherName with hardwareModuleName        |
-|       | Comments:                                                 |
+|       | Comments:        1.3.6.1.5.5.7.8.4                        |
+|       |                  06 08 2B 06 01 05 05 07 08 04            |
 |       | Value:           [ ~oid, bytes ]                          |
 +-------+-----------------------------------------------------------+
 |     0 | Name:            otherName                                |
