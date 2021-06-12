@@ -430,7 +430,7 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 
 ## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an non-negative integer, and the other columns are text strings. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
