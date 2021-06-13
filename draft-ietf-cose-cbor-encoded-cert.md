@@ -250,11 +250,24 @@ The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'ext
 
 CBOR encoding of the following extension values are fully supported:
 
-* subjectKeyIdentifier. extensionValue is the value of the 'keyIdentifier' field encoded as a CBOR byte string.
+*  Subject Key Identifier (subjectKeyIdentifier). The extensionValue is encoded as follows:
 
-* keyUsage. The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{message-fields}} for special encoding in case keyUsage is the only extension present.
+~~~~~~~~~~~
+  KeyIdentifier = bytes
+  SubjectKeyIdentifier = KeyIdentifier
+~~~~~~~~~~~
 
-* basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
+* Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{message-fields}} for special encoding in case keyUsage is the only extension present.
+
+~~~~~~~~~~~
+  KeyUsage = int
+~~~~~~~~~~~
+
+* Basic Constraints (basicConstraints). If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
+
+~~~~~~~~~~~
+  BasicConstraints = int
+~~~~~~~~~~~
 
 * Policy Constraints (policyConstraints). extensionValue is encoded as follows:
 
@@ -271,9 +284,24 @@ CBOR encoding of the following extension values are fully supported:
   InhibitAnyPolicy = uint
 ~~~~~~~~~~~
 
-* basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
+* Policy Mappings (policyMappings). extensionValue is encoded as follows:
+
+~~~~~~~~~~~
+  PolicyMappings = [ + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid) ]
+~~~~~~~~~~~
 
 CBOR encoding of the following extension values are partly supported:
+
+* Authority Key Identifier (authorityKeyIdentifier). The extensionValue is encoded as an array. If they array only contains keyIdentifier, the array is omitted:
+
+~~~~~~~~~~~
+   KeyIdentifierArray = [
+     keyIdentifier: KeyIdentifier / null,
+     authorityCertIssuer: GeneralNames / null,
+     authorityCertSerialNumber: CertificateSerialNumber / null
+   ]
+   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
+~~~~~~~~~~~
 
 * subjectAltName. If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
@@ -298,15 +326,6 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 PolicyQualifierInfos = [+ ( qualifierId: int / ~oid, qualifier: text )]
 ExtValueCP = [ + ( policyId: int / ~oid, ? PolicyQualifierInfos ) ]
-~~~~~~~~~~~
-
-* authorityKeyIdentifier. If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present a CBOR byte string is used.
-
-~~~~~~~~~~~
-   ExtValueAKI = [ keyIdentifier: bytes,
-                   certIssuer: GeneralNames,
-                   certSerialNumber: CertificateSerialNumber ]
-                 / bytes
 ~~~~~~~~~~~
 
 * authorityInfoAccess. If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
