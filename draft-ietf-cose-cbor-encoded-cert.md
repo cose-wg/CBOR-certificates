@@ -1125,7 +1125,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 +-------+-----------------------------------------------------------+
 |    25 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP384r1                              |
-|       | OID:         1.2.840.10045.2.11                           |
+|       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = brainpoolP384r1                 |
 |       |              (1.3.36.3.3.2.8.1.1.11)                      |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
@@ -1134,7 +1134,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 +-------+-----------------------------------------------------------+
 |    26 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP256r1                              |
-|       | OID:         1.2.840.10045.2.13                           |
+|       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = brainpoolP512r1                 |
 |       |              (1.3.36.3.3.2.8.1.1.13)                      |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
