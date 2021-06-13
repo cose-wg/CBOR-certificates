@@ -1133,12 +1133,21 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |    26 | Name:        EC Public Key (Weierstraß) with              |
-|       |              brainpoolP256r1                              |
+|       |              brainpoolP512r1                              |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = brainpoolP512r1                 |
 |       |              (1.3.36.3.3.2.8.1.1.13)                      |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 0D                         |
+|       | Comments:    Point compressed subjectPublicKey            |
++-------+-----------------------------------------------------------+
+|    27 | Name:        EC Public Key (Weierstraß) with              |
+|       |              FRP256v1                                     |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = FRP256v1                        |
+|       |              (1.2.250.1.223.101.256.1)                    |
+|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 0A 2A 81 |
+|       |              7A 01 81 5F 65 82 00 01                      |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
