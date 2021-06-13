@@ -803,17 +803,19 @@ IANA has created a new registry titled "C509 Policies Qualifiers Registry" under
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
 |     1 | Name:            Certification Practice Statement         |
+|       |                  (id-qt-cps)                              |
 |       | OID:             1.3.6.1.5.5.7.2.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 02 01            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            User Notice                              |
+|       |                  (id-qt-unotice)                          |
 |       | OID:             1.3.6.1.5.5.7.2.2                        |
 |       | DER:             06 08 2B 06 01 05 05 07 02 02            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-pq-type title="C509 Policies Qualifiers"}
+{: #fig-pq title="C509 Policies Qualifiers"}
 {: artwork-align="center"}
 
 ## C509 Information Access Registry {#IA}
