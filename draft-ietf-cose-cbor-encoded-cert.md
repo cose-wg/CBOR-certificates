@@ -705,32 +705,93 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
 |     0 | Name:            Any Policy                               |
+|       |                  (anyPolicy)                              |
 |       | OID:             2.5.29.32.0                              |
 |       | DER:             06 04 55 1D 20 00                        |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            Domain Validation (DV)                   |
+|       |                  (domain-validated)                       |
 |       | OID:             2.23.140.1.2.1                           |
 |       | DER:             06 06 67 81 0C 01 02 01                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Organization Validation (OV)             |
+|       |                  (organization-validated)                 |
 |       | OID:             2.23.140.1.2.2                           |
 |       | DER:             06 06 67 81 0C 01 02 02                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Individual Validation (IV)               |
+|       |                  (individual-validated)                   |
 |       | OID:             2.23.140.1.2.3                           |
 |       | DER:             06 06 67 81 0C 01 02 03                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Extended Validation (EV)                 |
+|       |                  (ev-guidelines)                          |
 |       | OID:             2.23.140.1.1                             |
 |       | DER:             06 05 67 81 0C 01 01                     |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|    10 | Name:            Remote SIM Provisioning Role             |
+|       |                  Certificate Issuer                       |
+|       |                  (id-rspRole-ci)                          |
+|       | OID:             2.23.146.1.2.1.0                         |
+|       | DER:             06 07 67 81 12 01 02 01 00               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    11 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC                                    |
+|       |                  (id-rspRole-euicc)                       |
+|       | OID:             2.23.146.1.2.1.1                         |
+|       | DER:             06 07 67 81 12 01 02 01 01               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    12 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC Manufacturer                       |
+|       |                  (id-rspRole-eum)                         |
+|       | OID:             2.23.146.1.2.1.2                         |
+|       | DER:             06 07 67 81 12 01 02 01 02               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    13 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ TLS                               |
+|       |                  (id-rspRole-dp-tls)                      |
+|       | OID:             2.23.146.1.2.1.3                         |
+|       | DER:             06 07 67 81 12 01 02 01 03               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    14 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Authentication                    |
+|       |                  (id-rspRole-dp-auth)                     |
+|       | OID:             2.23.146.1.2.1.4                         |
+|       | DER:             06 07 67 81 12 01 02 01 04               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    15 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Profile Binding                   |
+|       |                  (id-rspRole-dp-pb)                       |
+|       | OID:             2.23.146.1.2.1.5                         |
+|       | DER:             06 07 67 81 12 01 02 01 05               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    16 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS TLS                                |
+|       |                  (id-rspRole-ds-tls)                      |
+|       | OID:             2.23.146.1.2.1.6                         |
+|       | DER:             06 07 67 81 12 01 02 01 06               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    17 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS Authentication                     |
+|       |                  (id-rspRole-ds-auth)                     |
+|       | OID:             2.23.146.1.2.1.7                         |
+|       | DER:             06 07 67 81 12 01 02 01 07               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-cptype title="C509 Certificate Policies"}
+{: #fig-cp title="C509 Certificate Policies"}
 {: artwork-align="center"}
 
 ## C509 Policies Qualifiers Registry {#PQ}
