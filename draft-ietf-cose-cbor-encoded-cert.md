@@ -256,11 +256,14 @@ CBOR encoding of the following extension values are fully supported:
 
 * basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
-* extKeyUsage. extensionValue is encoded as an array of CBOR ints (see {{EKU}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose. If the array contains a single int, the array is omitted.
+* Policy Constraints (id-ce-policyConstraints). extensionValue is encoded as follows:
 
 ~~~~~~~~~~~
-   ExtValueEKU = [ + int / ~oid ] / int
+   SkipCerts = uint / null
+   ExtValuePC = [ SkipCerts, SkipCerts ]
 ~~~~~~~~~~~
+
+* basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
 CBOR encoding of the following extension values are partly supported:
 
