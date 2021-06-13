@@ -267,9 +267,11 @@ CBOR encoding of the following extension values are partly supported:
 * subjectAltName. If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~
-   ExtValueSAN = [ + GeneralName ] / text
+   ExtValueAN  = [ + GeneralName ] / text
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
 ~~~~~~~~~~~
+
+* issuerAltName.  Encoded exactly like subjectAltName.
 
 * cRLDistributionPoints. If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. The extensionValue is encoded as an array of CBOR text strings where each CBOR text string encodes a uniformResourceIdentifier. If the array contains exactly one text string, the array is omitted.
 
@@ -574,7 +576,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueSAN                              |
+|       | extensionValue:  ExtValueAN                               |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Basic Constraints                        |
 |       | OID:             2.5.29.19                                |
@@ -628,7 +630,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             2.5.29.18                                |
 |       | DER:             06 03 55 1D 12                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  ExtValueAN                               |
 +-------+-----------------------------------------------------------+
 |    26 | Name:            Name Constraints                         |
 |       | OID:             2.5.29.30                                |
@@ -664,7 +666,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             1.3.6.1.5.5.7.1.11                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
 |       | Comments:                                                 |
-|       | extensionValue:   ExtValueIA                              |
+|       | extensionValue:  ExtValueIA                               |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-extype title="C509 Extensions"}
