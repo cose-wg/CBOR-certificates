@@ -668,6 +668,30 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueIA                               |
 +-------+-----------------------------------------------------------+
+|    32 | Name:            IP Resources                             |
+|       | OID:             1.3.6.1.5.5.7.1.7                        |
+|       | DER:             06 08 2B 06 01 05 05 07 01 07            |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    33 | Name:            AS Resources                             |
+|       | OID:             1.3.6.1.5.5.7.1.8                        |
+|       | DER:             06 08 2B 06 01 05 05 07 01 08            |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    34 | Name:            IP Resources v2                          |
+|       | OID:             1.3.6.1.5.5.7.1.28                       |
+|       | DER:             06 08 2B 06 01 05 05 07 01 1C            |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
+|    35 | Name:            AS Resources v2                          |
+|       | OID:             1.3.6.1.5.5.7.1.29                       |
+|       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
+|       | Comments:                                                 |
+|       | extensionValue:  bytes                                    |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-extype title="C509 Extensions"}
 {: artwork-align="center"}
