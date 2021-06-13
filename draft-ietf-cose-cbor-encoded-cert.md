@@ -588,139 +588,161 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Extension                                                 |
 +=======+===========================================================+
 |     1 | Name:            Subject Key Identifier                   |
+|       | Identifiers:     subjectKeyIdentifier                     |
 |       | OID:             2.5.29.14                                |
 |       | DER:             06 03 55 1D 0E                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Key Usage                                |
+|       | Identifiers:     keyUsage                                 |
 |       | OID:             2.5.29.15                                |
 |       | DER:             06 03 55 1D 0F                           |
 |       | Comments:                                                 |
 |       | AttributeValue:  int                                      |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Subject Alternative Name                 |
+|       | Identifiers:     subjectAltName                           |
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueAN                               |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Basic Constraints                        |
+|       | Identifiers:     basicConstraints                         |
 |       | OID:             2.5.29.19                                |
 |       | DER:             06 03 55 1D 13                           |
 |       | Comments:                                                 |
 |       | extensionValue:  int                                      |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            CRL Distribution Points                  |
+|       | Identifiers:     cRLDistributionPoints                    |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueCDP                              |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            Certificate Policies                     |
+|       | Identifiers:     certificatePolicies                      |
 |       | OID:             2.5.29.32                                |
 |       | DER:             06 03 55 1D 20                           |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueCP                               |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Authority Key Identifier                 |
+|       | Identifiers:     authorityKeyIdentifier                   |
 |       | OID:             2.5.29.35                                |
 |       | DER:             06 03 55 1D 23                           |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueAKI                              |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Extended Key Usage                       |
+|       | Identifiers:     extKeyUsage                              |
 |       | OID:             2.5.29.37                                |
 |       | DER:             06 03 55 1D 25                           |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueEKU                              |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Authority Information Access             |
+|       | Identifiers:     authorityInfoAccess                      |
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueIA                              |
+|       | extensionValue:  ExtValueIA                               |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Signed Certificate Timestamp List        |
+|       | Identifiers:                                              |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueSCT                              |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
+|       | Identifiers:     subjectDirectoryAttributes               |
 |       | OID:             2.5.29.9                                 |
 |       | DER:             06 03 55 1D 09                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Issuer Alternative Name                  |
+|       | Identifiers:     issuerAltName                            |
 |       | OID:             2.5.29.18                                |
 |       | DER:             06 03 55 1D 12                           |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueAN                               |
 +-------+-----------------------------------------------------------+
 |    26 | Name:            Name Constraints                         |
+|       | Identifiers:     nameConstraints                          |
 |       | OID:             2.5.29.30                                |
 |       | DER:             06 03 55 1D 1E                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    27 | Name:            Policy Mappings                          |
+|       | Identifiers:     policyMappings                           |
 |       | OID:             2.5.29.33                                |
 |       | DER:             06 03 55 1D 21                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    28 | Name:            Policy Constraints                       |
+|       | Identifiers:     policyConstraints                        |
 |       | OID:             2.5.29.36                                |
 |       | DER:             06 03 55 1D 24                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    29 | Name:            Freshest CRL                             |
+|       | Identifiers:     freshestCRL                              |
 |       | OID:             2.5.29.46                                |
 |       | DER:             06 03 55 1D 2E                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    30 | Name:            Inhibit anyPolicy                        |
+|       | Identifiers:     inhibitAnyPolicy                         |
 |       | OID:             2.5.29.54                                |
 |       | DER:             06 03 55 1D 36                           |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    31 | Name:            Subject Information Access               |
+|       | Identifiers:     subjectInfoAccess                        |
 |       | OID:             1.3.6.1.5.5.7.1.11                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
 |       | Comments:                                                 |
 |       | extensionValue:  ExtValueIA                               |
 +-------+-----------------------------------------------------------+
 |    32 | Name:            IP Resources                             |
+|       | Identifiers:     ipAddrBlocks                             |
 |       | OID:             1.3.6.1.5.5.7.1.7                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 07            |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    33 | Name:            AS Resources                             |
+|       | Identifiers:     autonomousSysIds                         |
 |       | OID:             1.3.6.1.5.5.7.1.8                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 08            |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    34 | Name:            IP Resources v2                          |
+|       | Identifiers:     ipAddrBlocks-v2                          |
 |       | OID:             1.3.6.1.5.5.7.1.28                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1C            |
 |       | Comments:                                                 |
 |       | extensionValue:  bytes                                    |
 +-------+-----------------------------------------------------------+
 |    35 | Name:            AS Resources v2                          |
+|       | Identifiers:     autonomousSysIds-v2                      |
 |       | OID:             1.3.6.1.5.5.7.1.29                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
 |       | Comments:                                                 |
