@@ -709,6 +709,28 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 {: #fig-cptype title="C509 Certificate Policies"}
 {: artwork-align="center"}
 
+## C509 Policies Qualifiers Registry {#PQ}
+
+IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~
++-------+-----------------------------------------------------------+
+| Value | Certificate Policy                                        |
++=======+===========================================================+
+|     1 | Name:            Certification Practice Statement         |
+|       | OID:             1.3.6.1.5.5.7.2.1                        |
+|       | DER:             06 08 2B 06 01 05 05 07 02 01            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     2 | Name:            User Notice                              |
+|       | OID:             1.3.6.1.5.5.7.2.2                        |
+|       | DER:             06 08 2B 06 01 05 05 07 02 02            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-pq-type title="C509 Policies Qualifiers"}
+{: artwork-align="center"}
+
 ## C509 Information Access Registry {#IA}
 
 IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
