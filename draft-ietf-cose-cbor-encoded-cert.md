@@ -292,6 +292,48 @@ CBOR encoding of the following extension values are fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
+* CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
+
+~~~~~~~~~~~
+   DistributionPointName = [ 2* text ] / text
+   CRLDistributionPoints = [ + DistributionPointName ]
+~~~~~~~~~~~
+
+* Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.
+
+~~~~~~~~~~~
+   FreshestCRL = CRLDistributionPoints
+~~~~~~~~~~~
+
+* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{QP}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
+
+~~~~~~~~~~~
+   PolicyIdentifier = int / ~oid
+   PolicyQualifierInfo = ( policyQualifierId: int / ~oid, qualifier: text )
+   CertificatePolicies = [ + ( PolicyIdentifier, ? [ + PolicyQualifierInfos ] ) ]
+~~~~~~~~~~~
+
+* Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
+ 
+~~~~~~~~~~~
+   AccessDescription = ( accessMethod: int / ~oid , uri: text )
+   InfoAccessSyntax = [ + AccessDescription ]
+   AuthorityInfoAccessSyntax = InfoAccessSyntax
+~~~~~~~~~~~
+
+* Subject Information Access (subjectInfoAccess). Encoded exactly like authorityInfoAccess.
+
+~~~~~~~~~~~
+   SubjectInfoAccessSyntax = InfoAccessSyntax
+~~~~~~~~~~~
+
+
+
+
+
+
+
+
 * Authority Key Identifier (authorityKeyIdentifier). The extensionValue is encoded as an array. If they array only contains keyIdentifier, the array is omitted:
 
 ~~~~~~~~~~~
@@ -312,29 +354,6 @@ CBOR encoding of the following extension values are partly supported:
 
 * Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.
 
-* CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
-
-~~~~~~~~~~~
-   DistributionPointName = [ 2* text ] / text
-   CRLDistributionPoints = [ + DistributionPointName ]
-~~~~~~~~~~~
-
-* Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.
-
-* certificatePolicies. If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{QP}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
-
-~~~~~~~~~~~
-PolicyQualifierInfos = [+ ( qualifierId: int / ~oid, qualifier: text )]
-ExtValueCP = [ + ( policyId: int / ~oid, ? PolicyQualifierInfos ) ]
-~~~~~~~~~~~
-
-* authorityInfoAccess. If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
- 
-~~~~~~~~~~~
-   ExtValueIA = [ + ( accessMethod : int / ~oid , uri : text ) ]
-~~~~~~~~~~~
-
-* subjectInfoAccess. Encoded exactly like authorityInfoAccess.
 
 * signedCertificateTimestamp. If all the SCTs are version 1, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as and CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
