@@ -256,7 +256,7 @@ CBOR encoding of the following extension values are fully supported:
 
 * basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
-* Policy Constraints (id-ce-policyConstraints). extensionValue is encoded as follows:
+* Policy Constraints (policyConstraints). extensionValue is encoded as follows:
 
 ~~~~~~~~~~~
    PolicyConstraints = [ 
@@ -265,7 +265,7 @@ CBOR encoding of the following extension values are fully supported:
    ]   
 ~~~~~~~~~~~
 
-* Inhibit anyPolicy (id-ce-inhibitAnyPolicy). extensionValue is encoded as follows:
+* Inhibit anyPolicy (inhibitAnyPolicy). extensionValue is encoded as follows:
 
 ~~~~~~~~~~~
   InhibitAnyPolicy = uint
@@ -282,14 +282,16 @@ CBOR encoding of the following extension values are partly supported:
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
 ~~~~~~~~~~~
 
-* issuerAltName.  Encoded exactly like subjectAltName.
+* Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.
 
-* cRLDistributionPoints. If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. The extensionValue is encoded as an array of CBOR text strings where each CBOR text string encodes a uniformResourceIdentifier. If the array contains exactly one text string, the array is omitted.
+* CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
 
 ~~~~~~~~~~~
    DistributionPointName = [ 2* text ] / text
-   ExtValueCDP = [ + DistributionPointName ]
+   CRLDistributionPoints = [ + DistributionPointName ]
 ~~~~~~~~~~~
+
+* Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.
 
 * certificatePolicies. If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{QP}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
 
