@@ -259,8 +259,16 @@ CBOR encoding of the following extension values are fully supported:
 * Policy Constraints (id-ce-policyConstraints). extensionValue is encoded as follows:
 
 ~~~~~~~~~~~
-   SkipCerts = uint / null
-   ExtValuePC = [ SkipCerts, SkipCerts ]
+   PolicyConstraints = [ 
+     requireExplicitPolicy: uint / null,
+     inhibitPolicyMapping: uint / null,
+   ]   
+~~~~~~~~~~~
+
+* Inhibit anyPolicy (id-ce-inhibitAnyPolicy). extensionValue is encoded as follows:
+
+~~~~~~~~~~~
+  InhibitAnyPolicy = uint
 ~~~~~~~~~~~
 
 * basicConstraints. If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
