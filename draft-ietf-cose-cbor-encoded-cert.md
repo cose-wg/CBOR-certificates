@@ -820,49 +820,56 @@ IANA has created a new registry titled "C509 Policies Qualifiers Registry" under
 
 ## C509 Information Access Registry {#IA}
 
-IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Information Access                                        |
 +=======+===========================================================+
 |     1 | Name:            OCSP                                     |
+|       | Identifiers:     id-ad-ocsp, id-pkix-ocsp                 |
 |       | OID:             1.3.6.1.5.5.7.48.1                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 01            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            CA Issuers                               |
+|       | Identifiers:     id-ad-caIssuers, caIssuers               |
 |       | OID:             1.3.6.1.5.5.7.48.2                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 02            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Time Stamping                            |
+|       | Identifiers:     id-ad-timeStamping, timeStamping         |
 |       | OID:             1.3.6.1.5.5.7.48.3                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 03            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            CA Repository                            |
+|       | Identifiers:     id-ad-caRepository                       |
 |       | OID:             1.3.6.1.5.5.7.48.5                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 05            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            RPKI Manifest                            |
+|       | Identifiers:     id-ad-rpkiManifest                       |
 |       | OID:             1.3.6.1.5.5.7.48.10                      |
 |       | DER:             06 08 2B 06 01 05 05 07 30 0A            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Signed Object                            |
+|       | Identifiers:     id-ad-signedObject                       |
 |       | OID:             1.3.6.1.5.5.7.48.11                      |
 |       | DER:             06 08 2B 06 01 05 05 07 30 0B            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            RPKI Notify                              |
+|       | Identifiers:     id-ad-rpkiNotify                         |
 |       | OID:             1.3.6.1.5.5.7.48.13                      |
 |       | DER:             06 08 2B 06 01 05 05 07 30 0D            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-cptype title="C509 Information Accesses"}
+{: #fig-ia title="C509 Information Accesses"}
 {: artwork-align="center"}
 
 ## C509 Extended Key Usages Registry {#EKU}
