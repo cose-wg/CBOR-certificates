@@ -698,94 +698,94 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 
 ## C509 Certificate Policies Registry {#CP}
 
-IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
 |     0 | Name:            Any Policy                               |
-|       |                  (anyPolicy)                              |
+|       | Identifiers:     anyPolicy                                |
 |       | OID:             2.5.29.32.0                              |
 |       | DER:             06 04 55 1D 20 00                        |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            Domain Validation (DV)                   |
-|       |                  (domain-validated)                       |
+|       | Identifiers:     domain-validated                         |
 |       | OID:             2.23.140.1.2.1                           |
 |       | DER:             06 06 67 81 0C 01 02 01                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Organization Validation (OV)             |
-|       |                  (organization-validated)                 |
+|       | Identifiers:     organization-validated                   |
 |       | OID:             2.23.140.1.2.2                           |
 |       | DER:             06 06 67 81 0C 01 02 02                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Individual Validation (IV)               |
-|       |                  (individual-validated)                   |
+|       | Identifiers:     individual-validated                     |
 |       | OID:             2.23.140.1.2.3                           |
 |       | DER:             06 06 67 81 0C 01 02 03                  |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Extended Validation (EV)                 |
-|       |                  (ev-guidelines)                          |
+|       | Identifiers:     ev-guidelines                            |
 |       | OID:             2.23.140.1.1                             |
 |       | DER:             06 05 67 81 0C 01 01                     |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Remote SIM Provisioning Role             |
 |       |                  Certificate Issuer                       |
-|       |                  (id-rspRole-ci)                          |
+|       | Identifiers:     id-rspRole-ci                            |
 |       | OID:             2.23.146.1.2.1.0                         |
 |       | DER:             06 07 67 81 12 01 02 01 00               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Remote SIM Provisioning Role             |
 |       |                  eUICC                                    |
-|       |                  (id-rspRole-euicc)                       |
+|       | Identifiers:     id-rspRole-euicc                         |
 |       | OID:             2.23.146.1.2.1.1                         |
 |       | DER:             06 07 67 81 12 01 02 01 01               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    12 | Name:            Remote SIM Provisioning Role             |
 |       |                  eUICC Manufacturer                       |
-|       |                  (id-rspRole-eum)                         |
+|       | Identifiers:     id-rspRole-eum                           |
 |       | OID:             2.23.146.1.2.1.2                         |
 |       | DER:             06 07 67 81 12 01 02 01 02               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            Remote SIM Provisioning Role             |
 |       |                  SM-DP+ TLS                               |
-|       |                  (id-rspRole-dp-tls)                      |
+|       | Identifiers:     id-rspRole-dp-tls                        |
 |       | OID:             2.23.146.1.2.1.3                         |
 |       | DER:             06 07 67 81 12 01 02 01 03               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    14 | Name:            Remote SIM Provisioning Role             |
 |       |                  SM-DP+ Authentication                    |
-|       |                  (id-rspRole-dp-auth)                     |
+|       | Identifiers:     id-rspRole-dp-auth                       |
 |       | OID:             2.23.146.1.2.1.4                         |
 |       | DER:             06 07 67 81 12 01 02 01 04               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    15 | Name:            Remote SIM Provisioning Role             |
 |       |                  SM-DP+ Profile Binding                   |
-|       |                  (id-rspRole-dp-pb)                       |
+|       | Identifiers:     id-rspRole-dp-pb                         |
 |       | OID:             2.23.146.1.2.1.5                         |
 |       | DER:             06 07 67 81 12 01 02 01 05               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    16 | Name:            Remote SIM Provisioning Role             |
 |       |                  SM-DS TLS                                |
-|       |                  (id-rspRole-ds-tls)                      |
+|       | Identifiers:     id-rspRole-ds-tls                        |
 |       | OID:             2.23.146.1.2.1.6                         |
 |       | DER:             06 07 67 81 12 01 02 01 06               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    17 | Name:            Remote SIM Provisioning Role             |
 |       |                  SM-DS Authentication                     |
-|       |                  (id-rspRole-ds-auth)                     |
+|       | Identifiers:     id-rspRole-ds-auth                       |
 |       | OID:             2.23.146.1.2.1.7                         |
 |       | DER:             06 07 67 81 12 01 02 01 07               |
 |       | Comments:                                                 |
@@ -796,20 +796,20 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 
 ## C509 Policies Qualifiers Registry {#PQ}
 
-IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
 |     1 | Name:            Certification Practice Statement         |
-|       |                  (id-qt-cps)                              |
+|       | Identifiers:     id-qt-cps, cps                           |
 |       | OID:             1.3.6.1.5.5.7.2.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 02 01            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            User Notice                              |
-|       |                  (id-qt-unotice)                          |
+|       | Identifiers:     id-qt-unotice, unotice                   |
 |       | OID:             1.3.6.1.5.5.7.2.2                        |
 |       | DER:             06 08 2B 06 01 05 05 07 02 02            |
 |       | Comments:                                                 |
