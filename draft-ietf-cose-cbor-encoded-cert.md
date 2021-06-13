@@ -443,118 +443,141 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 
 ## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an non-negative integer, and the other columns are text strings. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an non-negative integer, and the other columns are text strings. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Attribute                                                 |
 +=======+===========================================================+
 |     0 | Name:            Email Address                            |
+|       | Identifiers:     emailAddress, e-mailAddress              |
 |       | OID:             1.2.840.113549.1.9.1                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            Common Name                              |
+|       | Identifiers:     commonName, cn                           |
 |       | OID:             2.5.4.3                                  |
 |       | DER:             06 03 55 04 03                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Surname                                  |
+|       | Identifiers:     surname, sn                              |
 |       | OID:             2.5.4.4                                  |
 |       | DER:             06 03 55 04 04                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Serial Number                            |
+|       | Identifiers:     serialNumber                             |
 |       | OID:             2.5.4.5                                  |
 |       | DER:             06 03 55 04 05                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Country                                  |
+|       | Identifiers:     countryName, c                           |
 |       | OID:             2.5.4.6                                  |
 |       | DER:             06 03 55 04 06                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            Locality                                 |
+|       | Identifiers:     localityName, locality, l                |
 |       | OID:             2.5.4.7                                  |
 |       | DER:             06 03 55 04 07                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            State or Province                        |
+|       | Identifiers:     stateOrProvinceName, st                  |
 |       | OID:             2.5.4.8                                  |
 |       | DER:             06 03 55 04 08                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Street Address                           |
+|       | Identifiers:     streetAddress, street                    |
 |       | OID:             2.5.4.9                                  |
 |       | DER:             06 03 55 04 09                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Organization                             |
+|       | Identifiers:     organizationName, o                      |
 |       | OID:             2.5.4.10                                 |
 |       | DER:             06 03 55 04 0A                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Organizational Unit                      |
+|       | Identifiers:     organizationalUnitName, ou               |
 |       | OID:             2.5.4.11                                 |
 |       | DER:             06 03 55 04 0B                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Title                                    |
+|       | Identifiers:     title                                    |
 |       | OID:             2.5.4.12                                 |
 |       | DER:             06 03 55 04 0C                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Business Category                        |
+|       | Identifiers:     businessCategory                         |
 |       | OID:             2.5.4.15                                 |
 |       | DER:             06 03 55 04 0F                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    12 | Name:            Postal Code                              |
+|       | Identifiers:     postalCode                               |
 |       | OID:             2.5.4.17                                 |
 |       | DER:             06 03 55 04 11                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            Given Name                               |
+|       | Identifiers:     givenName                                |
 |       | OID:             2.5.4.42                                 |
 |       | DER:             06 03 55 04 2A                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    14 | Name:            Initials                                 |
+|       | Identifiers:     initials                                 |
 |       | OID:             2.5.4.43                                 |
 |       | DER:             06 03 55 04 2B                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    15 | Name:            Generation Qualifier                     |
+|       | Identifiers:     generationQualifier                      |
 |       | OID:             2.5.4.44                                 |
 |       | DER:             06 03 55 04 2C                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    16 | Name:            DN Qualifier                             |
+|       | Identifiers:     dnQualifier                              |
 |       | OID:             2.5.4.46                                 |
 |       | DER:             06 03 55 04 2E                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    17 | Name:            Pseudonym                                |
+|       | Identifiers:     pseudonym                                |
 |       | OID:             2.5.4.65                                 |
 |       | DER:             06 03 55 04 41                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    18 | Name:            Organization Identifier                  |
+|       | Identifiers:     organizationIdentifier                   |
 |       | OID:             2.5.4.97                                 |
 |       | DER:             06 03 55 04 61                           |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    19 | Name:            Inc. Locality                            |
+|       | Identifiers:     jurisdictionOfIncorporationLocalityName  |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.1                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 01   |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    20 | Name:            Inc. State or Province                   |
+|       | Identifiers:     jurisdictionOfIncorporation              |
+|       |                  StateOrProvinceName                      |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.2                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 02   |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    21 | Name:            Inc. Country                             |
+|       | Identifiers:     jurisdictionOfIncorporationCountryName   |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.3                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 03   |
 |       | Comments:                                                 |
