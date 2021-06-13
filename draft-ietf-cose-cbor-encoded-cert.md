@@ -885,44 +885,50 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 
 ## C509 Extended Key Usages Registry {#EKU}
 
-IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | Extended Key Usage                                        |
 +=======+===========================================================+
 |     1 | Name:            TLS Server authentication                |
+|       | Identifiers:     id-kp-serverAuth                         |
 |       | OID:             1.3.6.1.5.5.7.3.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 01            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            TLS Client Authentication                |
+|       | Identifiers:     id-kp-clientAuth                         |
 |       | OID:             1.3.6.1.5.5.7.3.2                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 02            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Code Signing                             |
+|       | Identifiers:     id-kp-codeSigning                        |
 |       | OID:             1.3.6.1.5.5.7.3.3                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 03            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Email protection (S/MIME)                |
+|       | Identifiers:     id-kp-emailProtection                    |
 |       | OID:             1.3.6.1.5.5.7.3.4                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 04            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Time Stamping                            |
+|       | Identifiers:     id-kp-timeStamping, timestamping         |
 |       | OID:             1.3.6.1.5.5.7.3.8                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 08            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            OCSP Signing                             |
+|       | Identifiers:     id-kp-OCSPSigning                        |
 |       | OID:             1.3.6.1.5.5.7.3.9                        |
 |       | DER:             06 08 2B 06 01 05 05 07 03 09            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-ekutype title="C509 Extended Key Usages"}
+{: #fig-eku title="C509 Extended Key Usages"}
 {: artwork-align="center"}
 
 ## C509 General Names Registry {#GN}
