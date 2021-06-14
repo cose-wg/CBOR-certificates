@@ -15,6 +15,16 @@ pi: # can use array (if all yes) or hash here
 
 author:
       -
+        ins: J. Preuß Mattsson
+        name: John Preuß Mattsson
+        org: Ericsson AB
+        email: john.mattsson@ericsson.com
+      -
+        ins: G. Selander
+        name: Göran Selander
+        org: Ericsson AB
+        email: goran.selander@ericsson.com
+      -
         ins: S. Raza
         name: Shahid Raza
         org: RISE AB
@@ -24,16 +34,6 @@ author:
         name: Joel Höglund
         org: RISE AB
         email: joel.hoglund@ri.se
-      -
-        ins: G. Selander
-        name: Göran Selander
-        org: Ericsson AB
-        email: goran.selander@ericsson.com
-      -
-        ins: J. Preuß Mattsson
-        name: John Preuß Mattsson
-        org: Ericsson AB
-        email: john.mattsson@ericsson.com
       -
         ins: M. Furuhed
         name: Martin Furuhed
@@ -1259,6 +1259,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
 |       | Comments:    Point compressed subjectPublicKey            |
+|       |              Also known as P-256, ansip256r1, prime256v1  |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
@@ -1267,6 +1268,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
+|       |              Also known as P-384, ansip384r1              |
 +-------+-----------------------------------------------------------+
 |     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
@@ -1275,6 +1277,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 23                                     |
 |       | Comments:    Point compressed subjectPublicKey            |
+|       |              Also known as P-521, ansip521r1              |
 +-------+-----------------------------------------------------------+
 |     8 | Name:        X25519 (Montgomery)                          |
 |       | Identifiers: id-X25519                                    |
