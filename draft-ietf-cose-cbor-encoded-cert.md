@@ -327,6 +327,29 @@ CBOR encoding of the following extension values are partly supported:
    SubjectInfoAccessSyntax = InfoAccessSyntax
 ~~~~~~~~~~~
 
+* AS Resources (autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
+
+~~~~~~~~~~~
+   AsIdsOrRanges = uint / [uint, uint]
+   ASIdentifiers = [ + AsIdsOrRanges ] / null
+~~~~~~~~~~~
+
+* AS Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like autonomousSysIds.
+
+* IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI is not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress is set to ones. With the exception of the first  Address, if the byte string has the same length as the previous ASid, the Addess is encoded as an uint with the the difference to the previous Addess.
+
+~~~~~~~~~~~
+   Address = bytes / uint, 
+   AddressPrefix = (Address, unusedBits: uint)
+   AddressRange =  [Address, Address]
+   IPAddressOrRange = AddressPrefix / AddressRange
+   IPAddressChoice = [ + IPAddressOrRange ] / null
+   IPAddrBlocks = [ AFI: uint, IPAddressChoice ]
+~~~~~~~~~~~
+
+* IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
+
+
 
 
 
