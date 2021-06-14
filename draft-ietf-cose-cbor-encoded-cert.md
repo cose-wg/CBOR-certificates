@@ -1024,12 +1024,14 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 | Value | General Names                                             |
 +=======+===========================================================+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
-|       | Comments:        1.3.6.1.5.5.7.8.9                        |
+|       | Comments:        id-on-SmtpUTF8Mailbox                    |
+|       |                  (1.3.6.1.5.5.7.8.9)                      |
 |       |                  06 08 2B 06 01 05 05 07 08 09            |
 |       | Value:           text                                     |
 +-------+-----------------------------------------------------------+
 |    -1 | Name:            otherName with hardwareModuleName        |
-|       | Comments:        1.3.6.1.5.5.7.8.4                        |
+|       | Comments:        id-on-hardwareModuleNamee                |
+|       |                  (1.3.6.1.5.5.7.8.4)                      |
 |       |                  06 08 2B 06 01 05 05 07 08 04            |
 |       | Value:           [ ~oid, bytes ]                          |
 +-------+-----------------------------------------------------------+
@@ -1067,85 +1069,100 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 
 ## C509 Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | X.509 Signature Algorithms                                |
 +=======+===========================================================+
 |  -256 | Name:        RSASSA-PKCS1-v1_5 with SHA-1                 |
+|       | Identifiers: sha1-with-rsa-signature,                     |
+|       |              sha1WithRSAEncryption,                       |
+|       |              sha-1WithRSAEncryption                       |
 |       | OID:         1.2.840.113549.1.1.5                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00 |
 |       | Comments:    Don't use                                    |
 +-------+-----------------------------------------------------------+
 |  -255 | Name:        ECDSA with SHA-1                             |
+|       | Identifiers: ecdsa-with-SHA1                              |
 |       | OID:         1.2.840.10045.4.1                            |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
 |       | Comments:    Don't use. Compressed signature value        |
 +-------+-----------------------------------------------------------+
 |     0 | Name:        ECDSA with SHA-256                           |
+|       | Identifiers: ecdsa-with-SHA256                            |
 |       | OID:         1.2.840.10045.4.3.2                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          |
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
 |     1 | Name:        ECDSA with SHA-384                           |
+|       | Identifiers: ecdsa-with-SHA384                            |
 |       | OID:         1.2.840.10045.4.3.3                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          |
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        ECDSA with SHA-512                           |
+|       | Identifiers: ecdsa-with-SHA512                            |
 |       | OID:         1.2.840.10045.4.3.4                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          |
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
 |     3 | Name:        ECDSA with SHAKE128                          |
+|       | Identifiers: id-ecdsa-with-shake128                       |
 |       | OID:         1.3.6.1.5.5.7.6.32                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          |
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
 |     4 | Name:        ECDSA with SHAKE256                          |
+|       | Identifiers: id-ecdsa-with-shake256                       |
 |       | OID:         1.3.6.1.5.5.7.6.33                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          |
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
 |    12 | Name:        Ed25519                                      |
+|       | Identifiers: id-Ed25519, id-EdDSA25519                    |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    13 | Name:        Ed448                                        |
+|       | Identifiers: id-Ed448, id-EdDSA448                        |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    23 | Name:        RSASSA-PKCS1-v1_5 with SHA-256               |
+|       | Identifiers: sha256WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    24 | Name:        RSASSA-PKCS1-v1_5 with SHA-384               |
+|       | Identifiers: sha384WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.12                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    25 | Name:        RSASSA-PKCS1-v1_5 with SHA-512               |
+|       | Identifiers: sha512WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.13                        |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    26 | Name:        RSASSA-PSS with SHA-256                      |
+|       | Identifiers: rsassa-pss, id-RSASSA-PSS                    |
 |       | OID:         1.2.840.113549.1.1.10                        |
 |       | Parameters:  SHA-256, MGF-1 with SHA-256, saltLength = 32 |
 |       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0A 30 34 |
@@ -1156,6 +1173,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    27 | Name:        RSASSA-PSS with SHA-384                      |
+|       | Identifiers: rsassa-pss, id-RSASSA-PSS                    |
 |       | OID:         1.2.840.113549.1.1.10                        |
 |       | Parameters:  SHA-384, MGF-1 with SHA-384, saltLength = 48 |
 |       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0A 30 34 |
@@ -1166,6 +1184,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    28 | Name:        RSASSA-PSS with SHA-512                      |
+|       | Identifiers: rsassa-pss, id-RSASSA-PSS                    |
 |       | OID:         1.2.840.113549.1.1.10                        |
 |       | Parameters:  SHA-512, MGF-1 with SHA-512, saltLength = 64 |
 |       | DER:         30 41 06 09 2A 86 48 86 F7 0D 01 01 0A 30 34 |
@@ -1176,30 +1195,35 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    29 | Name:        RSASSA-PSS with SHAKE128                     |
+|       | Identifiers: id-RSASSA-PSS-SHAKE128                       |
 |       | OID:         1.3.6.1.5.5.7.6.30                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1E          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    30 | Name:        RSASSA-PSS with SHAKE256                     |
+|       | Identifiers: id-RSASSA-PSS-SHAKE256                       |
 |       | OID:         1.3.6.1.5.5.7.6.31                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    42 | Name:        HSS / LMS                                    |
+|       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    43 | Name:        XMSS                                         |
+|       | Identifiers: id_alg_xmss                                  |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    44 | Name:        XMSS^MT                                      |
+|       | Identifiers: id_alg_xmssmt                                |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
