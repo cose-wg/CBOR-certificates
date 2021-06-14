@@ -1235,19 +1235,21 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 
 ## C509 Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
+IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
 | Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
 |     0 | Name:        RSA                                          |
+|       | Identifiers: rsaEncryption                                |
 |       | OID:         1.2.840.113549.1.1.1                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |     1 | Name:        EC Public Key (Weierstraß) with secp256r1    |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
@@ -1255,6 +1257,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
@@ -1262,6 +1265,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
@@ -1269,42 +1273,49 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 |     8 | Name:        X25519 (Montgomery)                          |
+|       | Identifiers: id-X25519                                    |
 |       | OID:         1.3.101.110                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6E                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |     9 | Name:        X448 (Montgomery)                            |
+|       | Identifiers: id-X448                                      |
 |       | OID:         1.3.101.111                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 6F                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:        Ed25519 (Twisted Edwards)                    |
+|       | Identifiers: id-Ed25519, id-EdDSA25519                    |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    11 | Name:        Ed448 (Edwards)                              |
+|       | Identifiers: id-Ed448, id-EdDSA448                        |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    16 | Name:        HSS / LMS                                    |
+|       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |
 |       | OID:         1.2.840.113549.1.9.16.3.17                   |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    17 | Name:        XMSS                                         |
+|       | Identifiers: id_alg_xmss                                  |
 |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    18 | Name:        XMSS^MT                                      |
+|       | Identifiers: id_alg_xmssmt                                |
 |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
@@ -1312,6 +1323,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 +-------+-----------------------------------------------------------+
 |    24 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP256r1                              |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = brainpoolP256r1                 |
 |       |              (1.3.36.3.3.2.8.1.1.7)                       |
@@ -1321,6 +1333,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 +-------+-----------------------------------------------------------+
 |    25 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP384r1                              |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = brainpoolP384r1                 |
 |       |              (1.3.36.3.3.2.8.1.1.11)                      |
@@ -1330,6 +1343,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 +-------+-----------------------------------------------------------+
 |    26 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP512r1                              |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = brainpoolP512r1                 |
 |       |              (1.3.36.3.3.2.8.1.1.13)                      |
@@ -1339,6 +1353,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 +-------+-----------------------------------------------------------+
 |    27 | Name:        EC Public Key (Weierstraß) with              |
 |       |              FRP256v1                                     |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = FRP256v1                        |
 |       |              (1.2.250.1.223.101.256.1)                    |
