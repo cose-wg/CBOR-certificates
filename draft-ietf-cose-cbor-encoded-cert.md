@@ -1649,7 +1649,7 @@ h'03963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
   8, [1, 2],
   5, ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl",
       "http://crl4.digicert.com/CloudflareIncECCCA-3.crl"],
-  6, [h'6086480186FD6C0101', "https://www.digicert.com/CPS",  2],
+  6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"],  2],
   9, [1, "http://ocsp.digicert.com",
       2, "http://cacerts.digicert.com/CloudflareIncECCCA-3.crt"],
  -4, -2,
@@ -1671,7 +1671,7 @@ h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
   B5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 781 bytes.
+The size of the CBOR encoding (CBOR sequence) is 783 bytes.
 
 ## Example CAB Baseline RSA HTTPS X.509 Certificate
 
@@ -1788,9 +1788,9 @@ h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
  -4, -2,
   8, [ 1, 2 ],
  -2, 5,
-  5, "http://crl.starfieldtech.com/sfig2s1-242.crl",
+  5, ["http://crl.starfieldtech.com/sfig2s1-242.crl"],
   6, [ h'6086480186fd6e01071701',
-       "http://certificates.starfieldtech.com/repository/", 1 ],
+       [1, "http://certificates.starfieldtech.com/repository/"], 1 ],
   9, [ 1, "http://ocsp.starfieldtech.com/",
        2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
   7, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
@@ -1820,7 +1820,7 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
   F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1242 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
 
 # Acknowledgments
 {: numbered="no"}
