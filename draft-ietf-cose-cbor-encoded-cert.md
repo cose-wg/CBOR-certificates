@@ -656,6 +656,12 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 03   |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|    21 | Name:            Domain Component                         |
+|       | Identifiers:     domainComponent, dc                      |
+|       | OID:             0.9.2342.19200300.100.1.25               |
+|       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 19      |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="C509 Attributes"}
 {: artwork-align="center"}
@@ -862,6 +868,18 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 |       | Identifiers:     ev-guidelines                            |
 |       | OID:             2.23.140.1.1                             |
 |       | DER:             06 05 67 81 0C 01 01                     |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     7 | Name:            Resource PKI (RPKI)                      |
+|       | Identifiers:     id-cp-ipAddr-asNumber                    |
+|       | OID:             1.3.6.1.5.5.7.14.2                       |
+|       | DER:             06 08 2B 06 01 05 05 07 0E 02            |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|     8 | Name:            Resource PKI (RPKI) (Alternative)        |
+|       | Identifiers:     id-cp-ipAddr-asNumber-v2                 |
+|       | OID:             1.3.6.1.5.5.7.14.3                       |
+|       | DER:             06 08 2B 06 01 05 05 07 0E 03            |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Remote SIM Provisioning Role             |
