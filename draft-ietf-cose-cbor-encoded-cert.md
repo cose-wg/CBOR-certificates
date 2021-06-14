@@ -350,6 +350,13 @@ CBOR encoding of the following extension values are partly supported:
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
 
 
+* Name Constraints (nameConstraints). 
+
+~~~~~~~~~~~
+   GeneralSubtree = [ GeneralName, minimum: uint, maximum: uint ]
+   NameConstraints = [ + (uint, [+ GeneralSubtree]) ]
+~~~~~~~~~~~
+
 
 
 
