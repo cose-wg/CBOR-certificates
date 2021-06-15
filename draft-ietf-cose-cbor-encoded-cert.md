@@ -1002,19 +1002,19 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 |       | Identifiers:     id-ad-rpkiManifest                       |
 |       | OID:             1.3.6.1.5.5.7.48.10                      |
 |       | DER:             06 08 2B 06 01 05 05 07 30 0A            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 6487                                 |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Signed Object                            |
 |       | Identifiers:     id-ad-signedObject                       |
 |       | OID:             1.3.6.1.5.5.7.48.11                      |
 |       | DER:             06 08 2B 06 01 05 05 07 30 0B            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 6487                                 |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            RPKI Notify                              |
 |       | Identifiers:     id-ad-rpkiNotify                         |
 |       | OID:             1.3.6.1.5.5.7.48.13                      |
 |       | DER:             06 08 2B 06 01 05 05 07 30 0D            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8182                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-ia title="C509 Information Accesses"}
