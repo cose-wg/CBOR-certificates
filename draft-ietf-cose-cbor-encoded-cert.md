@@ -305,7 +305,7 @@ CBOR encoding of the following extension values are partly supported:
    FreshestCRL = CRLDistributionPoints
 ~~~~~~~~~~~
 
-* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{QP}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
+* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
 
 ~~~~~~~~~~~
    PolicyIdentifier = int / ~oid
