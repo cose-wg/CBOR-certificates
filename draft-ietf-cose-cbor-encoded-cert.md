@@ -195,7 +195,7 @@ C509Certificate = [
    issuerSignatureValue : any,
 ]
 
-; The elements of the following group are to be used in a CBOR Sequence:
+; The elements of the following group are used in a CBOR Sequence:
 TBSCertificate = (
    c509CertificateType: int,
    certificateSerialNumber: CertificateSerialNumber,
@@ -220,12 +220,14 @@ Attribute = ( attributeType: int, attributeValue: text ) //
 
 Time = ~time / null
 
-AlgorithmIdentifier = int / ~oid / [ algorithm: ~oid, parameters: bytes ]
+AlgorithmIdentifier = int / ~oid / 
+                    [ algorithm: ~oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
 Extension = ( extensionID: int, extensionValue: any ) //
-            ( extensionID: ~oid, ? critical: true, extensionValue: bytes )
+            ( extensionID: ~oid, ? critical: true, 
+              extensionValue: bytes )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
@@ -287,7 +289,8 @@ CBOR encoding of the following extension values are fully supported:
 * Policy Mappings (policyMappings). extensionValue is encoded as follows:
 
 ~~~~~~~~~~~
-  PolicyMappings = [ + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid) ]
+  PolicyMappings = [ + (issuerDomainPolicy: ~oid, 
+                        subjectDomainPolicy: ~oid) ]
 ~~~~~~~~~~~
 
 CBOR encoding of the following extension values are partly supported:
@@ -309,8 +312,10 @@ CBOR encoding of the following extension values are partly supported:
 
 ~~~~~~~~~~~
    PolicyIdentifier = int / ~oid
-   PolicyQualifierInfo = ( policyQualifierId: int / ~oid, qualifier: text )
-   CertificatePolicies = [ + ( PolicyIdentifier, ? [ + PolicyQualifierInfos ] ) ]
+   PolicyQualifierInfo = ( policyQualifierId: int / ~oid, 
+                           qualifier: text )
+   CertificatePolicies = [ + ( PolicyIdentifier, 
+                           ? [ + PolicyQualifierInfos ] ) ]
 ~~~~~~~~~~~
 
 * Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
@@ -416,7 +421,7 @@ C509CertificateSigningRequest = [
    subjectProofOfPossessionValue: any,
 ]
 
-; The elements of the following group are to be used in a CBOR Sequence:
+; The elements of the following group are used in a CBOR Sequence:
 TBSCertificateSigningRequest = (
    c509CertificateSigningRequestType: int,
    subject: Name,
@@ -455,32 +460,32 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +---------------------------------------+-----------+-----------+
 |                                       | COSE_X509 | COSE_C509 |
 +---------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate     |       317 |       139 |
+| RFC 7925 profiled IoT Certificate (1) |       317 |       139 |
 +---------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain         |      2193 |      1394 |
+| ECDSA HTTPS Certificate Chain (2)     |      2193 |      1394 |
 +---------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain           |      5175 |      3934 |
+| RSA HTTPS Certificate Chain (4)       |      5175 |      3934 |
 +---------------------------------------+-----------+-----------+
 ~~~~~~~~~~~
-{: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE (bytes)."}
+{: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain)."}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~ 
-+-----------------------+-------+---------------+------+---------------+
-|                       |  X509 | X509 + Brotli | C509 | C509 + Brotli |
-+-----------------------+-------+---------------+------+---------------+
-| RFC 7925 Cert (len 1) |   327 |           324 |  151 |           167 |
-+-----------------------+-------+---------------+------+---------------+
-| RPKI Cert (len 1)     | 20991 |          9134 | 8660 |          5668 |
-+-----------------------+-------+---------------+------+---------------+
-| HTTPS Chain (len 2)   |  2204 |          1455 | 1414 |          1063 |
-+-----------------------+-------+---------------+------+---------------+
-| HTTPS Chain (len 4)   |  5190 |          3244 | 3958 |          2845 |
-+-----------------------+-------+---------------+------+---------------+
-| HTTPS Bag (len 8)     | 11578 |          3979 | 8882 |          3519 |
-+-----------------------+-------+---------------+------+---------------+
++-------------------+-------+---------------+------+---------------+
+|                   |  X509 | X509 + Brotli | C509 | C509 + Brotli |
++-------------------+-------+---------------+------+---------------+
+| RFC 7925 Cert (1) |   327 |           324 |  151 |           167 |
++-------------------+-------+---------------+------+---------------+
+| RPKI Cert (1)     | 20991 |          9134 | 8660 |          5668 |
++-------------------+-------+---------------+------+---------------+
+| HTTPS Chain (2)   |  2204 |          1455 | 1414 |          1063 |
++-------------------+-------+---------------+------+---------------+
+| HTTPS Chain (4)   |  5190 |          3244 | 3958 |          2845 |
++-------------------+-------+---------------+------+---------------+
+| HTTPS Bag (8)     | 11578 |          3979 | 8882 |          3519 |
++-------------------+-------+---------------+------+---------------+
 ~~~~~~~~~~~
-{: #fig-size-TLS title="Comparing Sizes of Certificate Chains in TLS (bytes). X509 and C509 are Certificate messages.  X509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
+{: #fig-size-TLS title="Comparing Sizes of Certificate Chains with TLS. Number of bytes (length of certificate chain). X509 and C509 are Certificate messages. X509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
 {: artwork-align="center"}
 
 # Security Considerations {#sec-cons}
@@ -1025,45 +1030,45 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
-+-------+-----------------------------------------------------------+
-| Value | Extended Key Usage                                        |
-+=======+===========================================================+
-|     1 | Name:            TLS Server authentication                |
-|       | Identifiers:     id-kp-serverAuth                         |
-|       | OID:             1.3.6.1.5.5.7.3.1                        |
-|       | DER:             06 08 2B 06 01 05 05 07 03 01            |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     2 | Name:            TLS Client Authentication                |
-|       | Identifiers:     id-kp-clientAuth                         |
-|       | OID:             1.3.6.1.5.5.7.3.2                        |
-|       | DER:             06 08 2B 06 01 05 05 07 03 02            |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     3 | Name:            Code Signing                             |
-|       | Identifiers:     id-kp-codeSigning                        |
-|       | OID:             1.3.6.1.5.5.7.3.3                        |
-|       | DER:             06 08 2B 06 01 05 05 07 03 03            |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     4 | Name:            Email protection (S/MIME)                |
-|       | Identifiers:     id-kp-emailProtection                    |
-|       | OID:             1.3.6.1.5.5.7.3.4                        |
-|       | DER:             06 08 2B 06 01 05 05 07 03 04            |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     8 | Name:            Time Stamping                            |
-|       | Identifiers:     id-kp-timeStamping, timestamping         |
-|       | OID:             1.3.6.1.5.5.7.3.8                        |
-|       | DER:             06 08 2B 06 01 05 05 07 03 08            |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|     9 | Name:            OCSP Signing                             |
-|       | Identifiers:     id-kp-OCSPSigning                        |
-|       | OID:             1.3.6.1.5.5.7.3.9                        |
-|       | DER:             06 08 2B 06 01 05 05 07 03 09            |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
++-------+---------------------------------------------------------+
+| Value | Extended Key Usage                                      |
++=======+=========================================================+
+|     1 | Name:            TLS Server authentication              |
+|       | Identifiers:     id-kp-serverAuth                       |
+|       | OID:             1.3.6.1.5.5.7.3.1                      |
+|       | DER:             06 08 2B 06 01 05 05 07 03 01          |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
+|     2 | Name:            TLS Client Authentication              |
+|       | Identifiers:     id-kp-clientAuth                       |
+|       | OID:             1.3.6.1.5.5.7.3.2                      |
+|       | DER:             06 08 2B 06 01 05 05 07 03 02          |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
+|     3 | Name:            Code Signing                           |
+|       | Identifiers:     id-kp-codeSigning                      |
+|       | OID:             1.3.6.1.5.5.7.3.3                      |
+|       | DER:             06 08 2B 06 01 05 05 07 03 03          |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
+|     4 | Name:            Email protection (S/MIME)              |
+|       | Identifiers:     id-kp-emailProtection                  |
+|       | OID:             1.3.6.1.5.5.7.3.4                      |
+|       | DER:             06 08 2B 06 01 05 05 07 03 04          |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
+|     8 | Name:            Time Stamping                          |
+|       | Identifiers:     id-kp-timeStamping, timestamping       |
+|       | OID:             1.3.6.1.5.5.7.3.8                      |
+|       | DER:             06 08 2B 06 01 05 05 07 03 08          |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
+|     9 | Name:            OCSP Signing                           |
+|       | Identifiers:     id-kp-OCSPSigning                      |
+|       | OID:             1.3.6.1.5.5.7.3.9                      |
+|       | DER:             06 08 2B 06 01 05 05 07 03 09          |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-eku title="C509 Extended Key Usages"}
 {: artwork-align="center"}
@@ -1736,29 +1741,29 @@ h'047FA1E31928EE403BA0B83A395673FC',
 1,
 h'03963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
 [
-  7, h'A5CE37EAEBB0750E946788B445FAD9241087961F',
-  1, h'CC0B50E7D837DBF243F3853D4860F53B39BE9B2A',
-  3, [2, "sni.cloudflaressl.com", 2, "www.ietf.org"],
- -2, 1,
-  8, [1, 2],
-  5, ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl",
-      "http://crl4.digicert.com/CloudflareIncECCCA-3.crl"],
-  6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"],  2],
-  9, [1, "http://ocsp.digicert.com",
-      2, "http://cacerts.digicert.com/CloudflareIncECCCA-3.crt"],
- -4, -2,
- 10, [
-       h'F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E3',
-       77922190,
-       0,
-       h'F8D1B4A93D2F0D4C4176DFB488BCC73B86443D7DE00E6AC8174D8948A8843668
-         29FF5A34068A240C69502788E8EE25AB7ED2CBCF686ECE7B5F96B431A90702FA',
-       h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
-       77922238,
-       0,
-       h'E891C197BFB0E3D30CB6CEE60D94C3C75FD1175336931108D89812D4D29D81D0
-         A159D16C4647D1483757FCD6CE4E75EC7B5EF657EFE028F8E5CC4792682DAC43'
-     ]
+ 7, h'A5CE37EAEBB0750E946788B445FAD9241087961F',
+ 1, h'CC0B50E7D837DBF243F3853D4860F53B39BE9B2A',
+ 3, [2, "sni.cloudflaressl.com", 2, "www.ietf.org"],
+-2, 1,
+ 8, [1, 2],
+ 5, ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl",
+     "http://crl4.digicert.com/CloudflareIncECCCA-3.crl"],
+ 6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"],  2],
+ 9, [1, "http://ocsp.digicert.com",
+     2, "http://cacerts.digicert.com/CloudflareIncECCCA-3.crt"],
+-4, -2,
+10, [
+    h'F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E3',
+    77922190,
+    0,
+    h'F8D1B4A93D2F0D4C4176DFB488BCC73B86443D7DE00E6AC8174D8948A8843668
+    29FF5A34068A240C69502788E8EE25AB7ED2CBCF686ECE7B5F96B431A90702FA',
+    h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
+    77922238,
+    0,
+    h'E891C197BFB0E3D30CB6CEE60D94C3C75FD1175336931108D89812D4D29D81D0
+    A159D16C4647D1483757FCD6CE4E75EC7B5EF657EFE028F8E5CC4792682DAC43'
+    ]
 ],
 0,
 h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
@@ -1879,29 +1884,29 @@ h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
   2BDD79D8530126ED284FC98694834EC8E1142E85B3AFD46EDD6946AF41250E7A
   AD8BF292CA79D97B324FF777E8F9B44F235CD45C03AED8AB3ACA135F5D5D5DA1',
 [
- -4, -2,
-  8, [ 1, 2 ],
+-4, -2,
+ 8, [ 1, 2 ],
  -2, 5,
-  5, ["http://crl.starfieldtech.com/sfig2s1-242.crl"],
-  6, [ h'6086480186fd6e01071701',
-       [1, "http://certificates.starfieldtech.com/repository/"], 1 ],
-  9, [ 1, "http://ocsp.starfieldtech.com/",
-       2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
-  7, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
-  3, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
-  1, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
- 10, [
-       h'F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E3',
-       1715,
-       0,
-       h'8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F
-         BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE6454995',
-       h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
-       2012,
-       0,
-       h'A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D
-         FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
-     ]
+ 5, ["http://crl.starfieldtech.com/sfig2s1-242.crl"],
+ 6, [ h'6086480186fd6e01071701',
+      [1, "http://certificates.starfieldtech.com/repository/"], 1 ],
+ 9, [ 1, "http://ocsp.starfieldtech.com/",
+      2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
+ 7, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
+ 3, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
+ 1, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
+10, [
+    h'F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E3',
+    1715,
+    0,
+    h'8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F
+      BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE6454995',
+    h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
+    2012,
+    0,
+    h'A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D
+      FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
+    ]
 ],
 23,
 h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
