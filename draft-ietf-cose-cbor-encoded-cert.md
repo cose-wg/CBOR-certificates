@@ -1033,6 +1033,12 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 +-------+---------------------------------------------------------+
 | Value | Extended Key Usage                                      |
 +=======+=========================================================+
+|     0 | Name:            Any Extended Key Usage                 |
+|       | Identifiers:     anyExtendedKeyUsage                    |
+|       | OID:             2.5.29.37.0                            |
+|       | DER:             06 04 55 1D 25 00                      |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
 |     1 | Name:            TLS Server authentication              |
 |       | Identifiers:     id-kp-serverAuth                       |
 |       | OID:             1.3.6.1.5.5.7.3.1                      |
