@@ -1037,31 +1037,31 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | Identifiers:     anyExtendedKeyUsage                    |
 |       | OID:             2.5.29.37.0                            |
 |       | DER:             06 04 55 1D 25 00                      |
-|       | Comments:                                               |
+|       | Comments:        RFC 5280                               |
 +-------+---------------------------------------------------------+
 |     1 | Name:            TLS Server authentication              |
 |       | Identifiers:     id-kp-serverAuth                       |
 |       | OID:             1.3.6.1.5.5.7.3.1                      |
 |       | DER:             06 08 2B 06 01 05 05 07 03 01          |
-|       | Comments:                                               |
+|       | Comments:        RFC 5280                               |
 +-------+---------------------------------------------------------+
 |     2 | Name:            TLS Client Authentication              |
 |       | Identifiers:     id-kp-clientAuth                       |
 |       | OID:             1.3.6.1.5.5.7.3.2                      |
 |       | DER:             06 08 2B 06 01 05 05 07 03 02          |
-|       | Comments:                                               |
+|       | Comments:        RFC 5280                               |
 +-------+---------------------------------------------------------+
 |     3 | Name:            Code Signing                           |
 |       | Identifiers:     id-kp-codeSigning                      |
 |       | OID:             1.3.6.1.5.5.7.3.3                      |
 |       | DER:             06 08 2B 06 01 05 05 07 03 03          |
-|       | Comments:                                               |
+|       | Comments:        RFC 5280                               |
 +-------+---------------------------------------------------------+
 |     4 | Name:            Email protection (S/MIME)              |
 |       | Identifiers:     id-kp-emailProtection                  |
 |       | OID:             1.3.6.1.5.5.7.3.4                      |
 |       | DER:             06 08 2B 06 01 05 05 07 03 04          |
-|       | Comments:                                               |
+|       | Comments:        RFC 5280                               |
 +-------+---------------------------------------------------------+
 |     8 | Name:            Time Stamping                          |
 |       | Identifiers:     id-kp-timeStamping, timestamping       |
@@ -1073,7 +1073,31 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | Identifiers:     id-kp-OCSPSigning                      |
 |       | OID:             1.3.6.1.5.5.7.3.9                      |
 |       | DER:             06 08 2B 06 01 05 05 07 03 09          |
-|       | Comments:                                               |
+|       | Comments:        RFC 5280                               |
++-------+---------------------------------------------------------+
+|    10 | Name:            Kerberos PKINIT Client Auth            |
+|       | Identifiers:     id-pkinit-KPClientAuth                 |
+|       | OID:             1.3.6.1.5.2.3.4                        |
+|       | DER:             06 07 2B 06 01 05 02 03 04             |
+|       | Comments:        RFC 4556                               |
++-------+---------------------------------------------------------+
+|    11 | Name:            Kerberos PKINIT KDC                    |
+|       | Identifiers:     id-pkinit-KPKdc                        |
+|       | OID:             1.3.6.1.5.2.3.5                        |
+|       | DER:             06 07 2B 06 01 05 02 03 05             |
+|       | Comments:        RFC 4556                               |
++-------+---------------------------------------------------------+
+|    12 | Name:            SSH Client                             |
+|       | Identifiers:     id-kp-secureShellClient                |
+|       | OID:             1.3.6.1.5.5.7.3.21                     |
+|       | DER:             06 08 2B 06 01 05 05 07 03 15          |
+|       | Comments:        RFC 6187                               |
++-------+---------------------------------------------------------+
+|    13 | Name:            Kerberos PKINIT KDC                    |
+|       | Identifiers:     id-pkinit-KPKdc                        |
+|       | OID:             1.3.6.1.5.5.7.3.22                     |
+|       | DER:             06 08 2B 06 01 05 05 07 03 16          |
+|       | Comments:        RFC 6187                               |
 +-------+---------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-eku title="C509 Extended Key Usages"}
