@@ -77,13 +77,21 @@ informative:
   I-D.ietf-emu-eaptlscert:
   I-D.ietf-quic-transport:
 
-  CAB-Baseline:
+  CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
-    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Certificates Version 1.7.3
+    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Certificates Version 1.7.6"
     author:
       -
         ins: CA/Browser Forum
-    date: October 2020
+    date: June 2021
+
+  CAB-Code:
+    target: https://cabforum.org/baseline-requirements-code-signing/
+    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Code Signing Certificates Version 2.3"
+    author:
+      -
+        ins: CA/Browser Forum
+    date: May 2021
 
   IEEE-802.1AR:
     target: https://standards.ieee.org/standard/802_1AR-2018.html
@@ -94,6 +102,14 @@ informative:
       -
         ins: Institute of Electrical and Electronics Engineers
     date: August 2018
+
+  GSMA-eUICC:
+    target: https://www.gsma.com/esim/wp-content/uploads/2021/02/SGP.14-v2.1.pdf
+    title: GSMA eUICC PKI Certificate Policy Version 2.1
+    author:
+      -
+        ins: GSMA
+    date: February 2021
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
@@ -121,7 +137,7 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA, RPKI, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%.  The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The document also specifies COSE headers as well as a TLS certificate type for C509 certificates.
+This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50%.  The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The document also specifies C509 COSE headers, a C509 TLS certificate type, and a C509 file format.
 
 --- middle
 
@@ -133,7 +149,7 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
 
-CAB Baseline Requirements {{CAB-Baseline}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{I-D.ietf-quic-transport}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, EDHOC {{I-D.ietf-lake-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of RFC 5280. The encoding support all RFC7925 and IEEE 802.1AR and CAB Baseline {{CAB-Baseline}} profiled X.509 certificates. The resulting certificates are called C509 Certificates. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
+CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{I-D.ietf-quic-transport}}, DTLS {{I-D.ietf-tls-dtls13}}, COSE {{RFC8152}}, EDHOC {{I-D.ietf-lake-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of RFC 5280. The encoding support all RFC 7925, IEEE 802.1AR, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates. The resulting certificates are called C509 Cehrtificates. This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
 
 1. An invertible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
 
@@ -151,7 +167,7 @@ This specification makes use of the terminology in {{RFC5280}}, {{RFC7228}}, {{R
 
 # C509 Certificate {#certificate}
 
-This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, and CAB Baseline {{CAB-Baseline}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
+This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
 The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
@@ -248,93 +264,146 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded as either a CBOR int or an unwrapped CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}), the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign.
 
-The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions mandated to be supported by {{RFC7925}}, {{IEEE-802.1AR}}, and {{CAB-Baseline}} which are encoded as specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
+The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
 
 CBOR encoding of the following extension values are fully supported:
 
 *  Subject Key Identifier (subjectKeyIdentifier). The extensionValue is encoded as follows:
 
-~~~~~~~~~~~
-  KeyIdentifier = bytes
-  SubjectKeyIdentifier = KeyIdentifier
+~~~~~~~~~~~ CDDL
+   KeyIdentifier = bytes
+   SubjectKeyIdentifier = KeyIdentifier
 ~~~~~~~~~~~
 
 * Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{message-fields}} for special encoding in case keyUsage is the only extension present.
 
+~~~~~~~~~~~ CDDL
+   KeyUsage = int
 ~~~~~~~~~~~
-  KeyUsage = int
+
+* Policy Mappings (policyMappings). extensionValue is encoded as follows:
+
+~~~~~~~~~~~ CDDL
+   PolicyMappings = [
+     + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)
+   ]
 ~~~~~~~~~~~
 
 * Basic Constraints (basicConstraints). If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
-~~~~~~~~~~~
-  BasicConstraints = int
+~~~~~~~~~~~ CDDL
+   BasicConstraints = int
 ~~~~~~~~~~~
 
 * Policy Constraints (policyConstraints). extensionValue is encoded as follows:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ CDDL
    PolicyConstraints = [ 
      requireExplicitPolicy: uint / null,
      inhibitPolicyMapping: uint / null,
    ]   
 ~~~~~~~~~~~
 
+* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}} or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose.  If the array contains a single KeyPurposeId, the array is omitted.
+
+~~~~~~~~~~~ CDDL
+   KeyPurposeId = int / ~oid
+   ExtKeyUsageSyntax = [ 2* KeyPurposeId ] / KeyPurposeId
+~~~~~~~~~~~
+
 * Inhibit anyPolicy (inhibitAnyPolicy). extensionValue is encoded as follows:
 
-~~~~~~~~~~~
-  InhibitAnyPolicy = uint
-~~~~~~~~~~~
-
-* Policy Mappings (policyMappings). extensionValue is encoded as follows:
-
-~~~~~~~~~~~
-  PolicyMappings = [ + (issuerDomainPolicy: ~oid, 
-                        subjectDomainPolicy: ~oid) ]
+~~~~~~~~~~~ CDDL
+   InhibitAnyPolicy = uint
 ~~~~~~~~~~~
 
 CBOR encoding of the following extension values are partly supported:
 
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+
+~~~~~~~~~~~ CDDL
+   GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
+   GeneralNames = [ + GeneralName ]
+   SubjectAltName = GeneralNames / text
+~~~~~~~~~~~
+
+* Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.
+
+~~~~~~~~~~~ CDDL
+   IssuerAltName  = GeneralNames / text
+~~~~~~~~~~~
+
 * CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ CDDL
    DistributionPointName = [ 2* text ] / text
    CRLDistributionPoints = [ + DistributionPointName ]
 ~~~~~~~~~~~
 
 * Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ CDDL
    FreshestCRL = CRLDistributionPoints
-~~~~~~~~~~~
-
-* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
-
-~~~~~~~~~~~
-   PolicyIdentifier = int / ~oid
-   PolicyQualifierInfo = ( policyQualifierId: int / ~oid, 
-                           qualifier: text )
-   CertificatePolicies = [ + ( PolicyIdentifier, 
-                           ? [ + PolicyQualifierInfos ] ) ]
 ~~~~~~~~~~~
 
 * Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
  
-~~~~~~~~~~~
+~~~~~~~~~~~ CDDL
    AccessDescription = ( accessMethod: int / ~oid , uri: text )
-   InfoAccessSyntax = [ + AccessDescription ]
-   AuthorityInfoAccessSyntax = InfoAccessSyntax
+   AuthorityInfoAccessSyntax = [ + AccessDescription ]
 ~~~~~~~~~~~
 
 * Subject Information Access (subjectInfoAccess). Encoded exactly like authorityInfoAccess.
 
+~~~~~~~~~~~ CDDL
+   SubjectInfoAccessSyntax = AuthorityInfoAccessSyntax
 ~~~~~~~~~~~
-   SubjectInfoAccessSyntax = InfoAccessSyntax
+
+* Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumberm or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present, the array is omitted:
+
+~~~~~~~~~~~ CDDL
+   KeyIdentifierArray = [
+     keyIdentifier: KeyIdentifier,
+     authorityCertIssuer: GeneralNames,
+     authorityCertSerialNumber: CertificateSerialNumber
+   ]
+   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
+~~~~~~~~~~~
+
+* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
+
+~~~~~~~~~~~ CDDL
+   PolicyIdentifier = int / ~oid
+   PolicyQualifierInfo = (
+     policyQualifierId: int / ~oid, 
+     qualifier: text,
+   )
+   CertificatePolicies = [
+     + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )
+   ]
+~~~~~~~~~~~
+
+* Name Constraints (nameConstraints). If the name constraints only contains general names registered in {{GN}} the extension value can be CBOR encoded.
+
+~~~~~~~~~~~ CDDL
+   GeneralSubtree = [ GeneralName, minimum: uint, ? maximum: uint ]
+   NameConstraints = [ 
+     permittedSubtrees: GeneralSubtree,
+     excludedSubtrees: GeneralSubtree,
+   ]
+~~~~~~~~~~~
+
+* Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
+
+~~~~~~~~~~~ CDDL
+   Attributes = ( attributeType: int, attributeValue: [+text] ) //
+                ( attributeType: ~oid, attributeValue: [+bytes] )
+   SubjectDirectoryAttributes = Attributes
 ~~~~~~~~~~~
 
 * AS Resources (autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ CDDL
    AsIdsOrRanges = uint / [uint, uint]
    ASIdentifiers = [ + AsIdsOrRanges ] / null
 ~~~~~~~~~~~
@@ -343,7 +412,7 @@ CBOR encoding of the following extension values are partly supported:
 
 * IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI is not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress is set to ones. With the exception of the first  Address, if the byte string has the same length as the previous ASid, the Addess is encoded as an uint with the the difference to the previous Addess.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ CDDL
    Address = bytes / uint, 
    AddressPrefix = (Address, unusedBits: uint)
    AddressRange =  [Address, Address]
@@ -354,47 +423,16 @@ CBOR encoding of the following extension values are partly supported:
 
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
 
+* Signed Certificate Timestamp. If all the SCTs are version 1, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as and CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
-* Name Constraints (nameConstraints). 
-
-~~~~~~~~~~~
-   GeneralSubtree = [ GeneralName, minimum: uint, maximum: uint ]
-   NameConstraints = [ + (uint, [+ GeneralSubtree]) ]
-~~~~~~~~~~~
-
-
-
-
-
-
-
-
-* Authority Key Identifier (authorityKeyIdentifier). The extensionValue is encoded as an array. If they array only contains keyIdentifier, the array is omitted:
-
-~~~~~~~~~~~
-   KeyIdentifierArray = [
-     keyIdentifier: KeyIdentifier / null,
-     authorityCertIssuer: GeneralNames / null,
-     authorityCertSerialNumber: CertificateSerialNumber / null
-   ]
-   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
-~~~~~~~~~~~
-
-* subjectAltName. If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
-
-~~~~~~~~~~~
-   ExtValueAN  = [ + GeneralName ] / text
-   GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
-~~~~~~~~~~~
-
-* Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.
-
-
-* signedCertificateTimestamp. If all the SCTs are version 1, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as and CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
-
-~~~~~~~~~~~
-   ExtValueSCT = [ + ( LogID : bstr, timestamp : int,
-                       alg : AlgorithmIdentifier, signature : any ) ]
+~~~~~~~~~~~ CDDL
+   SignedCerticateTimestamp = (
+     logID: bytes,
+     timestamp: int,
+     sigAlg: AlgorithmIdentifier,
+     sigValue: any,
+   )
+   SignedCertificateTimestamps = [ + SignedCerticateTimestamp ]
 ~~~~~~~~~~~
 
 ### Example Encoding of Extensions
@@ -436,11 +474,39 @@ TBSCertificateSigningRequest = (
 
 After verifying the subjectProofOfPossessionValue, the CA MAY transform the C509CertificateSigningRequest into a RFC 2985 CertificationRequestInfo for compatibility with existing procedures and code.
 
-# Compliance Requirements for Constrained IoT
+# C509 Certificate Revocation List {#CRL}
 
-For general purpose applications, the normative requirements of {{RFC5280}} applies. This section describes the mandatory to implement algorithms and OIDs for constrained IoT application; the values of the OIDs including certificate fields and extensions, time format, attributes in distinguished names, etc.
+The section defines the C509 Certificate Revocation List (CRL) format based on and compatible with {{RFC5280}} reusing the formatting for C509 certificates defined in {{certificate}}.
 
-TODO: Write this section
+~~~~~~~~~~~ CDDL
+C509CertificateRevocationList = [
+   TBSCertificateRevocationList,
+   issuerSignatureValue : any,
+]
+
+; The elements of the following group are used in a CBOR Sequence:
+TBSCertificateSigningRequest = (
+   C509CertificateRevocationListType: int,
+   issuer: Name,
+   thisUpdate: Time,
+   nextUpdate: Time,
+   revokedCertificates: RevokedCertificates,
+   crlExtensions: Extensions,
+   issuerSignatureAlgorithm: AlgorithmIdentifier,
+)
+
+RevokedCertificates = [
+    userCertificate: CertificateSerialNumber,
+    revocationDate: Time,
+    crlEntryExtensions: Extensions,
+]
+~~~~~~~~~~~
+{: #fig-C509CRLCDDL title="CDDL for C509CertificateRevocationList."}
+{: artwork-align="center"}
+
+# C509 Online Certificate Status Protocol {#OCSP}
+
+TODO
 
 # Legacy Considerations {#dep-set}
 
@@ -684,154 +750,154 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             2.5.29.14                                |
 |       | DER:             06 03 55 1D 0E                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  SubjectKeyIdentifier                     |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Key Usage                                |
 |       | Identifiers:     keyUsage                                 |
 |       | OID:             2.5.29.15                                |
 |       | DER:             06 03 55 1D 0F                           |
 |       | Comments:                                                 |
-|       | AttributeValue:  int                                      |
+|       | AttributeValue:  KeyUsage                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Subject Alternative Name                 |
 |       | Identifiers:     subjectAltName                           |
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueAN                               |
+|       | extensionValue:  SubjectAltName                           |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Basic Constraints                        |
 |       | Identifiers:     basicConstraints                         |
 |       | OID:             2.5.29.19                                |
 |       | DER:             06 03 55 1D 13                           |
 |       | Comments:                                                 |
-|       | extensionValue:  int                                      |
+|       | extensionValue:  BasicConstraints                         |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            CRL Distribution Points                  |
 |       | Identifiers:     cRLDistributionPoints                    |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueCDP                              |
+|       | extensionValue:  CRLDistributionPoints                    |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            Certificate Policies                     |
 |       | Identifiers:     certificatePolicies                      |
 |       | OID:             2.5.29.32                                |
 |       | DER:             06 03 55 1D 20                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueCP                               |
+|       | extensionValue:  CertificatePolicies                      |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Authority Key Identifier                 |
 |       | Identifiers:     authorityKeyIdentifier                   |
 |       | OID:             2.5.29.35                                |
 |       | DER:             06 03 55 1D 23                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueAKI                              |
+|       | extensionValue:  AuthorityKeyIdentifier                   |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Extended Key Usage                       |
 |       | Identifiers:     extKeyUsage                              |
 |       | OID:             2.5.29.37                                |
 |       | DER:             06 03 55 1D 25                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueEKU                              |
+|       | extensionValue:  ExtKeyUsageSyntax                        |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Authority Information Access             |
 |       | Identifiers:     authorityInfoAccess                      |
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueIA                               |
+|       | extensionValue:   AuthorityInfoAccessSyntax               |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Signed Certificate Timestamp List        |
 |       | Identifiers:                                              |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueSCT                              |
+|       | extensionValue:  SignedCertificateTimestamps              |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | Identifiers:     subjectDirectoryAttributes               |
 |       | OID:             2.5.29.9                                 |
 |       | DER:             06 03 55 1D 09                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:   SubjectDirectoryAttributes              |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Issuer Alternative Name                  |
 |       | Identifiers:     issuerAltName                            |
 |       | OID:             2.5.29.18                                |
 |       | DER:             06 03 55 1D 12                           |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueAN                               |
+|       | extensionValue:  IssuerAltName                            |
 +-------+-----------------------------------------------------------+
 |    26 | Name:            Name Constraints                         |
 |       | Identifiers:     nameConstraints                          |
 |       | OID:             2.5.29.30                                |
 |       | DER:             06 03 55 1D 1E                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  NameConstraints                          |
 +-------+-----------------------------------------------------------+
 |    27 | Name:            Policy Mappings                          |
 |       | Identifiers:     policyMappings                           |
 |       | OID:             2.5.29.33                                |
 |       | DER:             06 03 55 1D 21                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  PolicyMappings                           |
 +-------+-----------------------------------------------------------+
 |    28 | Name:            Policy Constraints                       |
 |       | Identifiers:     policyConstraints                        |
 |       | OID:             2.5.29.36                                |
 |       | DER:             06 03 55 1D 24                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  PolicyConstraints                        |
 +-------+-----------------------------------------------------------+
 |    29 | Name:            Freshest CRL                             |
 |       | Identifiers:     freshestCRL                              |
 |       | OID:             2.5.29.46                                |
 |       | DER:             06 03 55 1D 2E                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  FreshestCRL                              |
 +-------+-----------------------------------------------------------+
 |    30 | Name:            Inhibit anyPolicy                        |
 |       | Identifiers:     inhibitAnyPolicy                         |
 |       | OID:             2.5.29.54                                |
 |       | DER:             06 03 55 1D 36                           |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  InhibitAnyPolicy                         |
 +-------+-----------------------------------------------------------+
 |    31 | Name:            Subject Information Access               |
 |       | Identifiers:     subjectInfoAccess                        |
 |       | OID:             1.3.6.1.5.5.7.1.11                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
 |       | Comments:                                                 |
-|       | extensionValue:  ExtValueIA                               |
+|       | extensionValue:  SubjectInfoAccessSyntax                  |
 +-------+-----------------------------------------------------------+
 |    32 | Name:            IP Resources                             |
 |       | Identifiers:     ipAddrBlocks                             |
 |       | OID:             1.3.6.1.5.5.7.1.7                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 07            |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
 |    33 | Name:            AS Resources                             |
 |       | Identifiers:     autonomousSysIds                         |
 |       | OID:             1.3.6.1.5.5.7.1.8                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 08            |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
 |    34 | Name:            IP Resources v2                          |
 |       | Identifiers:     ipAddrBlocks-v2                          |
 |       | OID:             1.3.6.1.5.5.7.1.28                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1C            |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
 |    35 | Name:            AS Resources v2                          |
 |       | Identifiers:     autonomousSysIds-v2                      |
 |       | OID:             1.3.6.1.5.5.7.1.29                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
 |       | Comments:                                                 |
-|       | extensionValue:  bytes                                    |
+|       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-extype title="C509 Extensions"}
