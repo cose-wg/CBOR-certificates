@@ -508,6 +508,16 @@ RevokedCertificates = [
 
 TODO
 
+# C509 Processing and Certificate Issuance
+ 
+It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
+ 
+The CSR format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
+ 
+When a certificate request is received the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof of possession of the public key, before normal certificate generation can take place.
+ 
+In the reverse direction, in case c509CertificateType = 1 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 0 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with CA may be needed.
+
 # Legacy Considerations {#dep-set}
 
 C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. In order to verify the signature, the C509 certificate is used to recreate the original X.509 data structure to be able to verify the signature.
