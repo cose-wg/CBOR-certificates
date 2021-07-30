@@ -52,8 +52,8 @@ normative:
   RFC8610:
   RFC8742:
   RFC8949:
+  RFC9090:
   I-D.ietf-cose-x509:
-  I-D.ietf-cbor-tags-oid:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -191,15 +191,15 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}} optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
+* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
 
 * issuerUniqueID. Not supported.
 
 * subjectUniqueID. Not supported.
 
-* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
+* extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either a CBOR int (see {{extype}}) followed by an optional CBOR item of any type or an unwrapped CBOR OID tag {{RFC9090}} followed by a CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string. If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field including parameters is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}} optionally followed by the parameters encoded as a CBOR byte string.
+* signatureAlgorithm. The 'signatureAlgorithm' field including parameters is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
 
 * signatureValue. In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}
 
@@ -304,7 +304,7 @@ CBOR encoding of the following extension values are fully supported:
    ]   
 ~~~~~~~~~~~
 
-* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}} or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}} where each int or OID tag encodes a key usage purpose.  If the array contains a single KeyPurposeId, the array is omitted.
+* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}} or unwrapped CBOR OID tags {{RFC9090}} where each int or OID tag encodes a key usage purpose.  If the array contains a single KeyPurposeId, the array is omitted.
 
 ~~~~~~~~~~~ CDDL
    KeyPurposeId = int / ~oid
@@ -346,7 +346,7 @@ CBOR encoding of the following extension values are partly supported:
    FreshestCRL = CRLDistributionPoints
 ~~~~~~~~~~~
 
-* Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{I-D.ietf-cbor-tags-oid}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
+* Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as an CBOR ints (see {{IA}}) or unwrapped CBOR OID tags {{RFC9090}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
  
 ~~~~~~~~~~~ CDDL
    AccessDescription = ( accessMethod: int / ~oid , uri: text )
@@ -370,7 +370,7 @@ CBOR encoding of the following extension values are partly supported:
    AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
 ~~~~~~~~~~~
 
-* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{I-D.ietf-cbor-tags-oid}}.
+* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{RFC9090}}.
 
 ~~~~~~~~~~~ CDDL
    PolicyIdentifier = int / ~oid
