@@ -251,7 +251,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
 
 ## Encoding of subjectPublicKey and issuerSignatureValue {#alg-encoding}
 
-### Encoding of subjectPublicKey
+### Encoding of subjectPublicKey {#subpubkey-alg-encoding}
 
 For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. \[ modulus : ~biguint, exponent : ~biguint \]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).
 
@@ -1676,7 +1676,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 138 bytes.
+The size of the CBOR encoding (CBOR sequence) is 138 bytes. The point compressed public key is represented as described in {{#subpubkey-alg-encoding}}.
 
 ~~~~~~~~~~~
 01
