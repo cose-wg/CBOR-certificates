@@ -1676,7 +1676,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 138 bytes. The point compressed public key is represented as described in {{#subpubkey-alg-encoding}}.
+The size of the CBOR encoding (CBOR sequence) is 138 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
 
 ~~~~~~~~~~~
 01
