@@ -399,7 +399,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~ CDDL
    Attributes = ( attributeType: int, attributeValue: [+text] ) //
                 ( attributeType: ~oid, attributeValue: [+bytes] )
-   SubjectDirectoryAttributes = Attributes
+   SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
 
 * AS Resources (autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
