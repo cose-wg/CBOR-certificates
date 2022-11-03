@@ -389,8 +389,8 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~ CDDL
    GeneralSubtree = [ GeneralName, minimum: uint, ? maximum: uint ]
    NameConstraints = [ 
-     permittedSubtrees: GeneralSubtree,
-     excludedSubtrees: GeneralSubtree,
+     permittedSubtrees: GeneralSubtree / null,
+     excludedSubtrees: GeneralSubtree / null,
    ]
 ~~~~~~~~~~~
 
