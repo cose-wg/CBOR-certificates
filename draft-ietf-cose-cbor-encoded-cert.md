@@ -738,7 +738,7 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 03   |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    21 | Name:            Domain Component                         |
+|    22 | Name:            Domain Component                         |
 |       | Identifiers:     domainComponent, dc                      |
 |       | OID:             0.9.2342.19200300.100.1.25               |
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 19      |
