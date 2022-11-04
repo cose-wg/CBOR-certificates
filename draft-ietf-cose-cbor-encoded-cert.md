@@ -364,7 +364,7 @@ CBOR encoding of the following extension values are partly supported:
 
 ~~~~~~~~~~~ CDDL
    KeyIdentifierArray = [
-     keyIdentifier: KeyIdentifier,
+     keyIdentifier: KeyIdentifier / null,
      authorityCertIssuer: GeneralNames,
      authorityCertSerialNumber: CertificateSerialNumber
    ]
