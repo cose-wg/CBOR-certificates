@@ -52,7 +52,6 @@ normative:
   RFC8742:
   RFC8949:
   RFC9052:
-  RFC9053:
   RFC9090:  
   I-D.ietf-cose-x509:
 
@@ -1741,7 +1740,7 @@ C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9
 
 ### Example: Additonal Keys for the Example Certificates
 
-Below are the issuer key pair and the subject private key belonging to the above example certificates. The private keys are encoded as in COSE {{RFC9052}}{{RFC9053}}. These issuer key pair can be used to sign or verify the example certificates and the subject private key allows the example certificates to be used in test vectors for other protocols like EDHOC.
+Below are the issuer key pair and the subject private key belonging to the above example certificates. The private keys are encoded as in COSE {{RFC9052}}. These issuer key pair can be used to sign or verify the example certificates and the subject private key allows the example certificates to be used in test vectors for other protocols like EDHOC.
 
 ~~~~~~~~~~~
 issuerPublicKeyAlgorithm :
