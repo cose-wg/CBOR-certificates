@@ -44,6 +44,7 @@ author:
 normative:
 
   RFC2119:
+  RFC2986:
   RFC4108:
   RFC5280:
   RFC8174:
@@ -62,7 +63,6 @@ normative:
 
 informative:
 
-  RFC2986:
   RFC6487:
   RFC7228:
   RFC7925:
