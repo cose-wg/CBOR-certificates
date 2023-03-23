@@ -402,10 +402,10 @@ CBOR encoding of the following extension values are partly supported:
    SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
 
-* AS Resources (autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
+* AS Resources (autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an int. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ CDDL
-   AsIdsOrRanges = uint / [uint, uint]
+   AsIdsOrRanges = int / [uint, uint]
    ASIdentifiers = [ + AsIdsOrRanges ] / null
 ~~~~~~~~~~~
 
