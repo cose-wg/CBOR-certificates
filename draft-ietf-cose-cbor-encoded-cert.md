@@ -53,7 +53,7 @@ normative:
   RFC8949:
   RFC9052:
   RFC9090:  
-  I-D.ietf-cose-x509:
+  RFC9360:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -531,7 +531,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{I-D.ietf-cose-x509}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 0 and 1 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
+The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 0 and 1 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
 ~~~~~~~~~
 +---------------------------------------+-----------+-----------+
@@ -1536,7 +1536,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 
 EDITORS NOTE: The text should be moved a section and not be in the IANA Section.
 
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{I-D.ietf-cose-x509}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cbor content format. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
+This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cbor content format. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ CDDL
 COSE_C509 = C509Certificate / [ 2* C509Certificate ]
