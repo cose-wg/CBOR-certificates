@@ -384,10 +384,10 @@ CBOR encoding of the following extension values are partly supported:
    ]
 ~~~~~~~~~~~
 
-* Name Constraints (nameConstraints). If the name constraints only contains general names registered in {{GN}} the extension value can be CBOR encoded.
+* Name Constraints (nameConstraints). If the name constraints only contains general names registered in {{GN}} the extension value can be CBOR encoded. Note that {{RFC5280}} requires that minimum MUST be zero, and maximum MUST be absent.
 
 ~~~~~~~~~~~ CDDL
-   GeneralSubtree = [ GeneralName, minimum: uint, ? maximum: uint ]
+   GeneralSubtree = [ GeneralName ]
    NameConstraints = [ 
      permittedSubtrees: GeneralSubtree / null,
      excludedSubtrees: GeneralSubtree / null,
