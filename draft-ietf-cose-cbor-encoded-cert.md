@@ -1566,7 +1566,7 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 ~~~~~~~~~~~
 
 ## Media Type application/cose-c509
-When the application/cose-c509 media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "bstr"). If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+When the application/cose-c509 media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "C509Certificate"). If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
 
 IANA has registered the following media type {{RFC6838}}:
 
