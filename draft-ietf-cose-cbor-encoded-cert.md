@@ -1579,11 +1579,11 @@ Optional parameters: usage
 
 Encoding considerations: binary
 
-Security considerations: See the Security Considerations section of draft-ietf-cose-cbor-encoded-cert.
+Security considerations: See the Security Considerations section of [this document]].
 
 Interoperability considerations: N/A
 
-Published specification: draft-ietf-cose-cbor-encoded-cert
+Published specification: [this document]]
 
 Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.
 
