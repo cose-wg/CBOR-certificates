@@ -457,6 +457,25 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 17, 8, \[ 3, 6 \], 3, "example.com" \].
 
+## COSE Header Parameters
+
+The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509 content format. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
+
+~~~~~~~~~~~ CDDL
+COSE_C509 = C509Certificate / [ 2* C509Certificate ]
+~~~~~~~~~~~
+
+As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
+
+| Name | Label | Value Type | Description |
+| c5b | TBD1 | COSE_C509 | An unordered bag of C509 certificates |
+| c5c | TBD2 | COSE_C509 | An ordered chain of C509 certificates |
+| c5t | TBD3 | COSE_CertHash | Hash of a C509Certificate |
+| c5u | TBD4 | uri | URI pointing to a COSE_C509 containing a ordered chain of certificates |
+{: #iana-header title="COSE Header Parameters" cols="r l l l"}
+
+Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
+
 # C509 Certificate Signing Request {#CSR}
 
 The section defines the C509 Certificate Signing Request (CSR) format based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateSigningRequestType values defined, c509CertificateSigningRequestType = 0 requests a c509CertificateType = 0 and c509CertificateSigningRequestType = 1 requests a c509CertificateType = 1 . subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm as defined in e.g. RFC 6955. CSR attributes other than extensionRequest are not supported.
@@ -1541,35 +1560,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 
 ## COSE Header Parameters Registry {#cose}
 
-EDITORS NOTE: The text should be moved a section and not be in the IANA Section.
-
-This document registers the following entries in the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading. The formatting and processing for c5b, c5c, and c5t, and c5u are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cbor content format. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
-
-~~~~~~~~~~~ CDDL
-COSE_C509 = C509Certificate / [ 2* C509Certificate ]
-~~~~~~~~~~~
-
-As the contents of c5bag, c5chain, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
-
-Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
-
-~~~~~~~~~~~
-+-----------+-------+----------------+------------------------------+
-| Name      | Label | Value Type     | Description                  |
-+===========+=======+================+==============================+
-| c5b       |  TBD1 | COSE_C509      | An unordered bag of C509     |
-|           |       |                | certificates                 |
-+-----------+-------+----------------+------------------------------+
-| c5c       |  TBD2 | COSE_C509      | An ordered chain of C509     |
-|           |       |                | certificates                 |
-+-----------+-------+----------------+------------------------------+
-| c5t       |  TBD3 | COSE_CertHash  | Hash of a C509Certificate    |
-+-----------+-------+----------------+------------------------------+
-| c5u       |  TBD4 | uri            | URI pointing to a COSE_C509  |
-|           |       |                | containing a ordered chain   |
-|           |       |                | of certificates              |
-+-----------+-------+----------------+------------------------------+
-~~~~~~~~~~~
+IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading with this document as reference.
 
 ## Media Type application/cose-c509
 When the application/cose-c509 media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
