@@ -12,6 +12,12 @@ pi: # can use array (if all yes) or hash here
   sortrefs: yes
   symrefs: yes
   tocdepth: 2
+venue:
+  group: "CBOR Object Signing and Encryption"
+  type: "Working Group"
+  mail: "cose@ietf.org"
+  arch: "https://mailarchive.ietf.org/arch/browse/cose/"
+  github: "cose-wg/CBOR-certificates"
 
 author:
       -
