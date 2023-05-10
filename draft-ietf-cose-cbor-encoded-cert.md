@@ -53,6 +53,7 @@ normative:
   RFC2986:
   RFC4108:
   RFC5280:
+  RFC6838:
   RFC8174:
   RFC8610:
   RFC8742:
@@ -1569,6 +1570,47 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 |           |       |                | of certificates              |
 +-----------+-------+----------------+------------------------------+
 ~~~~~~~~~~~
+
+## Media Type application/cose-c509
+When the application/cose-c509 media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+Subtype name: cose-c509
+Required parameters: N/A
+Optional parameters: usage
+* Can be absent to provide no further information about the intended meaning of the order in the CBOR sequence of certificates.
+* Can be set to "chain" to indicate that the sequence of data items is to be interpreted as a certificate chain.
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of [this document]].
+
+Interoperability considerations: N/A
+
+Published specification: [this document]]
+
+Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+  Deprecated alias names for this type: N/A  
+  Magic number(s): N/A  
+  File extension(s): N/A  
+  Macintosh file type code(s): N/A  
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
 
 ## TLS Certificate Types Registry {#tls}
 
