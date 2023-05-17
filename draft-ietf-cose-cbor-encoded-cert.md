@@ -1419,6 +1419,13 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|    45 | Name:        SM2 with SM3                                 |
+|       | Identifiers: sm2-with-sm3                                 |
+|       | OID:         1.2.156.10197.1.501                          |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
+|       | Comments:    Compressed signature value                   |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="C509 Signature Algorithms"}
 {: artwork-align="center"}
@@ -1552,6 +1559,16 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.2.250.1.223.101.256.1)                    |
 |       | DER:         30 15 06 07 2A 86 48 CE 3D 02 01 06 0A 2A 81 |
 |       |              7A 01 81 5F 65 82 00 01                      |
+|       | Comments:    Point compressed subjectPublicKey            |
++-------+-----------------------------------------------------------+
+|    28 | Name:        EC Public Key (Weierstraß) with              |
+|       |              sm2p256v1                                    |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = sm2p256v1                       |
+|       |              (1.2.156.10197.1.301)                        |
+|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
+|       |              1C CF 55 01 82 2D                            |
 |       | Comments:    Point compressed subjectPublicKey            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
