@@ -262,7 +262,7 @@ Extension = ( extensionID: int, extensionValue: any ) //
 
 For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. \[ modulus : ~biguint, exponent : ~biguint \]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).
 
-For elliptic curve public keys in Weierstraß form (id-ecPublicKey), uncompressed keys are point compressed as defined in Section 2.3.3 of {{SECG}}. If a DER encoded certificate with a point compressed public key of type id-ecPublicKey is CBOR encoded, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively. Native C509 certificates with Weierstraß form keys are always point compressed.
+For elliptic curve public keys in Weierstraß form (id-ecPublicKey), keys may be point compressed as defined in Section 2.3.3 of {{SECG}}. Native C509 certificates with Weierstraß form keys use the octets 0x02, 0x03, and 0x04 as defined in {{SECG}}. If a DER encoded certificate with a uncompressed public key of type id-ecPublicKey is CBOR encoded with point compression, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
 
 ### Encoding of issuerSignatureValue
 
