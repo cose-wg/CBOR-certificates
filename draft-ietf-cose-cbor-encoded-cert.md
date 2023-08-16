@@ -1133,6 +1133,7 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
+
 +-------+---------------------------------------------------------+
 | Value | Extended Key Usage                                      |
 +=======+=========================================================+
@@ -1196,8 +1197,8 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | DER:             06 08 2B 06 01 05 05 07 03 15          |
 |       | Comments:        RFC 6187                               |
 +-------+---------------------------------------------------------+
-|    13 | Name:            Kerberos PKINIT KDC                    |
-|       | Identifiers:     id-pkinit-KPKdc                        |
+|    13 | Name:            SSH Server                             |
+|       | Identifiers:     id-kp-secureShellServer                |
 |       | OID:             1.3.6.1.5.5.7.3.22                     |
 |       | DER:             06 08 2B 06 01 05 05 07 03 16          |
 |       | Comments:        RFC 6187                               |
@@ -2099,4 +2100,4 @@ The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Fraser Tweedale, and Rene Struik for reviewing and commenting on intermediate versions of the draft and helping with GitHub.
+The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser Tweedale, and Rene Struik for reviewing and commenting on intermediate versions of the draft and helping with GitHub.
