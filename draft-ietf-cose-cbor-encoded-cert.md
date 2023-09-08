@@ -1735,7 +1735,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   1612224000,
   h'0123456789AB',
   1,
-  h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
+  h'FEB1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
   1,
   0,
@@ -1755,7 +1755,7 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes. The point compressed
 1A 60 18 96 00
 46 01 23 45 67 89 AB
 01
-58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+58 21 FE B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
 00
@@ -1766,7 +1766,7 @@ The size of the CBOR encoding (CBOR sequence) is 138 bytes. The point compressed
 
 ### Example: Natively Signed C509 Certificate
 
-The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for c509CertificateType and signatureValue.
+The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for c509CertificateType, encoding of point compression (see {{subpubkey-alg-encoding}}), and signatureValue.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
