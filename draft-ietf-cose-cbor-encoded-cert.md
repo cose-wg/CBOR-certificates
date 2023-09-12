@@ -70,6 +70,7 @@ normative:
 informative:
 
   RFC6487:
+  RFC6955:
   RFC7228:
   RFC7925:
   RFC7932:
@@ -478,17 +479,17 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 # C509 Certificate Signing Request {#CSR}
 
-The section defines the C509 Certificate Signing Request (CSR) format based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateSigningRequestType values defined, c509CertificateSigningRequestType = 0 requests a c509CertificateType = 0 and c509CertificateSigningRequestType = 1 requests a c509CertificateType = 1 . subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm as defined in e.g. RFC 6955. CSR attributes other than extensionRequest are not supported.
+The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateRequestType values defined, c509CertificateRequestType = 0 requests a c509CertificateType = 0 and c509CertificateRequestType = 1 requests a c509CertificateType = 1. subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm, e.g. as defined in {{RFC6955}}. CSR attributes other than extensionRequest are not supported.
 
 ~~~~~~~~~~~ CDDL
-C509CertificateSigningRequest = [
-   TBSCertificateSigningRequest,
+C509CertificateRequest = [
+   TBSCertificateRequest,
    subjectProofOfPossessionValue: any,
 ]
 
 ; The elements of the following group are used in a CBOR Sequence:
-TBSCertificateSigningRequest = (
-   c509CertificateSigningRequestType: int,
+TBSCertificateRequest = (
+   c509CertificateRequestType: int,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
@@ -496,10 +497,10 @@ TBSCertificateSigningRequest = (
    subjectProofOfPossessionAlgorithm: AlgorithmIdentifier,
 )
 ~~~~~~~~~~~
-{: #fig-C509CSRCDDL title="CDDL for C509CertificateSigningRequest."}
+{: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
 {: artwork-align="center"}
 
-After verifying the subjectProofOfPossessionValue, the CA MAY transform the C509CertificateSigningRequest into a RFC 2985 CertificationRequestInfo for compatibility with existing procedures and code.
+After verifying the subjectProofOfPossessionValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
 # C509 Certificate Revocation List {#CRL}
 
