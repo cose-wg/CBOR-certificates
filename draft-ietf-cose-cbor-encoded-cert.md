@@ -479,12 +479,12 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 # C509 Certificate Signing Request {#CSR}
 
-The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateRequestType values defined, c509CertificateRequestType = 0 requests a c509CertificateType = 0 and c509CertificateRequestType = 1 requests a c509CertificateType = 1. subjectProofOfPossessionAlgorithm can be a C509 signature algorithm or a non-signature Proof-of-Possession Algorithm, e.g. as defined in {{RFC6955}}. CSR attributes other than extensionRequest are not supported.
+The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateRequestType values defined, c509CertificateRequestType = 0 requests a c509CertificateType = 0 and c509CertificateRequestType = 1 requests a c509CertificateType = 1. subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g. as defined in {{RFC6955}}, both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. CSR attributes other than extensionRequest are not supported.
 
 ~~~~~~~~~~~ CDDL
 C509CertificateRequest = [
    TBSCertificateRequest,
-   subjectProofOfPossessionValue: any,
+   subjectSignatureValue: any,
 ]
 
 ; The elements of the following group are used in a CBOR Sequence:
@@ -494,13 +494,13 @@ TBSCertificateRequest = (
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    extensionsRequest : Extensions,
-   subjectProofOfPossessionAlgorithm: AlgorithmIdentifier,
+   subjectSignatureAlgorithm: AlgorithmIdentifier,
 )
 ~~~~~~~~~~~
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
 {: artwork-align="center"}
 
-After verifying the subjectProofOfPossessionValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
+After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
 # C509 Certificate Revocation List {#CRL}
 
@@ -542,7 +542,7 @@ It is straightforward to integrate the C509 format into legacy X.509 processing 
  
 The CSR format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
  
-When a certificate request is received the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof of possession of the public key, before normal certificate generation can take place.
+When a certificate request is received the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession of the public key, before normal certificate generation can take place.
  
 In the reverse direction, in case c509CertificateType = 1 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 0 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with CA may be needed.
 
@@ -1273,7 +1273,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 
 ## C509 Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -1343,6 +1343,33 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    14 | Name:        SHA-256 with HMAC-SHA256                     |
+|       | Identifiers: sa-ecdhPop-sha256-hmac-sha256                |
+|       | OID:         1.3.6.1.5.5.7.6.26                           |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1A          |
+|       | Comments:    Proof-of-possession algorithm, indexed with  |
+|       |              KDF and MAC, see RFC 6955. Requires          |
+|       |              recipient public static Diffie-Hellman key.  |
++-------+-----------------------------------------------------------+
+|    15 | Name:        SHA-384 with HMAC-SHA384                     |
+|       | Identifiers: sa-ecdhPop-sha384-hmac-sha384                |
+|       | OID:         1.3.6.1.5.5.7.6.27                           |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1B          |
+|       | Comments:    Proof-of-possession algorithm, indexed with  |
+|       |              KDF and MAC, see RFC 6955. Requires          |
+|       |              recipient public static Diffie-Hellman key.  |
++-------+-----------------------------------------------------------+
+|    16 | Name:        SHA-512 with HMAC-SHA512                     |
+|       | Identifiers: sa-ecdhPop-sha512-hmac-sha512                |
+|       | OID:         1.3.6.1.5.5.7.6.28                           |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1C          |
+|       | Comments:    Proof-of-possession algorithm, indexed with  |
+|       |              KDF and MAC, see RFC 6955. Requires          |
+|       |              recipient public static Diffie-Hellman key.  |
 +-------+-----------------------------------------------------------+
 |    23 | Name:        RSASSA-PKCS1-v1_5 with SHA-256               |
 |       | Identifiers: sha256WithRSAEncryption                      |
