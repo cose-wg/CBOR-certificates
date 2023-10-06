@@ -483,7 +483,7 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateRequestType values defined, c509CertificateRequestType = 0 requests a c509CertificateType = 0 and c509CertificateRequestType = 1 requests a c509CertificateType = 1. subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g. as defined in {{RFC6955}}, both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}.
 
-Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other attribute currently defined is challengePassword which is encoded as CBOR text string or CBOR byte string.
+Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other attribute currently defined is challengePassword which is encoded as a CBOR byte string.
 
 
 
@@ -504,7 +504,7 @@ TBSCertificateRequest = (
    subjectSignatureAlgorithm: AlgorithmIdentifier,
 )
 
-challengePassword: tstr / bstr
+challengePassword: bstr
 ~~~~~~~~~~~
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
 {: artwork-align="center"}
