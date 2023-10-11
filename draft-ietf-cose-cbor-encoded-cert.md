@@ -1803,7 +1803,7 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
 /This defines a CBOR Sequence (RFC 8742):/
 
   0,
-  h'01F50D',
+  h'01f50d',
   "RFC test CA",
   1672531200,
   1767225600,
