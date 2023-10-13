@@ -887,21 +887,21 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
-|       | extensionValue:   AuthorityInfoAccessSyntax               |
+|       | extensionValue:  AuthorityInfoAccessSyntax                |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Signed Certificate Timestamp List        |
 |       | Identifiers:                                              |
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
-|       | extensionValue:  SignedCertificateTimestamps              |
+|       | extensionValue:  SignedCertificateTimestampList           |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | Identifiers:     subjectDirectoryAttributes               |
 |       | OID:             2.5.29.9                                 |
 |       | DER:             06 03 55 1D 09                           |
 |       | Comments:                                                 |
-|       | extensionValue:   SubjectDirectoryAttributes              |
+|       | extensionValue:  SubjectDirectoryAttributes               |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Issuer Alternative Name                  |
 |       | Identifiers:     issuerAltName                            |
@@ -953,7 +953,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | extensionValue:  SubjectInfoAccessSyntax                  |
 +-------+-----------------------------------------------------------+
 |    32 | Name:            IP Resources                             |
-|       | Identifiers:     ipAddrBlocks                             |
+|       | Identifiers:     id-pe-ipAddrBlocks                       |
 |       | OID:             1.3.6.1.5.5.7.1.7                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 07            |
 |       | Comments:                                                 |
@@ -967,7 +967,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
 |    34 | Name:            IP Resources v2                          |
-|       | Identifiers:     ipAddrBlocks-v2                          |
+|       | Identifiers:     id-pe-ipAddrBlocks-v2                    |
 |       | OID:             1.3.6.1.5.5.7.1.28                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1C            |
 |       | Comments:                                                 |
@@ -979,6 +979,55 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
 |       | Comments:                                                 |
 |       | extensionValue:  ASIdentifiers                            |
++-------+-----------------------------------------------------------+
+|    36 | Name:            Biometric Information                    |
+|       | Identifiers:     biometricInfo                            |
+|       | OID:             1.3.6.1.5.5.7.1.2                        |
+|       | DER:             06 08 2B 06 01 05 05 07 01 02            |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
++-------+-----------------------------------------------------------+
+|    37 | Name:            Precertificate Signing Certificate       |
+|       | Identifiers:                                              |
+|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |
+|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
++-------+-----------------------------------------------------------+
+|    38 | Name:            OCSP No Check                            |
+|       | Identifiers:     id-pkix-ocsp-nocheck                     |
+|       | OID:             1.3.6.1.5.5.7.48.1.5                     |
+|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
++-------+-----------------------------------------------------------+
+|    39 | Name:            Qualified Certificate Statements         |
+|       | Identifiers:     id-pe-qcStatements                       |
+|       | OID:             1.3.6.1.5.5.7.1.3                        |
+|       | DER:             06 08 2B 06 01 05 05 07 01 03            |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
++-------+-----------------------------------------------------------+
+|    40 | Name:            S/MIME Capabilities                      |
+|       | Identifiers:     smimeCapabilities                        |
+|       | OID:             1.2.840.113549.1.9.15                    |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
++-------+-----------------------------------------------------------+
+|    41 | Name:            TLS Features                             |
+|       | Identifiers:     id-pe-tlsfeature                         |
+|       | OID:             1.3.6.1.5.5.7.1.24                       |
+|       | DER:             06 08 2B 06 01 05 05 07 01 18            |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
++-------+-----------------------------------------------------------+
+|    42 | Name:            Subject Information Access               |
+|       | Identifiers:     id-pe-subjectInfoAccess                  |
+|       | OID:             1.3.6.1.5.5.7.1.11                       |
+|       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
+|       | Comments:                                                 |
+|       | extensionValue:                                           |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-extype title="C509 Extensions"}
