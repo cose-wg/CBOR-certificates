@@ -1,6 +1,6 @@
 ---
 title: "CBOR Encoded Certificate Revocation Management"
-docname: draft-ietf-cose-cbor-cert-revocation-latest
+docname: draft-cose-cbor-cert-revocation-latest
 abbrev: C509 Revocation
 
 ipr: trust200902
