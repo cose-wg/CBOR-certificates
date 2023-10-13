@@ -772,6 +772,48 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 19      |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|    24 | Name:            Postal Address                           |
+|       | Identifiers:     postalAddress                            |
+|       | OID:             2.5.4.16                                 |
+|       | DER:             06 03 55 04 10                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    25 | Name:            Name                                     |
+|       | Identifiers:     name                                     |
+|       | OID:             2.5.4.41                                 |
+|       | DER:             06 03 55 04 29                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    26 | Name:            Telephone Number                         |
+|       | Identifiers:     telephoneNumber                          |
+|       | OID:             2.5.4.20                                 |
+|       | DER:             06 03 55 04 14                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    27 | Name:            Directory Management Domain Name         |
+|       | Identifiers:     dmdName                                  |
+|       | OID:             2.5.4.54                                 |
+|       | DER:             06 03 55 04 36                           |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    28 | Name:            userid                                   |
+|       | Identifiers:     uid                                      |
+|       | OID:             0.9.2342.19200300.100.1.1                |
+|       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 01      |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    29 | Name:            Unstructured Name                        |
+|       | Identifiers:     unstructuredName                         |
+|       | OID:             1.2.840.113549.1.9.2                     |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 02         |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
+|    30 | Name:            Unstructured Address                     |
+|       | Identifiers:     unstructuredAddress                      |
+|       | OID:             1.2.840.113549.1.9.8                     |
+|       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="C509 Attributes"}
 {: artwork-align="center"}
