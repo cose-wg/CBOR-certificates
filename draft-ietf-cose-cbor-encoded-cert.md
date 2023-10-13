@@ -195,8 +195,10 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and therefore omitted from the CBOR encoding.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically, each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as a (CBOR int, CBOR text string) pair or as a (unwrapped CBOR OID, CBOR bytes) pair. The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. The Attribute Email Address is always an IA5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as a CBOR text string. If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string of length 8 instead. EUI-64 mapped from a 48-bit MAC address (i.e., of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 6.
-
+* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically, each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as a (CBOR int, CBOR text string) pair or as a (unwrapped CBOR OID, CBOR bytes) pair. The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. The Attribute Email Address is always an IA5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows: 
+  * If the text string contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string, prefixed with an initial byte set to '00'.
+  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 9. An EUI-64 mapped from a 48-bit MAC address (i.e., of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string of length 7. 
+  * Otherwise it is encoded as a CBOR text string.
 * validity. The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as CBOR null.
 
 * subject. The 'subject' is encoded exactly like issuer.
@@ -1706,8 +1708,8 @@ Certificate:
         Signature Algorithm: ecdsa-with-SHA256
         Issuer: CN=RFC test CA
         Validity
-            Not Before: Jan  1 00:00:00 2020 GMT
-            Not After : Feb  2 00:00:00 2021 GMT
+            Not Before: Jan  1 00:00:00 2023 GMT
+            Not After : Jan  1 00:00:00 2026 GMT
         Subject: CN=01-23-45-FF-FE-67-89-AB
         Subject Public Key Info:
             Public Key Algorithm: id-ecPublicKey
@@ -1721,33 +1723,32 @@ Certificate:
                 ASN1 OID: prime256v1
                 NIST CURVE: P-256
         X509v3 extensions:
-            X509v3 Key Usage:
+            X509v3 Key Usage: 
                 Digital Signature
     Signature Algorithm: ecdsa-with-SHA256
-         30:44:02:20:44:5d:79:8c:90:e7:f5:00:dc:74:7a:65:4c:ec:
-         6c:fa:6f:03:72:76:e1:4e:52:ed:07:fc:16:29:4c:84:66:0d:
-         02:20:5a:33:98:5d:fb:d4:bf:dd:6d:4a:cf:38:04:c3:d4:6e:
-         bf:3b:7f:a6:26:40:67:4f:c0:35:4f:a0:56:db:ae:a6
-
+        30:46:02:21:00:d4:32:0b:1d:68:49:e3:09:21:9d:30:03:7e:
+        13:81:66:f2:50:82:47:dd:da:e7:6c:ce:ea:55:05:3c:10:8e:
+        90:02:21:00:d5:51:f6:d6:01:06:f1:ab:b4:84:cf:be:62:56:
+        c1:78:e4:ac:33:14:ea:19:19:1e:8b:60:7d:a5:ae:3b:da:16
 ~~~~~~~~~~~
 
-The DER encoding of the above certificate is 314 bytes.
+The DER encoding of the above certificate is 316 bytes.
 
 ~~~~~~~~~~~
-30 82 01 36 30 81 DE A0 03 02 01 02 02 03 01 F5 0D 30 0A 06 08 2A 86
-48 CE 3D 04 03 02 30 16 31 14 30 12 06 03 55 04 03 0C 0B 52 46 43 20
-74 65 73 74 20 43 41 30 1E 17 0D 32 30 30 31 30 31 30 30 30 30 30 30
-5A 17 0D 32 31 30 32 30 32 30 30 30 30 30 30 5A 30 22 31 20 30 1E 06
-03 55 04 03 0C 17 30 31 2D 32 33 2D 34 35 2D 46 46 2D 46 45 2D 36 37
-2D 38 39 2D 41 42 30 59 30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86
-48 CE 3D 03 01 07 03 42 00 04 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E
-69 3F 16 21 3A 04 52 5E D4 44 50 B1 01 9C 2D FD 38 38 AB AC 4E 14 D8
-6C 09 83 ED 5E 9E EF 24 48 C6 86 1C C4 06 54 71 77 E6 02 60 30 D0 51
-F7 79 2A C2 06 A3 0F 30 0D 30 0B 06 03 55 1D 0F 04 04 03 02 07 80 30
-0A 06 08 2A 86 48 CE 3D 04 03 02 03 47 00 30 44 02 20 44 5D 79 8C 90
-E7 F5 00 DC 74 7A 65 4C EC 6C FA 6F 03 72 76 E1 4E 52 ED 07 FC 16 29
-4C 84 66 0D 02 20 5A 33 98 5D FB D4 BF DD 6D 4A CF 38 04 C3 D4 6E BF
-3B 7F A6 26 40 67 4F C0 35 4F A0 56 DB AE A6
+30 82 01 38 30 81 de a0 03 02 01 02 02 03 01 f5 0d 30 0a 06 08 2a 86 
+48 ce 3d 04 03 02 30 16 31 14 30 12 06 03 55 04 03 0c 0b 52 46 43 20 
+74 65 73 74 20 43 41 30 1e 17 0d 32 33 30 31 30 31 30 30 30 30 30 30 
+5a 17 0d 32 36 30 31 30 31 30 30 30 30 30 30 5a 30 22 31 20 30 1e 06 
+03 55 04 03 0c 17 30 31 2d 32 33 2d 34 35 2d 46 46 2d 46 45 2d 36 37 
+2d 38 39 2d 41 42 30 59 30 13 06 07 2a 86 48 ce 3d 02 01 06 08 2a 86 
+48 ce 3d 03 01 07 03 42 00 04 b1 21 6a b9 6e 5b 3b 33 40 f5 bd f0 2e 
+69 3f 16 21 3a 04 52 5e d4 44 50 b1 01 9c 2d fd 38 38 ab ac 4e 14 d8 
+6c 09 83 ed 5e 9e ef 24 48 c6 86 1c c4 06 54 71 77 e6 02 60 30 d0 51 
+f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30 
+0a 06 08 2a 86 48 ce 3d 04 03 02 03 49 00 30 46 02 21 00 d4 32 0b 1d 
+68 49 e3 09 21 9d 30 03 7e 13 81 66 f2 50 82 47 dd da e7 6c ce ea 55 
+05 3c 10 8e 90 02 21 00 d5 51 f6 d6 01 06 f1 ab b4 84 cf be 62 56 c1 
+78 e4 ac 33 14 ea 19 19 1e 8b 60 7d a5 ae 3b da 16 
 ~~~~~~~~~~~
 
 ### Example C509 Certificate Encoding
@@ -1757,40 +1758,41 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-  1,
-  h'01f50d',
-  "RFC test CA",
-  1577836800,
-  1612224000,
-  h'0123456789AB',
-  1,   / subjectPublicKeyAlgorithm /
-  h'FEB1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
-    B1019C2DFD3838AB',
-  1,   / non-critical keyUsage digitalSignature /
-  0,   / signatureAlgorithm /
-  h'445D798C90E7F500DC747A654CEC6CFA6F037276E14E52ED07
-    FC16294C84660D5A33985DFBD4BFDD6D4ACF3804C3D46EBF3B
-    7FA62640674FC0354FA056DBAEA6'
+  1,                   / version /
+  h'01f50d',           / serialNumber /
+  "RFC test CA",       / issuer /
+  1672531200,          / notBefore /
+  1767225600,          / notAfter /
+  h'010123456789AB',   / subject, EUI-64 / 
+  1,                   / subjectPublicKeyAlgorithm /
+  h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
+    B1019C2DFD3838AB',  
+  1,                   / non-critical keyUsage 
+                         digitalSignature /
+  0,                   / signatureAlgorithm /
+  h'D4320B1D6849E309219D30037E138166F2508247DDDAE76CCE
+    EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
+    3314EA19191E8B607DA5AE3BDA16'
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 138 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
+The size of the CBOR encoding (CBOR sequence) is 139 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
 
 ~~~~~~~~~~~
-01
-43 01 F5 0D
+01 
+43 01 F5 0D 
 6B 52 46 43 20 74 65 73 74 20 43 41
-1A 5E 0B E1 00
-1A 60 18 96 00
-46 01 23 45 67 89 AB
-01
-58 21 FE B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
-5E D4 44 50 B1 01 9C 2D FD 38 38 AB
-01
-00
-58 40 44 5D 79 8C 90 E7 F5 00 DC 74 7A 65 4C EC 6C FA 6F 03 72 76 E1
-4E 52 ED 07 FC 16 29 4C 84 66 0D 5A 33 98 5D FB D4 BF DD 6D 4A CF 38
-04 C3 D4 6E BF 3B 7F A6 26 40 67 4F C0 35 4F A0 56 DB AE A6
+1A 63 B0 CD 00 
+1A 69 55 B9 00 
+47 01 01 23 45 67 89 AB 
+01 
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB 
+01 
+00 
+58 40 D4 32 0B 1D 68 49 E3 09 21 9D 30 03 7E 13 81 66 F2 50 82 47 DD 
+DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE 
+62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16  
 ~~~~~~~~~~~
 
 ### Example: Natively Signed C509 Certificate
@@ -1803,37 +1805,36 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
   0,
   h'01f50d',
   "RFC test CA",
-  1577836800,
-  1612224000,
-  h'0123456789AB',
+  1672531200,
+  1767225600,
+  h'010123456789AB',
   1,
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
-    B1019C2DFD3838AB',
+    B1019C2DFD3838AB',  
   1,
   0,
-  h'B27A0B781455F71B68290F6C2EC9A897F18FDE9B6C59575953
-    BC67268AB0E4DDE99D273E04E4715383AB2257C6AAA35284E5
-    ED18BDB91247E9F2C433136480B9'
-
+  h'6FC903015259A38C0800A3D0B2969CA21977E8ED6EC344964D
+    4E1C6B37C8FB541274C3BB81B2F53073C5F101A5AC2A928865
+    83B6A2679B6E682D2A26945ED0B2'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 138 bytes.
+The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 
 ~~~~~~~~~~~
-00
-43 01 F5 0D
+00 
+43 01 F5 0D 
 6B 52 46 43 20 74 65 73 74 20 43 41
-1A 5E 0B E1 00
-1A 60 18 96 00
-46 01 23 45 67 89 AB
-01
+1A 63 B0 CD 00 
+1A 69 55 B9 00 
+47 01 01 23 45 67 89 AB 
+01 
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
-5E D4 44 50 B1 01 9C 2D FD 38 38 AB
-01
-00
-58 40 B2 7A 0B 78 14 55 F7 1B 68 29 0F 6C 2E C9 A8 97 F1 8F DE 9B 6C
-59 57 59 53 BC 67 26 8A B0 E4 DD E9 9D 27 3E 04 E4 71 53 83 AB 22 57
-C6 AA A3 52 84 E5 ED 18 BD B9 12 47 E9 F2 C4 33 13 64 80 B9
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB 
+01 
+00 
+58 40 6F C9 03 01 52 59 A3 8C 08 00 A3 D0 B2 96 9C A2 19 77 E8 ED 6E 
+C3 44 96 4D 4E 1C 6B 37 C8 FB 54 12 74 C3 BB 81 B2 F5 30 73 C5 F1 01 
+A5 AC 2A 92 88 65 83 B6 A2 67 9B 6E 68 2D 2A 26 94 5E D0 B2
 ~~~~~~~~~~~
 
 ### Example: Additonal Keys for the Example Certificates
