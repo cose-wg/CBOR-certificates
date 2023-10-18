@@ -1619,6 +1619,12 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 {: #fig-pkalgs title="C509 Public Key Algorithms"}
 {: artwork-align="center"}
 
+### Suitability of different public key algorithms for use within IoT scenarios
+
+The public key algorithms registry {{#pkalg}} specify a number of cryptographic keys, not all which are suitable for usage within constrained IoT devices. In general, RSA is too computationally expensive for constrained IoT devices to process, and in addition requires long keys. Using elliptic curve cryptographic keys, a key length of 233 bits gives equivalent strength as an RSA key with 2048 bits.
+
+The recommendation given in {{RFC7925}} for IoT scenarios using certificates is the cipher suite TLS_ECDHE_ECDSA_WITH_AES_128_CCM_8, with the named curve secp256r1. In the newer {{I-D.ietf-lake-edhoc}} document, the cipher suites recommended for resource constrained scenarios contain either the secp256r1 curve or the Montgomery curve X25519. Additionally, there exist resource efficient implementations of other Montgomery, Edwards and Weierstraß curves, making them possible candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in {{#pkalg}}.
+
 ## COSE Header Parameters Registry {#cose}
 
 IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading with this document as reference.
