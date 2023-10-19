@@ -513,40 +513,6 @@ challengePassword: tstr / bstr
 
 After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
-# C509 Certificate Revocation List {#CRL}
-
-The section defines the C509 Certificate Revocation List (CRL) format based on and compatible with {{RFC5280}} reusing the formatting for C509 certificates defined in {{certificate}}.
-
-~~~~~~~~~~~ CDDL
-C509CertificateRevocationList = [
-   TBSCertificateRevocationList,
-   issuerSignatureValue : any,
-]
-
-; The elements of the following group are used in a CBOR Sequence:
-TBSCertificateRevocationList = (
-   C509CertificateRevocationListType: int,
-   issuer: Name,
-   thisUpdate: Time,
-   nextUpdate: Time,
-   revokedCertificates: RevokedCertificates,
-   crlExtensions: Extensions,
-   issuerSignatureAlgorithm: AlgorithmIdentifier,
-)
-
-RevokedCertificates = [
-    userCertificate: CertificateSerialNumber,
-    revocationDate: Time,
-    crlEntryExtensions: Extensions,
-]
-~~~~~~~~~~~
-{: #fig-C509CRLCDDL title="CDDL for C509CertificateRevocationList."}
-{: artwork-align="center"}
-
-# C509 Online Certificate Status Protocol {#OCSP}
-
-TODO
-
 # C509 Processing and Certificate Issuance
  
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
