@@ -50,6 +50,7 @@ author:
 normative:
 
   RFC2119:
+  RFC2985:
   RFC2986:
   RFC4108:
   RFC5280:
@@ -482,7 +483,12 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 # C509 Certificate Signing Request {#CSR}
 
-The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateRequestType values defined, c509CertificateRequestType = 0 requests a c509CertificateType = 0 and c509CertificateRequestType = 1 requests a c509CertificateType = 1. subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g. as defined in {{RFC6955}}, both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. CSR attributes other than extensionRequest are not supported.
+The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}. There are currently two c509CertificateRequestType values defined, c509CertificateRequestType = 0 requests a c509CertificateType = 0 and c509CertificateRequestType = 1 requests a c509CertificateType = 1. subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g. as defined in {{RFC6955}}, both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}.
+
+Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for utf8String values and encoded as CBOR text string, except if the text string contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string.
+
+
+
 
 ~~~~~~~~~~~ CDDL
 C509CertificateRequest = [
@@ -496,9 +502,11 @@ TBSCertificateRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
-   extensionsRequest : Extensions,
+   extensionsRequest: Extensions,
    subjectSignatureAlgorithm: AlgorithmIdentifier,
 )
+
+challengePassword: tstr / bstr
 ~~~~~~~~~~~
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
 {: artwork-align="center"}
@@ -543,7 +551,7 @@ TODO
  
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
  
-The CSR format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
+The Certificate Signing Request (CSR)) format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
  
 When a certificate request is received the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession of the public key, before normal certificate generation can take place.
  
@@ -780,7 +788,7 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X509 Certificates (C509 Certificates)". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. The registry also contains CSR attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~
 +-------+-----------------------------------------------------------+
@@ -940,8 +948,15 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | Comments:                                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
+|   255 | Name:            Challenge Password                       |
+|       | Identifiers:     challengePassword                        |
+|       | OID:             1.2.840.113549.1.9.7                     |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
+|       | Comments:        CSR Attribute                            |
+|       | extensionValue:  ChallengePassword                        |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-extype title="C509 Extensions"}
+{: #fig-extype title="C509 Extensions and CSR Attributes"}
 {: artwork-align="center"}
 
 ## C509 Certificate Policies Registry {#CP}
