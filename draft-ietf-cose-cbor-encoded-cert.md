@@ -1782,7 +1782,8 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   1,                   / subjectPublicKeyAlgorithm /
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',  
-  1,                   / non-critical keyUsage 
+  1,                   / single extension:
+                         non-critical keyUsage 
                          digitalSignature /
   0,                   / signatureAlgorithm /
   h'D4320B1D6849E309219D30037E138166F2508247DDDAE76CCE
@@ -1851,8 +1852,10 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 C3 44 96 4D 4E 1C 6B 37 C8 FB 54 12 74 C3 BB 81 B2 F5 30 73 C5 F1 01 
 A5 AC 2A 92 88 65 83 B6 A2 67 9B 6E 68 2D 2A 26 94 5E D0 B2
 ~~~~~~~~~~~
+### Comment: Compact certificates for Diffie-Hellman key agreement
+The two above-presented examples illustrate the common digitalSignature key usage. A compact certificate for key agreement usage is identical, except for the key usage extension field, formatted according to {{message-fields}}.
 
-### Example: Additonal Keys for the Example Certificates
+### Example: Additional Keys for the Example Certificates
 
 Below are the issuer key pair and the subject private key belonging to the above example certificates. The private keys are encoded as in COSE {{RFC9052}}. These issuer key pair can be used to sign or verify the example certificates and the subject private key allows the example certificates to be used in test vectors for other protocols like EDHOC.
 
