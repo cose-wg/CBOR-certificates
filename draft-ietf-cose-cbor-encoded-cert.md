@@ -1941,11 +1941,13 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 
 ## Example IEEE 802.1AR profiled X.509 Certificate
 
-We reuse as example of an IEEE 802.1AR profiled X.509 certificate (IDevID) a certificate provided in {{RFC9148}}. The DER encoding is given in the second example in Appendix A.2, and the plain text is in the second example of Appendix C.2. The X509v3 Subject Alternative Name is of type OtherName (see {{RFC5280}}), with type-id = id-on-hardwareModuleName (see {{RFC4108}}) consisting of hardware type OID and hardware serial number of the device, in this example being 1.3.6.1.4.1.6715.1.10 and 01020304, respectively.
+EDITOR'S NOTE: Need good example, or remove section
+
+One example of an IEEE 802.1AR profiled X.509 certificate (IDevID) is provided in {{RFC9148}}. The DER encoding is given in the second example in Appendix A.2, and the plain text is in the second example of Appendix C.2. The X509v3 Subject Alternative Name is of type OtherName (see {{RFC5280}}), with type-id = id-on-hardwareModuleName (see {{RFC4108}}) consisting of hardware type OID and hardware serial number of the device, in that example being 1.3.6.1.4.1.6715.1.10 and 01020304, respectively.
 
 ### Example C509 Certificate Encoding
 
-EDITOR'S NOTE: To do
+
 
 ## Example CAB Baseline ECDSA HTTPS X.509 Certificate
 
