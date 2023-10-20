@@ -48,15 +48,15 @@ author:
 
 
 normative:
-
-  RFC5280
-  RFC6960
-  RFC8949
-  ToBeRepopulated
+  RFC2119:
+  RFC5280:
+  RFC6960:
+  RFC8949:
+  RFC8174:
+  I-D.ietf-cose-cbor-encoded-cert:
 
 informative:
 
-  ToBeRepopulated
 
 --- abstract
 
@@ -76,7 +76,7 @@ This specification makes use of the terminology in {{RFC5280}}, and {{RFC6960}}.
 
 # C509 Certificate Revocation List {#CRL}
 
-The section defines the C509 Certificate Revocation List (CRL) format based on and compatible with {{RFC5280}} reusing the formatting for C509 certificates defined in {{certificate}}.
+The section defines the C509 Certificate Revocation List (CRL) format based on and compatible with {{RFC5280}} reusing the formatting for C509 certificates defined in {{I-D.ietf-cose-cbor-encoded-cert}}.
 
 ~~~~~~~~~~~ CDDL
 C509CertificateRevocationList = [
