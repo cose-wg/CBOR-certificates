@@ -1835,7 +1835,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-  1,                   / version /
+  1,                   / version and certificate type /
   h'01f50d',           / serialNumber /
   "RFC test CA",       / issuer /
   1672531200,          / notBefore /
@@ -1914,8 +1914,10 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 C3 44 96 4D 4E 1C 6B 37 C8 FB 54 12 74 C3 BB 81 B2 F5 30 73 C5 F1 01 
 A5 AC 2A 92 88 65 83 B6 A2 67 9B 6E 68 2D 2A 26 94 5E D0 B2
 ~~~~~~~~~~~
-### Comment: Compact certificates for Diffie-Hellman key agreement
-The two above-presented examples illustrate the common digitalSignature key usage. A compact certificate for key agreement usage is identical, except for the key usage extension field, formatted according to {{message-fields}}.
+
+### C509 for Diffie-Hellman keys
+
+The two previous examples illustrate the common key usage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format.
 
 ### Example: Additional Keys for the Example Certificates
 
