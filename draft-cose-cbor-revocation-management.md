@@ -60,7 +60,7 @@ informative:
 
 --- abstract
 
-This document specifies CBOR encodings of messages for certificate revocation lists, and 
+This document specifies CBOR encodings of messages for certificate revocation lists, and
 
 --- middle
 
@@ -113,7 +113,7 @@ To encode OCSP requests, the CDDL below gives the cbor encoding corresponding to
 ~~~~~~~~~~~ CDDL
  C509OCSPRequest    =     [
        TBSRequest,
-       optionalSignature : *any, 
+       optionalSignature : *any,
  ]
 
    TBSRequest   =     [
@@ -132,7 +132,7 @@ To encode OCSP requests, the CDDL below gives the cbor encoding corresponding to
        hashAlgorithm : AlgorithmIdentifier,
        issuerNameHash : bytes, -- Hash of issuer's DN
        issuerKeyHash : bytes, -- Hash of issuer's public key
-       serialNumber : CertificateSerialNumber 
+       serialNumber : CertificateSerialNumber
    ]
 
    extension = TBD
@@ -164,7 +164,7 @@ Concerning OCSP responses we address the id-pkix-ocsp-basic response type as def
       signature : any,
       certs : *[C509Certificate]
    ]
-   
+
    ResponseData = [
       version : uint .default 1,
       responderID : ResponderID,
@@ -188,13 +188,13 @@ Concerning OCSP responses we address the id-pkix-ocsp-basic response type as def
    ]
 
    CertStatus = {1: NULL} / {2: RevokedInfo} / {3: NULL}
-	; good / revoked / unknown, semantics from RFC6960 
+	; good / revoked / unknown, semantics from RFC6960
 
    RevokedInfo = (
        revocationTime : Time,
-       revocationReason : *CRLReason 
+       revocationReason : *CRLReason
    )
-   
+
    CRLReason = 0..10 ; inclusive range
 	; semantics of integer values from RFC6960, 5.3.1.
 ~~~~~~~~~~~
