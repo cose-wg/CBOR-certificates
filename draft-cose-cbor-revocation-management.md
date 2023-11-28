@@ -1,11 +1,11 @@
 ---
 title: "CBOR Encoded Certificate Revocation Management"
-docname: draft-cose-cbor-cert-revocation-latest
+docname: draft-cose-cbor-revocation-management-latest
 abbrev: C509 Revocation
 
 ipr: trust200902
 cat: std
-
+submissiontype: IETF
 coding: utf-8
 pi: # can use array (if all yes) or hash here
   toc: yes
