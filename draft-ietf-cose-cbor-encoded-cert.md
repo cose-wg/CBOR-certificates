@@ -485,18 +485,19 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 # C509 Certificate Signing Request {#CSR}
 
-The section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting for C509 certificates defined in {{certificate}}.
-Different types of C509 Certificate Requests are specified using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:
+This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting of C509 certificates defined in {{certificate}}.
 
-* Analogously to C509 certificates, the C509 Certificate Request can be an invertible CBOR re-encoding of a DER encoded RFC 2986 certification request, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
+Different types of C509 Certificate Requests are defined, see {{csr-type}}, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:
 
-* The requested C509 certificate can be of type 0 or 1, see {{type}}.
+* The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER encoded RFC 2986 certification request, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
 
-This enables the four combinations defined in {{csr-type}}, most common variants are expected to be:
+* The requested C509 certificate in the C509 Certificate Request can either be of type 0 or of type 1, see {{type}}.
 
-* c509CertificateType = 0. Natively signed C509 Certificate Requests for C509 Type 0, which removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
+This enables the four combinations defined in {{csr-type}}, the most common variants are expected to be:
 
-* c509CertificateType = 3. CBOR re-encoded RFC 2986 certification requests for C509 Type 1, which is backwards compatible with legacy certification request and with reduced transport overhead.
+* c509CertificateType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 0. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
+
+* c509CertificateType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 1. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g. as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}.
 
