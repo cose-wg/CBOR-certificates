@@ -637,14 +637,17 @@ fn cbor_ext_info_access(b: &[u8]) -> Vec<u8> {
    SkipCerts ::= INTEGER (0..MAX)
    
    -- This extension MUST be critical.
-   -- see https://datatracker.ietf.org/doc/html/rfc3280
-   
+   -- see https://datatracker.ietf.org/doc/html/rfc3280 / 
+      https://datatracker.ietf.org/doc/html/rfc5912
+      (not included in sample cert)
    TO
    
    InhibitAnyPolicy = uint
 */
 fn cbor_ext_inhibit_anypolicy(b: &[u8]) -> Vec<u8> {
-// 
+  let mut vec = Vec::new();
+  let inhibitAnyPolicy = der(b, ASN1_INT);
+  vec.push(cbor_uint(inhibitAnyPolicy));
 }
 
 // CBOR encodes a Range of IP Addresses
@@ -738,6 +741,7 @@ fn cbor_ext_key_use(bs: &[u8], signed_nr_ext: i64) -> Vec<u8> {
    }
    
    -- see https://datatracker.ietf.org/doc/html/rfc3280
+      no explicit example included
    
    TO
    
@@ -762,6 +766,9 @@ fn cbor_ext_name_constraints(b: &[u8]) -> Vec<u8> {
         vec.push(cbor_simple(CBOR_NULL));
    } else {
    //TODO: process content of permittedSubtrees
+     let generalSubtrees = der_vec(permittedSubtrees, ASN1_SEQ);
+     let generalSubtree = generalSubtrees[0];
+     vec.push(cbor_general_names(der_vec(generalSubtree, ASN1_SEQ)));
    }
    
    let excludedSubtrees = der(name_constraints, ASN1_INDEX_ONE);
