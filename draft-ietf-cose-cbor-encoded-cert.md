@@ -1038,13 +1038,6 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | Comments:                                                 |
 |       | extensionValue:                                           |
 +-------+-----------------------------------------------------------+
-|    42 | Name:            Subject Information Access               |
-|       | Identifiers:     id-pe-subjectInfoAccess                  |
-|       | OID:             1.3.6.1.5.5.7.1.11                       |
-|       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
 |   255 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
