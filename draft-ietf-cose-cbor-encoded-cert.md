@@ -436,14 +436,14 @@ CBOR encoding of the following extension values are partly supported:
    SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
 
-* AS Resources (autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
+* AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ CDDL
    AsIdsOrRanges = uint / [uint, uint]
    ASIdentifiers = [ + AsIdsOrRanges ] / null
 ~~~~~~~~~~~
 
-* AS Resources v2 (autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
+* AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
 
 * IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI is not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress is set to ones. With the exception of the first  Address, if the byte string has the same length as the previous Address, the Address is encoded as an uint with the the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2^64 - 1 corresponding to the cbor integer max value.
 
@@ -996,7 +996,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
 |    33 | Name:            AS Resources                             |
-|       | Identifiers:     autonomousSysIds                         |
+|       | Identifiers:     id-pe-autonomousSysIds                   |
 |       | OID:             1.3.6.1.5.5.7.1.8                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 08            |
 |       | Comments:                                                 |
@@ -1010,14 +1010,14 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
 |    35 | Name:            AS Resources v2                          |
-|       | Identifiers:     autonomousSysIds-v2                      |
+|       | Identifiers:     id-pe-autonomousSysIds-v2                |
 |       | OID:             1.3.6.1.5.5.7.1.29                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
 |       | Comments:                                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
 |    36 | Name:            Biometric Information                    |
-|       | Identifiers:     biometricInfo                            |
+|       | Identifiers:     id-pe-biometricInfo                      |
 |       | OID:             1.3.6.1.5.5.7.1.2                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 02            |
 |       | Comments:                                                 |
