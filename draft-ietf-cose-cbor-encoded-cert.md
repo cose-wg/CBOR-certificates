@@ -301,7 +301,9 @@ This section details the encoding of the 'extensions' field. The 'extensions' fi
 
 The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
 
-CBOR encoding of the following extension values are fully supported:
+A note on extension ID naming: on the Internet most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{REF5280}} and included them in for extensions defined elsewhere.
+
+CBOR encoding of the following extension values is fully supported:
 
 *  Subject Key Identifier (subjectKeyIdentifier). The extensionValue is encoded as follows:
 
@@ -418,7 +420,7 @@ CBOR encoding of the following extension values are partly supported:
    ]
 ~~~~~~~~~~~
 
-* Name Constraints (nameConstraints). If the name constraints only contains general names registered in {{GN}} the extension value can be CBOR encoded. Note that {{RFC5280}} requires that minimum MUST be zero, and maximum MUST be absent.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. Note that {{RFC5280}} requires that minimum MUST be zero, and maximum MUST be absent.
 
 ~~~~~~~~~~~ CDDL
    GeneralSubtree = [ GeneralName ]
