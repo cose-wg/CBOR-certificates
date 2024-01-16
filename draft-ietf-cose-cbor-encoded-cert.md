@@ -1821,7 +1821,19 @@ Author: COSE WG
 
 Change controller: IESG
 
+## CoAP Content-Formats Registry {#content-format}
 
+IANA is requested to add the media types "application/cose-c509-cert" and "application/cose-c509-pkcs10" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+
+~~~~~~~~~~~ aasvg
++--------------------------------+----------+------+-------------------+
+| Media Type                     | Encoding | ID   | Reference         |
++================================+==========+======+===================+
+| application/cose-c509-cert     | -        | TBD6 | [[this document]] |
+| application/cose-c509-pkcs10   | -        | TBD7 | [[this document]] |
++--------------------------------+----------+------+-------------------+
+~~~~~~~~~~~
+{: #fig-format-ids title="CoAP Content-Format IDs"}
 
 ## TLS Certificate Types Registry {#tls}
 
