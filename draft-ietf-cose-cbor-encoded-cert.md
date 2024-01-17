@@ -1338,6 +1338,30 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | DER:             06 08 2B 06 01 05 05 07 03 23          |
 |       | Comments:        RFC 9174                               |
 +-------+---------------------------------------------------------+
+|    15 | Name:            CMC Certification Authority            |
+|       | Identifiers:     id-kp-cmcCA                            |
+|       | OID:             1.3.6.1.5.5.7.3.27                     |
+|       | DER:             06 08 2B 06 01 05 05 07 03 1B          |
+|       | Comments:        RFC 6402                               |
++-------+---------------------------------------------------------+
+|    16 | Name:            CMC Registration Authority             |
+|       | Identifiers:     id-kp-cmcRA                            |
+|       | OID:             1.3.6.1.5.5.7.3.28                     |
+|       | DER:             06 08 2B 06 01 05 05 07 03 1C          |
+|       | Comments:        RFC 6402                               |
++-------+---------------------------------------------------------+
+|    17 | Name:            CMC Archive Server                     |
+|       | Identifiers:     id-kp-cmcArchive                       |
+|       | OID:             1.3.6.1.5.5.7.3.29                     |
+|       | DER:             06 08 2B 06 01 05 05 07 03 1D          |
+|       | Comments:        RFC 6402                               |
++-------+---------------------------------------------------------+
+|    18 | Name:            CMC Key Generation Authority           |
+|       | Identifiers:     id-kp-cmKGA                            |
+|       | OID:             1.3.6.1.5.5.7.3.32                     |
+|       | DER:             06 08 2B 06 01 05 05 07 03 20          |
+|       | Comments:        RFC 9480                               |
++-------+---------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-eku title="C509 Extended Key Usages"}
 {: artwork-align="center"}
