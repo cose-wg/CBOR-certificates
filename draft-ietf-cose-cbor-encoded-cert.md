@@ -354,7 +354,7 @@ CBOR encoding of the following extension values are fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to identify the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~ CDDL
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -1362,7 +1362,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 |       | Value:           text                                     |
 +-------+-----------------------------------------------------------+
 |    -1 | Name:            otherName with hardwareModuleName        |
-|       | Comments:        id-on-hardwareModuleNamee                |
+|       | Comments:        id-on-hardwareModuleName                 |
 |       |                  (1.3.6.1.5.5.7.8.4)                      |
 |       |                  06 08 2B 06 01 05 05 07 08 04            |
 |       | Value:           [ ~oid, bytes ]                          |
@@ -2028,7 +2028,7 @@ F2 5D 83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92
 36 A1 00 31 00
 ~~~~~~~~~~~
 
-The plain text is shown in Appendix C.2 of {{RFC9148}}, repeated below with added details on otherName in subjectAltName. The hardwareModuleName field is defined in {{RFC4108}}, see {{ext-encoding}}.
+The plaintext is shown in Appendix C.2 of {{RFC9148}}, repeated below with added details on the hardwareModuleName type of otherName in subjectAltName, see {{ext-encoding}}.
 
 ~~~~~~~~~~~
 
