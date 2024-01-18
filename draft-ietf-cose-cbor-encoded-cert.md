@@ -354,7 +354,7 @@ CBOR encoding of the following extension values are fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~ CDDL
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -1994,12 +1994,107 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 
 ## Example IEEE 802.1AR profiled X.509 Certificate
 
-EDITOR'S NOTE: Need good example, or remove section
 
-One example of an IEEE 802.1AR profiled X.509 certificate (IDevID) is provided in {{RFC9148}}. The DER encoding is given in the second example in Appendix A.2, and the plain text is in the second example of Appendix C.2. The X509v3 Subject Alternative Name is of type OtherName (see {{RFC5280}}), with type-id = id-on-hardwareModuleName (see {{RFC4108}}) consisting of hardware type OID and hardware serial number of the device, in that example being 1.3.6.1.4.1.6715.1.10 and 01020304, respectively.
+An example of an IEEE 802.1AR profiled X.509 certificates (Secure Device Identifier, DevID) is provided in Appendix A.2 of {{RFC9148}}. The DER encoding of the issued certificate is 626 bytes:
+
+~~~~~~~~~~~
+30 82 02 6E 06 09 2A 86 48 86 F7 0D 01 07 02 A0 82 02 5F 30 82 02 5B
+02 01 01 31 00 30 0B 06 09 2A 86 48 86 F7 0D 01 07 01 A0 82 02 41 30
+82 02 3D 30 82 01 E2 A0 03 02 01 02 02 08 7E 76 61 D7 B5 4E 46 32 30
+0A 06 08 2A 86 48 CE 3D 04 03 02 30 5D 31 0B 30 09 06 03 55 04 06 13
+02 55 53 31 0B 30 09 06 03 55 04 08 0C 02 43 41 31 14 30 12 06 03 55
+04 0A 0C 0B 45 78 61 6D 70 6C 65 20 49 6E 63 31 16 30 14 06 03 55 04
+0B 0C 0D 63 65 72 74 69 66 69 63 61 74 69 6F 6E 31 13 30 11 06 03 55
+04 03 0C 0A 38 30 32 2E 31 41 52 20 43 41 30 20 17 0D 31 39 30 31 33
+31 31 31 32 39 31 36 5A 18 0F 39 39 39 39 31 32 33 31 32 33 35 39 35
+39 5A 30 5C 31 0B 30 09 06 03 55 04 06 13 02 55 53 31 0B 30 09 06 03
+55 04 08 0C 02 43 41 31 0B 30 09 06 03 55 04 07 0C 02 4C 41 31 14 30
+12 06 03 55 04 0A 0C 0B 65 78 61 6D 70 6C 65 20 49 6E 63 31 0C 30 0A
+06 03 55 04 0B 0C 03 49 6F 54 31 0F 30 0D 06 03 55 04 05 13 06 57 74
+31 32 33 34 30 59 30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 48 CE
+3D 03 01 07 03 42 00 04 C8 B4 21 F1 1C 25 E4 7E 3A C5 71 23 BF 2D 9F
+DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C FF 95 8D 75 41 9D 81 A6
+A2 45 DF FA E7 90 BE 95 CF 75 F6 02 F9 15 26 18 F8 16 A2 B2 3B 56 38
+E5 9F D9 A3 81 8A 30 81 87 30 09 06 03 55 1D 13 04 02 30 00 30 1D 06
+03 55 1D 0E 04 16 04 14 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77
+AD 66 5D 02 A0 30 1F 06 03 55 1D 23 04 18 30 16 80 14 68 D1 65 51 F9
+51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F 01
+01 FF 04 04 03 02 05 A0 30 2A 06 03 55 1D 11 04 23 30 21 A0 1F 06 08
+2B 06 01 05 05 07 08 04 A0 13 30 11 06 09 2B 06 01 04 01 B4 3B 0A 01
+04 04 01 02 03 04 30 0A 06 08 2A 86 48 CE 3D 04 03 02 03 49 00 30 46
+02 21 00 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB 21
+40 99 D9 81 17 C6 3B 36 13 74 CD 86 02 21 00 A7 74 98 9F 4C 32 1A 5C
+F2 5D 83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92
+36 A1 00 31 00
+~~~~~~~~~~~
+
+The plain text is shown in Appendix C.2 of {{RFC9148}}, repeated below with added details on otherName in subjectAltName. The hardwareModuleName field is defined in {{RFC4108}}, see {{ext-encoding}}.
+
+~~~~~~~~~~~
+
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 9112578475118446130 (0x7e7661d7b54e4632)
+        Signature Algorithm: ecdsa-with-SHA256
+        Issuer: C=US, ST=CA, O=Example Inc, OU=certification, CN=802.1AR CA
+        Validity
+            Not Before: Jan 31 11:29:16 2019 GMT
+            Not After : Dec 31 23:59:59 9999 GMT
+        Subject: C=US, ST=CA, L=LA, O=example Inc, OU=IoT/serialNumber=Wt1234
+        Subject Public Key Info:
+            Public Key Algorithm: id-ecPublicKey
+                Public-Key: (256 bit)
+                pub:
+                    04:c8:b4:21:f1:1c:25:e4:7e:3a:c5:71:23:bf:2d:
+                    9f:dc:49:4f:02:8b:c3:51:cc:80:c0:3f:15:0b:f5:
+                    0c:ff:95:8d:75:41:9d:81:a6:a2:45:df:fa:e7:90:
+                    be:95:cf:75:f6:02:f9:15:26:18:f8:16:a2:b2:3b:
+                    56:38:e5:9f:d9
+                ASN1 OID: prime256v1
+                NIST CURVE: P-256
+        X509v3 extensions:
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Subject Key Identifier:
+                96:60:0D:87:16:BF:7F:D0:E7:52:D0:AC:76:07:77:AD:66:5D:02:A0
+            X509v3 Authority Key Identifier:
+                68:D1:65:51:F9:51:BF:C8:2A:43:1D:0D:9F:08:BC:2D:20:5B:11:60
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Subject Alternative Name:
+                otherName:
+                    type-id: 1.3.6.1.5.5.7.8.4 (id-on-hardwareModuleName)
+                    value:
+                        hwType: 1.3.6.1.4.1.6175.10.1
+                        hwSerialNum: 01:02:03:04
+    Signature Algorithm: ecdsa-with-SHA256
+    Signature Value:
+        30:46:02:21:00:c0:d8:19:96:d2:50:7d:69:3f:3c:48:ea:a5:
+        ee:94:91:bd:a6:db:21:40:99:d9:81:17:c6:3b:36:13:74:cd:
+        86:02:21:00:a7:74:98:9f:4c:32:1a:5c:f2:5d:83:2a:4d:33:
+        6a:08:ad:67:df:20:f1:50:64:21:18:8a:0a:de:6d:34:92:36
+~~~~~~~~~~~
+
+
 
 ### Example C509 Certificate Encoding
 
+The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
+
+~~~~~~~~~~~
+
+TODO CBOR diagnostic notation
+
+~~~~~~~~~~~
+
+The size of the CBOR encoding (CBOR sequence) is TODO bytes:
+
+~~~~~~~~~~~
+
+TODO CBOR hex
+
+~~~~~~~~~~~
 
 
 ## Example CAB Baseline ECDSA HTTPS X.509 Certificate
