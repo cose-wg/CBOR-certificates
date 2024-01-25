@@ -486,7 +486,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters
 
-The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509 content format. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
+The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509-cert media type, see {{c509-cert}}. The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ CDDL
 COSE_C509 = C509Certificate / [ 2* C509Certificate ]
@@ -1776,13 +1776,13 @@ The public key algorithms registry {{pkalg}} specify a number of algorithms, not
 
 IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading with this document as reference.
 
-## Media Type application/cose-c509
-When the application/cose-c509 media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+## Media Type application/cose-c509-cert {#c509-cert}
+When the application/cose-c509-cert media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
 
 IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
-Subtype name: cose-c509
+Subtype name: cose-c509-cert
 Required parameters: N/A
 Optional parameters: usage
 
@@ -1817,6 +1817,60 @@ Restrictions on usage: N/A
 Author: COSE WG
 
 Change controller: IESG
+
+
+## Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
+When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificateRequest structure.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+Subtype name: cose-c509-pkcs10
+Required parameters: N/A
+Optional parameters: N/A
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of [[this document]].
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and C509 Certificate Request.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+  Deprecated alias names for this type: N/A
+  Magic number(s): N/A
+  File extension(s): N/A
+  Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
+
+## CoAP Content-Formats Registry {#content-format}
+
+IANA is requested to add the media types "application/cose-c509-cert" and "application/cose-c509-pkcs10" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+
+~~~~~~~~~~~ aasvg
++--------------------------------+----------+------+-------------------+
+| Media Type                     | Encoding | ID   | Reference         |
++================================+==========+======+===================+
+| application/cose-c509-cert     | -        | TBD6 | [[this document]] |
+| application/cose-c509-pkcs10   | -        | TBD7 | [[this document]] |
++--------------------------------+----------+------+-------------------+
+~~~~~~~~~~~
+{: #fig-format-ids title="CoAP Content-Format IDs"}
 
 ## TLS Certificate Types Registry {#tls}
 
