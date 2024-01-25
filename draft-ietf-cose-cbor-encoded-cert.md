@@ -301,7 +301,7 @@ This section details the encoding of the 'extensions' field. The 'extensions' fi
 
 The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
 
-A note on extension ID naming: in existing OID databases most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{REF5280}} and included them in for extensions defined elsewhere.
+A note on extension ID naming: in existing OID databases most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{REF5280}} and included them for extensions defined elsewhere.
 
 CBOR encoding of the following extension values is fully supported:
 
