@@ -420,7 +420,7 @@ CBOR encoding of the following extension values are partly supported:
    ]
 ~~~~~~~~~~~
 
-* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. Note that {{RFC5280}} requires that minimum MUST be zero, and maximum MUST be absent.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 4.2.1.10 of RFC5280}}. Note that the minimum and maximum fields are not used and therefore omitted.
 
 ~~~~~~~~~~~ CDDL
    GeneralSubtrees = [ + GeneralName ]
