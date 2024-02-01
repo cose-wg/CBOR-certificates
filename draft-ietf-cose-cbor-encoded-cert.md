@@ -467,7 +467,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters
 
-The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509-cert media type, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, the file starting with the reserved CBOR tag 55799 followed by a CBOR tag calculated from the CoAP Content-Format value.
+The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509-cert media type, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -488,7 +488,7 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 # C509 Certificate Signing Request {#CSR}
 
-This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting of C509 certificates defined in {{certificate}}.
+This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}} reusing the formatting of C509 certificates defined in {{certificate}}. The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
 
 Different types of C509 Certificate Requests are defined, see {{csr-type}}, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:
 
@@ -1770,8 +1770,8 @@ Fragment identifier considerations: N/A
 Additional information:
 
   Deprecated alias names for this type: N/A
-  Magic number(s): N/A
-  File extension(s): N/A
+  Magic number(s): TBD8
+  File extension(s): .c509
   Macintosh file type code(s): N/A
 
 Person & email address to contact for further information: iesg@ietf.org
@@ -1810,8 +1810,8 @@ Fragment identifier considerations: N/A
 Additional information:
 
   Deprecated alias names for this type: N/A
-  Magic number(s): N/A
-  File extension(s): N/A
+  Magic number(s): TBD9
+  File extension(s): .c509
   Macintosh file type code(s): N/A
 
 Person & email address to contact for further information: iesg@ietf.org
