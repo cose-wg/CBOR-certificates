@@ -1994,7 +1994,7 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 
 ## Example IEEE 802.1AR profiled X.509 Certificate
 
-An example of an IEEE 802.1AR profiled X.509 certificate (Secure Device Identifier, DevID) is provided in Appendix C.2 of {{RFC9148}}. The certificate is shown below including details the hardwareModuleName type of otherName in subjectAltName, see {{ext-encoding}}.
+An example of an IEEE 802.1AR profiled X.509 certificate (Secure Device Identifier, DevID) is provided in Appendix C.2 of {{RFC9148}}. The certificate is shown below including details of the hardwareModuleName type of otherName in subjectAltName, see {{ext-encoding}}.
 
 
 ~~~~~~~~~~~
@@ -2079,17 +2079,55 @@ F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F
 The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
+/This defines a CBOR Sequence (RFC 8742):/
 
-TODO CBOR diagnostic notation
-
+ 1,
+ h'7E7661D7B54E4632',
+ [
+  -4, "US",
+   6, "CA",
+   8, "Example Inc",
+   9, "certification",
+   1, "802.1AR CA"
+ ],
+ 1548934156,
+ null,
+ [
+  -4, "US",
+   6, "CA",
+   5, "LA",
+   8, "example Inc",
+   9, "IoT",
+  -3, "Wt1234"
+ ],
+ 1,
+ h'03C8B421F11C25E47E3AC57123BF2D9FDC494F028BC351CC80C03F150BF50CFF95',
+ [
+   4, -2,
+   1, h'96600D8716BF7FD0E752D0AC760777AD665D02A0',
+   7, h'68D16551F951BFC82A431D0D9F08BC2D205B1160',
+  -2, 5,
+  -1, [h'2B06010401B01F0A01', h'01020304']
+ ],
+ 0,
+ h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86A774989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is TODO bytes:
+The size of the CBOR encoding (CBOR sequence) is 273 bytes:
 
 ~~~~~~~~~~~
-
-TODO CBOR hex
-
+01 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78
+61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F
+6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55
+53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09
+63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 03 C8 B4 21 F1 1C 25 E4
+7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C
+FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD
+66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20
+5B 11 60 21 05 20 82 49 2B 06 01 04 01 B0 1F 0A 01 44 01 02 03 04 00
+58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB 21 40
+99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D 83 2A
+4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36
 ~~~~~~~~~~~
 
 
