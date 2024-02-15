@@ -248,7 +248,7 @@ RelativeDistinguishedName = Attribute / [ 2* Attribute ]
 
 Attribute = ( attributeType: int, attributeValue: text ) //
             ( attributeType: ~oid, attributeValue: bytes ) //
-            ( attributeType: [int, ~roid], attributeValue: bytes )
+            ( attributeType: pen, attributeValue: bytes )
 
 Time = ~time / null
 
@@ -260,7 +260,8 @@ Extensions = [ * Extension ] / int
 Extension = ( extensionID: int, extensionValue: any ) //
             ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ) //
-            ( extensionID: [int, ~roid], extensionValue: bytes )
+            ( extensionID: pen, ? critical: true,
+              extensionValue: bytes )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
