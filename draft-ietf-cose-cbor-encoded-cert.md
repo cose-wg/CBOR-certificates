@@ -325,7 +325,7 @@ CBOR encoding of the following extension values are fully supported:
 * Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}} or unwrapped CBOR OID tags {{RFC9090}} where each int or OID tag encodes a key usage purpose.  If the array contains a single KeyPurposeId, the array is omitted.
 
 ~~~~~~~~~~~ CDDL
-   KeyPurposeId = int / ~oid
+   KeyPurposeId = int / ~oid / pen
    ExtKeyUsageSyntax = [ 2* KeyPurposeId ] / KeyPurposeId
 ~~~~~~~~~~~
 
