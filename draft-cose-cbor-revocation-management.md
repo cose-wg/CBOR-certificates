@@ -85,7 +85,7 @@ C509CertificateRevocationList = [
 ]
 
 ; The elements of the following group are used in a CBOR Sequence:
-TBSCertificateSigningRequest = (
+TBSCertificateRevocationList = (
    C509CertificateRevocationListType: int,
    issuer: Name,
    thisUpdate: Time,
