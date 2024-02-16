@@ -1812,8 +1812,11 @@ When the application/cose-c509-cert media type is used, the data is a COSE_C509 
 IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
+
 Subtype name: cose-c509-cert
+
 Required parameters: N/A
+
 Optional parameters: usage
 
 * Can be absent to provide no further information about the intended meaning of the order in the CBOR sequence of certificates.
@@ -1833,10 +1836,13 @@ Fragment identifier considerations: N/A
 
 Additional information:
 
-  Deprecated alias names for this type: N/A
-  Magic number(s): TBD8
-  File extension(s): .c509
-  Macintosh file type code(s): N/A
+* Deprecated alias names for this type: N/A
+
+* Magic number(s): TBD8
+
+* File extension(s): .c509
+
+* Macintosh file type code(s): N/A
 
 Person & email address to contact for further information: iesg@ietf.org
 
@@ -1855,8 +1861,11 @@ When the application/cose-c509-pkcs10 media type is used, the data is a C509Cert
 IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
+
 Subtype name: cose-c509-pkcs10
+
 Required parameters: N/A
+
 Optional parameters: N/A
 
 Encoding considerations: binary
@@ -1873,10 +1882,10 @@ Fragment identifier considerations: N/A
 
 Additional information:
 
-  Deprecated alias names for this type: N/A
-  Magic number(s): TBD9
-  File extension(s): .c509
-  Macintosh file type code(s): N/A
+* Deprecated alias names for this type: N/A
+* Magic number(s): TBD9
+* File extension(s): .c509
+* Macintosh file type code(s): N/A
 
 Person & email address to contact for further information: iesg@ietf.org
 
@@ -1894,8 +1903,11 @@ When the application/cose-c509-privkey media type is used, the data is a C509Pri
 IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
+
 Subtype name: cose-c509-privkey
+
 Required parameters: N/A
+
 Optional parameters: usage
 
 Encoding considerations: binary
@@ -1912,10 +1924,10 @@ Fragment identifier considerations: N/A
 
 Additional information:
 
-  Deprecated alias names for this type: N/A
-  Magic number(s): TBD12
-  File extension(s): .c509
-  Macintosh file type code(s): N/A
+* Deprecated alias names for this type: N/A
+* Magic number(s): TBD12
+* File extension(s): .c509
+* Macintosh file type code(s): N/A
 
 Person & email address to contact for further information: iesg@ietf.org
 
@@ -1933,8 +1945,11 @@ When the application/cose-c509-pem media type is used, the data is a C509PEM str
 IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
+
 Subtype name: cose-c509-pem
+
 Required parameters: N/A
+
 Optional parameters: usage
 
 Encoding considerations: binary
@@ -1951,10 +1966,10 @@ Fragment identifier considerations: N/A
 
 Additional information:
 
-  Deprecated alias names for this type: N/A
-  Magic number(s): TBD13
-  File extension(s): .c509
-  Macintosh file type code(s): N/A
+* Deprecated alias names for this type: N/A
+* Magic number(s): TBD13
+* File extension(s): .c509
+* Macintosh file type code(s): N/A
 
 Person & email address to contact for further information: iesg@ietf.org
 
@@ -1968,7 +1983,7 @@ Change controller: IESG
 
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add the media types "application/cose-c509-cert" and "application/cose-c509-pkcs10" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+IANA is requested to add the media types "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 
 ~~~~~~~~~~~ aasvg
 +--------------------------------+----------+-------+-------------------+
@@ -1986,7 +2001,7 @@ IANA is requested to add the media types "application/cose-c509-cert" and "appli
 
 This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).
 
-EDITOR'S NOTE: The TLS registrations should be discussed and approved by the TLS WG at a later stage. The TLS WG might e.g. want a separate draft in the TLS WG.
+Editor's Note: The TLS registrations should be discussed and approved by the TLS WG at a later stage. The TLS WG might e.g. want a separate draft in the TLS WG.
 
 ~~~~~~~~~~~
 +-------+------------------+-------------+--------------------------+
