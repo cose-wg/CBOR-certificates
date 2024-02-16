@@ -74,6 +74,7 @@ informative:
   RFC6487:
   RFC6955:
   RFC7228:
+  RFC7468:
   RFC7925:
   RFC7932:
   RFC8446:
@@ -507,6 +508,30 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 {: #iana-header title="COSE Header Parameters" cols="r l l l"}
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
+
+## Private Key Structures
+
+Certificate management also makes use of data structures including private keys, see e.g. {{RFC7468}}. This section defines the following CBOR encoded structures:
+
+~~~~~~~~~~~ CDDL
+C509PrivateKey = [
+   subjectPrivateKeyAlgorithm: AlgorithmIdentifier,
+   subjectPrivateKey: any,
+]
+~~~~~~~~~~~
+
+The C509PrivateKey item is served with the application/cose-c509-privkey media type, see {{c509-privkey}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
+
+~~~~~~~~~~~ CDDL
+C509PEM = [
+   C509PrivateKey,
+   COSE_C509 / null,
+]
+~~~~~~~~~~~
+
+The C509PEM item is served with the application/cose-c509-pem media type, see {{c509-pem}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD13 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
+
+Editor's note: Include further details for encoding of subjectPrivateKey.
 
 # C509 Certificate Signing Request {#CSR}
 
@@ -1863,17 +1888,97 @@ Author: COSE WG
 
 Change controller: IESG
 
+## Media Type application/cose-c509-privkey {#c509-privkey}
+When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+Subtype name: cose-c509-privkey
+Required parameters: N/A
+Optional parameters: usage
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of [[this document]].
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+  Deprecated alias names for this type: N/A
+  Magic number(s): TBD12
+  File extension(s): .c509
+  Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
+
+## Media Type application/cose-c509-pem {#c509-pem}
+When the application/cose-c509-pem media type is used, the data is a C509PEM structure.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+Subtype name: cose-c509-pem
+Required parameters: N/A
+Optional parameters: usage
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of [[this document]].
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+  Deprecated alias names for this type: N/A
+  Magic number(s): TBD13
+  File extension(s): .c509
+  Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
+
 ## CoAP Content-Formats Registry {#content-format}
 
 IANA is requested to add the media types "application/cose-c509-cert" and "application/cose-c509-pkcs10" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 
 ~~~~~~~~~~~ aasvg
-+--------------------------------+----------+------+-------------------+
-| Media Type                     | Encoding | ID   | Reference         |
-+================================+==========+======+===================+
-| application/cose-c509-cert     | -        | TBD6 | [[this document]] |
-| application/cose-c509-pkcs10   | -        | TBD7 | [[this document]] |
-+--------------------------------+----------+------+-------------------+
++--------------------------------+----------+-------+-------------------+
+| Media Type                     | Encoding | ID    | Reference         |
++================================+==========+=======+===================+
+| application/cose-c509-cert     | -        |  TBD6 | [[this document]] |
+| application/cose-c509-pkcs10   | -        |  TBD7 | [[this document]] |
+| application/cose-c509-privkey  | -        | TBD10 | [[this document]] |
+| application/cose-c509-pem      | -        | TBD11 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
