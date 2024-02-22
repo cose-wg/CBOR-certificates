@@ -479,7 +479,7 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 * A critical basicConstraints ('cA' = true) without pathLenConstraint is encoded as the two CBOR ints -4, -1.
 
-* A non-critical keyUsage with digitalSignature and keyAgreement asserted is encoded as the two CBOR ints 2, 17 (2^0 + 2^4 = 17).
+* A non-critical keyUsage with keyCertSign (5) and cRLSign (6) asserted is encoded as the two CBOR ints 2, 96 (2^5 + 2^6 = 96).
 
 * A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 8 followed by the CBOR array \[ 3, 6 \].
 
