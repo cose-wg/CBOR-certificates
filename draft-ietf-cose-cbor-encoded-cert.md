@@ -141,7 +141,7 @@ informative:
     date: July 2018
 
   CborMe:
-    target: http://cbor.me/
+    target: https://cbor.me/
     title: CBOR Playground
     author:
       -
