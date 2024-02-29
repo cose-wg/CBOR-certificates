@@ -1,8 +1,9 @@
 # CBOR Encoded X.509 Certificates
 
-This is the working area for the individual Internet-Draft, "CBOR Encoded X.509 Certificates".
+This is the working area for the IETF [COSE Working Group](https://datatracker.ietf.org/wg/cose/documents/)individual Internet-Draft, "CBOR Encoded X.509 Certificates".
 
-* [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
+* [Editor's Copy HTML](https://cose-wg.github.io/CBOR-certificates/draft-ietf-cose-cbor-encoded-cert.html)
+* [Editor's Copy Text](https://cose-wg.github.io/CBOR-certificates/draft-ietf-cose-cbor-encoded-cert.txt)
 * [Individual Draft](https://tools.ietf.org/html/draft-ietf-cose-cbor-encoded-cert.html)
 * [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
