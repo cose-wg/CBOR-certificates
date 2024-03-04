@@ -190,7 +190,7 @@ The resulting certificates are called C509 Certificates. This document does not 
 
 Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
-This document also specifies C509 Certificate Signing Requests {{CSR}}, COSE headers for use of the C509 certificates with COSE {{cose}}, and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}.
+This document also specifies C509 Certificate Signing Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}.
 
 # Notational Conventions
 
@@ -562,7 +562,7 @@ Combining these options enables the four instances of c509CertificateRequestType
 
 * c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 1. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
-subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used with a signature algorithm in certificate requests.
+subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
 Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for utf8String values and encoded as CBOR text string, except if the text string contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string.
 
@@ -2184,9 +2184,9 @@ C3 44 96 4D 4E 1C 6B 37 C8 FB 54 12 74 C3 BB 81 B2 F5 30 73 C5 F1 01
 A5 AC 2A 92 88 65 83 B6 A2 67 9B 6E 68 2D 2A 26 94 5E D0 B2
 ~~~~~~~~~~~
 
-### C509 for Diffie-Hellman keys
+### C509 for Diffie-Hellman keys {#app-DH-keys}
 
-The two previous examples illustrate the common key usage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used to sign certificate requests.
+The two previous examples illustrate the common key usage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used to sign a certificate request.
 
 ### Example: Additional Keys for the Example Certificates
 
@@ -2617,4 +2617,4 @@ The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser Tweedale, and Rene Struik for reviewing and commenting on intermediate versions of the draft and helping with GitHub.
+The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Lijun Liao, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser Tweedale, and Rene Struik for reviewing and commenting on intermediate versions of the draft and helping with GitHub.
