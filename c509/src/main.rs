@@ -318,25 +318,18 @@ fn cbor_name(b: &[u8]) -> Vec<u8> {
   
   if vec.len() == 2 && vec[0] == [ATT_COMMON_NAME as u8] {
       //let cn = from_utf8(&vec[0][1..]).unwrap();
-      println!("b0: {:02x?}", vec[0]);
       vec.remove(0);
-      println!("b1: {:02x?}", vec[0]);
       if eui_64.is_match(from_utf8(&vec[0][1..]).unwrap()) {
           vec[0].retain(|&x| x != b'-' && x != 0x77); // 0x77 = text string length 23
           if &vec[0][6..10] == b"FFFE" {
               vec[0].drain(6..10);
           }
-          println!("before insert: {:02x?}", vec[0]);
           vec[0].insert(0, '1' as u8); 
           vec[0].insert(0, '0' as u8); 
-          println!("after insert: {:02x?}", vec[0]);
           vec[0] = cbor_bytes(&hex::decode(&vec[0]).unwrap());
-          println!("after convert: {:02x?}", vec[0]);
       } else if is_hex.is_match(from_utf8(&vec[0][1..]).unwrap()) {
         vec[0][0] = '0' as u8; //overwrite the added utf8 text marker at the start
-        println!("a1: {:02x?}, {}", vec[0], vec[0].len());
         vec[0].insert(0, '0' as u8); 
-        println!("a2: {:02x?}, {}", vec[0], vec[0].len());
         vec[0] = cbor_bytes(&hex::decode(&vec[0]).unwrap());
         
       }
@@ -459,17 +452,12 @@ CDDL
 [ ~oid, bytes ]
 */
 fn cbor_other_name(b: &[u8]) -> Vec<u8> {
-  println!("handling b: {:02x?}", b);
   let mut vec = Vec::new();
   let (oid_raw, rest) = der_split(b, false);
-  println!("oid_raw: {:02x?}", oid_raw);
   let oid = der(oid_raw,ASN1_OID);
-  println!("oid: {:02x?}", oid);
-  println!("rest: {:02x?}", rest);
  
   let raw_value = der(rest,ASN1_INDEX_ZERO);
   //let (choice, value_raw) = der_split(rest, false);
-  println!("raw_value: {:02x?}", raw_value);
   //Since the raw value can be of any type, we just store it as a byte string without parsing
  
   vec.push(cbor_bytes(oid));
