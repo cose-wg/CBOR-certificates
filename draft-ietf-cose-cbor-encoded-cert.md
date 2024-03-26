@@ -210,7 +210,7 @@ The X.509 fields and their CBOR encodings are listed below, and used in the defi
 
 C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (c509CertificateType = 0) or a CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 1), see {{type}}.
+* version. The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (c509CertificateType = 2) or a CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
@@ -511,13 +511,13 @@ Different types of C509 Certificate Requests are defined, see {{csr-type}}, all 
 
 * The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER encoded RFC 2986 certification request, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
 
-* The requested C509 certificate in the C509 Certificate Request can either be of type 0 or of type 1, see {{type}}.
+* The requested C509 certificate in the C509 Certificate Request can either be of type 2 or of type 3, see {{type}}.
 
 Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}}. An implementation MAY only support c509CertificateRequestType = 0. The most common variants are expected to be:
 
-* c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 0. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
+* c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 1. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
+* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used with a signature algorithm in certificate requests.
 
@@ -557,7 +557,7 @@ The Certificate Signing Request (CSR)) format defined in Section 4 follows the P
 
 When a certificate request is received the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession of the public key, before normal certificate generation can take place.
 
-In the reverse direction, in case c509CertificateType = 1 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 0 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with CA may be needed.
+In the reverse direction, in case c509CertificateType = 3 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 2 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with CA may be needed.
 
 # Legacy Considerations {#dep-set}
 
@@ -571,7 +571,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 0 and 1 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
+The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
 ~~~~~~~~~
 +---------------------------------------+-----------+-----------+
@@ -629,9 +629,13 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Natively Signed C509 Certificate following X.509 v3       |
+|     0 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     1 | CBOR re-encoding of X.509 v3 Certificate                  |
+|     1 | Reserved                                                  |
++-------+-----------------------------------------------------------+
+|     2 | Natively Signed C509 Certificate following X.509 v3       |
++-------+-----------------------------------------------------------+
+|     3 | CBOR re-encoding of X.509 v3 Certificate                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="C509 Certificate Types"}
@@ -646,16 +650,16 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 | Value | Description                                               |
 +=======+===========================================================+
 |     0 | Natively Signed C509 Certificate Request.                 |
-|       | Requested certificate is C509 Type 0.                     |
+|       | Requested certificate is C509 Type 2.                     |
 +-------+-----------------------------------------------------------+
 |     1 | Natively Signed C509 Certificate Request.                 |
-|       | Requested certificate is C509 Type 1.                     |
+|       | Requested certificate is C509 Type 3.                     |
 +-------+-----------------------------------------------------------+
 |     2 | CBOR re-encoding of RFC 2986 certification request.       |
-|       | Requested certificate is C509 Type 0.                     |
+|       | Requested certificate is C509 Type 2.                     |
 +-------+-----------------------------------------------------------+
 |     3 | CBOR re-encoding of RFC 2986 certification request.       |
-|       | Requested certificate is C509 Type 1.                     |
+|       | Requested certificate is C509 Type 3.                     |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-csr-types title="C509 Certificate Request Types"}
