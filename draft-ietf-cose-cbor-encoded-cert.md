@@ -2108,7 +2108,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-  1,                   / version and certificate type /
+  3,                   / version and certificate type /
   h'01f50d',           / serialNumber /
   "RFC test CA",       / issuer /
   1672531200,          / notBefore /
@@ -2130,7 +2130,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 The size of the CBOR encoding (CBOR sequence) is 139 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
 
 ~~~~~~~~~~~
-01
+03
 43 01 F5 0D
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
@@ -2153,7 +2153,7 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-  0,
+  2,
   h'01f50d',
   "RFC test CA",
   1672531200,
@@ -2172,7 +2172,7 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
 The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 
 ~~~~~~~~~~~
-00
+02
 43 01 F5 0D
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
@@ -2301,7 +2301,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
- 1,
+ 3,
  h'7E7661D7B54E4632',
  [
   -4, "US",
@@ -2337,7 +2337,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 The size of the CBOR encoding (CBOR sequence) is 275 bytes:
 
 ~~~~~~~~~~~
-01 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78
+03 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78
 61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F
 6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55
 53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09
@@ -2419,7 +2419,7 @@ The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown bel
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-1,
+3,
 h'047FA1E31928EE403BA0B83A395673FC',
 [
  -4, "US",
@@ -2555,7 +2555,7 @@ The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown bel
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-1,
+3,
 h'A6A55C870E39B40E',
 [
  -4, "US",
