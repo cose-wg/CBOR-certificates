@@ -51,6 +51,7 @@ normative:
   RFC2119:
   RFC5280:
   RFC6960:
+  RFC7228:
   RFC8949:
   RFC8174:
   I-D.ietf-cose-cbor-encoded-cert:
