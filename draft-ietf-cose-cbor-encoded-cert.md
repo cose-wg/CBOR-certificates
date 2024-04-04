@@ -212,11 +212,11 @@ The X.509 fields and their CBOR encodings are listed below, and used in the defi
 
 C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates:
 
-* version. The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (c509CertificateType = 0) or a CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 1), see {{type}}.
+* version. The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (c509CertificateType = 2) or a CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}.
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
-* signature. The 'signature' field is always the same as the 'signatureAlgorithm' field and therefore omitted from the CBOR encoding.
+* signature. The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically, each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as either
 
@@ -246,7 +246,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
-* signatureAlgorithm. The 'signatureAlgorithm' field including parameters is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
+* signatureAlgorithm. The 'signatureAlgorithm' field is always the same as the 'signature' field and therefore omitted from the CBOR encoding.
 
 * signatureValue. In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}
 
@@ -262,6 +262,7 @@ C509Certificate = [
 TBSCertificate = (
    c509CertificateType: int,
    certificateSerialNumber: CertificateSerialNumber,
+   issuerSignatureAlgorithm: AlgorithmIdentifier,
    issuer: Name,
    validityNotBefore: Time,
    validityNotAfter: Time,
@@ -269,7 +270,6 @@ TBSCertificate = (
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    extensions: Extensions,
-   issuerSignatureAlgorithm: AlgorithmIdentifier,
 )
 
 CertificateSerialNumber = ~biguint
@@ -554,13 +554,13 @@ Different types of C509 Certificate Requests are defined, see {{csr-type}}, all 
 
 * The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER encoded RFC 2986 certification request, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
 
-* The requested C509 certificate in the C509 Certificate Request can either be of type 0 or of type 1, see {{type}}.
+* The requested C509 certificate in the C509 Certificate Request can either be of type 2 or of type 3, see {{type}}.
 
 Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}}. An implementation MAY only support c509CertificateRequestType = 0. The most common variants are expected to be:
 
-* c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 0. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
+* c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 1. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
+* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
@@ -600,7 +600,7 @@ The Certificate Signing Request (CSR)) format defined in Section 4 follows the P
 
 When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
 
-In the reverse direction, in case c509CertificateType = 1 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 0 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with the CA may be needed.
+In the reverse direction, in case c509CertificateType = 3 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 2 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with the CA may be needed.
 
 # Legacy Considerations {#dep-set}
 
@@ -614,7 +614,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 # Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 0 and 1 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
+The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
 ~~~~~~~~~
 +---------------------------------------+-----------+-----------+
@@ -672,9 +672,13 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Natively Signed C509 Certificate following X.509 v3       |
+|     0 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     1 | CBOR re-encoding of X.509 v3 Certificate                  |
+|     1 | Reserved                                                  |
++-------+-----------------------------------------------------------+
+|     2 | Natively Signed C509 Certificate following X.509 v3       |
++-------+-----------------------------------------------------------+
+|     3 | CBOR re-encoding of X.509 v3 Certificate                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="C509 Certificate Types"}
@@ -689,16 +693,16 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 | Value | Description                                               |
 +=======+===========================================================+
 |     0 | Natively Signed C509 Certificate Request.                 |
-|       | Requested certificate is C509 Type 0.                     |
+|       | Requested certificate is C509 Type 2.                     |
 +-------+-----------------------------------------------------------+
 |     1 | Natively Signed C509 Certificate Request.                 |
-|       | Requested certificate is C509 Type 1.                     |
+|       | Requested certificate is C509 Type 3.                     |
 +-------+-----------------------------------------------------------+
 |     2 | CBOR re-encoding of RFC 2986 certification request.       |
-|       | Requested certificate is C509 Type 0.                     |
+|       | Requested certificate is C509 Type 2.                     |
 +-------+-----------------------------------------------------------+
 |     3 | CBOR re-encoding of RFC 2986 certification request.       |
-|       | Requested certificate is C509 Type 1.                     |
+|       | Requested certificate is C509 Type 3.                     |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-csr-types title="C509 Certificate Request Types"}
@@ -2104,8 +2108,9 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-  1,                   / version and certificate type /
+  3,                   / version and certificate type /
   h'01f50d',           / serialNumber /
+  0,                   / signatureAlgorithm /
   "RFC test CA",       / issuer /
   1672531200,          / notBefore /
   1767225600,          / notAfter /
@@ -2116,7 +2121,6 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   1,                   / single extension:
                          non-critical keyUsage
                          digitalSignature /
-  0,                   / signatureAlgorithm /
   h'D4320B1D6849E309219D30037E138166F2508247DDDAE76CCE
     EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
     3314EA19191E8B607DA5AE3BDA16'
@@ -2126,8 +2130,9 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 The size of the CBOR encoding (CBOR sequence) is 139 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
 
 ~~~~~~~~~~~
-01
+03
 43 01 F5 0D
+00
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
 1A 69 55 B9 00
@@ -2136,7 +2141,6 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes. The point compressed
 58 21 FE B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
-00
 58 40 D4 32 0B 1D 68 49 E3 09 21 9D 30 03 7E 13 81 66 F2 50 82 47 DD
 DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
@@ -2149,8 +2153,9 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-  0,
+  2,
   h'01f50d',
+  0,
   "RFC test CA",
   1672531200,
   1767225600,
@@ -2159,17 +2164,17 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
   1,
-  0,
-  h'6FC903015259A38C0800A3D0B2969CA21977E8ED6EC344964D
-    4E1C6B37C8FB541274C3BB81B2F53073C5F101A5AC2A928865
-    83B6A2679B6E682D2A26945ED0B2'
+  h'357B3D83F4ECD1B4E1D225A85C6BE2EADA3134375E72E5B6E2
+    C311FC9F3DD5962585ABF644D68415194C245A579E134A7CA5
+    313B90AEAFCAA7AF0DE440302146'
 ~~~~~~~~~~~
 
 The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 
 ~~~~~~~~~~~
-00
+02
 43 01 F5 0D
+00
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
 1A 69 55 B9 00
@@ -2178,10 +2183,9 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
 01
-00
-58 40 6F C9 03 01 52 59 A3 8C 08 00 A3 D0 B2 96 9C A2 19 77 E8 ED 6E
-C3 44 96 4D 4E 1C 6B 37 C8 FB 54 12 74 C3 BB 81 B2 F5 30 73 C5 F1 01
-A5 AC 2A 92 88 65 83 B6 A2 67 9B 6E 68 2D 2A 26 94 5E D0 B2
+58 40 35 7B 3D 83 F4 EC D1 B4 E1 D2 25 A8 5C 6B E2 EA DA 31 34 37 5E
+72 E5 B6 E2 C3 11 FC 9F 3D D5 96 25 85 AB F6 44 D6 84 15 19 4C 24 5A
+57 9E 13 4A 7C A5 31 3B 90 AE AF CA A7 AF 0D E4 40 30 21 46
 ~~~~~~~~~~~
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
@@ -2297,8 +2301,9 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
- 1,
+ 3,
  h'7E7661D7B54E4632',
+ 0,
  [
   -4, "US",
    6, "CA",
@@ -2325,7 +2330,6 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   -2, 5,
   3, [-1, [h'2B06010401B01F0A01', h'01020304']]   / subjectAltName w. hardwareModuleName /
  ],
- 0,
  h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86A7
    74989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
 ~~~~~~~~~~~
@@ -2333,7 +2337,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 The size of the CBOR encoding (CBOR sequence) is 275 bytes:
 
 ~~~~~~~~~~~
-01 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78
+03 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78
 61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F
 6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55
 53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09
@@ -2415,8 +2419,9 @@ The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown bel
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-1,
+3,
 h'047FA1E31928EE403BA0B83A395673FC',
+0,
 [
  -4, "US",
  -8, "Cloudflare, Inc.",
@@ -2458,7 +2463,6 @@ h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
     A159D16C4647D1483757FCD6CE4E75EC7B5EF657EFE028F8E5CC4792682DAC43'
     ]
 ],
-0,
 h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
   B5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
 ~~~~~~~~~~~
@@ -2551,8 +2555,9 @@ The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown bel
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
 
-1,
+3,
 h'A6A55C870E39B40E',
+23,
 [
  -4, "US",
  -6, "Arizona",
@@ -2601,7 +2606,6 @@ h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
       FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
     ]
 ],
-23,
 h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
   B33F9DB3D7E0594C19A8E419A50CA770727763D5FE64510AD27AD650A58A9238
   ECCB2F0F5AC064584D5C06B9736368278B8934DC79C71D3AFD345F8314415849
