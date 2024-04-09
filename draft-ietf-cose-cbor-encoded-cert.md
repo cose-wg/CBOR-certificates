@@ -616,7 +616,7 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in {{fig-size-COSE}} and {{fig-size-TLS}}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. For the example HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 use dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli {{RFC7932}}, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
-~~~~~~~~~
+~~~~~~~~~ aasvg
 +---------------------------------------+-----------+-----------+
 |                                       | COSE_X509 | COSE_C509 |
 +---------------------------------------+-----------+-----------+
@@ -630,7 +630,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain)."}
 {: artwork-align="center"}
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------------------+-------+----------------+------+---------------+
 |                   | X.509 | X.509 + Brotli | C509 | C509 + Brotli |
 +-------------------+-------+----------------+------+---------------+
@@ -668,7 +668,7 @@ The expert reviewers for the registries defined in this document are expected to
 
 IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
@@ -688,7 +688,7 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 
 IANA has created a new registry titled "C509 Certificate Request Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
@@ -712,7 +712,7 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 
 IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an non-negative integer, and the other columns are text strings. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Attribute                                                 |
 +=======+===========================================================+
@@ -905,7 +905,7 @@ IANA has created a new registry titled "C509 Attributes" under the new heading "
 
 IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is an positive integer, and the other columns are text strings. The registry also contains CSR attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Extension                                                 |
 +=======+===========================================================+
@@ -1120,7 +1120,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 
 IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
@@ -1230,7 +1230,7 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 
 IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Certificate Policy                                        |
 +=======+===========================================================+
@@ -1254,7 +1254,7 @@ IANA has created a new registry titled "C509 Policies Qualifiers Registry" under
 
 IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Information Access                                        |
 +=======+===========================================================+
@@ -1308,8 +1308,7 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 
 IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
-
+~~~~~~~~~~~ aasvg
 +-------+---------------------------------------------------------+
 | Value | Extended Key Usage                                      |
 +=======+=========================================================+
@@ -1416,7 +1415,7 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 ## C509 General Names Registry {#GN}
 IANA has created a new registry titled "C509 General Names Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
@@ -1474,7 +1473,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 
 IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | X.509 Signature Algorithms                                |
 +=======+===========================================================+
@@ -1674,7 +1673,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 
 IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". T The initial contents of the registry are:
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | X.509 Public Key Algorithms                               |
 +=======+===========================================================+
@@ -2020,7 +2019,7 @@ This document registers the following entry in the "TLS Certificate Types" regis
 
 Editor's Note: The TLS registrations should be discussed and approved by the TLS WG at a later stage. The TLS WG might e.g. want a separate draft in the TLS WG.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
 | Value | Name             | Recommended | Comment                  |
 +=======+==================+=============+==========================+
@@ -2032,7 +2031,7 @@ Editor's Note: The TLS registrations should be discussed and approved by the TLS
 
 This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.
 
-~~~~~~~~~~~
+~~~~~~~~~~~ aasvg
 +------+------------------------------------------------------------+
 |  Tag | X.509 Public Key Algorithms                                |
 +======+============================================================+
