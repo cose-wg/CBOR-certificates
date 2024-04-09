@@ -556,30 +556,30 @@ Different types of C509 Certificate Requests are defined, see {{csr-type}}, all 
 
 * The requested C509 certificate in the C509 Certificate Request can either be of type 2 or of type 3, see {{type}}.
 
-Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}}  and illustrated in {{fig-csr-types2}}.
-+
-+~~~~~~~~~~~~~~~~~~~~~~~ aasvg
-++------------------+---------------------------+
-+|                  | Requested certificate     |
-++------------------+=============+=============+
-+| Signed object    | C509 Type 2 | C509 Type 3 |
-++==================+-------------+-------------+
-+|                  |             |             |
-+| CBOR encoded CSR |      0      |      2      |
-+|                  |             |             |
-++------------------+-------------+-------------+
-+|                  |             |             |
-+| DER encoded CSR  |      1      |      3      |
-+|                  |             |             |
-++------------------+-------------+-------------+
-+~~~~~~~~~~~~~~~~~~~~~~~
-+{: #fig-csr-types2 title="C509 Certificate Request Types 0, 1, 2 and 3." artwork-align="center"}
+Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}} and illustrated in {{fig-csr-types2}}.
+
+~~~~~~~~~~~~~~~~~~~~~~~ aasvg
++------------------+---------------------------------------------------+
+|                  |              Requested certificate                |
++------------------+=========================+=========================+
+| Signed object    | c509CertificateType = 2 | c509CertificateType = 3 |
++==================+-------------------------+-------------------------+
+|                  |                         |                         |
+| CBOR encoded CSR |            0            |             2           |
+|                  |                         |                         |
++------------------+-------------------------+-------------------------+
+|                  |                         |                         |
+| DER encoded CSR  |            1            |             3           |
+|                  |                         |                         |
++------------------+-------------------------+-------------------------+
+~~~~~~~~~~~~~~~~~~~~~~~
+{: #fig-csr-types2 title="C509 Certificate Request Types 0, 1, 2 and 3." artwork-align="center"}
 
 An implementation MAY only support c509CertificateRequestType = 0. The most common variants are expected to be:
 
-* c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
+* c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format has c509CertificateType = 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate is C509 Type 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
+* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
