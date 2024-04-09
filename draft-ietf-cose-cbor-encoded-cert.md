@@ -556,7 +556,26 @@ Different types of C509 Certificate Requests are defined, see {{csr-type}}, all 
 
 * The requested C509 certificate in the C509 Certificate Request can either be of type 2 or of type 3, see {{type}}.
 
-Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}}. An implementation MAY only support c509CertificateRequestType = 0. The most common variants are expected to be:
+Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}}  and illustrated in {{fig-csr-types2}}.
++
++~~~~~~~~~~~~~~~~~~~~~~~ aasvg
+++------------------+---------------------------+
++|                  | Requested certificate     |
+++------------------+=============+=============+
++| Signed object    | C509 Type 2 | C509 Type 3 |
+++==================+-------------+-------------+
++|                  |             |             |
++| CBOR encoded CSR |      0      |      2      |
++|                  |             |             |
+++------------------+-------------+-------------+
++|                  |             |             |
++| DER encoded CSR  |      1      |      3      |
++|                  |             |             |
+++------------------+-------------+-------------+
++~~~~~~~~~~~~~~~~~~~~~~~
++{: #fig-csr-types2 title="C509 Certificate Request Types 0, 1, 2 and 3." artwork-align="center"}
+
+An implementation MAY only support c509CertificateRequestType = 0. The most common variants are expected to be:
 
 * c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format is C509 Type 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
@@ -596,7 +615,7 @@ After verifying the subjectSignatureValue, the CA MAY transform the C509Certific
 
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
 
-The Certificate Signing Request (CSR)) format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
+The Certificate Signing Request (CSR) format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
 
 When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
 
@@ -692,17 +711,17 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Natively Signed C509 Certificate Request.                 |
-|       | Requested certificate is C509 Type 2.                     |
+|     0 | Requested certificate is C509 Type 2.                     |
+|       | Natively Signed C509 Certificate Request.                 |
 +-------+-----------------------------------------------------------+
-|     1 | Natively Signed C509 Certificate Request.                 |
-|       | Requested certificate is C509 Type 3.                     |
+|     1 | Requested certificate is C509 Type 2.                     |
+|       | CBOR re-encoding of RFC 2986 certification request.       |
 +-------+-----------------------------------------------------------+
-|     2 | CBOR re-encoding of RFC 2986 certification request.       |
-|       | Requested certificate is C509 Type 2.                     |
+|     2 | Requested certificate is C509 Type 3.                     |
+|       | Natively Signed C509 Certificate Request.                 |
 +-------+-----------------------------------------------------------+
-|     3 | CBOR re-encoding of RFC 2986 certification request.       |
-|       | Requested certificate is C509 Type 3.                     |
+|     3 | Requested certificate is C509 Type 3.                     |
+|       | CBOR re-encoding of RFC 2986 certification request.       |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-csr-types title="C509 Certificate Request Types"}
