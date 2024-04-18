@@ -264,8 +264,8 @@ TBSCertificate = (
    certificateSerialNumber: CertificateSerialNumber,
    issuerSignatureAlgorithm: AlgorithmIdentifier,
    issuer: Name,
-   validityNotBefore: Time,
-   validityNotAfter: Time,
+   validityNotBefore: ~time,
+   validityNotAfter: ~time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
@@ -281,8 +281,6 @@ RelativeDistinguishedName = Attribute / [ 2* Attribute ]
 Attribute = ( attributeType: int, attributeValue: text ) //
             ( attributeType: ~oid, attributeValue: bytes ) //
             ( attributeType: pen, attributeValue: bytes )
-
-Time = ~time / null
 
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
