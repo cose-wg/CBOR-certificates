@@ -454,8 +454,8 @@ CBOR encoding of the following extension values are partly supported:
 * AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ CDDL
-   AsIdsOrRanges = uint / [uint, uint]
-   ASIdentifiers = [ + AsIdsOrRanges ] / null
+   ASIdOrRange = uint / [uint, uint]
+   ASIdentifiers = [ + ASIdOrRange ] / null
 ~~~~~~~~~~~
 
 * AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
@@ -476,7 +476,7 @@ CBOR encoding of the following extension values are partly supported:
 * Signed Certificate Timestamp. If all the SCTs are version 1, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
 ~~~~~~~~~~~ CDDL
-   SignedCerticateTimestamp = (
+   SignedCertificateTimestamp = (
      logID: bytes,
      timestamp: int,
      sigAlg: AlgorithmIdentifier,
