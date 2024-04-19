@@ -240,7 +240,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 * subjectUniqueID. Not supported.
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either
-    * a CBOR int (see {{extype}}) followed by an optional CBOR item of any type, or
+    * a CBOR int (see {{extype}}) followed by a CBOR item of any type, or
     * an unwrapped CBOR OID tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string, or
     * a CBOR PEN tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.
 
