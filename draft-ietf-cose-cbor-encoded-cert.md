@@ -200,7 +200,7 @@ This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{R
 
 # C509 Certificate {#certificate}
 
-This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID and PEN encodings {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
+This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR oid and pen encodings {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
 The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
@@ -216,13 +216,12 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * serialNumber. The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
-* signature. The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
+* signature. The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with a CBOR OID optionally followed by the parameters encoded as a CBOR byte string. The CBOR OID is either an unwrapped CBOR oid (~oid) or a CBOR pen {{RFC9090}}.
 
 * issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically, each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as either
 
    * a (CBOR int, CBOR text string) pair, or
-   * a (unwrapped CBOR OID, CBOR bytes) pair, or
-   * a (CBOR PEN, CBOR bytes) pair.
+   * a (CBOR OID, CBOR bytes) pair.
 
    The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. The Attribute Email Address is always an IA5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows:
 
@@ -233,7 +232,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * subject. The 'subject' is encoded exactly like issuer.
 
-* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
+* subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with a CBOR OID optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
 
 * issuerUniqueID. Not supported.
 
@@ -241,8 +240,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either
     * a CBOR int (see {{extype}}) followed by a CBOR item of any type, or
-    * an unwrapped CBOR OID tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string, or
-    * a CBOR PEN tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.
+    * a CBOR OID followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.
 
 If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
@@ -272,6 +270,8 @@ TBSCertificate = (
    extensions: Extensions,
 )
 
+OID = ~oid / pen
+
 CertificateSerialNumber = ~biguint
 
 Name = [ * RelativeDistinguishedName ] / text / bytes
@@ -279,18 +279,15 @@ Name = [ * RelativeDistinguishedName ] / text / bytes
 RelativeDistinguishedName = Attribute / [ 2* Attribute ]
 
 Attribute = ( attributeType: int, attributeValue: text ) //
-            ( attributeType: ~oid, attributeValue: bytes ) //
-            ( attributeType: pen, attributeValue: bytes )
+            ( attributeType: OID, attributeValue: bytes )
 
-AlgorithmIdentifier = int / ~oid /
-                    [ algorithm: ~oid, parameters: bytes ]
+AlgorithmIdentifier = int / OID /
+                    [ algorithm: OID, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
 Extension = ( extensionID: int, extensionValue: any ) //
-            ( extensionID: ~oid, ? critical: true,
-              extensionValue: bytes ) //
-            ( extensionID: pen, ? critical: true,
+            ( extensionID: OID, ? critical: true,
               extensionValue: bytes )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
@@ -310,7 +307,7 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 ## Encoding of Extensions {#ext-encoding}
 
-This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int or as an unwrapped CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}), the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign.
+This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int or as a CBOR OID. If 'extensionID' is encoded an int (see {{extype}}), the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign.
 
 The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
 
@@ -335,7 +332,7 @@ CBOR encoding of the following extension values is fully supported:
 
 ~~~~~~~~~~~ CDDL
    PolicyMappings = [
-     + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)
+     + (issuerDomainPolicy: OID, subjectDomainPolicy: OID)
    ]
 ~~~~~~~~~~~
 
@@ -354,10 +351,10 @@ CBOR encoding of the following extension values is fully supported:
    ]
 ~~~~~~~~~~~
 
-* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}}), unwrapped CBOR OID tags {{RFC9090}}, or CBOR PEN tags {{RFC9090}}, where each int or OID / PEN tag encodes a key usage purpose. If the array contains a single KeyPurposeId, the array is omitted.
+* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}}), or CBOR OID, where each int or OID encodes a key usage purpose. If the array contains a single KeyPurposeId, the array is omitted.
 
 ~~~~~~~~~~~ CDDL
-   KeyPurposeId = int / ~oid / pen
+   KeyPurposeId = int / OID
    ExtKeyUsageSyntax = [ 2* KeyPurposeId ] / KeyPurposeId
 ~~~~~~~~~~~
 
@@ -369,7 +366,7 @@ CBOR encoding of the following extension values is fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ OID, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~ CDDL
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -396,10 +393,10 @@ CBOR encoding of the following extension values are partly supported:
    FreshestCRL = CRLDistributionPoints
 ~~~~~~~~~~~
 
-* Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as a CBOR int (see {{IA}}) or an unwrapped CBOR OID tag {{RFC9090}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
+* Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as a CBOR int (see {{IA}}) or a CBOR OID. The uniformResourceIdentifiers are encoded as CBOR text strings.
 
 ~~~~~~~~~~~ CDDL
-   AccessDescription = ( accessMethod: int / ~oid , uri: text )
+   AccessDescription = ( accessMethod: int / OID , uri: text )
    AuthorityInfoAccessSyntax = [ + AccessDescription ]
 ~~~~~~~~~~~
 
@@ -420,12 +417,12 @@ CBOR encoding of the following extension values are partly supported:
    AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
 ~~~~~~~~~~~
 
-* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{RFC9090}}.
+* Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or a CBOR OID.
 
 ~~~~~~~~~~~ CDDL
-   PolicyIdentifier = int / ~oid
+   PolicyIdentifier = int / OID
    PolicyQualifierInfo = (
-     policyQualifierId: int / ~oid,
+     policyQualifierId: int / OID,
      qualifier: text,
    )
    CertificatePolicies = [
@@ -447,7 +444,7 @@ CBOR encoding of the following extension values are partly supported:
 
 ~~~~~~~~~~~ CDDL
    Attributes = ( attributeType: int, attributeValue: [+text] ) //
-                ( attributeType: ~oid, attributeValue: [+bytes] )
+                ( attributeType: OID, attributeValue: [+bytes] )
    SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
 
@@ -1452,11 +1449,11 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 |       | Comments:        id-on-hardwareModuleName                 |
 |       |                  (1.3.6.1.5.5.7.8.4)                      |
 |       |                  06 08 2B 06 01 05 05 07 08 04            |
-|       | Value:           [ ~oid, bytes ]                          |
+|       | Value:           [ OID, bytes ]                           |
 +-------+-----------------------------------------------------------+
 |     0 | Name:            otherName                                |
 |       | Comments:                                                 |
-|       | Value:           [ ~oid, bytes ]                          |
+|       | Value:           [ OID, bytes ]                           |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            rfc822Name                               |
 |       | Comments:                                                 |
@@ -1480,7 +1477,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 +-------+-----------------------------------------------------------+
 |     8 | Name:            registeredID                             |
 |       | Comments:                                                 |
-|       | Value:           ~oid                                     |
+|       | Value:           OID                                      |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-gn title="C509 General Names"}
