@@ -595,11 +595,11 @@ C509CertificateRequest = [
 ; The elements of the following group are used in a CBOR Sequence:
 TBSCertificateRequest = (
    c509CertificateRequestType: int,
+   subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    extensionsRequest: Extensions,
-   subjectSignatureAlgorithm: AlgorithmIdentifier,
 )
 
 challengePassword: tstr / bstr
