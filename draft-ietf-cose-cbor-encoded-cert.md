@@ -218,7 +218,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically, each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as either
+* issuer. In the general case, the sequence of 'Attribute' is encoded as a CBOR array of Attributes. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is encoded as either
 
    * a (CBOR int, CBOR text string) pair, or
    * a (unwrapped CBOR OID, CBOR bytes) pair, or
@@ -277,9 +277,7 @@ TBSCertificate = (
 
 CertificateSerialNumber = ~biguint
 
-Name = [ * RelativeDistinguishedName ] / text / bytes
-
-RelativeDistinguishedName = Attribute / [ 2* Attribute ]
+Name = [ * Attribute ] / text / bytes
 
 Attribute = ( attributeType: int, attributeValue: text ) //
             ( attributeType: ~oid, attributeValue: bytes ) //
