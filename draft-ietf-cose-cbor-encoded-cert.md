@@ -457,7 +457,7 @@ CBOR encoding of the following extension values are partly supported:
 * AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ CDDL
-   ASIdOrRange = uint / [uint, uint]
+   ASIdOrRange = uint / [min:uint, max:uint]
    ASIdentifiers = [ + ASIdOrRange ] / null
 ~~~~~~~~~~~
 
@@ -468,7 +468,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~ CDDL
    Address = bytes / uint,
    AddressPrefix = (Address, unusedBits: uint)
-   AddressRange =  [Address, Address]
+   AddressRange =  [min:Address, max:Address]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
    IPAddrBlocks = [ AFI: uint, IPAddressChoice ]
