@@ -52,6 +52,7 @@ normative:
   RFC2119:
   RFC2985:
   RFC2986:
+  RFC3039:
   RFC4108:
   RFC5280:
   RFC6838:
@@ -200,7 +201,7 @@ This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{R
 
 # C509 Certificate {#certificate}
 
-This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID and PEN encodings {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
+This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
 The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
@@ -218,20 +219,22 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
 * signature. The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
 
-* issuer. In the general case, the sequence of 'RelativeDistinguishedName' is encoded as a CBOR array of CBOR arrays of Attributes. Typically, each RelativeDistinguishedName only contains a single attribute and the sequence is then encoded as a CBOR array of Attributes. Each Attribute is encoded as either
+* issuer. In the general case, the sequence of 'Attribute' is encoded as a CBOR array of Attributes. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is encoded as either
 
    * a (CBOR int, CBOR text string) pair, or
-   * a (unwrapped CBOR OID, CBOR bytes) pair, or
-   * a (CBOR PEN, CBOR bytes) pair.
+   * a (unwrapped CBOR OID, CBOR bytes) pair.
 
-   The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for Utf8String, negative for PrintableString. The Attribute Email Address is always an IA5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by PrintableString and countryName SHALL have length 2. The string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows:
+   The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The Attribute Email Address and domainComponent (as specified in {{RFC3039}}) are always an ia5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by printableString and countryName SHALL have length 2. In re-encoded C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows:
 
   * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string, prefixed with an initial byte set to '00'.
   * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 9. An EUI-64 mapped from a 48-bit MAC address (i.e., of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 7.
   * Otherwise it is encoded as a CBOR text string.
+
+   If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then it MUST be encoded as CBOR null.
+
 * validity. The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as CBOR null.
 
-* subject. The 'subject' is encoded exactly like issuer.
+* subject. The 'subject' field is encoded exactly like issuer, except that CBOR null is not a valid value.
 
 * subjectPublicKeyInfo.  The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
 
@@ -240,9 +243,8 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 * subjectUniqueID. Not supported.
 
 * extensions. The 'extensions' field is encoded as a CBOR array where each extension is encoded as either
-    * a CBOR int (see {{extype}}) followed by an optional CBOR item of any type, or
-    * an unwrapped CBOR OID tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string, or
-    * a CBOR PEN tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.
+    * a CBOR int (see {{extype}}) followed by a CBOR item of any type, or
+    * an unwrapped CBOR OID tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.
 
 If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
 
@@ -263,7 +265,7 @@ TBSCertificate = (
    c509CertificateType: int,
    certificateSerialNumber: CertificateSerialNumber,
    issuerSignatureAlgorithm: AlgorithmIdentifier,
-   issuer: Name,
+   issuer: Name / null,
    validityNotBefore: ~time,
    validityNotAfter: ~time / null,
    subject: Name,
@@ -274,13 +276,10 @@ TBSCertificate = (
 
 CertificateSerialNumber = ~biguint
 
-Name = [ * RelativeDistinguishedName ] / text / bytes
-
-RelativeDistinguishedName = Attribute / [ 2* Attribute ]
+Name = [ * Attribute ] / text / bytes
 
 Attribute = ( attributeType: int, attributeValue: text ) //
-            ( attributeType: ~oid, attributeValue: bytes ) //
-            ( attributeType: pen, attributeValue: bytes )
+            ( attributeType: ~oid, attributeValue: bytes )
 
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
@@ -289,8 +288,6 @@ Extensions = [ * Extension ] / int
 
 Extension = ( extensionID: int, extensionValue: any ) //
             ( extensionID: ~oid, ? critical: true,
-              extensionValue: bytes ) //
-            ( extensionID: pen, ? critical: true,
               extensionValue: bytes )
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
@@ -354,10 +351,10 @@ CBOR encoding of the following extension values is fully supported:
    ]
 ~~~~~~~~~~~
 
-* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}}), unwrapped CBOR OID tags {{RFC9090}}, or CBOR PEN tags {{RFC9090}}, where each int or OID / PEN tag encodes a key usage purpose. If the array contains a single KeyPurposeId, the array is omitted.
+* Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}}), or unwrapped CBOR OID tags {{RFC9090}}, where each int or OID encodes a key usage purpose. If the array contains a single KeyPurposeId, the array is omitted.
 
 ~~~~~~~~~~~ CDDL
-   KeyPurposeId = int / ~oid / pen
+   KeyPurposeId = int / ~oid
    ExtKeyUsageSyntax = [ 2* KeyPurposeId ] / KeyPurposeId
 ~~~~~~~~~~~
 
@@ -454,7 +451,7 @@ CBOR encoding of the following extension values are partly supported:
 * AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ CDDL
-   ASIdOrRange = uint / [uint, uint]
+   ASIdOrRange = uint / [min:uint, max:uint]
    ASIdentifiers = [ + ASIdOrRange ] / null
 ~~~~~~~~~~~
 
@@ -465,7 +462,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~ CDDL
    Address = bytes / uint,
    AddressPrefix = (Address, unusedBits: uint)
-   AddressRange =  [Address, Address]
+   AddressRange =  [min:Address, max:Address]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
    IPAddrBlocks = [ AFI: uint, IPAddressChoice ]
@@ -493,11 +490,11 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 * A non-critical keyUsage with digitalSignature (0), nonRepudiation (1), keyEncipherment (2) and keyAgreement (4) asserted is encoded as the two CBOR ints 2, 23 (2^0 + 2^1 + 2^2 + 2^4 = 23).
 
-* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 8 followed by the CBOR array \[ 3, 6 \].
+* A non-critical extKeyUsage containing id-kp-codeSigning and id-kp-OCSPSigning is encoded as the CBOR int 8 followed by the CBOR array \[ 3, 9 \].
 
 * A non-critical subjectAltName containing only the dNSName example.com is encoded as the CBOR int 3 followed by the CBOR text string "example.com".
 
-Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 23, 8, \[ 3, 6 \], 3, "example.com" \].
+Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 23, 8, \[ 3, 9 \], 3, "example.com" \].
 
 ## COSE Header Parameters
 
@@ -581,7 +578,7 @@ An implementation MAY only support c509CertificateRequestType = 0. The most comm
 
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
-Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for utf8String values and encoded as CBOR text string, except if the text string contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string.
+Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
 
 
 
@@ -595,11 +592,11 @@ C509CertificateRequest = [
 ; The elements of the following group are used in a CBOR Sequence:
 TBSCertificateRequest = (
    c509CertificateRequestType: int,
+   subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    extensionsRequest: Extensions,
-   subjectSignatureAlgorithm: AlgorithmIdentifier,
 )
 
 challengePassword: tstr / bstr
@@ -2637,4 +2634,4 @@ The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Lijun Liao, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser Tweedale, and Rene Struik for reviewing and commenting on intermediate versions of the draft and helping with GitHub.
+The authors want to thank Henk Birkholz, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser Tweedale, and Rene Struik for reviewing and commenting on intermediate versions of the draft and helping with GitHub. The authors are especially grateful to Lijun Liao for his many detailed improvement proposals.

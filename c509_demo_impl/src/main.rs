@@ -793,7 +793,7 @@ inherit   NULL, -- inherit from issuer --
 asIdsOrRanges   SEQUENCE OF ASIdOrRange
 }
 ASIdOrRange   ::= CHOICE {
-id  ASId,
+id	ASId,
 range   ASRange
 }
 ASRange   ::= SEQUENCE {
@@ -2786,7 +2786,7 @@ pub fn cleanup(mut file_contents: Vec<u8>) -> Vec<u8> {
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
-//              Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
+//          	Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
 //EXT_SUBJECT_KEY_ID = 1
