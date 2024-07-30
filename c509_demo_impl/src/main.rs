@@ -4,9 +4,9 @@
 //
 // To read a DER encoded X.509 from file and encode as C509:
 // "cargo r f <der encoded certificate>"
-// -- A few sample certificates are present in ../certs
+// -- A few sample certificates are present in ../test_certs
 //
-// To read a CBOR encoded C509 from file and encode as X.509:
+// To read a CBOR encoded C509 from file and encode as X.509 (with hex encoded, plain text input, see ../test_certs for examples):
 // "cargo r c <cbor encoded certificate>"
 //
 // To read a DER encoded X.509 chain/bag from a TLS server:
@@ -38,8 +38,9 @@
 //
 // Minimal update history & limitations:
 //
-// Version 0.4 of the code released in July 2024
+// Version 0.4+0.41 of the code released in July 2024
 // *Adding functionality to convert between C509 and X.509 format
+// *A few sample certs
 // *More bugfixes
 // *Please note: the code is far from optimized, is lacking support for a number of less used extensions, and 
 // key types, and is not fully tested. Known bugs & shortcomings are: 
@@ -96,8 +97,8 @@ pub const SECG_ODD: u8 = 0x03;
 pub const SECG_UNCOMPRESSED: u8 = 0x04;
 pub const SECG_EVEN_COMPRESSED: u8 = 0xfe;
 pub const SECG_ODD_COMPRESSED: u8 = 0xfd;
-pub const C509_TYPE_NATIVE: u8 = 0x00; //TODO, update
-pub const C509_TYPE_X509_ENCODED: u8 = 0x01; //TODO, update
+pub const C509_TYPE_NATIVE: u8 = 0x02; 
+pub const C509_TYPE_X509_ENCODED: u8 = 0x03; 
 struct Cert {
     der: Vec<u8>,
     cbor: Vec<Vec<u8>>,
@@ -297,6 +298,7 @@ fn parse_x509_cert(input: Vec<u8>) -> Cert {
     let tbs_certificate = lder_vec_len(certificate[0], ASN1_SEQ, 8);
     let version = lder(tbs_certificate[0], 0xa0);
     let serial_number = lder_uint(tbs_certificate[1]);
+    let signature_algorithm = certificate[1];
     let signature = tbs_certificate[2];
     let issuer = tbs_certificate[3];
     let validity = lder_vec_len(tbs_certificate[4], ASN1_SEQ, 2);
@@ -307,13 +309,22 @@ fn parse_x509_cert(input: Vec<u8>) -> Cert {
     let spki_algorithm = subject_public_key_info[0]; //TODO, update?
     let subject_public_key = lder(subject_public_key_info[1], ASN1_BIT_STR);
     let extensions = lder_vec(lder(tbs_certificate[7], 0xa3), ASN1_SEQ); //0xa3 = [3] EXPLICIT, mandatory start of ext.seq if present
-    let signature_algorithm = certificate[1];
     let signature_value = lder(certificate[2], ASN1_BIT_STR);
     // version
     assert!(lder(version, ASN1_INT)[0] == 2, "Expected v3!");
-    output.push(lcbor_uint(1));
+    output.push(lcbor_uint(C509_TYPE_X509_ENCODED as u64));
     // serial_number
     output.push(lcbor_bytes(serial_number));
+    
+    // signatureAlg.
+    if let Some(sig_type) = sig_map(signature_algorithm) {
+        output.push(lcbor_int(sig_type));
+    } else {
+        let oid = lder(lder_vec(signature_algorithm, ASN1_SEQ)[0], ASN1_OID);
+        print_warning("No C509 int regisered for signature algorithm identifier, oid", &signature_algorithm, oid);
+        output.push(cbor_alg_id(signature_algorithm));
+    }
+    
     // signature
     assert!(signature_algorithm == signature, "Expected signature_algorithm == signature!");
     // issuer
@@ -450,11 +461,10 @@ fn parse_x509_cert(input: Vec<u8>) -> Cert {
     This requires the minus sign of the EXT_KEY_USAGE value (2) to be surpressed above
     */
     output.push(cbor_opt_array(&vec, EXT_KEY_USAGE as u8));
-    // signatureAlgorithm, signatureValue
+    // now only signatureValue
     assert!(signature_value[0] == 0, "expected 0 unused bits");
     let signature_value = &signature_value[1..];
     if let Some(sig_type) = sig_map(signature_algorithm) {
-        output.push(lcbor_int(sig_type));
         // Special handling for ECDSA
         if [SIG_ECDSA_SHA1, SIG_ECDSA_SHA256, SIG_ECDSA_SHA384, SIG_ECDSA_SHA512, SIG_ECDSA_SHAKE128, SIG_ECDSA_SHAKE256].contains(&sig_type) {
             output.push(cbor_ecdsa(signature_value));
@@ -462,9 +472,6 @@ fn parse_x509_cert(input: Vec<u8>) -> Cert {
             output.push(lcbor_bytes(signature_value));
         }
     } else {
-        let oid = lder(lder_vec(signature_algorithm, ASN1_SEQ)[0], ASN1_OID);
-        print_warning("No C509 int regisered for signature algorithm identifier, oid", &signature_algorithm, oid);
-        output.push(cbor_alg_id(signature_algorithm));
         output.push(lcbor_bytes(signature_value));
     }
     Cert { der: input, cbor: output }
@@ -793,7 +800,7 @@ inherit   NULL, -- inherit from issuer --
 asIdsOrRanges   SEQUENCE OF ASIdOrRange
 }
 ASIdOrRange   ::= CHOICE {
-id	ASId,
+id  ASId,
 range   ASRange
 }
 ASRange   ::= SEQUENCE {
@@ -1944,38 +1951,38 @@ fn parse_c509_cert(input: Vec<u8>, is_str: bool) -> Cert {
                 tbs_cert_vec.push(parsed_serial_number);
 
                 //Please note that in the reconstructed X.509 the third element is the "signature AlgorithmIdentifier"
-                let (sig_alg, sig_val) = parse_cbor_sig_info(&elements[9], &elements[10]);
+                let (sig_alg, sig_val) = parse_cbor_sig_info(&elements[2], &elements[10]);
                 debug!("Done parsing sig_alg & sig_val: {:02x?}", sig_val);
                 tbs_cert_vec.push(sig_alg.clone());
 
                 //The fourth value in the cbor array should be the issuer
-                let issuer = parse_cbor_name(&elements[2], &empty_vec);
+                let issuer = parse_cbor_name(&elements[3], &empty_vec);
                 debug!("Done parsing issuer;\n{:02x?}", issuer);
                 tbs_cert_vec.push(issuer);
 
                 //The fifth and sixth values should be the val.period
-                let (not_before, not_before_int) = parse_cbor_time(&elements[3]);
-                let validity: Vec<u8> = lder_to_two_seq(not_before, parse_cbor_time(&elements[4]).0);
+                let (not_before, not_before_int) = parse_cbor_time(&elements[4]);
+                let validity: Vec<u8> = lder_to_two_seq(not_before, parse_cbor_time(&elements[5]).0);
                 debug!("Done parsing validity time:\n{:02x?}", validity);
                 tbs_cert_vec.push(validity);
 
                 //The seventh value should be the cbor encoded subject
-                let subject = parse_cbor_name(&elements[5], &empty_vec);
+                let subject = parse_cbor_name(&elements[6], &empty_vec);
                 debug!("Done parsing subject: {:02x?}", subject);
                 tbs_cert_vec.push(subject);
 
                 //The eighth value should be the subjectPublicKeyAlgorithm -- which in the reconstructed X.509 is combined inside the subjectPublicKeyInfo
-                let (subject_pka, subject_pka_oid) = map_pk_id_to_oid(&elements[6]);
+                let (subject_pka, subject_pka_oid) = map_pk_id_to_oid(&elements[7]);
                 let spka = lder_to_generic(subject_pka_oid, ASN1_SEQ);
                 debug!("Done parsing subject_pka:\n{:02x?}", spka);
                 //The ninth value should be the subjectPublicKey
-                let subject_pub_key_info = parse_cbor_pub_key(&elements[7], subject_pka.unwrap());
+                let subject_pub_key_info = parse_cbor_pub_key(&elements[8], subject_pka.unwrap());
                 debug!("Done parsing subject_pub_key_info: {:02x?}", subject_pub_key_info);
                 tbs_cert_vec.push(subject_pub_key_info);
 
                 //issuerUniqueID + subjectUniqueID. -- Not supported in current draft
                 //The tenth value should be the extension / ext.array
-                let extensions = parse_cbor_extensions(&elements[8], not_before_int);
+                let extensions = parse_cbor_extensions(&elements[9], not_before_int);
                 trace!("Done parsing extensions: {:02x?}", extensions);
 
                 tbs_cert_vec.push(extensions);
@@ -2786,7 +2793,7 @@ pub fn cleanup(mut file_contents: Vec<u8>) -> Vec<u8> {
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
-//          	Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
+//              Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
 //EXT_SUBJECT_KEY_ID = 1
