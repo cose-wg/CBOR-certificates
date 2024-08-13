@@ -62,6 +62,7 @@ normative:
   RFC8949:
   RFC9052:
   RFC9090:
+  RFC9171:
   RFC9277:
   RFC9360:
 
@@ -366,7 +367,7 @@ CBOR encoding of the following extension values is fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, some types of otherName have been given their own negative int code point. For hardwareModuleName this is due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ oid, bytes \] is used to identify the pair ( hwType, hwSerialEntries ) directly as specified in {{RFC4108}}. For bundleEID this allows the encoding to be compressed with CBOR form based on the EID scheme as specified in {{RFC9171}} and any later bundle EID scheme registrations. A general purpose translating c509 processor does not need to use the bundleEID form and instead can use the generic otherName form to avoid bundle EID processing. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~ CDDL
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -1437,7 +1438,8 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 |       | Comments:        id-on-bundleEID                          |
 |       |                  (1.3.6.1.5.5.7.8.11)                     |
 |       |                  06 08 2B 06 01 05 05 07 08 0B            |
-|       | Value:           eid-structure from RFC 9171              |
+|       | Value:           bstr .cbor eid-structure                 |
+|       |                  (from RFC 9171)                          |
 +-------+-----------------------------------------------------------+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
 |       | Comments:        id-on-SmtpUTF8Mailbox                    |
