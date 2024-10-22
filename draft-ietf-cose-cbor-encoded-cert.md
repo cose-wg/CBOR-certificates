@@ -1438,7 +1438,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 |       | Comments:        id-on-bundleEID                          |
 |       |                  (1.3.6.1.5.5.7.8.11)                     |
 |       |                  06 08 2B 06 01 05 05 07 08 0B            |
-|       | Value:           bstr .cbor eid-structure                 |
+|       | Value:           bstr .cborseq eid-structure                 |
 |       |                  (from RFC 9171)                          |
 +-------+-----------------------------------------------------------+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
