@@ -615,10 +615,6 @@ fn cbor_general_names(b: &[u8], t: u8, opt: u8) -> Vec<u8> {
             let inner_value = &value[12..]; //TODO, check handling of long values
             match value {
                 [0x06, 0x08, 0x2B, 0x06, 0x01, 0x05, 0x05, 0x07, 0x08, ..] => match value[9] {
-                    0x0B => {
-                        vec.push(lcbor_int(-3));
-                        vec.push(lcbor_bytes(inner_value));
-                    }
                     0x09 => {
                         vec.push(lcbor_int(-2));
                         vec.push(cbor_other_name_mail(inner_value));
