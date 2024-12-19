@@ -315,7 +315,7 @@ A note on extension ID naming: in existing OID databases most IDs can be found i
 
 CBOR encoding of the following extension values is fully supported:
 
-*  Subject Key Identifier (subjectKeyIdentifier). The extensionValue is encoded as follows:
+*  Subject Key Identifier (subjectKeyIdentifier). In natively signed certificates, KeyIdentifier SHOULD be composed of the leftmost 160-bits of the SHA-256 hash of the CBOR encoded subjectPublicKey. Other methods of generating unique numbers MAY be used. The extensionValue is encoded as follows:
 
 ~~~~~~~~~~~ CDDL
    KeyIdentifier = bytes
