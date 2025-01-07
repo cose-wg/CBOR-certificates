@@ -457,15 +457,17 @@ CBOR encoding of the following extension values are partly supported:
 
 * AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
 
-* IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI is not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress is set to ones. With the exception of the first  Address, if the byte string has the same length as the previous Address, the Address is encoded as an uint with the the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2^64 - 1 corresponding to the cbor integer max value.
+* IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI is not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress is set to ones. With the exception of the first  Address, if the byte string has the same length as the previous Address, the Address is encoded as an uint with the the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2^64 - 1 corresponding to the CBOR integer max value.
 
 ~~~~~~~~~~~ CDDL
-   Address = bytes / uint,
+
+   Address = bytes
    AddressPrefix = (Address, unusedBits: uint)
-   AddressRange =  [min:Address, max:Address]
+   AddressRange = [min: Address, max: Address]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
-   IPAddrBlocks = [ AFI: uint, IPAddressChoice ]
+   IPAddressFamily = (AFI: uint, IPAddressChoice)
+   IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
