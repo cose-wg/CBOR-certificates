@@ -2267,7 +2267,7 @@ Certificate:
                 otherName:
                     type-id: 1.3.6.1.5.5.7.8.4 (id-on-hardwareModuleName)
                     value:
-                        hwType: 1.3.6.1.4.1.6175.10.1
+                        hwType: 1.3.6.1.4.1.6715.10.1
                         hwSerialNum: 01:02:03:04
     Signature Algorithm: ecdsa-with-SHA256
     Signature Value:
@@ -2343,11 +2343,14 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
    1, h'96600D8716BF7FD0E752D0AC760777AD665D02A0',
    7, h'68D16551F951BFC82A431D0D9F08BC2D205B1160',
   -2, 5,
-  3, [-1, [h'2B06010401B01F0A01', h'01020304']]   / subjectAltName w. hardwareModuleName /
+  3, [-1, [h'2B06010401B43B0A01', h'01020304']]
+     / subjectAltName with hardwareModuleName /
  ],
  h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86A7
    74989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
 ~~~~~~~~~~~
+
+Editor's note: Signature value needs to be updated.
 
 The size of the CBOR encoding (CBOR sequence) is 275 bytes:
 
@@ -2360,7 +2363,7 @@ The size of the CBOR encoding (CBOR sequence) is 275 bytes:
 7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C
 FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD
 66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20
-5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B0 1F 0A 01 44 01 02 03
+5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02 03
 04 00 58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB
 21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D
 83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36
