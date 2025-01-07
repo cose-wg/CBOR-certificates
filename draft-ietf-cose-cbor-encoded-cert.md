@@ -228,7 +228,7 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
    The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The Attribute Email Address and domainComponent (as specified in {{RFC3039}}) are always an ia5String. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by printableString and countryName SHALL have length 2. In re-encoded C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows:
 
   * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string, prefixed with an initial byte set to '00'.
-  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 9. An EUI-64 mapped from a 48-bit MAC address (i.e., of the form "HH-HH-HH-FF-FE-HH-HH-HH) is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 7.
+  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 9. An EUI-64 mapped from a 48-bit MAC address (i.e., of the form "HH-HH-HH-FF-FE-HH-HH-HH") is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 7.
   * Otherwise it is encoded as a CBOR text string.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then it MUST be encoded as CBOR null.
@@ -308,11 +308,15 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 ## Encoding of Extensions {#ext-encoding}
 
-This section details the encoding of the 'extensions' field. The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int or as an unwrapped CBOR OID tag. If 'extensionID' is encoded an int (see {{extype}}), the sign is used to encode if the extension is critical and the 'critical' field is omitted. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign.
+The 'extensions' field is encoded as specified in {{message-fields}} with further details provided in this section.
 
-The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below. For some extensions, only commonly used parts are supported by the CBOR encoding. If unsupported parts are used, the CBOR encoding cannot be used.
+The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int (see {{extype}}) or as an unwrapped CBOR OID tag {{RFC9090}}. If 'extensionID' is encoded an int, the sign is used to encode that the extension is critical. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If 'extensionID' is encoded as an unwrapped CBOR OID tag, then an optional boolean element in the array is used to indicate that the extension is critical, see {{fig-CBORCertCDDL}}.
 
-A note on extension ID naming: in existing OID databases most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
+The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below.
+
+For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension needs to be encoded using the unwrapped CBOR OID tag encoded extensionID.
+
+A note on extensionID naming: in existing OID databases most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
 
 CBOR encoding of the following extension values is fully supported:
 
@@ -444,6 +448,7 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
 ~~~~~~~~~~~ CDDL
+
    Attributes = ( attributeType: int, attributeValue: [+text] ) //
                 ( attributeType: ~oid, attributeValue: [+bytes] )
    SubjectDirectoryAttributes = [+Attributes]
