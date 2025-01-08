@@ -2356,8 +2356,6 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
    74989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
 ~~~~~~~~~~~
 
-Editor's note: Signature value needs to be updated.
-
 The size of the CBOR encoding (CBOR sequence) is 275 bytes:
 
 ~~~~~~~~~~~
