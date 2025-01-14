@@ -486,7 +486,7 @@ CBOR encoding of the following extension values are partly supported:
      sigAlg: AlgorithmIdentifier,
      sigValue: any,
    )
-   SignedCertificateTimestamps = [ + SignedCerticateTimestamp ]
+   SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
 ~~~~~~~~~~~
 
 ### Example Encoding of Extensions
@@ -998,7 +998,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
 |       | Comments:                                                 |
-|       | extensionValue:  SignedCertificateTimestampList           |
+|       | extensionValue:  SignedCertificateTimestamps              |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | Identifiers:     subjectDirectoryAttributes               |
