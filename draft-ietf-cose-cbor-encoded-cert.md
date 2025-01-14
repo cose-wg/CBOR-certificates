@@ -1440,12 +1440,6 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
-|    -3 | Name:            otherName with BundleEID                 |
-|       | Comments:        id-on-bundleEID                          |
-|       |                  (1.3.6.1.5.5.7.8.11)                     |
-|       |                  06 08 2B 06 01 05 05 07 08 0B            |
-|       | Value:           eid-structure from RFC 9171              |
-+-------+-----------------------------------------------------------+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
 |       | Comments:        id-on-SmtpUTF8Mailbox                    |
 |       |                  (1.3.6.1.5.5.7.8.9)                      |
