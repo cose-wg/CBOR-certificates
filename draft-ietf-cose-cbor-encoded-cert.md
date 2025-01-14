@@ -193,7 +193,7 @@ Natively signed C509 certificates can be applied in devices that are only requir
 
 This document also specifies C509 Certificate Signing Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}.
 
-# Notational Conventions
+# Notational Conventions {#notation}
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
 
@@ -547,6 +547,16 @@ C509PEM = [
 The C509PEM item is served with the application/cose-c509-pem media type, see {{c509-pem}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD13 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 Editor's note: Include further details for encoding of subjectPrivateKey.
+
+## Deterministic Encoding
+
+In some use cases it is desirable to be able to specify a unique C509 representation of a given X.509 certificate.
+
+While this specification requires the use of Deterministically Encoded CBOR (see {{notation}}), it is still possible to represent certain X.509 certificate fields in different ways. This is a consequence of the extensibility of the C509 format where new encodings can be defined, for example to optimize extensions for which no special CBOR encoding have been previously defined.
+
+Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
+
+Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.
 
 # C509 Certificate Signing Request {#CSR}
 
