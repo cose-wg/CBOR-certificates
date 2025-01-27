@@ -1,9 +1,13 @@
 ---
+v: 3
 title: "CBOR Encoded X.509 Certificates (C509 Certificates)"
 docname: draft-ietf-cose-cbor-encoded-cert-latest
 abbrev: C509 Certificates
 
-ipr: trust200902
+v3xml2rfc:
+  silence:
+  - Found SVG with width or height specified
+
 cat: std
 submissiontype: IETF
 coding: utf-8
@@ -20,43 +24,30 @@ venue:
   github: "cose-wg/CBOR-certificates"
 
 author:
-      -
-        ins: J. Preuß Mattsson
-        name: John Preuß Mattsson
+      - name: John | Preuß Mattsson
         org: Ericsson AB
         email: john.mattsson@ericsson.com
-      -
-        ins: G. Selander
-        name: Göran Selander
+      - name: Göran Selander
         org: Ericsson AB
         email: goran.selander@ericsson.com
-      -
-        ins: S. Raza
-        name: Shahid Raza
+      - name: Shahid Raza
         org: RISE AB
         email: shahid.raza@ri.se
-      -
-        ins: J. Höglund
-        name: Joel Höglund
+      - name: Joel Höglund
         org: RISE AB
         email: joel.hoglund@ri.se
-      -
-        ins: M. Furuhed
-        name: Martin Furuhed
+      - name: Martin Furuhed
         org: Nexus Group
         email: martin.furuhed@nexusgroup.com
 
 
 normative:
-
-  RFC2119:
   RFC2985:
   RFC2986:
   RFC4108:
   RFC5280:
   RFC6838:
   RFC6962:
-  RFC8174:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -86,7 +77,7 @@ informative:
   RFC9148:
   RFC9190:
   RFC9191:
-  I-D.ietf-lake-edhoc:
+  RFC9528: edhoc
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
 
@@ -181,7 +172,7 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
 
-CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{I-D.ietf-lake-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of RFC 5280. The encoding supports all RFC 7925, IEEE 802.1AR, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.
+CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of RFC 5280. The encoding supports all RFC 7925, IEEE 802.1AR, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.
 
 The resulting certificates are called C509 Certificates. This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
 
@@ -195,7 +186,7 @@ This document also specifies C509 Certificate Signing Requests, see {{CSR}}; COS
 
 # Notational Conventions {#notation}
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 {{RFC2119}} {{RFC8174}} when, and only when, they appear in all capitals, as shown here.
+{::boilerplate bcp14-tagged}
 
 This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refers to Deterministically Encoded CBOR as specified in Sections 4.2.1 and 4.2.2 of {{RFC8949}}.
 
