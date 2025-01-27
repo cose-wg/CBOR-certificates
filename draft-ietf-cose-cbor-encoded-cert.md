@@ -269,17 +269,17 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * Attribute ] / text / bytes
 
-Attribute = ( attributeType: int, attributeValue: text ) //
-            ( attributeType: ~oid, attributeValue: bytes )
+Attribute = (( attributeType: int, attributeValue: text ) //
+             ( attributeType: ~oid, attributeValue: bytes ))
 
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
-Extension = ( extensionID: int, extensionValue: any ) //
-            ( extensionID: ~oid, ? critical: true,
-              extensionValue: bytes )
+Extension = (( extensionID: int, extensionValue: any ) //
+             ( extensionID: ~oid, ? critical: true,
+              extensionValue: bytes ))
 ~~~~~~~~~~~
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
@@ -607,7 +607,7 @@ TBSCertificateRequest = (
    extensionsRequest: Extensions,
 )
 
-challengePassword: tstr / bstr
+challengePassword = tstr / bstr
 ~~~~~~~~~~~
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
 {: artwork-align="center"}
