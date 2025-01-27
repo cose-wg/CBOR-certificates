@@ -245,7 +245,7 @@ If the array contains exactly two ints and the absolute value of the first int i
 
 The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate).
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 C509Certificate = [
    TBSCertificate,
    issuerSignatureValue : any,
@@ -281,6 +281,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 {: artwork-align="center"}
 
@@ -312,98 +313,111 @@ CBOR encoding of the following extension values is fully supported:
 
 *  Subject Key Identifier (subjectKeyIdentifier). In natively signed certificates, KeyIdentifier SHOULD be composed of the leftmost 160-bits of the SHA-256 hash of the CBOR encoded subjectPublicKey. Other methods of generating unique numbers can be used. The extensionValue is encoded as follows:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    KeyIdentifier = bytes
    SubjectKeyIdentifier = KeyIdentifier
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{message-fields}} for special encoding in case keyUsage is the only extension present.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    KeyUsage = int
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Policy Mappings (policyMappings). extensionValue is encoded as follows:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    PolicyMappings = [
      + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)
    ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Basic Constraints (basicConstraints). If 'cA' = false then extensionValue = -2, if 'cA' = true and 'pathLenConstraint' is not present then extensionValue = -1, and if 'cA' = true and 'pathLenConstraint' is present then extensionValue = pathLenConstraint.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    BasicConstraints = int
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Policy Constraints (policyConstraints). extensionValue is encoded as follows:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    PolicyConstraints = [
      requireExplicitPolicy: uint / null,
      inhibitPolicyMapping: uint / null,
    ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Extended Key Usage (extKeyUsage). extensionValue is encoded as an array of CBOR ints (see {{EKU}}), or unwrapped CBOR OID tags {{RFC9090}}, where each int or OID encodes a key usage purpose. If the array contains a single KeyPurposeId, the array is omitted.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    KeyPurposeId = int / ~oid
    ExtKeyUsageSyntax = [ 2* KeyPurposeId ] / KeyPurposeId
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Inhibit anyPolicy (inhibitAnyPolicy). extensionValue is encoded as follows:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    InhibitAnyPolicy = uint
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 CBOR encoding of the following extension values are partly supported:
 
 * Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
    GeneralNames = [ + GeneralName ]
    SubjectAltName = GeneralNames / text
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    IssuerAltName  = GeneralNames / text
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    DistributionPointName = [ 2* text ] / text
    CRLDistributionPoints = [ + DistributionPointName ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    FreshestCRL = CRLDistributionPoints
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as a CBOR int (see {{IA}}) or an unwrapped CBOR OID tag {{RFC9090}}. The uniformResourceIdentifiers are encoded as CBOR text strings.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    AccessDescription = ( accessMethod: int / ~oid , uri: text )
    AuthorityInfoAccessSyntax = [ + AccessDescription ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Subject Information Access (subjectInfoAccess). Encoded exactly like authorityInfoAccess.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    SubjectInfoAccessSyntax = AuthorityInfoAccessSyntax
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumberm or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present, the array is omitted:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    KeyIdentifierArray = [
      keyIdentifier: KeyIdentifier,
      authorityCertIssuer: GeneralNames,
@@ -411,10 +425,11 @@ CBOR encoding of the following extension values are partly supported:
    ]
    AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in {{CP}} are encoded as an int. The policyQualifierId is encoded as an CBOR int (see {{PQ}}) or an unwrapped CBOR OID tag {{RFC9090}}.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    PolicyIdentifier = int / ~oid
    PolicyQualifierInfo = (
      policyQualifierId: int / ~oid,
@@ -424,38 +439,42 @@ CBOR encoding of the following extension values are partly supported:
      + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )
    ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 4.2.1.10 of RFC5280}}. Note that the minimum and maximum fields are not used and therefore omitted.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    GeneralSubtrees = [ + GeneralName ]
    NameConstraints = [
      permittedSubtrees: GeneralSubtrees / null,
      excludedSubtrees: GeneralSubtrees / null,
    ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 
-   Attributes = ( attributeType: int, attributeValue: [+text] ) //
-                ( attributeType: ~oid, attributeValue: [+bytes] )
+   Attributes = (( attributeType: int, attributeValue: [+text] ) //
+                 ( attributeType: ~oid, attributeValue: [+bytes] ))
    SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    ASIdOrRange = uint / [min:uint, max:uint]
    ASIdentifiers = [ + ASIdOrRange ] / null
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
 
 * IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI is not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress is set to ones. With the exception of the first  Address, if the byte string has the same length as the previous Address, the Address is encoded as an uint with the the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2^64 - 1 corresponding to the CBOR integer max value.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 
    Address = bytes
    AddressPrefix = (Address, unusedBits: uint)
@@ -465,12 +484,13 @@ CBOR encoding of the following extension values are partly supported:
    IPAddressFamily = (AFI: uint, IPAddressChoice)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
 
 * Signed Certificate Timestamp. If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    SignedCertificateTimestamp = (
      logID: bytes,
      timestamp: int,
@@ -479,6 +499,7 @@ CBOR encoding of the following extension values are partly supported:
    )
    SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 ### Example Encoding of Extensions
 
@@ -500,9 +521,10 @@ The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 COSE_C509 = C509Certificate / [ 2* C509Certificate ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
 
@@ -519,21 +541,23 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 Certificate management also makes use of data structures including private keys, see e.g. {{RFC7468}}. This section defines the following CBOR encoded structures:
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 C509PrivateKey = [
    subjectPrivateKeyAlgorithm: AlgorithmIdentifier,
    subjectPrivateKey: any,
 ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 The C509PrivateKey item is served with the application/cose-c509-privkey media type, see {{c509-privkey}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 C509PEM = [
    C509PrivateKey,
    COSE_C509 / null,
 ]
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 The C509PEM item is served with the application/cose-c509-pem media type, see {{c509-pem}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD13 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
@@ -591,7 +615,7 @@ Certificate request attributes, i.e. attributes for use with certificate request
 
 
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
 C509CertificateRequest = [
    TBSCertificateRequest,
    subjectSignatureValue: any,
@@ -609,6 +633,7 @@ TBSCertificateRequest = (
 
 challengePassword = tstr / bstr
 ~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
 {: artwork-align="center"}
 
