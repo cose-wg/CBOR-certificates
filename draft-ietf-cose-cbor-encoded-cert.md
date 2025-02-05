@@ -558,6 +558,12 @@ Where there is support for a specific and a generic CBOR encoding, the specific 
 
 Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.
 
+Some cbor encodings of extensions are only possible given that certain preconditions are fulfilled. In the negative case, the encoding must use the unwrapped oid, reserving the uint for the fully cbor compliant encoding.
+~~~~~~~~~~~ CDDL
+Extension = ( extensionID: ~oid, ? critical: true,
+              extensionValue: bytes )
+~~~~~~~~~~~
+
 # C509 Certificate Signing Request {#CSR}
 
 This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
