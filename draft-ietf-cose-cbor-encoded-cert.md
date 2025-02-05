@@ -6,6 +6,7 @@ abbrev: C509 Certificates
 ipr: trust200902
 cat: std
 submissiontype: IETF
+updates: 6698
 coding: utf-8
 pi: # can use array (if all yes) or hash here
   toc: yes
@@ -54,6 +55,7 @@ normative:
   RFC2986:
   RFC4108:
   RFC5280:
+  RFC6698:
   RFC6838:
   RFC6962:
   RFC8174:
@@ -2065,6 +2067,20 @@ This document registers the following entries in the "CBOR Tags" registry under 
 |      | Reference: This document                                   |
 +------+------------------------------------------------------------+
 ~~~~~~~~~~~
+
+## TLSA Selectors Registry {#tlsa}
+
+This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.
+
+~~~~~~~~~~~ aasvg
++-------+---------+-------------------------+-----------------------+
+| Value | Acronym |    Short Description    |       Reference       |
++=======+=========+=========================+=======================+
+|  TDB7 |    C509 | c509CertificateType = 3 |     [[this document]] |
++-------+---------+-------------------------+-----------------------+
+~~~~~~~~~~~
+
+The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept C509 certificates with c509CertificateType = 3, which are essentially compressed PKIX certificates.
 
 --- back
 
