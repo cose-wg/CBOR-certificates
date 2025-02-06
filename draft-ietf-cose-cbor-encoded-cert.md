@@ -2073,14 +2073,15 @@ This document registers the following entries in the "CBOR Tags" registry under 
 This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.
 
 ~~~~~~~~~~~ aasvg
-+-------+---------+-------------------------+-----------------------+
-| Value | Acronym |    Short Description    |       Reference       |
-+=======+=========+=========================+=======================+
-|  TDB7 |    C509 | c509CertificateType = 3 |     [[this document]] |
-+-------+---------+-------------------------+-----------------------+
+
++-------+---------+--------------------------------+-------------------+
+| Value | Acronym |    Short Description           |     Reference     |
++=======+=========+================================+===================+
+|  TDB7 |    C509 | CBOR encoded PKIX certificates | [[this document]] |
++-------+---------+--------------------------------+-------------------+
 ~~~~~~~~~~~
 
-The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept C509 certificates with c509CertificateType = 3, which are essentially compressed PKIX certificates.
+The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.
 
 --- back
 
