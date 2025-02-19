@@ -642,7 +642,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +---------------------------------------+-----------+-----------+
 |                                       | COSE_X509 | COSE_C509 |
 +---------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1) |       317 |       139 |
+| RFC 7925 profiled IoT Certificate (1) |       317 |       140 |
 +---------------------------------------+-----------+-----------+
 | ECDSA HTTPS Certificate Chain (2)     |      2193 |      1394 |
 +---------------------------------------+-----------+-----------+
@@ -2174,7 +2174,7 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
   "RFC test CA",
   1672531200,
   1767225600,
-  h'010123456789AB',
+  48(h'0123456789AB'),
   1,
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
@@ -2184,7 +2184,9 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
     313B90AEAFCAA7AF0DE440302146'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 139 bytes.
+Editor's note: Signature needs to be updated
+
+The size of the CBOR encoding (CBOR sequence) is 140 bytes.
 
 ~~~~~~~~~~~
 02
@@ -2193,7 +2195,7 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
 1A 69 55 B9 00
-47 01 01 23 45 67 89 AB
+D8 30 46 01 23 45 67 89 AB
 01
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
@@ -2202,6 +2204,8 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 72 E5 B6 E2 C3 11 FC 9F 3D D5 96 25 85 AB F6 44 D6 84 15 19 4C 24 5A
 57 9E 13 4A 7C A5 31 3B 90 AE AF CA A7 AF 0D E4 40 30 21 46
 ~~~~~~~~~~~
+
+Editor's note: Signature needs to be updated
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
 
