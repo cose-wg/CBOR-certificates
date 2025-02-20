@@ -64,6 +64,7 @@ normative:
   RFC9090:
   RFC9277:
   RFC9360:
+  RFC9542:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -226,8 +227,8 @@ C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certific
 
    The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}). In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74 character subset of ASCII allowed by printableString and countryName SHALL have length 2. In re-encoded C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported. If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows:
 
-  * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string, prefixed with an initial byte set to '00'.
-  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 9. An EUI-64 mapped from a 48-bit MAC address (i.e., of the form "HH-HH-HH-FF-FE-HH-HH-HH") is encoded as a CBOR byte string prefixed with an initial byte set to '01', for a total length of 7.
+  * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
+  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
   * Otherwise it is encoded as a CBOR text string.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then it MUST be encoded as CBOR null.
@@ -651,7 +652,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +---------------------------------------+-----------+-----------+
 |                                       | COSE_X509 | COSE_C509 |
 +---------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1) |       317 |       139 |
+| RFC 7925 profiled IoT Certificate (1) |       317 |       140 |
 +---------------------------------------+-----------+-----------+
 | ECDSA HTTPS Certificate Chain (2)     |      2193 |      1394 |
 +---------------------------------------+-----------+-----------+
@@ -2070,7 +2071,7 @@ This document registers the following entries in the "CBOR Tags" registry under 
 
 # Example C509 Certificates {#appA}
 
-## Example RFC 7925 profiled X.509 Certificate
+## Example RFC 7925 profiled X.509 Certificate {#rfc7925-prof}
 
 Example of {{RFC7925}} profiled X.509 certificate parsed with OpenSSL.
 
@@ -2138,7 +2139,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   "RFC test CA",       / issuer /
   1672531200,          / notBefore /
   1767225600,          / notAfter /
-  h'010123456789AB',   / subject, EUI-64 /
+  48(h'0123456789AB'), / subject, EUI-64 /
   1,                   / subjectPublicKeyAlgorithm /
   h'FEB1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
@@ -2151,7 +2152,7 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 139 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
+The size of the CBOR encoding (CBOR sequence) is 140 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
 
 ~~~~~~~~~~~
 03
@@ -2160,7 +2161,7 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes. The point compressed
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
 1A 69 55 B9 00
-47 01 01 23 45 67 89 AB
+D8 30 46 01 23 45 67 89 AB
 01
 58 21 FE B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
@@ -2183,7 +2184,7 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
   "RFC test CA",
   1672531200,
   1767225600,
-  h'010123456789AB',
+  48(h'0123456789AB'),
   1,
   h'02B1216AB96E5B3B3340F5BDF02E693F16213A04525ED44450
     B1019C2DFD3838AB',
@@ -2193,7 +2194,9 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
     313B90AEAFCAA7AF0DE440302146'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 139 bytes.
+Editor's note: Signature needs to be updated
+
+The size of the CBOR encoding (CBOR sequence) is 140 bytes.
 
 ~~~~~~~~~~~
 02
@@ -2202,7 +2205,7 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 6B 52 46 43 20 74 65 73 74 20 43 41
 1A 63 B0 CD 00
 1A 69 55 B9 00
-47 01 01 23 45 67 89 AB
+D8 30 46 01 23 45 67 89 AB
 01
 58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
 5E D4 44 50 B1 01 9C 2D FD 38 38 AB
@@ -2211,6 +2214,8 @@ The size of the CBOR encoding (CBOR sequence) is 139 bytes.
 72 E5 B6 E2 C3 11 FC 9F 3D D5 96 25 85 AB F6 44 D6 84 15 19 4C 24 5A
 57 9E 13 4A 7C A5 31 3B 90 AE AF CA A7 AF 0D E4 40 30 21 46
 ~~~~~~~~~~~
+
+Editor's note: Signature needs to be updated
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
 
