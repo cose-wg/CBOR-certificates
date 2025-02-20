@@ -58,6 +58,7 @@ normative:
   RFC9277:
   RFC9360:
   RFC9542:
+  RFC9668:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -2085,7 +2086,7 @@ This document registers the following entries in the "CBOR Tags" registry under 
 +------+------------------------------------------------------------+
 |  Tag | X.509 Public Key Algorithms                                |
 +======+============================================================+
-| TDB6 | Data Item: COSE_C509                                       |
+| TBD6 | Data Item: COSE_C509                                       |
 |      | Semantics: An ordered chain of C509 certificates           |
 |      | Reference: This document                                   |
 +------+------------------------------------------------------------+
@@ -2100,11 +2101,26 @@ This document registers the following entries in the "TLSA Selectors" registry u
 +-------+---------+--------------------------------+-------------------+
 | Value | Acronym |    Short Description           |     Reference     |
 +=======+=========+================================+===================+
-|  TDB7 |    C509 | CBOR encoded PKIX certificates | [[this document]] |
+|  TBD7 |    C509 | CBOR encoded PKIX certificates | [[this document]] |
 +-------+---------+--------------------------------+-------------------+
 ~~~~~~~~~~~
 
 The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.
+
+
+
+## EDHOC Authentication Credential Types Registry
+
+This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is used to identify supported authentication credential type, for example, during discovery of EDHOC resources, see {{RFC9668}}.
+
+~~~~~~~~~~~ aasvg
+
++-------+----------------------+-------------------+
+| Value | Description          |     Reference     |
++=======+======================+===================+
+| TBD14 | C509 certificate     | [[this document]] |
++-------+----------------------+-------------------+
+~~~~~~~~~~~
 
 --- back
 
