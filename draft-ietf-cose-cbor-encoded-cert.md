@@ -343,7 +343,7 @@ The 'extensions' field is encoded as a CBOR array where each extensionID is enco
 
 The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below.
 
-For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension needs to be encoded using the unwrapped CBOR OID tag encoded extensionID.
+For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension MUST be encoded using the unwrapped CBOR OID tag encoded extensionID.
 
 A note on extensionID naming: in existing OID databases most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
 
@@ -610,12 +610,6 @@ While this specification requires the use of Deterministically Encoded CBOR (see
 Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
 
 Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.
-
-Some of the defined CBOR encodings of extensions are only possible when certain preconditions are fulfilled. When the preconditions cannot be satisfied, the CBOR encoding must use the unwrapped oid.
-~~~~~~~~~~~ CDDL
-Extension = ( extensionID: ~oid, ? critical: true,
-              extensionValue: bytes )
-~~~~~~~~~~~
 
 # C509 Certificate Signing Request {#CSR}
 
