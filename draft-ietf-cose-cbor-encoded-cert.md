@@ -168,7 +168,7 @@ informative:
 
 --- abstract
 
-This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50% while also significantly reducing memory and code size compared to ASN.1.  The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The document also specifies C509 Certificate Signing Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format.
+This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50% while also significantly reducing memory and code size compared to ASN.1. The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The TLSA selectors registry defined in RFC 6698 is extended to include CBOR certificates. The document also specifies C509 Certificate Signing Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format.
 
 --- middle
 
@@ -771,7 +771,7 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 
 ## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descripions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
