@@ -558,7 +558,7 @@ Where there is support for a specific and a generic CBOR encoding, the specific 
 
 Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.
 
-Some cbor encodings of extensions are only possible given that certain preconditions are fulfilled. In the negative case, the encoding must use the unwrapped oid, reserving the uint for the fully cbor compliant encoding.
+Some of the defined CBOR encodings of extensions are only possible when certain preconditions are fulfilled. When the preconditions cannot be satisfied, the CBOR encoding must use the unwrapped oid.
 ~~~~~~~~~~~ CDDL
 Extension = ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes )
