@@ -1,5 +1,3 @@
-<!-- regenerate: on (set to off if you edit this file) -->
-
 # CBOR Drafts
 
 This is the working area for individual Internet-Drafts.
