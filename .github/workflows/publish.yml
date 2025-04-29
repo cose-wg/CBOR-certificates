@@ -54,5 +54,4 @@ jobs:
     - name: "Archive Submitted Drafts"
       uses: actions/upload-artifact@v4
       with:
-        name: published
         path: "versioned/draft-*-[0-9][0-9].*"
