@@ -1,4 +1,4 @@
 # License
 
 See the
-[guidelines for contributions](https://github.com/EricssonResearch/CBOR-certificates/blob/master/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/cose-wg/CBOR-certificates/blob/master/CONTRIBUTING.md).

@@ -1,0 +1,4 @@
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
+draft-cose-cbor-revocation-management.md john.mattsson@ericsson.com goran.selander@ericsson.com shahid.raza@ri.se joel.hoglund@ri.se martin.furuhed@nexusgroup.com
+draft-ietf-cose-cbor-encoded-cert.md john.mattsson@ericsson.com goran.selander@ericsson.com shahid.raza@ri.se joel.hoglund@ri.se martin.furuhed@nexusgroup.com
