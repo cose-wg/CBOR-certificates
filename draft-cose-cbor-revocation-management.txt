@@ -1,0 +1,321 @@
+
+
+
+
+Network Working Group                                  J. Preuß Mattsson
+Internet-Draft                                               G. Selander
+Intended status: Standards Track                             Ericsson AB
+Expires: 6 November 2025                                         S. Raza
+                                                              J. Höglund
+                                                                 RISE AB
+                                                              M. Furuhed
+                                                             Nexus Group
+                                                              5 May 2025
+
+
+             CBOR Encoded Certificate Revocation Management
+              draft-cose-cbor-revocation-management-latest
+
+Abstract
+
+   This document specifies CBOR encodings of messages for certificate
+   revocation lists, and
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-cose-cbor-revocation-
+   management/.
+
+   Discussion of this document takes place on the CBOR Object Signing
+   and Encryption Working Group mailing list (mailto:cose@ietf.org),
+   which is archived at https://mailarchive.ietf.org/arch/browse/cose/.
+   Subscribe at https://www.ietf.org/mailman/listinfo/cose/.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/cose-wg/CBOR-certificates.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 6 November 2025.
+
+Copyright Notice
+
+   Copyright (c) 2025 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Notational Conventions
+   3.  C509 Certificate Revocation List
+   4.  C509 Online Certificate Status Protocol
+     4.1.  C509 OCSP request
+     4.2.  C509 OCSP response
+   5.  Example C509 CRL Message
+   6.  Example C509 OCSP Message
+   Acknowledgments
+   Normative References
+   Authors' Addresses
+
+1.  Introduction
+
+   One of the challenges with deploying a Public Key Infrastructure
+   (PKI) for the Internet of Things (IoT) is the management of X.509
+   public key certificates [RFC5280], since that is not optimized for
+   constrained environments with restricted hardware definitions and
+   data transport capabilities, see [RFC7228].
+
+   A more compact representation of X.509 certificates has been
+   specified through the use of the Concise Binary Object Representation
+   (CBOR, [RFC8949]).  This CBOR encoding of X.509 certificates,
+   referred to as C509 [I-D.ietf-cose-cbor-encoded-cert], also enables
+   reduced code complexity, code size, memory and CPU usage, while
+   allowing compatibility with ordinary ASN.1 DER-encoded X.509 for use
+   with legacy deployments.  A "native" C509 encoding is specified,
+   identical to the backwards compatible format except for the scope of
+   the signature, suitable for very constrained greenfield deployments.
+
+   The current specification adds to this work by specifying
+   corresponding revokation related encoding and strucure.
+
+2.  Notational Conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+   This specification makes use of the terminology in [RFC5280], and
+   [RFC6960].  When referring to CBOR, this specification always refers
+   to Deterministically Encoded CBOR as specified in Sections 4.2.1 and
+   4.2.2 of [RFC8949].
+
+3.  C509 Certificate Revocation List
+
+   The section defines the C509 Certificate Revocation List (CRL) format
+   based on and compatible with [RFC5280] reusing the formatting for
+   C509 certificates defined in [I-D.ietf-cose-cbor-encoded-cert].
+
+    C509CertificateRevocationList = [
+       TBSCertificateRevocationList,
+       issuerSignatureValue : any,
+    ]
+
+    ; The elements of the following group are used in a CBOR Sequence:
+    TBSCertificateRevocationList = (
+       C509CertificateRevocationListType: int,
+       issuer: Name,
+       thisUpdate: Time,
+       nextUpdate: Time,
+       revokedCertificates: RevokedCertificates,
+       crlExtensions: Extensions,
+       issuerSignatureAlgorithm: AlgorithmIdentifier,
+    )
+
+    RevokedCertificates = [
+        userCertificate: CertificateSerialNumber,
+        revocationDate: Time,
+        crlEntryExtensions: Extensions,
+    ]
+
+             Figure 1: CDDL for C509CertificateRevocationList.
+
+4.  C509 Online Certificate Status Protocol
+
+4.1.  C509 OCSP request
+
+   To encode OCSP requests, the CDDL below gives the cbor encoding
+   corresponding to the ASN.1 encoding defined in RFC 6960 [RFC6960].
+
+      C509OCSPRequest    =     [
+            TBSRequest,
+            optionalSignature : *any,
+      ]
+
+        TBSRequest   =     [
+            version : uint .default 1,
+            requestorName : *GeneralName,
+            requestList : [+Request],
+            requestExtensions : *[+extension]
+        ]
+
+        Request    =    [
+            reqCert : CertID,
+            singleRequestExtensions : *[+extension]
+        ]
+
+        CertID          =     [
+            hashAlgorithm : AlgorithmIdentifier,
+            issuerNameHash : bytes, -- Hash of issuer's DN
+            issuerKeyHash : bytes, -- Hash of issuer's public key
+            serialNumber : CertificateSerialNumber
+        ]
+
+        extension = TBD
+
+        IMPORTS
+             GeneralName, AlgorithmIdentifier, CertificateSerialNumber
+        FROM
+             Main C509 document
+
+                    Figure 2: CDDL for C509OCSPRequest.
+
+4.2.  C509 OCSP response
+
+   Concerning OCSP responses we address the id-pkix-ocsp-basic response
+   type as defined in defined in RFC 6960 [RFC6960].
+
+   C509OCSPResponse = [
+      responseStatus : C509OCSPResponseStatus,
+      responseBytes : *BasicOCSPResponse
+  ]
+
+   OCSPResponseStatus = 0..6 ; inclusive range
+        ; semantics of integer values as in rfc6960, 4.2.1.  ASN.1 Specification of the OCSP Response
+
+   BasicOCSPResponse    =  [
+      tbsResponseData : ResponseData,
+      signatureAlgorithm : AlgorithmIdentifier,
+      signature : any,
+      certs : *[C509Certificate]
+   ]
+
+   ResponseData = [
+      version : uint .default 1,
+      responderID : ResponderID,
+      producedAt : Time,
+      responses : [+SingleResponse],
+      responseExtensions : *[+extension]
+
+   ResponderID = Name / KeyHash
+
+   Name = TBD
+
+   KeyHash = bytes -- SHA-1 hash of responder's public key (excluding the tag and length fields)
+        ; OBSOLETE, but needed if we want to fully recreate RFC6960 style messages
+
+   SingleResponse = [
+      certID : CertID,
+      certStatus : CertStatus,
+      thisUpdate : Time,
+      nextUpdate : *Time,
+      singleExtensions : *[+extension]
+   ]
+
+   CertStatus = {1: NULL} / {2: RevokedInfo} / {3: NULL}
+        ; good / revoked / unknown, semantics from RFC6960
+
+   RevokedInfo = (
+       revocationTime : Time,
+       revocationReason : *CRLReason
+   )
+
+   CRLReason = 0..10 ; inclusive range
+        ; semantics of integer values from RFC6960, 5.3.1.
+
+                 Figure 3: CDDL for C509OCSPResponse.
+
+5.  Example C509 CRL Message
+
+   TODO
+
+6.  Example C509 OCSP Message
+
+   TODO
+
+Acknowledgments
+
+   TODO
+
+Normative References
+
+   [I-D.ietf-cose-cbor-encoded-cert]
+              Mattsson, J. P., Selander, G., Raza, S., Höglund, J., and
+              M. Furuhed, "CBOR Encoded X.509 Certificates (C509
+              Certificates)", Work in Progress, Internet-Draft, draft-
+              ietf-cose-cbor-encoded-cert-13, 3 March 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-cose-
+              cbor-encoded-cert-13>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <https://www.rfc-editor.org/info/rfc5280>.
+
+   [RFC6960]  Santesson, S., Myers, M., Ankney, R., Malpani, A.,
+              Galperin, S., and C. Adams, "X.509 Internet Public Key
+              Infrastructure Online Certificate Status Protocol - OCSP",
+              RFC 6960, DOI 10.17487/RFC6960, June 2013,
+              <https://www.rfc-editor.org/info/rfc6960>.
+
+   [RFC7228]  Bormann, C., Ersue, M., and A. Keranen, "Terminology for
+              Constrained-Node Networks", RFC 7228,
+              DOI 10.17487/RFC7228, May 2014,
+              <https://www.rfc-editor.org/info/rfc7228>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8949]  Bormann, C. and P. Hoffman, "Concise Binary Object
+              Representation (CBOR)", STD 94, RFC 8949,
+              DOI 10.17487/RFC8949, December 2020,
+              <https://www.rfc-editor.org/info/rfc8949>.
+
+Authors' Addresses
+
+   John Preuß Mattsson
+   Ericsson AB
+   Email: john.mattsson@ericsson.com
+
+
+   Göran Selander
+   Ericsson AB
+   Email: goran.selander@ericsson.com
+
+
+   Shahid Raza
+   RISE AB
+   Email: shahid.raza@ri.se
+
+
+   Joel Höglund
+   RISE AB
+   Email: joel.hoglund@ri.se
+
+
+   Martin Furuhed
+   Nexus Group
+   Email: martin.furuhed@nexusgroup.com
