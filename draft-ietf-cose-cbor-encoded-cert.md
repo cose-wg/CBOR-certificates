@@ -560,7 +560,8 @@ The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ cddl
-COSE_C509 = C509Certificate / [ 2* C509Certificate ]
+COSE_C509 = C509CertData / [ 2* C509CertData ]
+C509CertData = bstr .cborseq C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
@@ -569,7 +570,7 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | Name | Label | Value Type | Description |
 | c5b | TBD1 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | TBD2 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t | TBD3 | COSE_CertHash | Hash of a C509Certificate |
+| c5t | TBD3 | COSE_CertHash | Hash of a ~C509Certificate |
 | c5u | TBD4 | uri | URI pointing to a COSE_C509 containing a ordered chain of certificates |
 {: #iana-header title="COSE Header Parameters" cols="r l l l"}
 
