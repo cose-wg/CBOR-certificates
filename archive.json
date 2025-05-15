@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-06T01:58:35.197872+00:00",
+  "timestamp": "2025-05-15T01:57:46.768209+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -5848,11 +5848,11 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
-        "waiting for input"
+        "PR exists"
       ],
       "body": "\nThe current definition of COSE_C509\n\n        COSE_C509 = C509Certificate / [ 2* C509Certificate ]\n\nrequires the handlers of the container to either decode the C509 contents itself or use a CBOR decoder to skip over the \"C509Certificate\" items (which likely contain deeply nested structure and is not a trivial activity [1] and not universally supported by CBOR libraries).\n\nThis is in contrast to the X.509 container, defined in RFC 9360 as\n\n        COSE_X509 = bstr / [ 2*certs: bstr ]\n\nwhich relieves the handler of that item of caring what are the exact contents of the contained bstr item(s).\n\nWould it seem sensible to rework the C509 container as (something equivalent to) the following?\n\n        COSE_C509 = C509CertData / [ 2* C509CertData ]\n        C509CertData = bstr .cbor C509Certificate\n\nThis relieves the handler of the container from needing to decode the bstr items, but also allows an aware handler to validate the embedded CBOR item just as is required today. The expense is the bstr wrapper item, which for small-ish certificates would be an overhead of 2-3 bytes per certificate.\n\nI understand that one of the main purposes of C509 is to reduce encoded size, but I think the current direct container contents also forces handlers to expend processing/memory resources to skip or decode the certificate contents even if that handler just passes the encoded certificate along to different entities/layers.\n\n[1] https://github.com/laurencelundblade/QCBOR/blob/83c4af09d3752afa64ae66e2a3382192bf682541/inc/qcbor/qcbor_decode.h#L1014C1-L1014C28\n\n\n",
       "createdAt": "2025-03-07T12:44:16Z",
-      "updatedAt": "2025-04-25T20:36:17Z",
+      "updatedAt": "2025-05-14T17:16:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -5903,6 +5903,20 @@
           "body": "I'm answering my own question, found in [RFC 8446](https://datatracker.ietf.org/doc/html/rfc8446#section-4.4.2) the statement:\n\n>    certificate_list:  A sequence (chain) of CertificateEntry structures,\n      each containing a single certificate and set of extensions.\n\nSo the TLS C509 use of `~C509Certificate` has exact parity with X509 type and having that same use for hash and for `C509CertData` bytes seems to have good consistency.",
           "createdAt": "2025-04-25T20:36:16Z",
           "updatedAt": "2025-04-25T20:36:16Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@BrianSipos Sorry for slow progress. Does PR #228 address the issue?",
+          "createdAt": "2025-05-14T14:32:01Z",
+          "updatedAt": "2025-05-14T14:32:01Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> [@BrianSipos](https://github.com/BrianSipos) Sorry for slow progress. Does PR [#228](https://github.com/cose-wg/CBOR-certificates/pull/228) address the issue?\n\nIt does technically, I added some comments to the PR that might improve reader understanding and equivalence of data between different C509 uses.",
+          "createdAt": "2025-05-14T17:16:15Z",
+          "updatedAt": "2025-05-14T17:16:15Z"
         }
       ]
     },
@@ -8321,6 +8335,40 @@
           "body": "Thanks @cabo!",
           "createdAt": "2025-05-05T09:34:03Z",
           "updatedAt": "2025-05-05T09:34:03Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 228,
+      "id": "PR_kwDOCpt5cM6WLM_2",
+      "title": "Redefine COSE_C509",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/228",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "New definitions of COSE-C509 and how to hash C509 certificates. Addresses #222.",
+      "createdAt": "2025-05-14T14:29:40Z",
+      "updatedAt": "2025-05-14T17:15:14Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "4f04f66a18adaaa39a148d77c683d00970974643",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "redefine-COSE_C509",
+      "headRefOid": "a865a7669b76004f7940b7068da6dc601bf50bdc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This captures the intent. It would be good if there was a normative statement about the hash input data being the unwrapped CBOR sequence just to be clear. The current table text seems non-normative and I can see it being misread or misinterpreted.\r\n\r\nIt could also be good to have an informative statement somewhere that the hash input is exactly the same as the `C509CertData` contained byte string and the same as the TLS certificate bytes just to make that clear.",
+          "createdAt": "2025-05-14T17:15:13Z",
+          "updatedAt": "2025-05-14T17:15:13Z"
         }
       ],
       "reviews": []
