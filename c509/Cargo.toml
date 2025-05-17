@@ -1,20 +1,31 @@
 [package]
 name = "c509"
-version = "0.3.0"
-authors = ["John Preuß Mattsson <john.mattsson@ericsson.com>"]
+version = "0.4.2"
+authors = ["John Preuß Mattsson <john.mattsson@ericsson.com>, Joel Höglund <joel.hoglund@ri.se>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+asn1 = "0.16"
+asn1-rs = "0.6.1"
+cbor = "0.4.1"
+serde_cbor = "0.11"
 brotli = "3.3"
 chrono = "0.4"
 colored = "2"
 hex = "0.4"
+log = "0.4"
+num-traits = "0.2"
+num-bigint = "0.4"
 oid = "0.2"
 regex = "1"
 rustls = "0.19"
+secp256k1 = "0.29.0"
 webpki = "0.21"
 webpki-roots = "0.21"
 bit_reverse = "0.1.8"
-#env_logger = "0.11"
+env_logger = "0.11"
+
+[dev-dependencies]
+
