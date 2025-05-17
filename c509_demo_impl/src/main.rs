@@ -33,6 +33,8 @@
 // Please note that running the converter with options l, ll or t assumes there are output folders "could_convert"
 // and "failed_convert" available for outputting log files. 
 //
+// Version 0.45, May 2025
+//
 // For misc. resources, a minimal update history, and know limitations, please see README_software_prototype.md
 //
 use crate::help::*;
@@ -775,7 +777,7 @@ inherit   NULL, -- inherit from issuer --
 asIdsOrRanges   SEQUENCE OF ASIdOrRange
 }
 ASIdOrRange   ::= CHOICE {
-id	ASId,
+id  ASId,
 range   ASRange
 }
 ASRange   ::= SEQUENCE {
@@ -2826,7 +2828,7 @@ pub fn cleanup(mut file_contents: Vec<u8>) -> Vec<u8> {
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
-//          	Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
+//            Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
 //EXT_SUBJECT_KEY_ID = 1
