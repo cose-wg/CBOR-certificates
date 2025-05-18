@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-15T01:57:46.768209+00:00",
+  "timestamp": "2025-05-18T02:06:37.834003+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8371,6 +8371,32 @@
           "updatedAt": "2025-05-14T17:15:13Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 229,
+      "id": "PR_kwDOCpt5cM6WlNlw",
+      "title": "Updates from the software prototype branch",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/229",
+      "state": "OPEN",
+      "author": "highlunder",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- Minor bugfixes\r\n- Separate README\r\n- Improved batch test mode\r\n- List of successfully tested URLs",
+      "createdAt": "2025-05-17T21:27:29Z",
+      "updatedAt": "2025-05-17T21:27:29Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "4f04f66a18adaaa39a148d77c683d00970974643",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "sw_update",
+      "headRefOid": "cdb622949f080938f95c1960aa31d627c6360ace",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
