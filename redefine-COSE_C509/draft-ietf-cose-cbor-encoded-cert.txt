@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 15 November 2025                                     J. Höglund
+Expires: 20 November 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             14 May 2025
+                                                             19 May 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 November 2025.
+   This Internet-Draft will expire on 20 November 2025.
 
 Copyright Notice
 
@@ -748,9 +748,12 @@ Table of Contents
    The formatting and processing for c5b, c5c, and c5t, and c5u, defined
    in Table 1 are similar to x5bag, x5chain, x5t, x5u defined in
    [RFC9360] except that the certificates are C509 instead of DER
-   encoded X.509 and uses a COSE_C509 structure instead of COSE_X509.
-   c5u provides an alternative way to identify an untrusted certificate
-   bag/chain by reference with a URI.  The content is a COSE_C509 item
+   encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.
+   The value type of c5t is the COSE_CertHash structure defined in
+   [RFC9360], which contains the hash value of the C509 certificate
+   calculated over the unwrapped CBOR sequence. c5u provides an
+   alternative way to identify an untrusted certificate bag/chain by
+   reference with a URI.  The certificate content is a COSE_C509 item
    served with the application/cose-c509-cert media type, see
    Section 9.13, with corresponding CoAP Content-Format defined in
    Section 9.17.  A stored file format is defined in [RFC9277], with
@@ -782,7 +785,7 @@ Table of Contents
       |  c5t | TBD3  | COSE_CertHash | Hash of a ~C509Certificate  |
       +------+-------+---------------+-----------------------------+
       |  c5u | TBD4  | uri           | URI pointing to a COSE_C509 |
-      |      |       |               | containing a ordered chain  |
+      |      |       |               | containing an ordered chain |
       |      |       |               | of certificates             |
       +------+-------+---------------+-----------------------------+
 
