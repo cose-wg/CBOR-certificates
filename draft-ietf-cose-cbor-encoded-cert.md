@@ -555,7 +555,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters
 
-The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509-cert media type, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
+The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509. The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over the unwrapped CBOR sequence. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The certificate content is a COSE_C509 item served with the application/cose-c509-cert media type, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -571,7 +571,7 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | c5b | TBD1 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | TBD2 | COSE_C509 | An ordered chain of C509 certificates |
 | c5t | TBD3 | COSE_CertHash | Hash of a ~C509Certificate |
-| c5u | TBD4 | uri | URI pointing to a COSE_C509 containing a ordered chain of certificates |
+| c5u | TBD4 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
 {: #iana-header title="COSE Header Parameters" cols="r l l l"}
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
