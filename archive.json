@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-18T02:06:37.834003+00:00",
+  "timestamp": "2025-05-20T02:01:23.563450+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8351,13 +8351,13 @@
       "labels": [],
       "body": "New definitions of COSE-C509 and how to hash C509 certificates. Addresses #222.",
       "createdAt": "2025-05-14T14:29:40Z",
-      "updatedAt": "2025-05-14T17:15:14Z",
+      "updatedAt": "2025-05-19T18:41:12Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4f04f66a18adaaa39a148d77c683d00970974643",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "redefine-COSE_C509",
-      "headRefOid": "a865a7669b76004f7940b7068da6dc601bf50bdc",
+      "headRefOid": "93193347f2f2ce239012bee723f846b204c30342",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -8369,6 +8369,20 @@
           "body": "This captures the intent. It would be good if there was a normative statement about the hash input data being the unwrapped CBOR sequence just to be clear. The current table text seems non-normative and I can see it being misread or misinterpreted.\r\n\r\nIt could also be good to have an informative statement somewhere that the hash input is exactly the same as the `C509CertData` contained byte string and the same as the TLS certificate bytes just to make that clear.",
           "createdAt": "2025-05-14T17:15:13Z",
           "updatedAt": "2025-05-14T17:15:13Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@BrianSipos Thanks for reviewing. \r\n\r\n>  It would be good if there was a normative statement about the hash input data being the unwrapped CBOR sequence just to be clear. The current table text seems non-normative and I can see it being misread or misinterpreted.\r\n\r\nI tried to address this by adding text saying the same thing as the content of the table. Since this is a definition I don't think it is necessary with normative text as in BCP 14. Please have a look.\r\n\r\n> It could also be good to have an informative statement somewhere that the hash input is exactly the same as the C509CertData contained byte string and the same as the TLS certificate bytes just to make that clear.\r\n\r\nI didn't understand this. In the current text, the input to the hash function is the unwrapped CBOR sequence ~C509Certificate, hence not the CBOR bstr wrapped CBOR sequence which is C509CertData. Is there some misunderstanding here?",
+          "createdAt": "2025-05-19T09:22:28Z",
+          "updatedAt": "2025-05-19T09:22:28Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Is there some misunderstanding here?\r\n\r\nNo, this was poor phrasing on my part. Here is a suggestion for in-document text to clarify the behavior and the intent.\r\n\r\n\"The data used for the `c5t` parameter hash input is identical to the data contained within the c5b and c5c parameter `C509CertData` byte string and identical to the data contained within the TLS `cert_data`.\"",
+          "createdAt": "2025-05-19T18:41:11Z",
+          "updatedAt": "2025-05-19T18:41:11Z"
         }
       ],
       "reviews": []
