@@ -555,7 +555,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509. The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over the unwrapped CBOR sequence. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The certificate content is a COSE_C509 item served with the application/cose-c509-cert media type, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}}, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -565,7 +565,13 @@ C509CertData = bstr .cborseq C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-For an example of C509CertData, see {{other-examples}}.
+C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate, see {{other-examples}} for an example.
+
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus C509CertData contains all data necessary to calculate the thumbprint c5t.
+
+c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI.
+
+The COSE_C509 item has media type application/cose-c509-cert, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
 
