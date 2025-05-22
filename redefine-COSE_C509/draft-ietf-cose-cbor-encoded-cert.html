@@ -1857,7 +1857,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
         </h3>
-<p id="section-3.4-1">The formatting and processing for c5b, c5c, and c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509. The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over the unwrapped CBOR sequence. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The certificate content is a COSE_C509 item served with the application/cose-c509-cert media type, see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.17</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a>, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">The COSE_C509 structure used in c5b, c5c, and c5u is defined as:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
@@ -1865,8 +1865,11 @@ COSE_C509 = C509CertData / [ 2* C509CertData ]
 C509CertData = bstr .cborseq C509Certificate
 </pre><a href="#section-3.4-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.4-4">For an example of C509CertData, see <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a>.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
-<p id="section-3.4-5">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate, see <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus C509CertData contains all data necessary to calculate the thumbprint c5t.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-7">The COSE_C509 item has media type application/cose-c509-cert, see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.17</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.4-8">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
 <span id="name-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">
           <caption>
@@ -1909,7 +1912,7 @@ C509CertData = bstr .cborseq C509Certificate
           </tbody>
         </table>
 </div>
-<p id="section-3.4-7">Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.4-10">Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="private-key-structures">
