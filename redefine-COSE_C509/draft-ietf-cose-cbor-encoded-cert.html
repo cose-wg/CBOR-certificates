@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 20 November 2025</td>
+<td class="center">Expires 23 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-19" class="published">19 May 2025</time>
+<time datetime="2025-05-22" class="published">22 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-20">20 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-23">23 November 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1290,10 +1290,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-c509-certificates" class="internal xref">Example C509 Certificates</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-c509-certificate-examples" class="internal xref">C509 Certificate Examples</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="internal xref">Example RFC 7925 profiled X.509 Certificate</a></p>
+                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="internal xref">Example: RFC 7925 profiled X.509 Certificate</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
                 <p id="section-toc.1-1.11.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-example-ieee-8021ar-profile" class="internal xref">Example IEEE 802.1AR profiled X.509 Certificate</a></p>
@@ -1367,7 +1367,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-message-fields" class="section-name selfRef">Message Fields</a>
         </h3>
 <p id="section-3.1-1">The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item <span class="bcp14">MAY</span> represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate).<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item <span class="bcp14">MAY</span> represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g. <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificate"></span><div id="fig-CBORCertCDDL">
 <figure id="figure-1">
           <div class="alignCenter art-cddl art-text artwork" id="section-3.1-3.1">
@@ -1852,7 +1852,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
 </div>
 </section>
 </div>
-<div id="cose-header-parameters">
+<div id="cose-header-params">
 <section id="section-3.4">
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
@@ -1865,7 +1865,8 @@ COSE_C509 = C509CertData / [ 2* C509CertData ]
 C509CertData = bstr .cborseq C509Certificate
 </pre><a href="#section-3.4-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.4-4">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">For an example of C509CertData, see <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a>.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
 <span id="name-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">
           <caption>
@@ -1908,7 +1909,7 @@ C509CertData = bstr .cborseq C509Certificate
           </tbody>
         </table>
 </div>
-<p id="section-3.4-6">Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-7">Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="private-key-structures">
@@ -6840,13 +6841,13 @@ challengePassword = tstr / bstr
 </div>
 <div id="appA">
 <section id="appendix-A">
-      <h2 id="name-example-c509-certificates">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-c509-certificates" class="section-name selfRef">Example C509 Certificates</a>
+      <h2 id="name-c509-certificate-examples">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-c509-certificate-examples" class="section-name selfRef">C509 Certificate Examples</a>
       </h2>
 <div id="rfc7925-prof">
 <section id="appendix-A.1">
         <h3 id="name-example-rfc-7925-profiled-x">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-example-rfc-7925-profiled-x" class="section-name selfRef">Example RFC 7925 profiled X.509 Certificate</a>
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-example-rfc-7925-profiled-x" class="section-name selfRef">Example: RFC 7925 profiled X.509 Certificate</a>
         </h3>
 <p id="appendix-A.1-1">Example of <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span> profiled X.509 certificate parsed with OpenSSL.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.1-2">
@@ -6904,10 +6905,13 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 <div id="example-c509-certificate-encoding">
 <section id="appendix-A.1.1">
           <h4 id="name-example-c509-certificate-en">
-<a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-example-c509-certificate-en" class="section-name selfRef">Example C509 Certificate Encoding</a>
+<a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-example-c509-certificate-en" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
-<p id="appendix-A.1.1-1">The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.1-2">
+<p id="appendix-A.1.1-1">This section shows the C509 encoding of the X.509 certificate in the previous section. The point compressed public key is represented as described in <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.1-2"><a href="#fig-CBOR-diagnostic-7925" class="auto internal xref">Figure 18</a> shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
+<span id="name-cbor-diagnostic-notation-of"></span><div id="fig-CBOR-diagnostic-7925">
+<figure id="figure-18">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.1-3.1">
 <pre>
 /This defines a CBOR Sequence (RFC 8742):/
 
@@ -6928,10 +6932,16 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
     EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
     3314EA19191E8B607DA5AE3BDA16'
 
-</pre><a href="#appendix-A.1.1-2" class="pilcrow">¶</a>
+</pre>
 </div>
-<p id="appendix-A.1.1-3">The size of the CBOR encoding (CBOR sequence) is 140 bytes. The point compressed public key is represented as described in <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>.<a href="#appendix-A.1.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.1-4">
+<figcaption><a href="#figure-18" class="selfRef">Figure 18</a>:
+<a href="#name-cbor-diagnostic-notation-of" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.1-4"><a href="#fig-CBOR-plain-hex-7925" class="auto internal xref">Figure 19</a> shows the plain hex format of the unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.1-4" class="pilcrow">¶</a></p>
+<span id="name-cbor-plain-hex-format-of-c5"></span><div id="fig-CBOR-plain-hex-7925">
+<figure id="figure-19">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.1-5.1">
 <pre>
 03
 43 01 F5 0D
@@ -6947,17 +6957,24 @@ D8 30 46 01 23 45 67 89 AB
 58 40 D4 32 0B 1D 68 49 E3 09 21 9D 30 03 7E 13 81 66 F2 50 82 47 DD
 DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
-</pre><a href="#appendix-A.1.1-4" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-19" class="selfRef">Figure 19</a>:
+<a href="#name-cbor-plain-hex-format-of-c5" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
-<div id="example-natively-signed-c509-certificate">
+<div id="example-native">
 <section id="appendix-A.1.2">
           <h4 id="name-example-natively-signed-c50">
 <a href="#appendix-A.1.2" class="section-number selfRef">A.1.2. </a><a href="#name-example-natively-signed-c50" class="section-name selfRef">Example: Natively Signed C509 Certificate</a>
           </h4>
-<p id="appendix-A.1.2-1">The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.2-2">
+<p id="appendix-A.1.2-1">This section shows the corresponding natively signed C509 certificate, which  is identical except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 20</a> shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
+<span id="name-cbor-diagnostic-notation-of-"></span><div id="fig-CBOR-diagnostic-native">
+<figure id="figure-20">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.2-3.1">
 <pre>
 /This defines a CBOR Sequence (RFC 8742):/
 
@@ -6975,10 +6992,16 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
   h'EB0D472731F689BC00F5880B12C68B3F9FD38B23FADFCA2095
     0F3F241B60A202579CAC28CD3B7494D5FA5D8BBAB4600357E5
     50AB9FA9A65D9BA2B3B82E668CC6'
-</pre><a href="#appendix-A.1.2-2" class="pilcrow">¶</a>
+</pre>
 </div>
-<p id="appendix-A.1.2-3">The size of the CBOR encoding (CBOR sequence) is 140 bytes.<a href="#appendix-A.1.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.2-4">
+<figcaption><a href="#figure-20" class="selfRef">Figure 20</a>:
+<a href="#name-cbor-diagnostic-notation-of-" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.2-4"><a href="#fig-CBOR-plain-hex-native" class="auto internal xref">Figure 21</a> shows the plain hex format of the natively signed unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.2-4" class="pilcrow">¶</a></p>
+<span id="name-cbor-plain-hex-format-of-c50"></span><div id="fig-CBOR-plain-hex-native">
+<figure id="figure-21">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.2-5.1">
 <pre>
 02
 43 01 F5 0D
@@ -6994,7 +7017,11 @@ D8 30 46 01 23 45 67 89 AB
 58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
 DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
-</pre><a href="#appendix-A.1.2-4" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-21" class="selfRef">Figure 21</a>:
+<a href="#name-cbor-plain-hex-format-of-c50" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
@@ -7030,6 +7057,68 @@ subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 </pre><a href="#appendix-A.1.4-3" class="pilcrow">¶</a>
 </div>
+</section>
+</div>
+<div id="other-examples">
+<section id="appendix-A.1.5">
+          <h4 id="name-examples-c509certificate-an">
+<a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-examples-c509certificate-an" class="section-name selfRef">Examples: C509Certificate and C509CertData</a>
+          </h4>
+<p id="appendix-A.1.5-1">This section examplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a>.<a href="#appendix-A.1.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 22</a> shows the encoding of the corresponding C509Certificate, i.e. the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
+<span id="name-c509certificate-the-cbor-ar"></span><div id="fig-C509Certificate">
+<figure id="figure-22">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.5-3.1">
+<pre>
+8B
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+</pre>
+</div>
+<figcaption><a href="#figure-22" class="selfRef">Figure 22</a>:
+<a href="#name-c509certificate-the-cbor-ar" class="selfRef">C509Certificate: The CBOR array wrapping of ~C509Certificate</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.5-4">Note that C509Certificate is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).<a href="#appendix-A.1.5-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 23</a> shows the encoding of the corresponding C509CertData, i.e. the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
+<span id="name-c509certdata-cbor-byte-stri"></span><div id="fig-C509CertData">
+<figure id="figure-23">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.5-6.1">
+<pre>
+58 8C
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+</pre>
+</div>
+<figcaption><a href="#figure-23" class="selfRef">Figure 23</a>:
+<a href="#name-c509certdata-cbor-byte-stri" class="selfRef">C509CertData: CBOR byte string wrapping of ~C509Certificate.</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.5-7">Note that C509CertData is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).<a href="#appendix-A.1.5-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
