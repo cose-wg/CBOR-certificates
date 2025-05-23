@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 23 November 2025                                     J. Höglund
+Expires: 24 November 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             22 May 2025
+                                                             23 May 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 November 2025.
+   This Internet-Draft will expire on 24 November 2025.
 
 Copyright Notice
 
@@ -747,9 +747,10 @@ Table of Contents
 3.4.  COSE Header Parameters
 
    The formatting and processing for c5b, c5c, c5t, and c5u, defined in
-   Table 1, are similar to x5bag, x5chain, x5t, x5u defined in [RFC9360]
-   except that the certificates are C509 instead of DER encoded X.509,
-   and uses a COSE_C509 structure instead of COSE_X509.
+   Table 1 below, are similar to x5bag, x5chain, x5t, x5u defined in
+   [RFC9360] except that the certificates are CBOR encoded instead of
+   DER encoded X.509, and uses a COSE_C509 structure instead of
+   COSE_X509.
 
    The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -2984,10 +2985,10 @@ A.1.1.  Example: C509 Certificate Encoding
 
 A.1.2.  Example: Natively Signed C509 Certificate
 
-   This section shows the corresponding natively signed C509
-   certificate, which is identical except for c509CertificateType,
-   encoding of point compression (see Section 3.2.1), and
-   signatureValue.
+   This section shows the natively signed C509 certificate corresponding
+   to that of the previous section, which is identical except for
+   c509CertificateType, encoding of point compression (see
+   Section 3.2.1), and signatureValue.
 
    Figure 20 shows the diagnostic notation of the natively signed
    unwrapped CBOR sequence, ~C509Certificate.

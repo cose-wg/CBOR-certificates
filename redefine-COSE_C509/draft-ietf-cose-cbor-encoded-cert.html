@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 23 November 2025</td>
+<td class="center">Expires 24 November 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-22" class="published">22 May 2025</time>
+<time datetime="2025-05-23" class="published">23 May 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-23">23 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-11-24">24 November 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1857,7 +1857,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
         </h3>
-<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a>, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> below, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are CBOR encoded instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">The COSE_C509 structure used in c5b, c5c, and c5u is defined as:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
@@ -6973,7 +6973,7 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
           <h4 id="name-example-natively-signed-c50">
 <a href="#appendix-A.1.2" class="section-number selfRef">A.1.2. </a><a href="#name-example-natively-signed-c50" class="section-name selfRef">Example: Natively Signed C509 Certificate</a>
           </h4>
-<p id="appendix-A.1.2-1">This section shows the corresponding natively signed C509 certificate, which  is identical except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-1">This section shows the natively signed C509 certificate corresponding to that of the previous section, which is identical except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
 <p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 20</a> shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
 <span id="name-cbor-diagnostic-notation-of-"></span><div id="fig-CBOR-diagnostic-native">
 <figure id="figure-20">
