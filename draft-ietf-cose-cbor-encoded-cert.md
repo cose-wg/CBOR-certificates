@@ -555,7 +555,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}}, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are CBOR encoded instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -2271,7 +2271,7 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 
 ### Example: Natively Signed C509 Certificate {#example-native}
 
-This section shows the corresponding natively signed C509 certificate, which  is identical except for c509CertificateType, encoding of point compression (see {{subpubkey-alg-encoding}}), and signatureValue.
+This section shows the natively signed C509 certificate corresponding to that of the previous section, which is identical except for c509CertificateType, encoding of point compression (see {{subpubkey-alg-encoding}}), and signatureValue.
 
 {{fig-CBOR-diagnostic-native}} shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.
 
