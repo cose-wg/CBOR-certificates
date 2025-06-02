@@ -1262,19 +1262,22 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.9.2.16.1"><a href="#section-9.16" class="auto internal xref">9.16</a>. <a href="#name-media-type-application-cose-c5" class="internal xref">Media Type application/cose-c509-pem</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.17">
-                <p id="section-toc.1-1.9.2.17.1"><a href="#section-9.17" class="auto internal xref">9.17</a>. <a href="#name-coap-content-formats-regist" class="internal xref">CoAP Content-Formats Registry</a></p>
+                <p id="section-toc.1-1.9.2.17.1"><a href="#section-9.17" class="auto internal xref">9.17</a>. <a href="#name-media-type-application-cose-ce" class="internal xref">Media Type application/cose-certhash</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.18">
-                <p id="section-toc.1-1.9.2.18.1"><a href="#section-9.18" class="auto internal xref">9.18</a>. <a href="#name-tls-certificate-types-regis" class="internal xref">TLS Certificate Types Registry</a></p>
+                <p id="section-toc.1-1.9.2.18.1"><a href="#section-9.18" class="auto internal xref">9.18</a>. <a href="#name-coap-content-formats-regist" class="internal xref">CoAP Content-Formats Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.19">
-                <p id="section-toc.1-1.9.2.19.1"><a href="#section-9.19" class="auto internal xref">9.19</a>. <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
+                <p id="section-toc.1-1.9.2.19.1"><a href="#section-9.19" class="auto internal xref">9.19</a>. <a href="#name-tls-certificate-types-regis" class="internal xref">TLS Certificate Types Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.20">
-                <p id="section-toc.1-1.9.2.20.1"><a href="#section-9.20" class="auto internal xref">9.20</a>. <a href="#name-tlsa-selectors-registry" class="internal xref">TLSA Selectors Registry</a></p>
+                <p id="section-toc.1-1.9.2.20.1"><a href="#section-9.20" class="auto internal xref">9.20</a>. <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.21">
-                <p id="section-toc.1-1.9.2.21.1"><a href="#section-9.21" class="auto internal xref">9.21</a>. <a href="#name-edhoc-authentication-creden" class="internal xref">EDHOC Authentication Credential Types Registry</a></p>
+                <p id="section-toc.1-1.9.2.21.1"><a href="#section-9.21" class="auto internal xref">9.21</a>. <a href="#name-tlsa-selectors-registry" class="internal xref">TLSA Selectors Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.22">
+                <p id="section-toc.1-1.9.2.22.1"><a href="#section-9.22" class="auto internal xref">9.22</a>. <a href="#name-edhoc-authentication-creden" class="internal xref">EDHOC Authentication Credential Types Registry</a></p>
 </li>
             </ul>
 </li>
@@ -1338,7 +1341,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
       </ol>
 <p id="section-1-7">Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">This document also specifies C509 Certificate Signing Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.12</a>; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.18</a>.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-8">This document also specifies C509 Certificate Signing Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.12</a>; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.19</a>.<a href="#section-1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1857,7 +1860,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
         </h3>
-<p id="section-3.4-1">The formatting and processing for c5b, c5c, and c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509-cert media type, see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.17</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The formatting and processing for c5b, c5c, and c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI. The content is a COSE_C509 item served with the application/cose-c509-cert media type, see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">The COSE_C509 structure used in c5b, c5c, and c5u is defined as:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
@@ -1924,7 +1927,7 @@ C509PrivateKey = [
 ]
 </pre><a href="#section-3.5-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.5-3">The C509PrivateKey item is served with the application/cose-c509-privkey media type, see <a href="#c509-privkey" class="auto internal xref">Section 9.15</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.17</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">The C509PrivateKey item is served with the application/cose-c509-privkey media type, see <a href="#c509-privkey" class="auto internal xref">Section 9.15</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.5-4">
 <pre>
 C509PEM = [
@@ -1933,7 +1936,7 @@ C509PEM = [
 ]
 </pre><a href="#section-3.5-4" class="pilcrow">¶</a>
 </div>
-<p id="section-3.5-5">The C509PEM item is served with the application/cose-c509-pem media type, see <a href="#c509-pem" class="auto internal xref">Section 9.16</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.17</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD13 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.5-5" class="pilcrow">¶</a></p>
+<p id="section-3.5-5">The C509PEM item is served with the application/cose-c509-pem media type, see <a href="#c509-pem" class="auto internal xref">Section 9.16</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD13 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.5-5" class="pilcrow">¶</a></p>
 <p id="section-3.5-6">Editor's note: Include further details for encoding of subjectPrivateKey.<a href="#section-3.5-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1955,7 +1958,7 @@ C509PEM = [
       <h2 id="name-c509-certificate-signing-re">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-c509-certificate-signing-re" class="section-name selfRef">C509 Certificate Signing Request</a>
       </h2>
-<p id="section-4-1">This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, and reusing the formatting of C509 certificates defined in <a href="#certificate" class="auto internal xref">Section 3</a>. The media type is application/cose-c509-pkcs10, see <a href="#c509-pkcs10" class="auto internal xref">Section 9.14</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.17</a>. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, and reusing the formatting of C509 certificates defined in <a href="#certificate" class="auto internal xref">Section 3</a>. The media type is application/cose-c509-pkcs10, see <a href="#c509-pkcs10" class="auto internal xref">Section 9.14</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">Different types of C509 Certificate Requests are defined, see <a href="#csr-type" class="auto internal xref">Section 9.2</a>, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:<a href="#section-4-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4-3.1">
@@ -6431,23 +6434,71 @@ challengePassword = tstr / bstr
 <p id="section-9.16-19">Change controller: IESG<a href="#section-9.16-19" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="content-format">
+<div id="cose-certhash">
 <section id="section-9.17">
-        <h3 id="name-coap-content-formats-regist">
-<a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-coap-content-formats-regist" class="section-name selfRef">CoAP Content-Formats Registry</a>
+        <h3 id="name-media-type-application-cose-ce">
+<a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-media-type-application-cose-ce" class="section-name selfRef">Media Type application/cose-certhash</a>
         </h3>
-<p id="section-9.17-1">IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
-A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>.<a href="#section-9.17-1" class="pilcrow">¶</a></p>
+<p id="section-9.17-1">When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>.<a href="#section-9.17-1" class="pilcrow">¶</a></p>
+<p id="section-9.17-2">IANA has registered the following media type <span>[<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>:<a href="#section-9.17-2" class="pilcrow">¶</a></p>
+<p id="section-9.17-3">Type name: application<a href="#section-9.17-3" class="pilcrow">¶</a></p>
+<p id="section-9.17-4">Subtype name: cose-certhash<a href="#section-9.17-4" class="pilcrow">¶</a></p>
+<p id="section-9.17-5">Required parameters: usage<a href="#section-9.17-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.17-6.1">
+            <p id="section-9.17-6.1.1">Can be set to "x.509" to indicate that the hash value is calculated over an X.509 certificate.<a href="#section-9.17-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.17-6.2">
+            <p id="section-9.17-6.2.1">Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate.<a href="#section-9.17-6.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-9.17-7">Optional parameters: N/A<a href="#section-9.17-7" class="pilcrow">¶</a></p>
+<p id="section-9.17-8">Encoding considerations: binary<a href="#section-9.17-8" class="pilcrow">¶</a></p>
+<p id="section-9.17-9">Security considerations: See the Security Considerations section of <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>.<a href="#section-9.17-9" class="pilcrow">¶</a></p>
+<p id="section-9.17-10">Interoperability considerations: N/A<a href="#section-9.17-10" class="pilcrow">¶</a></p>
+<p id="section-9.17-11">Published specification: [[this document]]<a href="#section-9.17-11" class="pilcrow">¶</a></p>
+<p id="section-9.17-12">Applications that use this media type: Applications that employ COSE and use X.509 or C509 as certificate type.<a href="#section-9.17-12" class="pilcrow">¶</a></p>
+<p id="section-9.17-13">Fragment identifier considerations: N/A<a href="#section-9.17-13" class="pilcrow">¶</a></p>
+<p id="section-9.17-14">Additional information:<a href="#section-9.17-14" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-9.17-15.1">
+            <p id="section-9.17-15.1.1">Deprecated alias names for this type: N/A<a href="#section-9.17-15.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.17-15.2">
+            <p id="section-9.17-15.2.1">Magic number(s): N/A<a href="#section-9.17-15.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.17-15.3">
+            <p id="section-9.17-15.3.1">File extension(s): N/A<a href="#section-9.17-15.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-9.17-15.4">
+            <p id="section-9.17-15.4.1">Macintosh file type code(s): N/A<a href="#section-9.17-15.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-9.17-16">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-9.17-16" class="pilcrow">¶</a></p>
+<p id="section-9.17-17">Intended usage: COMMON<a href="#section-9.17-17" class="pilcrow">¶</a></p>
+<p id="section-9.17-18">Restrictions on usage: N/A<a href="#section-9.17-18" class="pilcrow">¶</a></p>
+<p id="section-9.17-19">Author: COSE WG<a href="#section-9.17-19" class="pilcrow">¶</a></p>
+<p id="section-9.17-20">Change controller: IESG<a href="#section-9.17-20" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="content-format">
+<section id="section-9.18">
+        <h3 id="name-coap-content-formats-regist">
+<a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-coap-content-formats-regist" class="section-name selfRef">CoAP Content-Formats Registry</a>
+        </h3>
+<p id="section-9.18-1">IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>.<a href="#section-9.18-1" class="pilcrow">¶</a></p>
+<p id="section-9.18-2">IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the cases when the parameter "usage" is set to "x.509" and "c509", see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>.<a href="#section-9.18-2" class="pilcrow">¶</a></p>
 <span id="name-coap-content-format-ids"></span><div id="fig-format-ids">
 <figure id="figure-17">
-          <div id="section-9.17-2.1">
-            <div class="alignLeft art-svg artwork" id="section-9.17-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="256" width="592" viewBox="0 0 592 256" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,240" fill="none" stroke="black"></path>
-                <path d="M 272,32 L 272,240" fill="none" stroke="black"></path>
-                <path d="M 360,32 L 360,240" fill="none" stroke="black"></path>
-                <path d="M 424,32 L 424,240" fill="none" stroke="black"></path>
-                <path d="M 584,32 L 584,240" fill="none" stroke="black"></path>
+          <div id="section-9.18-3.1">
+            <div class="alignLeft art-svg artwork" id="section-9.18-3.1.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="352" width="592" viewBox="0 0 592 352" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,336" fill="none" stroke="black"></path>
+                <path d="M 272,32 L 272,336" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,336" fill="none" stroke="black"></path>
+                <path d="M 424,32 L 424,336" fill="none" stroke="black"></path>
+                <path d="M 584,32 L 584,336" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 584,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 584,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 584,66" fill="none" stroke="black"></path>
@@ -6456,6 +6507,8 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <path d="M 8,176 L 584,176" fill="none" stroke="black"></path>
                 <path d="M 8,208 L 584,208" fill="none" stroke="black"></path>
                 <path d="M 8,240 L 584,240" fill="none" stroke="black"></path>
+                <path d="M 8,288 L 584,288" fill="none" stroke="black"></path>
+                <path d="M 8,336 L 584,336" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Media</text>
                   <text x="84" y="52">Type</text>
@@ -6490,8 +6543,24 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="392" y="228">TBD11</text>
                   <text x="460" y="228">[[this</text>
                   <text x="532" y="228">document]]</text>
+                  <text x="120" y="260">application/cose-certhash</text>
+                  <text x="48" y="276">"usage"</text>
+                  <text x="88" y="276">=</text>
+                  <text x="128" y="276">"x.509"</text>
+                  <text x="288" y="276">-</text>
+                  <text x="392" y="276">TBD16</text>
+                  <text x="460" y="276">[[this</text>
+                  <text x="532" y="276">document]]</text>
+                  <text x="120" y="308">application/cose-certhash</text>
+                  <text x="48" y="324">"usage"</text>
+                  <text x="88" y="324">=</text>
+                  <text x="124" y="324">"c509"</text>
+                  <text x="288" y="324">-</text>
+                  <text x="392" y="324">TBD17</text>
+                  <text x="460" y="324">[[this</text>
+                  <text x="532" y="324">document]]</text>
                 </g>
-              </svg><a href="#section-9.17-2.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-9.18-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-17" class="selfRef">Figure 17</a>:
@@ -6501,14 +6570,14 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 </section>
 </div>
 <div id="tls">
-<section id="section-9.18">
+<section id="section-9.19">
         <h3 id="name-tls-certificate-types-regis">
-<a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
+<a href="#section-9.19" class="section-number selfRef">9.19. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
         </h3>
-<p id="section-9.18-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.18-1" class="pilcrow">¶</a></p>
-<p id="section-9.18-2">Editor's Note: The TLS registrations should be discussed and approved by the TLS WG at a later stage. The TLS WG might e.g. want a separate draft in the TLS WG.<a href="#section-9.18-2" class="pilcrow">¶</a></p>
-<div id="section-9.18-3">
-          <div class="alignLeft art-svg artwork" id="section-9.18-3.1">
+<p id="section-9.19-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.19-1" class="pilcrow">¶</a></p>
+<p id="section-9.19-2">Editor's Note: The TLS registrations should be discussed and approved by the TLS WG at a later stage. The TLS WG might e.g. want a separate draft in the TLS WG.<a href="#section-9.19-2" class="pilcrow">¶</a></p>
+<div id="section-9.19-3">
+          <div class="alignLeft art-svg artwork" id="section-9.19-3.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6529,19 +6598,19 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="168" y="84">Certificate</text>
                 <text x="320" y="84">Y</text>
               </g>
-            </svg><a href="#section-9.18-3.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.19-3.1" class="pilcrow">¶</a>
 </div>
 </div>
 </section>
 </div>
 <div id="tags">
-<section id="section-9.19">
+<section id="section-9.20">
         <h3 id="name-cbor-tags-registry">
-<a href="#section-9.19" class="section-number selfRef">9.19. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
+<a href="#section-9.20" class="section-number selfRef">9.20. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
         </h3>
-<p id="section-9.19-1">This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.<a href="#section-9.19-1" class="pilcrow">¶</a></p>
-<div id="section-9.19-2">
-          <div class="alignLeft art-svg artwork" id="section-9.19-2.1">
+<p id="section-9.20-1">This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.<a href="#section-9.20-1" class="pilcrow">¶</a></p>
+<div id="section-9.20-2">
+          <div class="alignLeft art-svg artwork" id="section-9.20-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="560" viewBox="0 0 560 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,128" fill="none" stroke="black"></path>
               <path d="M 64,32 L 64,128" fill="none" stroke="black"></path>
@@ -6571,19 +6640,19 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="180" y="116">This</text>
                 <text x="236" y="116">document</text>
               </g>
-            </svg><a href="#section-9.19-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.20-2.1" class="pilcrow">¶</a>
 </div>
 </div>
 </section>
 </div>
 <div id="tlsa">
-<section id="section-9.20">
+<section id="section-9.21">
         <h3 id="name-tlsa-selectors-registry">
-<a href="#section-9.20" class="section-number selfRef">9.20. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
+<a href="#section-9.21" class="section-number selfRef">9.21. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
         </h3>
-<p id="section-9.20-1">This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.<a href="#section-9.20-1" class="pilcrow">¶</a></p>
-<div id="section-9.20-2">
-          <div class="alignLeft art-svg artwork" id="section-9.20-2.1">
+<p id="section-9.21-1">This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.<a href="#section-9.21-1" class="pilcrow">¶</a></p>
+<div id="section-9.21-2">
+          <div class="alignLeft art-svg artwork" id="section-9.21-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="584" viewBox="0 0 584 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6609,20 +6678,20 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="452" y="84">[[this</text>
                 <text x="524" y="84">document]]</text>
               </g>
-            </svg><a href="#section-9.20-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.21-2.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-9.20-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.<a href="#section-9.20-3" class="pilcrow">¶</a></p>
+<p id="section-9.21-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.<a href="#section-9.21-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="edhoc-authentication-credential-types-registry">
-<section id="section-9.21">
+<section id="section-9.22">
         <h3 id="name-edhoc-authentication-creden">
-<a href="#section-9.21" class="section-number selfRef">9.21. </a><a href="#name-edhoc-authentication-creden" class="section-name selfRef">EDHOC Authentication Credential Types Registry</a>
+<a href="#section-9.22" class="section-number selfRef">9.22. </a><a href="#name-edhoc-authentication-creden" class="section-name selfRef">EDHOC Authentication Credential Types Registry</a>
         </h3>
-<p id="section-9.21-1">This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is used to identify supported authentication credential type, for example, during discovery of EDHOC resources, see <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span>.<a href="#section-9.21-1" class="pilcrow">¶</a></p>
-<div id="section-9.21-2">
-          <div class="alignLeft art-svg artwork" id="section-9.21-2.1">
+<p id="section-9.22-1">This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is used to identify supported authentication credential type, for example, during discovery of EDHOC resources, see <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span>.<a href="#section-9.22-1" class="pilcrow">¶</a></p>
+<div id="section-9.22-2">
+          <div class="alignLeft art-svg artwork" id="section-9.22-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="424" viewBox="0 0 424 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6642,7 +6711,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="292" y="84">[[this</text>
                 <text x="364" y="84">document]]</text>
               </g>
-            </svg><a href="#section-9.21-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.22-2.1" class="pilcrow">¶</a>
 </div>
 </div>
 </section>
