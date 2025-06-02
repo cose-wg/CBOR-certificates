@@ -264,7 +264,7 @@ The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned
 
 ### signature
 
-The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
+The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string. New algorithms, including additional post-quantum algorithms, can be registered in the IANA registry as they become specified, see {{sigalg}}.
 
 ### issuer
 
