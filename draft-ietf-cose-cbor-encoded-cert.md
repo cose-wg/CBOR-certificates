@@ -2078,10 +2078,57 @@ Author: COSE WG
 
 Change controller: IESG
 
+## Media Type application/cose-certhash {#cose-certhash}
+When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see {{RFC9360}}.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+
+Subtype name: cose-certhash
+
+Required parameters: usage
+
+* Can be set to "x.509" to indicate that the hash value is calculated over an X.509 certificate.
+* Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate.
+
+Optional parameters: N/A
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of {{RFC9360}}.
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and use X.509 or C509 as certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+* Deprecated alias names for this type: N/A
+* Magic number(s): N/A
+* File extension(s): N/A
+* Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
+
 ## CoAP Content-Formats Registry {#content-format}
 
 IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
+
+IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the cases when the parameter "usage" is set to "x.509" and "c509", see {{c509-cert}}.
 
 ~~~~~~~~~~~ aasvg
 +--------------------------------+----------+-------+-------------------+
@@ -2097,6 +2144,12 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 | application/cose-c509-privkey  | -        | TBD10 | [[this document]] |
 +--------------------------------+----------+-------+-------------------+
 | application/cose-c509-pem      | -        | TBD11 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
+| application/cose-certhash      |          |       |                   |
+| "usage" = "x.509"              | -        | TBD16 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
+| application/cose-certhash      |          |       |                   |
+| "usage" = "c509"               | -        | TBD17 | [[this document]] |
 +--------------------------------+----------+-------+-------------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
