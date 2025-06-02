@@ -2080,15 +2080,22 @@ Change controller: IESG
 
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add the media types "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
 
 ~~~~~~~~~~~ aasvg
 +--------------------------------+----------+-------+-------------------+
 | Media Type                     | Encoding | ID    | Reference         |
 +================================+==========+=======+===================+
 | application/cose-c509-cert     | -        |  TBD6 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
+| application/cose-c509-cert     |          |       |                   |
+| "usage" = "chain"              | -        | TBD15 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
 | application/cose-c509-pkcs10   | -        |  TBD7 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
 | application/cose-c509-privkey  | -        | TBD10 | [[this document]] |
++--------------------------------+----------+-------+-------------------+
 | application/cose-c509-pem      | -        | TBD11 | [[this document]] |
 +--------------------------------+----------+-------+-------------------+
 ~~~~~~~~~~~
