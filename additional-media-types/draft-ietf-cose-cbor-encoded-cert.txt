@@ -753,13 +753,13 @@ Table of Contents
    [RFC9360] except that the certificates are C509 instead of DER
    encoded X.509 and uses a COSE_C509 structure instead of COSE_X509.
    c5u provides an alternative way to identify an untrusted certificate
-   bag/chain by reference with a URI.  The content is a COSE_C509 item
-   served with the application/cose-c509-cert media type, see
-   Section 9.13, with corresponding CoAP Content-Format defined in
-   Section 9.18.  A stored file format is defined in [RFC9277], with
-   "magic number" TBD8 composed of the reserved CBOR tag 55799
-   concatenated with the CBOR tag calculated from the CoAP Content-
-   Format value.
+   chain by reference with a URI [RFC3986], encoded as a CBOR text
+   string.  The content is a COSE_C509 item served with the application/
+   cose-c509-cert media type ("usage" = "chain"), see Section 9.13, with
+   corresponding CoAP Content-Format defined in Section 9.18.  A stored
+   file format is defined in [RFC9277], with "magic number" TBD8
+   composed of the reserved CBOR tag 55799 concatenated with the CBOR
+   tag calculated from the CoAP Content-Format value.
 
    The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -2622,26 +2622,34 @@ Table of Contents
    when the parameter "usage" is set to "x.509" and "c509", see
    Section 9.13.
 
-+--------------------------------+----------+-------+-------------------+
-| Media Type                     | Encoding | ID    | Reference         |
-+================================+==========+=======+===================+
-| application/cose-c509-cert     | -        |  TBD6 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
-| application/cose-c509-cert     |          |       |                   |
-| "usage" = "chain"              | -        | TBD15 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
-| application/cose-c509-pkcs10   | -        |  TBD7 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
-| application/cose-c509-privkey  | -        | TBD10 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
-| application/cose-c509-pem      | -        | TBD11 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
-| application/cose-certhash      |          |       |                   |
-| "usage" = "x.509"              | -        | TBD16 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
-| application/cose-certhash      |          |       |                   |
-| "usage" = "c509"               | -        | TBD17 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
+   IANA is requested to add media types for "application/cbor" to the
+   "CoAP Content-Formats" registry under the registry group "Constrained
+   RESTful Environments (CoRE) Parameters", in the case when the
+   encoding is a CBOR text string containing a URI, see [RFC3986].
+
++-------------------------------+-----------+-------+-------------------+
+| Media Type                    | Encoding  | ID    | Reference         |
++===============================+===========+=======+===================+
+| application/cose-c509-cert    | -         |  TBD6 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-cert    |           |       |                   |
+| "usage" = "chain"             | -         | TBD15 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-pkcs10  | -         |  TBD7 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-privkey | -         | TBD10 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-pem     | -         | TBD11 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-certhash     |           |       |                   |
+| "usage" = "x.509"             | -         | TBD16 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-certhash     |           |       |                   |
+| "usage" = "c509"              | -         | TBD17 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cbor              |           |       |                   |
+| containing a URI              | CBOR text | TBD18 | [RFC9360]         |
++-------------------------------+-----------+-------+-------------------+
 
                   Figure 17: CoAP Content-Format IDs
 
@@ -2728,6 +2736,11 @@ Table of Contents
               Request Syntax Specification Version 1.7", RFC 2986,
               DOI 10.17487/RFC2986, November 2000,
               <https://www.rfc-editor.org/rfc/rfc2986>.
+
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [RFC4108]  Housley, R., "Using Cryptographic Message Syntax (CMS) to
               Protect Firmware Packages", RFC 4108,
