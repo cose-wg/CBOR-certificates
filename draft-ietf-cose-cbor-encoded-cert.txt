@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 24 November 2025                                     J. Höglund
+Expires: 4 December 2025                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             23 May 2025
+                                                             2 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 November 2025.
+   This Internet-Draft will expire on 4 December 2025.
 
 Copyright Notice
 
@@ -329,7 +329,9 @@ Table of Contents
    The 'signature' field, containing the signature algorithm including
    parameters, is encoded as a CBOR int (see Section 9.10) or as an
    array with an unwrapped CBOR OID tag [RFC9090] optionally followed by
-   the parameters encoded as a CBOR byte string.
+   the parameters encoded as a CBOR byte string.  New algorithms,
+   including additional post-quantum algorithms, can be registered in
+   the IANA registry as they become specified, see Section 9.10.
 
 3.1.4.  issuer
 
