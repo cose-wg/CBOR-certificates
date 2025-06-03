@@ -183,6 +183,8 @@ CBOR data items are encoded to or decoded from byte strings using a type-length-
 
 CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of RFC 5280. The encoding supports all RFC 7925, IEEE 802.1AR, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.
 
+C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see {{sigalg}}.
+
 The resulting certificates are called C509 Certificates. This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
 
 1. An invertible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
@@ -211,7 +213,7 @@ In the encoding described below, the order of elements in arrays are always enco
 
 The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see {{fig-CBORCertCDDL}}.
 
-The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate).
+The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g. {{rfc7925-prof}}.
 
 ~~~~~~~~~~~ cddl
 C509Certificate = [
@@ -265,7 +267,7 @@ The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned
 
 ### signature
 
-The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string. New algorithms, including additional post-quantum algorithms, can be registered in the IANA registry as they become specified, see {{sigalg}}.
+The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
 
 ### issuer
 
@@ -554,24 +556,34 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 23, 8, \[ 3, 9 \], 3, "example.com" \].
 
-## COSE Header Parameters
+## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, and c5t, and c5u, defined in {{iana-header}} are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
+
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ cddl
-COSE_C509 = C509Certificate / [ 2* C509Certificate ]
+COSE_C509 = C509CertData / [ 2* C509CertData ]
+C509CertData = bstr .cborseq C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
+
+C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate, see {{other-examples}} for an example.
+
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus C509CertData contains all data necessary to calculate the thumbprint c5t.
+
+c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI.
+
+The COSE_C509 item has media type application/cose-c509-cert, see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
 
 | Name | Label | Value Type | Description |
 | c5b | TBD1 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | TBD2 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t | TBD3 | COSE_CertHash | Hash of a C509Certificate |
-| c5u | TBD4 | uri | URI pointing to a COSE_C509 containing a ordered chain of certificates |
+| c5t | TBD3 | COSE_CertHash | Hash of a ~C509Certificate |
+| c5u | TBD4 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
 {: #iana-header title="COSE Header Parameters" cols="r l l l"}
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
@@ -2220,9 +2232,9 @@ This document registers the following entry in the "EDHOC Authentication Credent
 
 --- back
 
-# Example C509 Certificates {#appA}
+# C509 Certificate Examples {#appA}
 
-## Example RFC 7925 profiled X.509 Certificate {#rfc7925-prof}
+## Example: RFC 7925 profiled X.509 Certificate {#rfc7925-prof}
 
 Example of {{RFC7925}} profiled X.509 certificate parsed with OpenSSL.
 
@@ -2277,9 +2289,11 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 78 e4 ac 33 14 ea 19 19 1e 8b 60 7d a5 ae 3b da 16
 ~~~~~~~~~~~
 
-### Example C509 Certificate Encoding
+### Example: C509 Certificate Encoding
 
-The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
+This section shows the C509 encoding of the X.509 certificate in the previous section. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
+
+{{fig-CBOR-diagnostic-7925}} shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -2302,8 +2316,9 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
     3314EA19191E8B607DA5AE3BDA16'
 
 ~~~~~~~~~~~
+{: #fig-CBOR-diagnostic-7925 title="CBOR diagnostic notation of ~C509Certificate"}
 
-The size of the CBOR encoding (CBOR sequence) is 140 bytes. The point compressed public key is represented as described in {{subpubkey-alg-encoding}}.
+{{fig-CBOR-plain-hex-7925}} shows the plain hex format of the unwrapped CBOR sequence, the size is 140 bytes.
 
 ~~~~~~~~~~~
 03
@@ -2321,10 +2336,13 @@ D8 30 46 01 23 45 67 89 AB
 DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
 ~~~~~~~~~~~
+{: #fig-CBOR-plain-hex-7925 title="CBOR plain hex format of ~C509Certificate."}
 
-### Example: Natively Signed C509 Certificate
+### Example: Natively Signed C509 Certificate {#example-native}
 
-The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for c509CertificateType, encoding of point compression (see {{subpubkey-alg-encoding}}), and signatureValue.
+This section shows the natively signed C509 certificate corresponding to that of the previous section, which is identical except for c509CertificateType, encoding of point compression (see {{subpubkey-alg-encoding}}), and signatureValue.
+
+{{fig-CBOR-diagnostic-native}} shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.
 
 ~~~~~~~~~~~
 /This defines a CBOR Sequence (RFC 8742):/
@@ -2344,8 +2362,9 @@ The corresponding natively signed C509 certificate in CBOR diagnostic format is 
     0F3F241B60A202579CAC28CD3B7494D5FA5D8BBAB4600357E5
     50AB9FA9A65D9BA2B3B82E668CC6'
 ~~~~~~~~~~~
+{: #fig-CBOR-diagnostic-native title="CBOR diagnostic notation of ~C509Certificate"}
 
-The size of the CBOR encoding (CBOR sequence) is 140 bytes.
+{{fig-CBOR-plain-hex-native}} shows the plain hex format of the natively signed unwrapped CBOR sequence, the size is 140 bytes.
 
 ~~~~~~~~~~~
 02
@@ -2363,6 +2382,7 @@ D8 30 46 01 23 45 67 89 AB
 DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 ~~~~~~~~~~~
+{: #fig-CBOR-plain-hex-native title="CBOR plain hex format of ~C509Certificate."}
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
 
@@ -2387,6 +2407,57 @@ h'DC66B3415456D649429B53223DF7532B942D6B0E0842C30BCA4C0ACF91547BB2'
 subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 ~~~~~~~~~~~
+
+### Examples: C509Certificate and C509CertData {#other-examples}
+
+This section examplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in {{example-native}}.
+
+{{fig-C509Certificate}} shows the encoding of the corresponding C509Certificate, i.e. the CBOR array wrapping of the CBOR sequence ~C509Certificate, see {{message-fields}}.
+
+~~~~~~~~~~~
+8B
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+~~~~~~~~~~~
+{: #fig-C509Certificate title="C509Certificate: The CBOR array wrapping of ~C509Certificate"}
+
+Note that C509Certificate is identical to ~C509Certificate in {{example-native}} except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).
+
+{{fig-C509CertData}} shows the encoding of the corresponding C509CertData, i.e. the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see {{cose-header-params}}.
+
+~~~~~~~~~~~
+58 8C
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+~~~~~~~~~~~
+{: #fig-C509CertData title="C509CertData: CBOR byte string wrapping of ~C509Certificate."}
+
+Note that C509CertData is identical to ~C509Certificate in {{example-native}} except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).
+
 
 ## Example IEEE 802.1AR profiled X.509 Certificate
 
