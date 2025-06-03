@@ -2140,7 +2140,7 @@ Change controller: IESG
 IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
 
-IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the cases when the parameter "usage" is set to "x.509" and "c509", see {{c509-cert}}.
+IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
 
 IANA is requested to add media types for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
