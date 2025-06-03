@@ -2088,12 +2088,12 @@ Type name: application
 
 Subtype name: cose-certhash
 
-Required parameters: usage
+Required parameters: N/A
 
-* Can be set to "x.509" to indicate that the hash value is calculated over an X.509 certificate.
+Optional parameters: usage
+
+* Can be absent to provide no further information about what the hash value is calculated over.
 * Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate.
-
-Optional parameters: N/A
 
 Encoding considerations: binary
 
@@ -2148,8 +2148,7 @@ IANA is requested to add media types for "application/cbor" to the "CoAP Content
 +-------------------------------+-----------+-------+-------------------+
 | application/cose-c509-pem     | -         | TBD11 | [[this document]] |
 +-------------------------------+-----------+-------+-------------------+
-| application/cose-certhash     |           |       |                   |
-| "usage" = "x.509"             | -         | TBD16 | [[this document]] |
+| application/cose-certhash     | -         | TBD16 | [[this document]] |
 +-------------------------------+-----------+-------+-------------------+
 | application/cose-certhash     |           |       |                   |
 | "usage" = "c509"              | -         | TBD17 | [[this document]] |
