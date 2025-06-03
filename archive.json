@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-25T02:09:17.968369+00:00",
+  "timestamp": "2025-06-03T02:03:11.265437+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -6035,10 +6035,12 @@
       "assignees": [
         "gselander"
       ],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "As just discussed during the IETF 122 Hackathon, we agreed on registering a new media type that indicates certificate by reference. This media type is to be used by `draft-ietf-ace-coap-est-oscore` draft during the negotiation in order to indicate support of the client for cert references. We discussed that it would make sense to have this media type indicate support for *any* kind of reference, i.e. irrespective whether it is `c5t` or `c5u`, as that would be equivalent from the point of view of a constrained device handling the certificate by reference (opaque binary blob of data without access to the actual certificate).\n\nSee https://github.com/ace-wg/est-oscore/issues/69",
       "createdAt": "2025-03-15T09:35:35Z",
-      "updatedAt": "2025-04-07T15:23:16Z",
+      "updatedAt": "2025-06-02T20:33:12Z",
       "closedAt": null,
       "comments": [
         {
@@ -6054,6 +6056,13 @@
           "body": "> Does this refer to both Media type and Content format?\n\nTo my understanding, it does refer to both.",
           "createdAt": "2025-04-07T15:23:15Z",
           "updatedAt": "2025-04-07T15:23:15Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@malishav Please look at #231 with proposed specifications of content formats and media types (where necessary). The scope here is credentials by reference as defined in this specification, i.e. `c5b`, `c5c`, `c5u` and `c5t` (currently with the addition of `x5t`, since the media type for COSE_CertHash is defined in this document but this is pending the review from other authors and may be taken out). The remaining content formats does not really belong to this document and can be defined analogously in `draft-ietf-ace-coap-est-oscore`.\n\nWe didn't find any good solution for a media type indicating _any_ credential by reference, and propose that this is addressed with an appropriate CoAP option enabling the enumeration of acceptable media types. The CoAP Accept option is not repeatable and expect a single Content-Format. However,  the Multi-Valued Accept Option in\nhttps://datatracker.ietf.org/doc/html/draft-fossati-core-parametrized-cf\nseems to address this case. Perhaps that draft, or just that option, can be resurrected for this purpose?\n\nPlease let us know if we can close this issue.",
+          "createdAt": "2025-06-02T20:32:00Z",
+          "updatedAt": "2025-06-02T20:33:11Z"
         }
       ]
     },
@@ -6066,10 +6075,12 @@
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "close?"
+      ],
       "body": "",
       "createdAt": "2025-05-23T10:34:17Z",
-      "updatedAt": "2025-05-23T10:34:17Z",
+      "updatedAt": "2025-06-02T16:14:11Z",
       "closedAt": null,
       "comments": []
     }
@@ -8452,6 +8463,32 @@
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "sw_update",
       "headRefOid": "cdb622949f080938f95c1960aa31d627c6360ace",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 231,
+      "id": "PR_kwDOCpt5cM6Yrdvs",
+      "title": "Additional media types and content formats",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/231",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addressing #226",
+      "createdAt": "2025-06-02T18:18:36Z",
+      "updatedAt": "2025-06-02T20:07:15Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "73565a1bf382e942bb73416315d3a2eac992690c",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "additional-media-types",
+      "headRefOid": "98fb7cc87574e5215a3a77a4a3f770a8a2dcaee7",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
