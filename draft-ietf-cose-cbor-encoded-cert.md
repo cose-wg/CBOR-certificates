@@ -558,7 +558,6 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-
 The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
@@ -2105,7 +2104,7 @@ Required parameters: N/A
 Optional parameters: usage
 
 * Can be absent to provide no further information about what the hash value is calculated over.
-* Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate.
+* Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate, see {{cose-header-params}}.
 
 Encoding considerations: binary
 
