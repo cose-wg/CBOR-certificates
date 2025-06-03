@@ -2641,9 +2641,9 @@ Table of Contents
 
    IANA is requested to add media types for "application/cose-certhash"
    to the "CoAP Content-Formats" registry under the registry group
-   "Constrained RESTful Environments (CoRE) Parameters", in the cases
-   when the parameter "usage" is set to "x.509" and "c509", see
-   Section 9.13.
+   "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
+   Content-Format ID is requested in the case when the parameter "usage"
+   is set to "c509", see Section 9.13.
 
    IANA is requested to add media types for "application/cbor" to the
    "CoAP Content-Formats" registry under the registry group "Constrained
