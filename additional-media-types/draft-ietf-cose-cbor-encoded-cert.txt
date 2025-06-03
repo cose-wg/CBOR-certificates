@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 4 December 2025                                      J. Höglund
+Expires: 5 December 2025                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             2 June 2025
+                                                             3 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 December 2025.
+   This Internet-Draft will expire on 5 December 2025.
 
 Copyright Notice
 
@@ -2561,15 +2561,15 @@ Table of Contents
 
    Subtype name: cose-certhash
 
-   Required parameters: usage
+   Required parameters: N/A
 
-   *  Can be set to "x.509" to indicate that the hash value is
-      calculated over an X.509 certificate.
+   Optional parameters: usage
+
+   *  Can be absent to provide no further information about what the
+      hash value is calculated over.
 
    *  Can be set to "c509" to indicate that the hash value is calculated
       over a C509 certificate.
-
-   Optional parameters: N/A
 
    Encoding considerations: binary
 
@@ -2641,8 +2641,7 @@ Table of Contents
 +-------------------------------+-----------+-------+-------------------+
 | application/cose-c509-pem     | -         | TBD11 | [[this document]] |
 +-------------------------------+-----------+-------+-------------------+
-| application/cose-certhash     |           |       |                   |
-| "usage" = "x.509"             | -         | TBD16 | [[this document]] |
+| application/cose-certhash     | -         | TBD16 | [[this document]] |
 +-------------------------------+-----------+-------+-------------------+
 | application/cose-certhash     |           |       |                   |
 | "usage" = "c509"              | -         | TBD17 | [[this document]] |

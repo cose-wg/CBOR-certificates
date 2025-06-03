@@ -22,12 +22,12 @@
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
+    lxml 5.3.1
     platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.3
-    setuptools 70.3.0
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 4 December 2025</td>
+<td class="center">Expires 5 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-02" class="published">2 June 2025</time>
+<time datetime="2025-06-03" class="published">3 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-04">4 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-05">5 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -6443,16 +6443,16 @@ challengePassword = tstr / bstr
 <p id="section-9.17-2">IANA has registered the following media type <span>[<a href="#RFC6838" class="cite xref">RFC6838</a>]</span>:<a href="#section-9.17-2" class="pilcrow">¶</a></p>
 <p id="section-9.17-3">Type name: application<a href="#section-9.17-3" class="pilcrow">¶</a></p>
 <p id="section-9.17-4">Subtype name: cose-certhash<a href="#section-9.17-4" class="pilcrow">¶</a></p>
-<p id="section-9.17-5">Required parameters: usage<a href="#section-9.17-5" class="pilcrow">¶</a></p>
+<p id="section-9.17-5">Required parameters: N/A<a href="#section-9.17-5" class="pilcrow">¶</a></p>
+<p id="section-9.17-6">Optional parameters: usage<a href="#section-9.17-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-9.17-6.1">
-            <p id="section-9.17-6.1.1">Can be set to "x.509" to indicate that the hash value is calculated over an X.509 certificate.<a href="#section-9.17-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9.17-7.1">
+            <p id="section-9.17-7.1.1">Can be absent to provide no further information about what the hash value is calculated over.<a href="#section-9.17-7.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-9.17-6.2">
-            <p id="section-9.17-6.2.1">Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate.<a href="#section-9.17-6.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-9.17-7.2">
+            <p id="section-9.17-7.2.1">Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate.<a href="#section-9.17-7.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-9.17-7">Optional parameters: N/A<a href="#section-9.17-7" class="pilcrow">¶</a></p>
 <p id="section-9.17-8">Encoding considerations: binary<a href="#section-9.17-8" class="pilcrow">¶</a></p>
 <p id="section-9.17-9">Security considerations: See the Security Considerations section of <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>.<a href="#section-9.17-9" class="pilcrow">¶</a></p>
 <p id="section-9.17-10">Interoperability considerations: N/A<a href="#section-9.17-10" class="pilcrow">¶</a></p>
@@ -6494,12 +6494,12 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <figure id="figure-17">
           <div id="section-9.18-4.1">
             <div class="alignLeft art-svg artwork" id="section-9.18-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="416" width="592" viewBox="0 0 592 416" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,384" fill="none" stroke="black"></path>
-                <path d="M 264,32 L 264,384" fill="none" stroke="black"></path>
-                <path d="M 360,32 L 360,384" fill="none" stroke="black"></path>
-                <path d="M 424,32 L 424,384" fill="none" stroke="black"></path>
-                <path d="M 584,32 L 584,384" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="592" viewBox="0 0 592 400" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,368" fill="none" stroke="black"></path>
+                <path d="M 264,32 L 264,368" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,368" fill="none" stroke="black"></path>
+                <path d="M 424,32 L 424,368" fill="none" stroke="black"></path>
+                <path d="M 584,32 L 584,368" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 584,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 584,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 584,66" fill="none" stroke="black"></path>
@@ -6508,9 +6508,9 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <path d="M 8,176 L 584,176" fill="none" stroke="black"></path>
                 <path d="M 8,208 L 584,208" fill="none" stroke="black"></path>
                 <path d="M 8,240 L 584,240" fill="none" stroke="black"></path>
-                <path d="M 8,288 L 584,288" fill="none" stroke="black"></path>
-                <path d="M 8,336 L 584,336" fill="none" stroke="black"></path>
-                <path d="M 8,384 L 584,384" fill="none" stroke="black"></path>
+                <path d="M 8,272 L 584,272" fill="none" stroke="black"></path>
+                <path d="M 8,320 L 584,320" fill="none" stroke="black"></path>
+                <path d="M 8,368 L 584,368" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Media</text>
                   <text x="84" y="52">Type</text>
@@ -6546,29 +6546,26 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="460" y="228">[[this</text>
                   <text x="532" y="228">document]]</text>
                   <text x="120" y="260">application/cose-certhash</text>
-                  <text x="48" y="276">"usage"</text>
-                  <text x="88" y="276">=</text>
-                  <text x="128" y="276">"x.509"</text>
-                  <text x="280" y="276">-</text>
-                  <text x="392" y="276">TBD16</text>
-                  <text x="460" y="276">[[this</text>
-                  <text x="532" y="276">document]]</text>
-                  <text x="120" y="308">application/cose-certhash</text>
-                  <text x="48" y="324">"usage"</text>
-                  <text x="88" y="324">=</text>
-                  <text x="124" y="324">"c509"</text>
-                  <text x="280" y="324">-</text>
-                  <text x="392" y="324">TBD17</text>
-                  <text x="460" y="324">[[this</text>
-                  <text x="532" y="324">document]]</text>
-                  <text x="84" y="356">application/cbor</text>
-                  <text x="60" y="372">containing</text>
-                  <text x="112" y="372">a</text>
-                  <text x="136" y="372">URI</text>
-                  <text x="292" y="372">CBOR</text>
-                  <text x="332" y="372">text</text>
-                  <text x="392" y="372">TBD18</text>
-                  <text x="472" y="372">[RFC9360]</text>
+                  <text x="280" y="260">-</text>
+                  <text x="392" y="260">TBD16</text>
+                  <text x="460" y="260">[[this</text>
+                  <text x="532" y="260">document]]</text>
+                  <text x="120" y="292">application/cose-certhash</text>
+                  <text x="48" y="308">"usage"</text>
+                  <text x="88" y="308">=</text>
+                  <text x="124" y="308">"c509"</text>
+                  <text x="280" y="308">-</text>
+                  <text x="392" y="308">TBD17</text>
+                  <text x="460" y="308">[[this</text>
+                  <text x="532" y="308">document]]</text>
+                  <text x="84" y="340">application/cbor</text>
+                  <text x="60" y="356">containing</text>
+                  <text x="112" y="356">a</text>
+                  <text x="136" y="356">URI</text>
+                  <text x="292" y="356">CBOR</text>
+                  <text x="332" y="356">text</text>
+                  <text x="392" y="356">TBD18</text>
+                  <text x="472" y="356">[RFC9360]</text>
                 </g>
               </svg><a href="#section-9.18-4.1.1" class="pilcrow">¶</a>
 </div>
