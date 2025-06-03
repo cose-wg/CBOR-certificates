@@ -1293,10 +1293,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-example-c509-certificates" class="internal xref">Example C509 Certificates</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-c509-certificate-examples" class="internal xref">C509 Certificate Examples</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="internal xref">Example RFC 7925 profiled X.509 Certificate</a></p>
+                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-example-rfc-7925-profiled-x" class="internal xref">Example: RFC 7925 profiled X.509 Certificate</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
                 <p id="section-toc.1-1.11.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-example-ieee-8021ar-profile" class="internal xref">Example IEEE 802.1AR profiled X.509 Certificate</a></p>
@@ -1331,17 +1331,18 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-2">CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">CAB Baseline Requirements <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>, RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, and CNSA <span>[<a href="#RFC8603" class="cite xref">RFC8603</a>]</span> specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span>, DTLS <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>, EDHOC <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, or Compact TLS 1.3 <span>[<a href="#I-D.ietf-tls-ctls" class="cite xref">I-D.ietf-tls-ctls</a>]</span>. RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, RFC7925bis <span>[<a href="#I-D.ietf-uta-tls13-iot-profile" class="cite xref">I-D.ietf-uta-tls13-iot-profile</a>]</span>, and IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> specifically target Internet of Things deployments. This document specifies a CBOR encoding based on <span>[<a href="#X.509-IoT" class="cite xref">X.509-IoT</a>]</span>, which can support large parts of RFC 5280. The encoding supports all RFC 7925, IEEE 802.1AR, CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>, <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span> profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">The resulting certificates are called C509 Certificates. This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:<a href="#section-1-5" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-1-6">
-<li id="section-1-6.1">
-          <p id="section-1-6.1.1">An invertible CBOR re-encoding of DER encoded X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, which can be reversed to obtain the original DER encoded X.509 certificate.<a href="#section-1-6.1.1" class="pilcrow">¶</a></p>
+<p id="section-1-5">C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see <a href="#sigalg" class="auto internal xref">Section 9.10</a>.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">The resulting certificates are called C509 Certificates. This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:<a href="#section-1-6" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-1-7">
+<li id="section-1-7.1">
+          <p id="section-1-7.1.1">An invertible CBOR re-encoding of DER encoded X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, which can be reversed to obtain the original DER encoded X.509 certificate.<a href="#section-1-7.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li id="section-1-6.2">
-          <p id="section-1-6.2.1">Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in 1. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER encoded X.509.<a href="#section-1-6.2.1" class="pilcrow">¶</a></p>
+        <li id="section-1-7.2">
+          <p id="section-1-7.2.1">Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in 1. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER encoded X.509.<a href="#section-1-7.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
-<p id="section-1-7">Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">This document also specifies C509 Certificate Signing Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.12</a>; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.19</a>.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-8">Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<p id="section-1-9">This document also specifies C509 Certificate Signing Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.12</a>; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.19</a>.<a href="#section-1-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1370,7 +1371,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-message-fields" class="section-name selfRef">Message Fields</a>
         </h3>
 <p id="section-3.1-1">The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item <span class="bcp14">MAY</span> represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate).<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item <span class="bcp14">MAY</span> represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g. <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificate"></span><div id="fig-CBORCertCDDL">
 <figure id="figure-1">
           <div class="alignCenter art-cddl art-text artwork" id="section-3.1-3.1">
@@ -1437,7 +1438,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
           <h4 id="name-signature">
 <a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-signature" class="section-name selfRef">signature</a>
           </h4>
-<p id="section-3.1.3-1">The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see <a href="#sigalg" class="auto internal xref">Section 9.10</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string. New algorithms, including additional post-quantum algorithms, can be registered in the IANA registry as they become specified, see <a href="#sigalg" class="auto internal xref">Section 9.10</a>.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-1">The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see <a href="#sigalg" class="auto internal xref">Section 9.10</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="issuer">
@@ -1855,19 +1856,24 @@ Extension = (( extensionID: int, extensionValue: any ) //
 </div>
 </section>
 </div>
-<div id="cose-header-parameters">
+<div id="cose-header-params">
 <section id="section-3.4">
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
         </h3>
-<p id="section-3.4-1">The formatting and processing for c5b, c5c, and c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> below, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">The COSE_C509 structure used in c5b, c5c, and c5u is defined as:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
-COSE_C509 = C509Certificate / [ 2* C509Certificate ]
+COSE_C509 = C509CertData / [ 2* C509CertData ]
+C509CertData = bstr .cborseq C509Certificate
 </pre><a href="#section-3.4-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.4-4">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate, see <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus C509CertData contains all data necessary to calculate the thumbprint c5t.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-7">The COSE_C509 item has media type application/cose-c509-cert, see <a href="#c509-cert" class="auto internal xref">Section 9.13</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.18</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.4-8">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without some out-of-band confirmation.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
 <span id="name-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">
           <caption>
@@ -1899,18 +1905,18 @@ COSE_C509 = C509Certificate / [ 2* C509Certificate ]
               <td class="text-right" rowspan="1" colspan="1">c5t</td>
               <td class="text-left" rowspan="1" colspan="1">TBD3</td>
               <td class="text-left" rowspan="1" colspan="1">COSE_CertHash</td>
-              <td class="text-left" rowspan="1" colspan="1">Hash of a C509Certificate</td>
+              <td class="text-left" rowspan="1" colspan="1">Hash of a ~C509Certificate</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5u</td>
               <td class="text-left" rowspan="1" colspan="1">TBD4</td>
               <td class="text-left" rowspan="1" colspan="1">uri</td>
-              <td class="text-left" rowspan="1" colspan="1">URI pointing to a COSE_C509 containing a ordered chain of certificates</td>
+              <td class="text-left" rowspan="1" colspan="1">URI pointing to a COSE_C509 containing an ordered chain of certificates</td>
             </tr>
           </tbody>
         </table>
 </div>
-<p id="section-3.4-6">Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-10">Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="private-key-structures">
@@ -6932,13 +6938,13 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 </div>
 <div id="appA">
 <section id="appendix-A">
-      <h2 id="name-example-c509-certificates">
-<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-example-c509-certificates" class="section-name selfRef">Example C509 Certificates</a>
+      <h2 id="name-c509-certificate-examples">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-c509-certificate-examples" class="section-name selfRef">C509 Certificate Examples</a>
       </h2>
 <div id="rfc7925-prof">
 <section id="appendix-A.1">
         <h3 id="name-example-rfc-7925-profiled-x">
-<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-example-rfc-7925-profiled-x" class="section-name selfRef">Example RFC 7925 profiled X.509 Certificate</a>
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-example-rfc-7925-profiled-x" class="section-name selfRef">Example: RFC 7925 profiled X.509 Certificate</a>
         </h3>
 <p id="appendix-A.1-1">Example of <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span> profiled X.509 certificate parsed with OpenSSL.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.1-2">
@@ -6996,10 +7002,13 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 <div id="example-c509-certificate-encoding">
 <section id="appendix-A.1.1">
           <h4 id="name-example-c509-certificate-en">
-<a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-example-c509-certificate-en" class="section-name selfRef">Example C509 Certificate Encoding</a>
+<a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-example-c509-certificate-en" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
-<p id="appendix-A.1.1-1">The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.1-2">
+<p id="appendix-A.1.1-1">This section shows the C509 encoding of the X.509 certificate in the previous section. The point compressed public key is represented as described in <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.1-2"><a href="#fig-CBOR-diagnostic-7925" class="auto internal xref">Figure 18</a> shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
+<span id="name-cbor-diagnostic-notation-of"></span><div id="fig-CBOR-diagnostic-7925">
+<figure id="figure-18">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.1-3.1">
 <pre>
 /This defines a CBOR Sequence (RFC 8742):/
 
@@ -7020,10 +7029,16 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
     EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
     3314EA19191E8B607DA5AE3BDA16'
 
-</pre><a href="#appendix-A.1.1-2" class="pilcrow">¶</a>
+</pre>
 </div>
-<p id="appendix-A.1.1-3">The size of the CBOR encoding (CBOR sequence) is 140 bytes. The point compressed public key is represented as described in <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>.<a href="#appendix-A.1.1-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.1-4">
+<figcaption><a href="#figure-18" class="selfRef">Figure 18</a>:
+<a href="#name-cbor-diagnostic-notation-of" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.1-4"><a href="#fig-CBOR-plain-hex-7925" class="auto internal xref">Figure 19</a> shows the plain hex format of the unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.1-4" class="pilcrow">¶</a></p>
+<span id="name-cbor-plain-hex-format-of-c5"></span><div id="fig-CBOR-plain-hex-7925">
+<figure id="figure-19">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.1-5.1">
 <pre>
 03
 43 01 F5 0D
@@ -7039,17 +7054,24 @@ D8 30 46 01 23 45 67 89 AB
 58 40 D4 32 0B 1D 68 49 E3 09 21 9D 30 03 7E 13 81 66 F2 50 82 47 DD
 DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
-</pre><a href="#appendix-A.1.1-4" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-19" class="selfRef">Figure 19</a>:
+<a href="#name-cbor-plain-hex-format-of-c5" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
-<div id="example-natively-signed-c509-certificate">
+<div id="example-native">
 <section id="appendix-A.1.2">
           <h4 id="name-example-natively-signed-c50">
 <a href="#appendix-A.1.2" class="section-number selfRef">A.1.2. </a><a href="#name-example-natively-signed-c50" class="section-name selfRef">Example: Natively Signed C509 Certificate</a>
           </h4>
-<p id="appendix-A.1.2-1">The corresponding natively signed C509 certificate in CBOR diagnostic format is identical, except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.2-2">
+<p id="appendix-A.1.2-1">This section shows the natively signed C509 certificate corresponding to that of the previous section, which is identical except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 20</a> shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
+<span id="name-cbor-diagnostic-notation-of-"></span><div id="fig-CBOR-diagnostic-native">
+<figure id="figure-20">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.2-3.1">
 <pre>
 /This defines a CBOR Sequence (RFC 8742):/
 
@@ -7067,10 +7089,16 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
   h'EB0D472731F689BC00F5880B12C68B3F9FD38B23FADFCA2095
     0F3F241B60A202579CAC28CD3B7494D5FA5D8BBAB4600357E5
     50AB9FA9A65D9BA2B3B82E668CC6'
-</pre><a href="#appendix-A.1.2-2" class="pilcrow">¶</a>
+</pre>
 </div>
-<p id="appendix-A.1.2-3">The size of the CBOR encoding (CBOR sequence) is 140 bytes.<a href="#appendix-A.1.2-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="appendix-A.1.2-4">
+<figcaption><a href="#figure-20" class="selfRef">Figure 20</a>:
+<a href="#name-cbor-diagnostic-notation-of-" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.2-4"><a href="#fig-CBOR-plain-hex-native" class="auto internal xref">Figure 21</a> shows the plain hex format of the natively signed unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.2-4" class="pilcrow">¶</a></p>
+<span id="name-cbor-plain-hex-format-of-c50"></span><div id="fig-CBOR-plain-hex-native">
+<figure id="figure-21">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.2-5.1">
 <pre>
 02
 43 01 F5 0D
@@ -7086,7 +7114,11 @@ D8 30 46 01 23 45 67 89 AB
 58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
 DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
-</pre><a href="#appendix-A.1.2-4" class="pilcrow">¶</a>
+</pre>
+</div>
+<figcaption><a href="#figure-21" class="selfRef">Figure 21</a>:
+<a href="#name-cbor-plain-hex-format-of-c50" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
+            </figcaption></figure>
 </div>
 </section>
 </div>
@@ -7122,6 +7154,68 @@ subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 </pre><a href="#appendix-A.1.4-3" class="pilcrow">¶</a>
 </div>
+</section>
+</div>
+<div id="other-examples">
+<section id="appendix-A.1.5">
+          <h4 id="name-examples-c509certificate-an">
+<a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-examples-c509certificate-an" class="section-name selfRef">Examples: C509Certificate and C509CertData</a>
+          </h4>
+<p id="appendix-A.1.5-1">This section examplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a>.<a href="#appendix-A.1.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 22</a> shows the encoding of the corresponding C509Certificate, i.e. the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
+<span id="name-c509certificate-the-cbor-ar"></span><div id="fig-C509Certificate">
+<figure id="figure-22">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.5-3.1">
+<pre>
+8B
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+</pre>
+</div>
+<figcaption><a href="#figure-22" class="selfRef">Figure 22</a>:
+<a href="#name-c509certificate-the-cbor-ar" class="selfRef">C509Certificate: The CBOR array wrapping of ~C509Certificate</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.5-4">Note that C509Certificate is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).<a href="#appendix-A.1.5-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 23</a> shows the encoding of the corresponding C509CertData, i.e. the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
+<span id="name-c509certdata-cbor-byte-stri"></span><div id="fig-C509CertData">
+<figure id="figure-23">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.5-6.1">
+<pre>
+58 8C
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+</pre>
+</div>
+<figcaption><a href="#figure-23" class="selfRef">Figure 23</a>:
+<a href="#name-c509certdata-cbor-byte-stri" class="selfRef">C509CertData: CBOR byte string wrapping of ~C509Certificate.</a>
+            </figcaption></figure>
+</div>
+<p id="appendix-A.1.5-7">Note that C509CertData is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).<a href="#appendix-A.1.5-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
