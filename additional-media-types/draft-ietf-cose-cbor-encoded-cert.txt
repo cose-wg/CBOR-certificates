@@ -2592,7 +2592,7 @@ Table of Contents
       hash value is calculated over.
 
    *  Can be set to "c509" to indicate that the hash value is calculated
-      over a C509 certificate.
+      over a C509 certificate, see Section 3.4.
 
    Encoding considerations: binary
 
