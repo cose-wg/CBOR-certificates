@@ -1,4 +1,4 @@
-# C509 Drafts
+# CBOR Encoded X.509 (C509)
 
 This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificates (C509 Certificates)" and "CBOR Encoded Certificate Revocation Management".
 
