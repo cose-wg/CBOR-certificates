@@ -138,7 +138,7 @@ Table of Contents
    optimized for constrained environments [RFC7228].  Large certificate
    chains are also problematic in non-constrained protocols such as EAP-
    TLS [RFC9190] [RFC9191] where authenticators typically drop an EAP
-   session after only 40 - 50 round-trips, QUIC [RFC9000] where the
+   session after only 40–50 round-trips, QUIC [RFC9000] where the
    latency increases significantly unless the server sends less than
    three times as many bytes as received prior to validating the client
    address, and RPKI [RFC6487] where a single certificate can be very
