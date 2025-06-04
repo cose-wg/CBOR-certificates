@@ -1,13 +1,13 @@
-# CBOR Drafts
+# C509 Drafts
 
-This is the working area for individual Internet-Drafts.
+This is the working area for Internet-Drafts "CBOR Encoded X.509 Certificates (C509 Certificates)" and "CBOR Encoded Certificate Revocation Management".
 
 ## CBOR Encoded X.509 Certificates (C509 Certificates)
 
 * [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert)
-* [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
+* [Compare Editor's Copy to Working Group Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
 ## CBOR Encoded Certificate Revocation Management
 
