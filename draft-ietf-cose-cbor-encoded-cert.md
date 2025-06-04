@@ -329,7 +329,7 @@ In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR b
 
 ### Encoding of subjectPublicKey {#subpubkey-alg-encoding}
 
-For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. \[ modulus : ~biguint, exponent : ~biguint \]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).
+For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted, and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. \[ modulus : ~biguint, exponent : ~biguint \]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consist of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).
 
 For elliptic curve public keys in Weierstraß form (id-ecPublicKey), keys may be point compressed as defined in Section 2.3.3 of {{SECG}}. Native C509 certificates with Weierstraß form keys use the octets 0x02, 0x03, and 0x04 as defined in {{SECG}}. If a DER encoded certificate with an uncompressed public key of type id-ecPublicKey is CBOR encoded with point compression, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.
 
@@ -341,7 +341,7 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 
 The 'extensions' field is encoded as specified in {{ext-field}} with further details provided in this section.
 
-The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int (see {{extype}}) or as an unwrapped CBOR OID tag {{RFC9090}}. If 'extensionID' is encoded an int, the sign is used to encode that the extension is critical. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If 'extensionID' is encoded as an unwrapped CBOR OID tag, then an optional boolean element in the array is used to indicate that the extension is critical, see {{fig-CBORCertCDDL}}.
+The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int (see {{extype}}) or as an unwrapped CBOR OID tag {{RFC9090}}. If 'extensionID' is encoded an int, the sign is used to encode that the extension is critical. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If 'extensionID' is encoded as an unwrapped CBOR OID tag, then an optional Boolean element in the array is used to indicate that the extension is critical, see {{fig-CBORCertCDDL}}.
 
 The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below.
 
@@ -655,7 +655,7 @@ An implementation MAY only support c509CertificateRequestType = 0. The most comm
 
 * c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format has c509CertificateType = 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate formate has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
+* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
@@ -758,7 +758,7 @@ The mechanism in this draft does not reveal any additional information compared 
 
 This document creates several new registries under the new heading "CBOR Encoded X.509 (C509) Parameters". For all items, the 'Reference' field points to this document.
 
-The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1 byte encodings, other values in the interval \[-256, 255\] have a 2 byte encodings, and the remaining values in the interval \[-65536, 65535\] have 3 byte encodings.
+The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1-byte encodings, other values in the interval \[-256, 255\] have a 2-byte encodings, and the remaining values in the interval \[-65536, 65535\] have 3-byte encodings.
 
 ## C509 Certificate Types Registry {#type}
 
