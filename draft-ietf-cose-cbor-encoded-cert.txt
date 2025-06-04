@@ -378,8 +378,8 @@ Table of Contents
    *  Otherwise it is encoded as a CBOR text string.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in
-   case of self-signed certificates, then it MUST be encoded as CBOR
-   null.
+   case of self-signed certificates, then the 'issuer' field MUST be
+   encoded as CBOR null.
 
 3.1.5.  validity
 
