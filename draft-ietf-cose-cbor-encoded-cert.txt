@@ -1389,7 +1389,7 @@ Table of Contents
    IANA has created a new registry titled "C509 Extensions Registry"
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, Name, Identifiers, OID, DER,
-   Comments, extensionValue, and Reference, where Value is an positive
+   Comments, extensionValue, and Reference, where Value is a positive
    integer, and the other columns are text strings.  The registry also
    contains CSR attributes for use in Certificate Requests, see
    Section 4.  For values in the interval [1, 23] the registration
