@@ -92,19 +92,19 @@ informative:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
-    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Certificates Version 1.7.6"
+    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Certificates Version 2.1.4"
     author:
       -
         ins: CA/Browser Forum
-    date: June 2021
+    date: March 2025
 
   CAB-Code:
     target: https://cabforum.org/baseline-requirements-code-signing/
-    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Code Signing Certificates Version 2.3"
+    title: CA/Browser Forum, "Baseline Requirements for the Issuance and Management of Publicly-Trusted Code Signing Certificates Version 3.8.0"
     author:
       -
         ins: CA/Browser Forum
-    date: May 2021
+    date: August 2024
 
   IEEE-802.1AR:
     target: https://standards.ieee.org/standard/802_1AR-2018.html
@@ -117,12 +117,12 @@ informative:
     date: August 2018
 
   GSMA-eUICC:
-    target: https://www.gsma.com/esim/wp-content/uploads/2021/02/SGP.14-v2.1.pdf
-    title: GSMA eUICC PKI Certificate Policy Version 2.1
+    target: https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2025/01/SGP.14-v2.2.pdf
+    title: GSMA eUICC PKI Certificate Policy Version 2.2
     author:
       -
         ins: GSMA
-    date: February 2021
+    date: January 2025
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
