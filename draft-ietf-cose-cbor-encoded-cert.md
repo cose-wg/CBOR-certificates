@@ -307,12 +307,15 @@ Not supported.
 
 ### extensions {#ext-field}
 
-The 'extensions' field is encoded as a CBOR array where each extension is encoded as either:
+The 'extensions' field is encoded either as a CBOR array or as a CBOR int. An omitted 'extensions' field is encoded as an empty CBOR array.
 
-  * a CBOR int (see {{extype}}) followed by a CBOR item of any type, or
-  * an unwrapped CBOR OID tag {{RFC9090}} followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.
+Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see {{extype}}) or as an unwrapped CBOR OID tag {{RFC9090}}.
 
-If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted, and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.
+* If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type, and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see {{ext-encoding}}), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.
+
+* If 'extensionID' is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR bool 'critical', and the DER encoded value of the 'extnValue'. The boolean element in the array is used to indicate if the extension is critical, see {{fig-CBORCertCDDL}}. The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.
+
+The currently defined extension values for which there is CBOR int encoded 'extensionID' is specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment.
 
 More details about extensions in {{ext-encoding}}.
 
@@ -340,10 +343,6 @@ For ECDSA signatures, the SEQUENCE and INTEGER type and length fields as well as
 ## Encoding of Extensions {#ext-encoding}
 
 The 'extensions' field is encoded as specified in {{ext-field}} with further details provided in this section.
-
-The 'extensions' field is encoded as a CBOR array where each extensionID is encoded either as a CBOR int (see {{extype}}) or as an unwrapped CBOR OID tag {{RFC9090}}. If 'extensionID' is encoded an int, the sign is used to encode that the extension is critical. Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If 'extensionID' is encoded as an unwrapped CBOR OID tag, then an optional Boolean element in the array is used to indicate that the extension is critical, see {{fig-CBORCertCDDL}}.
-
-The 'extnValue' OCTET STRING value field is encoded as the CBOR byte string 'extensionValue' except for the extensions specified below.
 
 For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension MUST be encoded using the unwrapped CBOR OID tag encoded extensionID.
 
