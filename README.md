@@ -12,9 +12,11 @@ This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificate
 ## CBOR Encoded Certificate Revocation Management
 
 * [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-cose-cbor-revocation-management.html)
-%* [Datatracker Page](https://datatracker.ietf.org/doc/draft-cose-cbor-revocation-management)
+<!--
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-cose-cbor-revocation-management)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-cose-cbor-revocation-management)
 * [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-cose-cbor-revocation-management.diff)
+-->
 
 ## Contributing
 
