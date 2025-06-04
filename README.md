@@ -2,13 +2,6 @@
 
 This is the working area for individual Internet-Drafts.
 
-## CBOR Encoded Certificate Revocation Management
-
-* [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-cose-cbor-revocation-management.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-cose-cbor-revocation-management)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-cose-cbor-revocation-management)
-* [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-cose-cbor-revocation-management.diff)
-
 ## CBOR Encoded X.509 Certificates (C509 Certificates)
 
 * [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
@@ -16,6 +9,12 @@ This is the working area for individual Internet-Drafts.
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert)
 * [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
+## CBOR Encoded Certificate Revocation Management
+
+* [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-cose-cbor-revocation-management.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-cose-cbor-revocation-management)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-cose-cbor-revocation-management)
+* [Compare Editor's Copy to Individual Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-cose-cbor-revocation-management.diff)
 
 ## Contributing
 
