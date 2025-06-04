@@ -6,7 +6,7 @@ This is the working area for Internet-Drafts "CBOR Encoded X.509 Certificates (C
 
 * [Editor's Copy](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert)
 * [Compare Editor's Copy to Working Group Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
 ## CBOR Encoded Certificate Revocation Management
