@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 5 December 2025</td>
+<td class="center">Expires 6 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-03" class="published">3 June 2025</time>
+<time datetime="2025-06-04" class="published">4 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-05">5 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-06">6 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 5 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1452,7 +1452,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
               <p id="section-3.1.4-2.2.1">a (unwrapped CBOR OID, CBOR bytes) pair.<a href="#section-3.1.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.4-3">The absolute value of the CBOR int (see <a href="#fig-attrtype" class="auto internal xref">Figure 8</a>) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>).In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74 character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. In re-encoded C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-3">The absolute value of the CBOR int (see <a href="#fig-attrtype" class="auto internal xref">Figure 8</a>) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>).In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. In re-encoded C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-4">If Name contains a single Attribute containing an utf8String encoded 'common name' it is encoded as follows:<a href="#section-3.1.4-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-5.1">
@@ -1489,7 +1489,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
           <h4 id="name-subjectpublickeyinfo">
 <a href="#section-3.1.7" class="section-number selfRef">3.1.7. </a><a href="#name-subjectpublickeyinfo" class="section-name selfRef">subjectPublicKeyInfo</a>
           </h4>
-<p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 9.11</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 9.11</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="issueruniqueid">
@@ -1522,7 +1522,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
               <p id="section-3.1.10-2.2.1">an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> followed by an optional CBOR bool encoding 'critical' and the DER encoded value of the 'extnValue' encoded as a CBOR byte string.<a href="#section-3.1.10-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.10-3">If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>. The extensions mandated to be supported by <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span> and <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.<a href="#section-3.1.10-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.10-3">If the array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage), the array is omitted, and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int. Extensions are encoded as specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>. The extensions mandated to be supported by <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span> and <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> are given special treatment. An omitted 'extensions' field is encoded as an empty CBOR array.<a href="#section-3.1.10-3" class="pilcrow">¶</a></p>
 <p id="section-3.1.10-4">More details about extensions in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>.<a href="#section-3.1.10-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1539,7 +1539,7 @@ Extension = (( extensionID: int, extensionValue: any ) //
           <h4 id="name-signaturevalue">
 <a href="#section-3.1.12" class="section-number selfRef">3.1.12. </a><a href="#name-signaturevalue" class="section-name selfRef">signatureValue</a>
           </h4>
-<p id="section-3.1.12-1">In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a><a href="#section-3.1.12-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.12-1">In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a><a href="#section-3.1.12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>

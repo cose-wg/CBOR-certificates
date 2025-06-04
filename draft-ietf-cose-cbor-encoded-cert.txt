@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 5 December 2025                                      J. Höglund
+Expires: 6 December 2025                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             3 June 2025
+                                                             4 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 December 2025.
+   This Internet-Draft will expire on 6 December 2025.
 
 Copyright Notice
 
@@ -355,7 +355,7 @@ Table of Contents
    type IA5String (see [RFC5280]).In natively signed C509 certificates
    all text strings are UTF-8 encoded and all attributeType SHALL be
    non-negative.  Text strings SHALL still adhere to any X.509
-   restrictions, i.e., serialNumber SHALL only contain the 74 character
+   restrictions, i.e., serialNumber SHALL only contain the 74-character
    subset of ASCII allowed by printableString and countryName SHALL have
    length 2.  In re-encoded C509 certificates, attribute values of types
    ia5String (if this is the only allowed type, e.g. emailAddress),
@@ -405,7 +405,7 @@ Table of Contents
    the parameters encoded as a CBOR byte string.  In general, the
    'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte
    string.  This specification assumes the BIT STRING has zero unused
-   bits and the unused bits byte is omitted.  For rsaEncryption and id-
+   bits, and the unused bits byte is omitted.  For rsaEncryption and id-
    ecPublicKey, the encoding of subjectPublicKey is further optimized as
    described in Section 3.2.
 
@@ -430,7 +430,7 @@ Table of Contents
       'extnValue' encoded as a CBOR byte string.
 
    If the array contains exactly two ints and the absolute value of the
-   first int is 2 (corresponding to keyUsage), the array is omitted and
+   first int is 2 (corresponding to keyUsage), the array is omitted, and
    the extensions is encoded as a single CBOR int with the absolute
    value of the second int and the sign of the first int.  Extensions
    are encoded as specified in Section 3.3.  The extensions mandated to
@@ -449,7 +449,7 @@ Table of Contents
 
    In general, the 'signatureValue' BIT STRING value field is encoded as
    the CBOR byte string issuerSignatureValue.  This specification
-   assumes the BIT STRING has zero unused bits and the unused bits byte
+   assumes the BIT STRING has zero unused bits, and the unused bits byte
    is omitted.  For natively signed C509 certificates the signatureValue
    is calculated over the CBOR sequence TBSCertificate.  For ECDSA, the
    encoding of issuerSignatureValue is further optimized as described in
