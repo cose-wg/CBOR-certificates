@@ -174,9 +174,9 @@ Table of Contents
    the CBOR playground [CborMe].
 
    CAB Baseline Requirements [CAB-TLS], RFC 7925 [RFC7925], IEEE 802.1AR
-   [IEEE-802.1AR], and CNSA [RFC8603] specify certificate profiles which
-   can be applied to certificate based authentication with, e.g., TLS
-   [RFC8446], QUIC [RFC9000], DTLS [RFC9147], COSE [RFC9052], EDHOC
+   [IEEE-802.1AR], and CNSA 1.0 [RFC8603] specify certificate profiles
+   which can be applied to certificate based authentication with, e.g.,
+   TLS [RFC8446], QUIC [RFC9000], DTLS [RFC9147], COSE [RFC9052], EDHOC
    [RFC9528], or Compact TLS 1.3 [I-D.ietf-tls-ctls].  RFC 7925
    [RFC7925], RFC7925bis [I-D.ietf-uta-tls13-iot-profile], and IEEE
    802.1AR [IEEE-802.1AR] specifically target Internet of Things
@@ -352,7 +352,7 @@ Table of Contents
    attribute type and the sign is used to represent the character string
    type; positive for utf8String, negative for printableString.  The
    attribute value for emailAddress and domainComponent are always of
-   type IA5String (see [RFC5280]).In natively signed C509 certificates
+   type IA5String (see [RFC5280]).  In natively signed C509 certificates
    all text strings are UTF-8 encoded and all attributeType SHALL be
    non-negative.  Text strings SHALL still adhere to any X.509
    restrictions, i.e., serialNumber SHALL only contain the 74-character
