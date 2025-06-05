@@ -50,6 +50,8 @@ normative:
   RFC6698:
   RFC6838:
   RFC6962:
+  RFC7030:
+  RFC8295:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -88,6 +90,7 @@ informative:
   RFC9528: edhoc
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
+  I-D.ietf-lamps-rfc7030-csrattrs:
 
 
   CAB-TLS:
@@ -624,7 +627,11 @@ Native C509 certificates MUST only use specific CBOR encoded fields. However, wh
 
 # C509 Certificate Signing Request {#CSR}
 
-This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
+This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The CDDL is shown in {{fig-C509CSRCDDL}}.
+
+The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
+
+## Certificate Request Types
 
 Different types of C509 Certificate Requests are defined, see {{csr-type}}, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:
 
@@ -640,13 +647,9 @@ Combining these options enables the four instances of c509CertificateRequestType
 +------------------+---------------------------------------------------+
 | Signed object    | c509CertificateType = 2 | c509CertificateType = 3 |
 +==================+=========================+=========================+
-|                  |                         |                         |
 | CBOR encoded CSR |            0            |             2           |
-|                  |                         |                         |
 +------------------+-------------------------+-------------------------+
-|                  |                         |                         |
 | DER encoded CSR  |            1            |             3           |
-|                  |                         |                         |
 +------------------+-------------------------+-------------------------+
 ~~~~~~~~~~~~~~~~~~~~~~~
 {: #fig-csr-types2 title="C509 Certificate Request Types 0, 1, 2 and 3." artwork-align="center"}
@@ -657,12 +660,35 @@ An implementation MAY only support c509CertificateRequestType = 0. The most comm
 
 * c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
+
+## Subject Signature Algorithm
+
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
-Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+## CSR Attributes
 
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how the Certificate Signing Request (CSR) Attributes can be used to specify both CSR attribute Object IDs (OID) and also CSR attribute values, in particular X.509 extension values, that the server expects the client to include in a subsequent Certificate Request.
 
+The ASN.1 syntax for CSR Attributes is defined in {{Section 4.5.2 of RFC7030}} and clarified in {{Section 3.2 of I-D.ietf-lamps-rfc7030-csrattrs}}. The corresponding CDDL is defined below. An Attribute with attributeType OID 'id-ExtensionReq' has a corresponding attributeValue Extensions, where Attribute and Extensions are defined in {{message-fields}}.
 
+~~~~~~~~~~~ cddl
+CsrAttrs = [* AttrOrOID]
+
+AttrOrOID = ~oid / Attribute
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
+
+The use of CSR Templates as defined in {{Appendix B of RFC8295}} is out of scope of this document.
+
+## Certificate Request Attributes
+
+Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element.
+
+Other certificate request attributes are included using the same Extensions structure as in extensionRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+
+##  C509 Certificate Request
+
+The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}.
 
 ~~~~~~~~~~~ cddl
 C509CertificateRequest = [
@@ -677,7 +703,7 @@ TBSCertificateRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
-   extensionsRequest: Extensions,
+   extensionRequest: Extensions,
 )
 
 challengePassword = tstr / bstr
@@ -1001,7 +1027,7 @@ The initial contents of the registry are:
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The registry also contains CSR attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The registry also contains Certificate Request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1207,11 +1233,11 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
-|       | Comments:        CSR Attribute                            |
+|       | Comments:        Certificate Request Attribute            |
 |       | extensionValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-extype title="C509 Extensions and CSR Attributes"}
+{: #fig-extype title="C509 Extensions and Certificate Request Attributes"}
 {: artwork-align="center"}
 
 ## C509 Certificate Policies Registry {#CP}
