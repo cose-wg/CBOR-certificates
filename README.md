@@ -1,6 +1,6 @@
 # CBOR Encoded X.509 (C509)
 
-This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificates (C509 Certificates)" and "CBOR Encoded Certificate Revocation Management".
+This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificates (C509 Certificates)" and "CBOR Encoded Certificate Revocation Management" as well as a reference implementation in RUST of DER encoded X.509 to CBOR encoded X.509 (C509). The reference software may be distributed under the terms of the 3-Clause BSD License.
 
 ## CBOR Encoded X.509 Certificates (C509 Certificates)
 
@@ -9,6 +9,10 @@ This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificate
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert)
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert)
 * [Compare Editor's Copy to Working Group Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
+
+## Reference Software
+
+* [DER encoded X.509 to CBOR encoded X.509 (C509)](https://github.com/cose-wg/CBOR-certificates/tree/master/c509_demo_impl)
 
 ## CBOR Encoded Certificate Revocation Management
 
