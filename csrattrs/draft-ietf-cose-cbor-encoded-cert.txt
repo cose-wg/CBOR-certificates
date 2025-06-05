@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 6 December 2025                                      J. Höglund
+Expires: 7 December 2025                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             4 June 2025
+                                                             5 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 December 2025.
+   This Internet-Draft will expire on 7 December 2025.
 
 Copyright Notice
 
@@ -949,6 +949,27 @@ Table of Contents
 
 4.3.  CSR Attributes
 
+   Enrollment over Secure Transport (EST, [RFC7030]) defines, and
+   [I-D.ietf-lamps-rfc7030-csrattrs] clarifies, how the Certificate
+   Signing Request (CSR) Attributes can be used to specify both CSR
+   attribute Object IDs (OID) and also CSR attribute values, in
+   particular X.509 extension values, that the server expects the client
+   to include in a subsequent Certificate Request.
+
+   The ASN.1 syntax for CSR Attributes is defined in Section 4.5.2 of
+   [RFC7030] and clarified in Section 3.2 of
+   [I-D.ietf-lamps-rfc7030-csrattrs].  The corresponding CDDL is defined
+   below.  An Attribute with attributeType OID 'id-ExtensionReq' has a
+   corresponding attributeValue Extensions, where Attribute and
+   Extensions are defined in Section 3.1.
+
+   CsrAttrs = [* AttrOrOID]
+
+   AttrOrOID = ~oid / Attribute
+
+   The use of CSR Templates as defined in Appendix B of [RFC8295] is out
+   of scope of this document.
+
 4.4.  Certificate Request Attributes
 
    Certificate request attributes, i.e. attributes for use with
@@ -957,7 +978,7 @@ Table of Contents
    The attribute extensionRequest is supported with a dedicated element.
 
    Other certificate request attributes are included using the same
-   Extensions structure as in extensionsRequest, both extensions and
+   Extensions structure as in extensionRequest, both extensions and
    attributes are listed in the C509 Extensions Registry, see Figure 9.
    The only other certificate request attribute specified in this
    document is challengePassword which is defined for printableString or
@@ -985,7 +1006,7 @@ Table of Contents
        subject: Name,
        subjectPublicKeyAlgorithm: AlgorithmIdentifier,
        subjectPublicKey: any,
-       extensionsRequest: Extensions,
+       extensionRequest: Extensions,
     )
 
     challengePassword = tstr / bstr
@@ -1408,12 +1429,12 @@ Table of Contents
    columns of the registry are Value, Name, Identifiers, OID, DER,
    Comments, extensionValue, and Reference, where Value is a positive
    integer, and the other columns are text strings.  The registry also
-   contains CSR attributes for use in Certificate Requests, see
-   Section 4.  For values in the interval [1, 23] the registration
-   procedure is "IETF Review" and "Expert Review".  Values ≥ 32768 are
-   reserved for Private Use. For all other values the registration
-   procedure is "Expert Review".  The initial contents of the registry
-   are:
+   contains Certificate Request attributes for use in Certificate
+   Requests, see Section 4.  For values in the interval [1, 23] the
+   registration procedure is "IETF Review" and "Expert Review".  Values
+   ≥ 32768 are reserved for Private Use. For all other values the
+   registration procedure is "Expert Review".  The initial contents of
+   the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Extension                                                 |
@@ -1618,11 +1639,11 @@ Table of Contents
    |       | Identifiers:     challengePassword                        |
    |       | OID:             1.2.840.113549.1.9.7                     |
    |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
-   |       | Comments:        CSR Attribute                            |
+   |       | Comments:        Certificate Request Attribute            |
    |       | extensionValue:  ChallengePassword                        |
    +-------+-----------------------------------------------------------+
 
-                Figure 9: C509 Extensions and CSR Attributes
+        Figure 9: C509 Extensions and Certificate Request Attributes
 
 9.5.  C509 Certificate Policies Registry
 
@@ -2710,9 +2731,18 @@ Table of Contents
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <https://www.rfc-editor.org/rfc/rfc6962>.
 
+   [RFC7030]  Pritikin, M., Ed., Yee, P., Ed., and D. Harkins, Ed.,
+              "Enrollment over Secure Transport", RFC 7030,
+              DOI 10.17487/RFC7030, October 2013,
+              <https://www.rfc-editor.org/rfc/rfc7030>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+   [RFC8295]  Turner, S., "EST (Enrollment over Secure Transport)
+              Extensions", RFC 8295, DOI 10.17487/RFC8295, January 2018,
+              <https://www.rfc-editor.org/rfc/rfc8295>.
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
@@ -2792,6 +2822,14 @@ Table of Contents
               January 2025, <https://www.gsma.com/solutions-and-
               impact/technologies/esim/wp-content/uploads/2025/01/
               SGP.14-v2.2.pdf>.
+
+   [I-D.ietf-lamps-rfc7030-csrattrs]
+              Richardson, M., Friel, O., von Oheimb, D., and D. Harkins,
+              "Clarification and enhancement of RFC7030 CSR Attributes
+              definition", Work in Progress, Internet-Draft, draft-ietf-
+              lamps-rfc7030-csrattrs-22, 8 May 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
+              rfc7030-csrattrs-22>.
 
    [I-D.ietf-tls-ctls]
               Rescorla, E., Barnes, R., Tschofenig, H., and B. M.

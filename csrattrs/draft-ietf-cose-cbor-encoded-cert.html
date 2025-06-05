@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 6 December 2025</td>
+<td class="center">Expires 7 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-04" class="published">4 June 2025</time>
+<time datetime="2025-06-05" class="published">5 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-06">6 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-07">7 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 7 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2062,7 +2062,17 @@ C509PEM = [
 <section id="section-4.3">
         <h3 id="name-csr-attributes">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-csr-attributes" class="section-name selfRef">CSR Attributes</a>
-      </h3>
+        </h3>
+<p id="section-4.3-1">Enrollment over Secure Transport (EST, <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>) defines, and <span>[<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span> clarifies, how the Certificate Signing Request (CSR) Attributes can be used to specify both CSR attribute Object IDs (OID) and also CSR attribute values, in particular X.509 extension values, that the server expects the client to include in a subsequent Certificate Request.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">The ASN.1 syntax for CSR Attributes is defined in <span><a href="https://rfc-editor.org/rfc/rfc7030#section-4.5.2" class="relref">Section 4.5.2</a> of [<a href="#RFC7030" class="cite xref">RFC7030</a>]</span> and clarified in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc7030-csrattrs-22#section-3.2" class="relref">Section 3.2</a> of [<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span>. The corresponding CDDL is defined below. An Attribute with attributeType OID 'id-ExtensionReq' has a corresponding attributeValue Extensions, where Attribute and Extensions are defined in <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-4.3-3">
+<pre>
+CsrAttrs = [* AttrOrOID]
+
+AttrOrOID = ~oid / Attribute
+</pre><a href="#section-4.3-3" class="pilcrow">¶</a>
+</div>
+<p id="section-4.3-4">The use of CSR Templates as defined in <span><a href="https://rfc-editor.org/rfc/rfc8295#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC8295" class="cite xref">RFC8295</a>]</span> is out of scope of this document.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="certificate-request-attributes">
@@ -2071,7 +2081,7 @@ C509PEM = [
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-certificate-request-attribu" class="section-name selfRef">Certificate Request Attributes</a>
         </h3>
 <p id="section-4.4-1">Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in <span><a href="https://rfc-editor.org/rfc/rfc2985#section-5.4" class="relref">Section 5.4</a> of [<a href="#RFC2985" class="cite xref">RFC2985</a>]</span>. The attribute extensionRequest is supported with a dedicated element.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.4-2">Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see <a href="#fig-extype" class="auto internal xref">Figure 9</a>. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length <span class="contact-name">≥</span> 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">Other certificate request attributes are included using the same Extensions structure as in extensionRequest, both extensions and attributes are listed in the C509 Extensions Registry, see <a href="#fig-extype" class="auto internal xref">Figure 9</a>. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length <span class="contact-name">≥</span> 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="c509-certificate-request">
@@ -2096,7 +2106,7 @@ TBSCertificateRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
-   extensionsRequest: Extensions,
+   extensionRequest: Extensions,
 )
 
 challengePassword = tstr / bstr
@@ -2997,8 +3007,8 @@ challengePassword = tstr / bstr
         <h3 id="name-c509-extensions-registry">
 <a href="#section-9.4" class="section-number selfRef">9.4. </a><a href="#name-c509-extensions-registry" class="section-name selfRef">C509 Extensions Registry</a>
         </h3>
-<p id="section-9.4-1">IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The registry also contains CSR attributes for use in Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>. For values in the interval [1, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.4-1" class="pilcrow">¶</a></p>
-<span id="name-c509-extensions-and-csr-att"></span><div id="fig-extype">
+<p id="section-9.4-1">IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The registry also contains Certificate Request attributes for use in Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>. For values in the interval [1, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.4-1" class="pilcrow">¶</a></p>
+<span id="name-c509-extensions-and-certifi"></span><div id="fig-extype">
 <figure id="figure-9">
           <div id="section-9.4-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.4-2.1.1">
@@ -3617,8 +3627,9 @@ challengePassword = tstr / bstr
                   <text x="444" y="3268">09</text>
                   <text x="468" y="3268">07</text>
                   <text x="120" y="3284">Comments:</text>
-                  <text x="232" y="3284">CSR</text>
-                  <text x="288" y="3284">Attribute</text>
+                  <text x="264" y="3284">Certificate</text>
+                  <text x="344" y="3284">Request</text>
+                  <text x="416" y="3284">Attribute</text>
                   <text x="144" y="3300">extensionValue:</text>
                   <text x="288" y="3300">ChallengePassword</text>
                 </g>
@@ -3626,7 +3637,7 @@ challengePassword = tstr / bstr
 </div>
 </div>
 <figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
-<a href="#name-c509-extensions-and-csr-att" class="selfRef">C509 Extensions and CSR Attributes</a>
+<a href="#name-c509-extensions-and-certifi" class="selfRef">C509 Extensions and Certificate Request Attributes</a>
           </figcaption></figure>
 </div>
 </section>
@@ -6737,9 +6748,17 @@ challengePassword = tstr / bstr
         <dd>
 <span class="refAuthor">Laurie, B.</span>, <span class="refAuthor">Langley, A.</span>, and <span class="refAuthor">E. Kasper</span>, <span class="refTitle">"Certificate Transparency"</span>, <span class="seriesInfo">RFC 6962</span>, <span class="seriesInfo">DOI 10.17487/RFC6962</span>, <time datetime="2013-06" class="refDate">June 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6962">https://www.rfc-editor.org/rfc/rfc6962</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC7030">[RFC7030]</dt>
+        <dd>
+<span class="refAuthor">Pritikin, M., Ed.</span>, <span class="refAuthor">Yee, P., Ed.</span>, and <span class="refAuthor">D. Harkins, Ed.</span>, <span class="refTitle">"Enrollment over Secure Transport"</span>, <span class="seriesInfo">RFC 7030</span>, <span class="seriesInfo">DOI 10.17487/RFC7030</span>, <time datetime="2013-10" class="refDate">October 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7030">https://www.rfc-editor.org/rfc/rfc7030</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8295">[RFC8295]</dt>
+        <dd>
+<span class="refAuthor">Turner, S.</span>, <span class="refTitle">"EST (Enrollment over Secure Transport) Extensions"</span>, <span class="seriesInfo">RFC 8295</span>, <span class="seriesInfo">DOI 10.17487/RFC8295</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8295">https://www.rfc-editor.org/rfc/rfc8295</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8610">[RFC8610]</dt>
         <dd>
@@ -6809,6 +6828,10 @@ challengePassword = tstr / bstr
 <dt id="GSMA-eUICC">[GSMA-eUICC]</dt>
         <dd>
 <span class="refAuthor">GSMA</span>, <span class="refTitle">"GSMA eUICC PKI Certificate Policy Version 2.2"</span>, <time datetime="2025-01" class="refDate">January 2025</time>, <span>&lt;<a href="https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2025/01/SGP.14-v2.2.pdf">https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2025/01/SGP.14-v2.2.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-lamps-rfc7030-csrattrs">[I-D.ietf-lamps-rfc7030-csrattrs]</dt>
+        <dd>
+<span class="refAuthor">Richardson, M.</span>, <span class="refAuthor">Friel, O.</span>, <span class="refAuthor">von Oheimb, D.</span>, and <span class="refAuthor">D. Harkins</span>, <span class="refTitle">"Clarification and enhancement of RFC7030 CSR Attributes definition"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-rfc7030-csrattrs-22</span>, <time datetime="2025-05-08" class="refDate">8 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc7030-csrattrs-22">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc7030-csrattrs-22</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-tls-ctls">[I-D.ietf-tls-ctls]</dt>
         <dd>
