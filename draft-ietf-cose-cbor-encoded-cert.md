@@ -50,6 +50,8 @@ normative:
   RFC6698:
   RFC6838:
   RFC6962:
+  RFC7030:
+  RFC8295:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -88,6 +90,7 @@ informative:
   RFC9528: edhoc
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
+  I-D.ietf-lamps-rfc7030-csrattrs:
 
 
   CAB-TLS:
@@ -664,12 +667,24 @@ subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-
 
 ## CSR Attributes
 
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how the Certificate Signing Request (CSR) Attributes can be used to specify both CSR attribute Object IDs (OID) and also CSR attribute values, in particular X.509 extension values, that the server expects the client to include in a subsequent Certificate Request.
+
+The ASN.1 syntax for CSR Attributes is defined in {{Section 4.5.2 of RFC7030}} and clarified in {{Section 3.2 of I-D.ietf-lamps-rfc7030-csrattrs}}. The corresponding CDDL is defined below. An Attribute with attributeType OID 'id-ExtensionReq' has a corresponding attributeValue Extensions, where Attribute and Extensions are defined in {{message-fields}}.
+
+~~~~~~~~~~~ cddl
+CsrAttrs = [* AttrOrOID]
+
+AttrOrOID = ~oid / Attribute
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
+
+The use of CSR Templates as defined in {{Appendix B of RFC8295}} is out of scope of this document.
 
 ## Certificate Request Attributes
 
 Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element.
 
-Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+Other certificate request attributes are included using the same Extensions structure as in extensionRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
 
 ##  C509 Certificate Request
 
@@ -688,7 +703,7 @@ TBSCertificateRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
-   extensionsRequest: Extensions,
+   extensionRequest: Extensions,
 )
 
 challengePassword = tstr / bstr
@@ -1012,7 +1027,7 @@ The initial contents of the registry are:
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The registry also contains CSR attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The registry also contains Certificate Request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1218,11 +1233,11 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
-|       | Comments:        CSR Attribute                            |
+|       | Comments:        Certificate Request Attribute            |
 |       | extensionValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-extype title="C509 Extensions and CSR Attributes"}
+{: #fig-extype title="C509 Extensions and Certificate Request Attributes"}
 {: artwork-align="center"}
 
 ## C509 Certificate Policies Registry {#CP}
