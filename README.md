@@ -12,7 +12,7 @@ It is also the working area for a reference implementation in RUST of DER encode
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cose-cbor-encoded-cert)
 * [Compare Editor's Copy to Working Group Draft](https://cose-wg.github.io/CBOR-certificates/#go.draft-ietf-cose-cbor-encoded-cert.diff)
 
-## Reference Software (DER Encoded X.509 ↔ CBOR Encoded C509)
+## Reference Software (DER Encoded X.509 ⟷ CBOR Encoded C509)
 
 * [Reference Software (X.509 <-> C509)](https://github.com/cose-wg/CBOR-certificates/tree/master/c509_demo_impl)
 
