@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-03T02:03:11.265437+00:00",
+  "timestamp": "2025-06-05T02:02:04.335070+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -4012,10 +4012,12 @@
       "assignees": [
         "emanjon"
       ],
-      "labels": [],
+      "labels": [
+        "separate from core spec"
+      ],
       "body": "Include further details for encoding of subjectPrivateKey in C509PrivateKey. Relates to #150.",
       "createdAt": "2024-02-16T14:09:54Z",
-      "updatedAt": "2024-02-22T08:11:01Z",
+      "updatedAt": "2025-06-03T09:36:46Z",
       "closedAt": null,
       "comments": []
     },
@@ -4133,10 +4135,12 @@
       "assignees": [
         "highlunder"
       ],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "An updated example implementation of X.509 to C509 encoding has been added through #162. To highlight the ongoing work on also providing an example C509 to X509 implementation, we create this new issue and close the old #93 ",
       "createdAt": "2024-03-15T14:23:55Z",
-      "updatedAt": "2025-05-23T08:04:53Z",
+      "updatedAt": "2025-06-03T09:37:21Z",
       "closedAt": null,
       "comments": [
         {
@@ -5838,10 +5842,12 @@
       "assignees": [
         "gselander"
       ],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "",
       "createdAt": "2025-03-03T20:01:27Z",
-      "updatedAt": "2025-04-04T11:44:48Z",
+      "updatedAt": "2025-06-04T19:52:23Z",
       "closedAt": null,
       "comments": []
     },
@@ -5850,7 +5856,7 @@
       "id": "I_kwDOCpt5cM6tBwsM",
       "title": "Redefine COSE_C509",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/222",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -5859,8 +5865,8 @@
       ],
       "body": "\nThe current definition of COSE_C509\n\n        COSE_C509 = C509Certificate / [ 2* C509Certificate ]\n\nrequires the handlers of the container to either decode the C509 contents itself or use a CBOR decoder to skip over the \"C509Certificate\" items (which likely contain deeply nested structure and is not a trivial activity [1] and not universally supported by CBOR libraries).\n\nThis is in contrast to the X.509 container, defined in RFC 9360 as\n\n        COSE_X509 = bstr / [ 2*certs: bstr ]\n\nwhich relieves the handler of that item of caring what are the exact contents of the contained bstr item(s).\n\nWould it seem sensible to rework the C509 container as (something equivalent to) the following?\n\n        COSE_C509 = C509CertData / [ 2* C509CertData ]\n        C509CertData = bstr .cbor C509Certificate\n\nThis relieves the handler of the container from needing to decode the bstr items, but also allows an aware handler to validate the embedded CBOR item just as is required today. The expense is the bstr wrapper item, which for small-ish certificates would be an overhead of 2-3 bytes per certificate.\n\nI understand that one of the main purposes of C509 is to reduce encoded size, but I think the current direct container contents also forces handlers to expend processing/memory resources to skip or decode the certificate contents even if that handler just passes the encoded certificate along to different entities/layers.\n\n[1] https://github.com/laurencelundblade/QCBOR/blob/83c4af09d3752afa64ae66e2a3382192bf682541/inc/qcbor/qcbor_decode.h#L1014C1-L1014C28\n\n\n",
       "createdAt": "2025-03-07T12:44:16Z",
-      "updatedAt": "2025-05-14T17:16:17Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-03T15:29:50Z",
+      "closedAt": "2025-06-03T15:29:50Z",
       "comments": [
         {
           "author": "gselander",
@@ -5924,6 +5930,13 @@
           "body": "> [@BrianSipos](https://github.com/BrianSipos) Sorry for slow progress. Does PR [#228](https://github.com/cose-wg/CBOR-certificates/pull/228) address the issue?\n\nIt does technically, I added some comments to the PR that might improve reader understanding and equivalence of data between different C509 uses.",
           "createdAt": "2025-05-14T17:16:15Z",
           "updatedAt": "2025-05-14T17:16:15Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing this, since PR #228 is merged.",
+          "createdAt": "2025-06-03T15:29:50Z",
+          "updatedAt": "2025-06-03T15:29:50Z"
         }
       ]
     },
@@ -5938,10 +5951,12 @@
       "assignees": [
         "emanjon"
       ],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "I would like to discuss whether it would make sense to define the CDDL of `application/csrattrs` in this document. \n\n`application/csrattrs` is defined in [Section 4.5 of RFC 7030](https://datatracker.ietf.org/doc/html/rfc7030#section-4.5) and the semantics is clarified in https://datatracker.ietf.org/doc/draft-ietf-lamps-rfc7030-csrattrs/.\n\nThe definition of `application/csrattrs` was brought up to `draft-ietf-ace-coap-est-oscore` in https://github.com/ace-wg/est-oscore/issues/34. However, the est-oscore document does not define any of the formats itself and relies for all CBOR formats on this document.",
       "createdAt": "2025-03-07T16:37:17Z",
-      "updatedAt": "2025-04-04T11:37:51Z",
+      "updatedAt": "2025-06-05T01:58:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -5957,6 +5972,13 @@
           "body": "I think this is the approximate equivalent:\n\n~~~ cddl\nCsrAttrs = [* AttrOrOID]\n\nAttrOrOID = Oid / Attribute\n\nOid = ~oid\noid = #6.111(bstr) ; see RFC 9090\n\nAttribute = $Attribute .within ([type, +value])\n\ntype = any\nvalue = any\n; (I don't know what type and value are.)\n\n$Attribute /= [name: 1, + text]\n$Attribute /= [datetime: 2, ~time]\n~~~\n\nHere is what the example generator produces:\n\n~~~ cbor-diag\n[h'616C62657363656E74', \n [1, \"hielaman\"], \n [2, -694], \n [1, \"oversound\"]]\n~~~\n\n(The example generator doesn't know how an OID looks like, so it puts in a randomly chosen byte string.  \n-694 probably is not a date I would have chosen for an example either.)",
           "createdAt": "2025-03-16T12:05:12Z",
           "updatedAt": "2025-03-16T12:05:12Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "As far as I understand, it suffices with the three first lines from @cabo \n\n> CsrAttrs = [* AttrOrOID]\n>\n> AttrOrOID = ~oid / Attribute\n\nThe rest is already defined in the draft. The examples in the referenced documents seems to match.",
+          "createdAt": "2025-06-05T01:58:15Z",
+          "updatedAt": "2025-06-05T01:58:15Z"
         }
       ]
     },
@@ -6040,7 +6062,7 @@
       ],
       "body": "As just discussed during the IETF 122 Hackathon, we agreed on registering a new media type that indicates certificate by reference. This media type is to be used by `draft-ietf-ace-coap-est-oscore` draft during the negotiation in order to indicate support of the client for cert references. We discussed that it would make sense to have this media type indicate support for *any* kind of reference, i.e. irrespective whether it is `c5t` or `c5u`, as that would be equivalent from the point of view of a constrained device handling the certificate by reference (opaque binary blob of data without access to the actual certificate).\n\nSee https://github.com/ace-wg/est-oscore/issues/69",
       "createdAt": "2025-03-15T09:35:35Z",
-      "updatedAt": "2025-06-02T20:33:12Z",
+      "updatedAt": "2025-06-03T14:02:02Z",
       "closedAt": null,
       "comments": [
         {
@@ -6063,6 +6085,13 @@
           "body": "@malishav Please look at #231 with proposed specifications of content formats and media types (where necessary). The scope here is credentials by reference as defined in this specification, i.e. `c5b`, `c5c`, `c5u` and `c5t` (currently with the addition of `x5t`, since the media type for COSE_CertHash is defined in this document but this is pending the review from other authors and may be taken out). The remaining content formats does not really belong to this document and can be defined analogously in `draft-ietf-ace-coap-est-oscore`.\n\nWe didn't find any good solution for a media type indicating _any_ credential by reference, and propose that this is addressed with an appropriate CoAP option enabling the enumeration of acceptable media types. The CoAP Accept option is not repeatable and expect a single Content-Format. However,  the Multi-Valued Accept Option in\nhttps://datatracker.ietf.org/doc/html/draft-fossati-core-parametrized-cf\nseems to address this case. Perhaps that draft, or just that option, can be resurrected for this purpose?\n\nPlease let us know if we can close this issue.",
           "createdAt": "2025-06-02T20:32:00Z",
           "updatedAt": "2025-06-02T20:33:11Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Another update, removing specifications only targeting X.509:\nhttps://github.com/cose-wg/CBOR-certificates/pull/231/files\n\n@malishav With the last table entry, it is intended to be able to request a URI, but it doesn't distinguish between c5u and x5u. \n\n@cabo Please sanity check table at the end of the link above. Would it be appropriate to specify a dedicated Content-Format for a URI to a C509 certificate (as opposed to a URI to a x.509 certificate)?\n\n\n",
+          "createdAt": "2025-06-03T14:02:00Z",
+          "updatedAt": "2025-06-03T14:02:00Z"
         }
       ]
     },
@@ -6071,7 +6100,7 @@
       "id": "I_kwDOCpt5cM6379AF",
       "title": "Mention compliance with PQC",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/230",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -6080,8 +6109,46 @@
       ],
       "body": "",
       "createdAt": "2025-05-23T10:34:17Z",
-      "updatedAt": "2025-06-02T16:14:11Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-04T10:13:50Z",
+      "closedAt": "2025-06-04T10:13:48Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Resolved in the master branch: 73565a1\n",
+          "createdAt": "2025-06-03T08:59:45Z",
+          "updatedAt": "2025-06-03T08:59:45Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Another update in a9f81b57",
+          "createdAt": "2025-06-03T13:29:14Z",
+          "updatedAt": "2025-06-03T13:29:14Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Seems done to me",
+          "createdAt": "2025-06-04T10:13:48Z",
+          "updatedAt": "2025-06-04T10:13:48Z"
+        }
+      ]
+    },
+    {
+      "number": 232,
+      "id": "I_kwDOCpt5cM652fPE",
+      "title": "Self-sign clarification",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/232",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then **it** MUST be encoded as CBOR null.\n\nWe should spell out what **it** is here.\n",
+      "createdAt": "2025-06-04T14:30:36Z",
+      "updatedAt": "2025-06-04T14:32:38Z",
+      "closedAt": "2025-06-04T14:32:38Z",
       "comments": []
     }
   ],
@@ -8378,7 +8445,7 @@
       "id": "PR_kwDOCpt5cM6WLM_2",
       "title": "Redefine COSE_C509",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/228",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -8387,17 +8454,19 @@
       ],
       "body": "New definitions of COSE-C509 and how to hash C509 certificates. Addresses #222.",
       "createdAt": "2025-05-14T14:29:40Z",
-      "updatedAt": "2025-05-23T10:31:35Z",
+      "updatedAt": "2025-06-03T13:34:57Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4f04f66a18adaaa39a148d77c683d00970974643",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "redefine-COSE_C509",
       "headRefOid": "c581e360f1ce0427421a49611464fba1cf7d853c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-03T13:34:57Z",
+      "mergedAt": "2025-06-03T13:34:57Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "4773d2298f8d659585aaabb101c6687ef72396b2"
+      },
       "comments": [
         {
           "author": "BrianSipos",
@@ -8482,13 +8551,65 @@
       "labels": [],
       "body": "Addressing #226",
       "createdAt": "2025-06-02T18:18:36Z",
-      "updatedAt": "2025-06-02T20:07:15Z",
+      "updatedAt": "2025-06-03T13:49:38Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "73565a1bf382e942bb73416315d3a2eac992690c",
+      "baseRefOid": "4773d2298f8d659585aaabb101c6687ef72396b2",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "additional-media-types",
-      "headRefOid": "98fb7cc87574e5215a3a77a4a3f770a8a2dcaee7",
+      "headRefOid": "f8ade70f0ad76e46a0b777d0e6ed7300bee0c404",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 233,
+      "id": "PR_kwDOCpt5cM6ZFUR_",
+      "title": "Refactor extension text",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/233",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses #221",
+      "createdAt": "2025-06-04T19:51:31Z",
+      "updatedAt": "2025-06-04T19:51:32Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "6dae6e2477e105b11c8e625aa841aedef062e461",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "refactor-extension-text",
+      "headRefOid": "3b74e7ffbb820180bc6739cf9958cf556f9100f1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 234,
+      "id": "PR_kwDOCpt5cM6ZHgIQ",
+      "title": "CDDL for CSR Attributes",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/234",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses #223",
+      "createdAt": "2025-06-05T01:51:28Z",
+      "updatedAt": "2025-06-05T01:51:29Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "6dae6e2477e105b11c8e625aa841aedef062e461",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "csrattrs",
+      "headRefOid": "3c4b63529518ac4e2cb306d082b678eb786d0652",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
