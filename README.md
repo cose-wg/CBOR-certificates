@@ -1,6 +1,8 @@
 # CBOR Encoded X.509 (C509)
 
-This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificates (C509 Certificates)" and "CBOR Encoded Certificate Revocation Management" as well as a reference implementation in RUST of DER encoded X.509 to CBOR encoded X.509 (C509). The reference software may be distributed under the terms of the 3-Clause BSD License.
+This is the working area for the Internet-Drafts "CBOR Encoded X.509 Certificates (C509 Certificates)" and "CBOR Encoded Certificate Revocation Management".
+
+It is also the working area for a reference implementation in RUST of DER encoded X.509 to CBOR encoded X.509 (C509). The reference software may be distributed under the terms of the 3-Clause BSD License.
 
 ## CBOR Encoded X.509 Certificates (C509 Certificates)
 
