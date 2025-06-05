@@ -1,6 +1,10 @@
 // DER encoded X.509 to CBOR encoded X.509 (C509)
-// Copyright (c) 2021--2024, Ericsson and John Preuß Mattsson <john.mattsson@ericsson.com> + RISE and Joel Höglund <joel.hoglund@ri.se>
+// Copyright (c) 2021--2025, Ericsson and John Preuß Mattsson <john.mattsson@ericsson.com> + RISE and Joel Höglund <joel.hoglund@ri.se>
 // This version implements a critical subset of draft-ietf-cose-cbor-encoded-cert-11
+//
+// Software license:  
+//
+// This software may be distributed under the terms of the 3-Clause BSD License.
 //
 // To read a DER encoded X.509 from file and encode as C509:
 // "cargo r f <der encoded certificate>"
@@ -26,40 +30,12 @@
 //
 // + run with RUST_LOG=<debug level> to change from default info level
 //
-// Misc. resources:
+// Please note that running the converter with options l, ll or t assumes there are output folders "could_convert"
+// and "failed_convert" available for outputting log files. 
 //
-// http://cbor.me/ is recommended to transform between CBOR encoding and diagnostic notation.
-// https://lapo.it/asn1js/ decodes DER encoded ASN.1
-// https://misc.daniel-marschall.de/asn.1/oid-converter/online.php transforms between OID dot notation and DER
+// Version 0.45, May 2025
 //
-// Software license:  
-//
-// This software may be distributed under the terms of the 3-Clause BSD License.
-//
-// Minimal update history & limitations:
-//
-// Version 0.4+0.41 of the code released in July 2024
-// *Adding functionality to convert between C509 and X.509 format
-// *A few sample certs
-// *More bugfixes
-// *Please note: the code is far from optimized, is lacking support for a number of less used extensions, and 
-// key types, and is not fully tested. Known bugs & shortcomings are: 
-//  -- A handling error of uncommon IssuerAltName format
-//  -- Not graceful error handling of unexpected string types
-// 
-//
-// Version 0.3 of the code released in March 2024
-// *A combination of a bugfix version and changes which have been made between draft-02 and draft-09
-//
-// Please note: while this version contains integer encodings for all the extension names listed in the
-// C509 Extensions Registry, not all extension values are fully cbor encoded. In those cases a warning is
-// given during the encoding.
-//
-// Version 0.2 of the code was never added to the github repo, but has been uploaded as an archive for
-// completeness
-//
-// Version 0.1 of the code released 2021-05-25, roughly corresponding to draft-02
-//
+// For misc. resources, a minimal update history, and know limitations, please see README_software_prototype.md
 //
 use crate::help::*;
 use crate::lder::*;
@@ -71,12 +47,9 @@ use std::env;
 use {rustls::*, std::io::Write, webpki, webpki_roots};
 use {std::env::args, std::io::Cursor, std::str::from_utf8};
 //At least during development both cbor and serde_cbor:
-//use serde_cbor;
 use serde_cbor::Value;
 //use serde_bytes::Bytes
-//type Type = str;
-//At least during development both asn1 and asn1-rs:
-//use asn1::{Asn1Read, Asn1Write};
+
 use asn1_rs::{oid, Oid};
 //use asn1_rs::{BitString, Sequence, Integer, FromBer, ToDer};
 use asn1_rs::ToDer;
@@ -86,11 +59,10 @@ use num_traits::{pow, One, Zero};
 
 use std::fs::read_to_string; //for reading host names from file
 use std::fs::File;
-//use std::io::{self, Write};
 
 use log::{trace, debug, info, warn};
 use env_logger::Env;
-
+use std::panic; //TODO, only for mass testing using URL lists 
 
 pub const SECG_EVEN: u8 = 0x02;
 pub const SECG_ODD: u8 = 0x03;
@@ -110,6 +82,7 @@ pub const PRINT_TLS: bool = false;
 
 pub const WRITE_X509: bool = true;
 pub const WRITE_C509: bool = true;
+static mut GLOBAL_BATCH_MODE: bool = false; //used to ignore some errors while batch testing
 
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -169,7 +142,7 @@ Options are:
         "l" => vec![loop_on_x509_cert(std::fs::read(second_arg).expect("No such file!"), "", 0, 0)],
         "ll" => loop_on_certs_from_tls(&second_arg, 0),
         "u" => get_certs_from_tls(second_arg),
-        "t" => read_hosts_from_file(&second_arg),
+        "t" => { unsafe { GLOBAL_BATCH_MODE = true; read_hosts_from_file(&second_arg) } },
         _ => panic!("expected f, c, u, l, ll or t"),
     };
     print_information(&certs);
@@ -200,12 +173,15 @@ fn loop_on_certs_from_tls(domain_name: &String, no: i64) -> Vec<Cert> {
     let conn_addr = domain_name.to_owned() + ":443";
 
     let sock_test = std::net::TcpStream::connect(conn_addr);
-    let mut sock: std::net::TcpStream; // = std::net::TcpStream::connect(conn_addr).unwrap();
+    //let mut sock: std::net::TcpStream; // = std::net::TcpStream::connect(conn_addr).unwrap();
                                        // let mut fail_now = false;
-    if let Ok(stream) = sock_test {
-        sock = stream;
-        let mut tls = rustls::Stream::new(&mut sess, &mut sock);
+    if let Ok(mut stream) = sock_test {
+        
+        //sock = stream;
+        stream.set_write_timeout(Some(std::time::Duration::from_secs(10))).unwrap(); //TODO
 
+        let mut tls = rustls::Stream::new(&mut sess, &mut stream);
+        
         if let Ok(_) = tls.write_all(b"GET / HTTP/1.1") {
             tls.flush().unwrap();
             let mut ugly_counter = 0;
@@ -225,10 +201,10 @@ fn loop_on_certs_from_tls(domain_name: &String, no: i64) -> Vec<Cert> {
             Vec::new()
         }
 
-    } else {
+  } else {
         warn!("Error opening {}, skipping", domain_name);
         Vec::new()
-    }
+  }
 }
 /******************************************************************************************************/
 /******************************************************************************************************/
@@ -292,6 +268,7 @@ fn read_hosts_from_file(filename: &str) -> Vec<Cert> {
 /******************************************************************************************************/
 // Parse a DER encoded X509 and encode it as C509
 fn parse_x509_cert(input: Vec<u8>) -> Cert {
+    trace!("Parsing x.509: {:02x?}", input);
     let mut output = Vec::new();
     // der Certificate
     let certificate = lder_vec_len(&input, ASN1_SEQ, 3);
@@ -606,10 +583,10 @@ fn cbor_general_names(b: &[u8], t: u8, opt: u8) -> Vec<u8> {
     let names = lder_vec(b, t);
     let mut vec = Vec::new();
     for name in names {
-        //println!("handling name: {:02x?}", name);
+        trace!("cbor_general_names, handling name: {:02x?}", name);
         let value = lder(name, name[0]);
         let context_tag = name[0] as u64 & 0x0f;
-        //println!("Storing context tag: {}", context_tag); //debug
+        trace!("cbor_general_names, storing context tag: {}", context_tag); //debug
         //ongoing: special handling of otherName:
         if context_tag == 0 {
             let inner_value = &value[12..]; //TODO, check handling of long values
@@ -862,11 +839,25 @@ AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
 */
 fn cbor_ext_auth_key_id(b: &[u8]) -> Vec<u8> {
     let aki = lder_vec(b, ASN1_SEQ);
-    let ki = lcbor_bytes(lder(aki[0], 0x80));
+    
     match aki.len() {
-        1 => ki,
-        3 => lcbor_array(&[ki, cbor_general_names(aki[1], 0xa1, 0xff), lcbor_bytes(lder(aki[2], 0x82))]),
-        _ => panic!("Error parsing auth key id"),
+      1 => lcbor_bytes(lder(aki[0], 0x80)), //assuming only a keyIdentifier is present, will fail otherwise
+      3 => {
+        let ki = lcbor_bytes(lder(aki[0], 0x80));
+        lcbor_array(&[ki, cbor_general_names(aki[1], 0xa1, 0xff), lcbor_bytes(lder(aki[2], 0x82))])
+        //above will fail if the AKI doesn't follow the outlined order. Might add back panic::catch_unwind(|| -> Vec<u8>  for batch testing
+      }
+      _ => {
+        warn!("Error parsing Authority Key Identifier extension.\nCan only handle AKI with either only KeyIdentifier or KeyIdentifier, authorityCertIssuer and authorityCertSerialNumber all present");
+        unsafe {
+          if GLOBAL_BATCH_MODE {
+            warn!("In batch mode, return empty vector to create a convert failure, but continue working");
+            Vec::new()
+          } else {
+            panic!("Error parsing auth key id")
+          } 
+        }
+      }
     }
 }
 /******************************************************************************************************/
@@ -953,7 +944,23 @@ fn cbor_ext_cert_policies(b: &[u8]) -> Vec<u8> {
                         trace!("cbor_ext_cert_policies, encoded text {:02x?}", text);
                         vec2.push(lcbor_text(text));
                     } else if pq_type == PQ_UNOTICE {
-                        let text = lder(lder(pqi[1], ASN1_SEQ), ASN1_UTF8_STR);
+                        let text = {
+                          let explicit_note = lder(pqi[1], ASN1_SEQ);
+                          match explicit_note[0] {
+                            ASN1_UTF8_STR => lder(explicit_note, ASN1_UTF8_STR),
+                            _ => {
+                              warn!("In Certificate Policies extension: can only handle explicitText of type utf8");
+                              unsafe {
+                                if GLOBAL_BATCH_MODE {
+                                  explicit_note //will cause matching to fail later
+                                } else {
+                                  panic!("Abort");
+                                }
+                              }
+                            }
+                          }
+                          
+                        };
                         vec2.push(lcbor_text(text));
                     } else {
                         panic!("unexpected qualifier oid");
@@ -983,16 +990,37 @@ fn cbor_ext_crl_dist(b: &[u8]) -> Vec<u8> {
     let mut vec = Vec::new();
     for dists in lder_vec(b, ASN1_SEQ) {
         let dists = lder(dists, ASN1_SEQ);
-        let dists = lder(dists, 0xa0);
-        let mut vec2 = Vec::new();
-        for dist in lder_vec(dists, 0xa0) {
-            vec2.push(lcbor_text(lder(dist, 0x86)));
+        let dists = panic::catch_unwind(|| -> &[u8] { 
+          lder(dists, 0xa0)
+        }); //only for batch testing
+        
+        match dists {
+          Ok(_) => {
+            let dists = dists.unwrap();
+            let mut vec2 = Vec::new();
+            for dist in lder_vec(dists, 0xa0) {
+                vec2.push(lcbor_text(lder(dist, 0x86)));
+            }
+            if vec2.len() > 1 {
+                vec.push(lcbor_array(&vec2))
+            } else {
+                vec.push(vec2[0].clone())
+            }
+
+          }
+          Err(_) => {
+            warn!("Caught a panic from a failed assertion while handling CRL distribution list extension!");
+            unsafe {
+            if GLOBAL_BATCH_MODE {
+              warn!("In batch mode, return empty vector to create a convert failure, but continue working");
+            } else {
+              panic!("Error parsing")
+            } 
+            }
+
+          }
         }
-        if vec2.len() > 1 {
-            vec.push(lcbor_array(&vec2))
-        } else {
-            vec.push(vec2[0].clone())
-        }
+         
     }
     lcbor_array(&vec)
 }
@@ -1212,10 +1240,17 @@ fn print_information(certs: &[Cert]) {
             let mut cose_c509: Vec<Vec<u8>> = Vec::new();
             for cert in certs {
                 cose_c509.push(lcbor_array(&cert.cbor));
+                println!("COSE_C509 individual certificate");
+                print_vec_compact(&lcbor_array(&cert.cbor));
+                println!("\n");
             }
-            print_vec("COSE_C509", &lcbor_array(&cose_c509));
+            
+            print_vec("\nCOSE_C509 chain", &lcbor_array(&cose_c509));
+            
         } else {
-            print_vec("COSE_X509", &lcbor_array(&certs[0].cbor));
+            print_vec("COSE_C509", &lcbor_array(&certs[0].cbor));
+            print_vec_compact(&lcbor_array(&certs[0].cbor));
+            println!("");
         }
         // // COSE_C509 Uncompressed
         // // ======================================================
@@ -2793,7 +2828,7 @@ pub fn cleanup(mut file_contents: Vec<u8>) -> Vec<u8> {
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
-//              Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
+//            Below are fuctions for parsing and re-encoding cbor encoded extensions back to ASN.1
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
 //EXT_SUBJECT_KEY_ID = 1
@@ -3031,9 +3066,37 @@ fn parse_cbor_ext_crl_dist_points(extension_val: &Value, critical: bool) -> Vec<
                     Value::Text(url_string) => {
                         result_vec.push(lder_to_generic(lder_to_generic(lder_to_generic(lder_to_generic(url_string.as_bytes().to_vec(), ASN1_URL), ASN1_INDEX_ZERO), ASN1_INDEX_ZERO), ASN1_SEQ));
                     }
+                    Value::Array(inner_elements) => {
+                      let mut inner_result_vec = Vec::new();
+                      for inner_element in inner_elements {
+                        match inner_element {
+                            Value::Text(url_string) => {
+                                inner_result_vec.append(&mut lder_to_generic(url_string.as_bytes().to_vec(), ASN1_URL));
+                            }
+                            _ => {
+                              panic!("Error parsing value {:?}, quitting", inner_element);
+                            }
+                        }                      
+                      }
+                      result_vec.push(lder_to_generic(lder_to_generic(lder_to_generic(inner_result_vec, ASN1_INDEX_ZERO), ASN1_INDEX_ZERO), ASN1_SEQ));
+                    } /*
+                      unsafe {
+                        if GLOBAL_BATCH_MODE {
+                          warn!("Can't handle arrays in EXT_CRL_DIST_POINTS - {:?}, skipping", elements);
+                        } else {
+                          panic!("Can't handle arrays in EXT_CRL_DIST_POINTS - {:?}, quitting", elements);
+                        }
+                      }
+                    } */
+                    
                     _ => {
-                        panic!("Could not parse {:?}", element);
-                        //Possible todo: this could be a nested array as well. fail grafully? (See elster.de, puma.com)
+                      unsafe {
+                        if GLOBAL_BATCH_MODE {
+                          panic!("Error parsing value {:?}, skipping", element);
+                        } else {
+                          panic!("Error parsing value {:?}, quitting", element);
+                        }
+                      }
                     }
                 }
             }
@@ -3480,6 +3543,19 @@ fn parse_cbor_ext_subject_directory_attr(extension_val: &Value, critical: bool) 
 /*
  EXT_ISSUER_ALT_NAME = 25; //0x12
 */
+
+fn parse_cbor_ext_issuer_alt_name(extension_val: &Value, critical: bool) -> Vec<u8> {
+    let mut oid = EXT_ISSUER_ALT_NAME_OID.to_der_vec().unwrap();
+    if critical {
+        oid.extend(ASN1_X509_CRITICAL.to_vec());
+    }
+    //  let ext_val_arr = parse_cbor_general_name(extension_val);
+    let ext_val_arr = lder_to_generic(parse_cbor_general_name(extension_val), ASN1_OCTET_STR);
+    //let ext_val_arr = parse_cbor_general_name(extension_val); //TODO, check if general name always gives the needed octet string wrapping
+    lder_to_two_seq(oid, ext_val_arr)
+}
+
+/*
 fn parse_cbor_ext_issuer_alt_name(extension_val: &Value, critical: bool) -> Vec<u8> {
     let mut oid = EXT_ISSUER_ALT_NAME_OID.to_der_vec().unwrap();
     if critical {
@@ -3489,7 +3565,7 @@ fn parse_cbor_ext_issuer_alt_name(extension_val: &Value, critical: bool) -> Vec<
     let ext_val_arr = parse_cbor_name(&extension_val, &empty_vec);
     lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
 }
-
+*/
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
 fn parse_cbor_ext_name_constraints(extension_val: &Value, critical: bool) -> Vec<u8> {
@@ -3516,7 +3592,7 @@ fn parse_cbor_ext_policy_mappings(extension_val: &Value, critical: bool) -> Vec<
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_policy_mappings not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3530,7 +3606,7 @@ fn parse_cbor_ext_policy_constraints(extension_val: &Value, critical: bool) -> V
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_policy_constraints not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3544,7 +3620,7 @@ fn parse_cbor_ext_freshest_crl(extension_val: &Value, critical: bool) -> Vec<u8>
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_freshest_crl not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3558,7 +3634,7 @@ fn parse_cbor_ext_inhibit_anypolicy(extension_val: &Value, critical: bool) -> Ve
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_inhibit_anypolicy not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3572,7 +3648,7 @@ fn parse_cbor_ext_subject_info_access(extension_val: &Value, critical: bool) -> 
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_subject_info_access not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3586,7 +3662,7 @@ fn parse_cbor_ext_ip_resources(extension_val: &Value, critical: bool) -> Vec<u8>
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_ip_resources not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3600,7 +3676,7 @@ fn parse_cbor_ext_as_resources(extension_val: &Value, critical: bool) -> Vec<u8>
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_as_resources not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3614,7 +3690,7 @@ fn parse_cbor_ext_ip_resources_v2(extension_val: &Value, critical: bool) -> Vec<
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_ip_resources_v2 not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3628,7 +3704,7 @@ fn parse_cbor_ext_as_resources_v2(extension_val: &Value, critical: bool) -> Vec<
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_as_resources_v2 not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3642,7 +3718,7 @@ fn parse_cbor_ext_biometric_info(extension_val: &Value, critical: bool) -> Vec<u
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_biometric_info not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3656,7 +3732,7 @@ fn parse_cbor_ext_precert_signing_cert(extension_val: &Value, critical: bool) ->
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_precert_signing_cert not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3670,7 +3746,7 @@ fn parse_cbor_ext_ocsp_no_check(extension_val: &Value, critical: bool) -> Vec<u8
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_ocsp_no_check not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3684,7 +3760,8 @@ fn parse_cbor_ext_qualified_cert_statements(extension_val: &Value, critical: boo
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_qualified_cert_statements not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    //lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3698,7 +3775,7 @@ fn parse_cbor_ext_s_mime_capabilities(extension_val: &Value, critical: bool) -> 
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_s_mime_capabilities not implemented / tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3711,12 +3788,13 @@ fn parse_cbor_ext_tls_features(extension_val: &Value, critical: bool) -> Vec<u8>
         oid.extend(ASN1_X509_CRITICAL.to_vec());
     }
     let  ext_val_arr = match extension_val {
-        //Value::Bytes(raw_val) => lder_to_generic(raw_val.to_vec(), ASN1_OCTET_STR),
-        Value::Bytes(raw_val) => raw_val.to_vec(), //TODO: check if always oct-wrapped
+        Value::Bytes(raw_val) => lder_to_generic(raw_val.to_vec(), ASN1_OCTET_STR),
+        //Value::Bytes(raw_val) => raw_val.to_vec(), //TODO: check if always oct-wrapped
+        
         _ => panic!("Error parsing value: {:?}.", extension_val),
     };
     print_str_warning("WARNING ext_tls_features not tested");
-    lder_to_two_seq(oid, lder_to_generic(ext_val_arr, ASN1_OCTET_STR))
+    lder_to_two_seq(oid, ext_val_arr)
 }
 //***************************************************************************************************************************************
 //***************************************************************************************************************************************
@@ -3787,6 +3865,14 @@ pub mod help {
     pub fn print_vec(s: &str, v: &[u8]) {
         print_internal(s, v, false);
     }
+    
+    // Print a compact vec to cout
+    pub fn print_vec_compact(v: &[u8]) {
+      for (i, byte) in v.iter().enumerate() {
+          print!("{:02X}", byte);
+      }
+    }
+
     // Print a warning to cout
     pub fn print_str_warning(s: &str) {
         let heading = format!("{}", s);
