@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-05T02:02:04.335070+00:00",
+  "timestamp": "2025-06-08T02:11:46.977863+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -6150,6 +6150,22 @@
       "updatedAt": "2025-06-04T14:32:38Z",
       "closedAt": "2025-06-04T14:32:38Z",
       "comments": []
+    },
+    {
+      "number": 235,
+      "id": "I_kwDOCpt5cM66BR_q",
+      "title": "Figure 4 is incorrect",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/235",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The size of ~C509Certificate is 140 bytes, the size of COSE_C509 is larger. Should change the number of bytes or the heading",
+      "createdAt": "2025-06-05T11:48:01Z",
+      "updatedAt": "2025-06-05T11:48:01Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -8518,26 +8534,42 @@
       "id": "PR_kwDOCpt5cM6WlNlw",
       "title": "Updates from the software prototype branch",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/229",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "highlunder",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "- Minor bugfixes\r\n- Separate README\r\n- Improved batch test mode\r\n- List of successfully tested URLs",
       "createdAt": "2025-05-17T21:27:29Z",
-      "updatedAt": "2025-05-23T08:10:44Z",
+      "updatedAt": "2025-06-05T09:08:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "4f04f66a18adaaa39a148d77c683d00970974643",
+      "baseRefOid": "c3fab7257a05caf794e480f494e684123a50ed3e",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "sw_update",
-      "headRefOid": "cdb622949f080938f95c1960aa31d627c6360ace",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "7c06cb61ad72b3601a510de06c412f91eee9c923",
+      "closedAt": "2025-06-05T09:08:50Z",
+      "mergedAt": "2025-06-05T09:08:50Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "a31e8608e19f11480af11f77b9f15e5e1662f12e"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM6s0jdQ",
+          "commit": {
+            "abbreviatedOid": "cdb6229"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-05T09:03:19Z",
+          "updatedAt": "2025-06-05T09:03:19Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 231,
@@ -8570,26 +8602,42 @@
       "id": "PR_kwDOCpt5cM6ZFUR_",
       "title": "Refactor extension text",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/233",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #221",
       "createdAt": "2025-06-04T19:51:31Z",
-      "updatedAt": "2025-06-04T19:51:32Z",
+      "updatedAt": "2025-06-05T11:10:11Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6dae6e2477e105b11c8e625aa841aedef062e461",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "refactor-extension-text",
       "headRefOid": "3b74e7ffbb820180bc6739cf9958cf556f9100f1",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-05T11:10:11Z",
+      "mergedAt": "2025-06-05T11:10:11Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "d53c5177d6ce38383a68b4ba7b9b19e92f2c2c22"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM6s2IUS",
+          "commit": {
+            "abbreviatedOid": "3b74e7f"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-05T11:10:02Z",
+          "updatedAt": "2025-06-05T11:10:02Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 234,
