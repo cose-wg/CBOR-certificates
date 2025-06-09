@@ -247,7 +247,7 @@ AlgorithmIdentifier = int / ~oid /
 Extensions = [ * Extension ] / int
 
 Extension = (( extensionID: int, extensionValue: any ) //
-             ( extensionID: ~oid, ? critical: true,
+             ( extensionID: ~oid, ? critical: bool,
               extensionValue: bytes ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
