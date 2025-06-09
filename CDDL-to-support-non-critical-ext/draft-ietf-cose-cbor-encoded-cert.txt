@@ -437,12 +437,12 @@ Table of Contents
       of the second int and the sign of the first int.
 
    *  If extensionID is encoded as an unwrapped CBOR OID tag, then it is
-      followed by an optional CBOR true indicating that the extension is
-      critical, and the DER-encoded value of the extnValue.  The
-      presence of the true value in the array indicates that the
-      extension is critical; its absence means the extension is non-
-      critical (see Figure 1).  The extnValue OCTET STRING value field
-      is encoded as the CBOR byte string extensionValue.
+      followed by an optional CBOR true 'critical', and the DER-encoded
+      value of the extnValue.  The presence of the true value in the
+      array indicates that the extension is critical; its absence means
+      the extension is non-critical (see Figure 1).  The extnValue OCTET
+      STRING value field is encoded as the CBOR byte string
+      extensionValue.
 
    The currently defined extension values for which there is CBOR int
    encoded 'extensionID' is specified in Section 3.3.  The extensions
