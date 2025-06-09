@@ -442,7 +442,7 @@ Table of Contents
       array indicates that the extension is critical; its absence means
       the extension is non-critical (see Figure 1).  The extnValue OCTET
       STRING value field is encoded as the CBOR byte string
-      extensionValue.
+      'extensionValue'.
 
    The currently defined extension values for which there is CBOR int
    encoded 'extensionID' is specified in Section 3.3.  The extensions
