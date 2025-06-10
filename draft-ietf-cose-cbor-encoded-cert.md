@@ -249,7 +249,7 @@ AlgorithmIdentifier = int / ~oid /
 
 Extensions = [ * Extension ] / int
 
-Extension = (( extensionID: int, extensionValue: any ) //
+Extension = (( extensionID: int, extensionValue: any .ne null ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
 ~~~~~~~~~~~
@@ -728,15 +728,15 @@ C509CertificateRequestTemplate = [
    extensionsRequest: ExtensionsTemplate,
 ]
 
-NameTemplate = [ * AttributeTemplate ]
+NameTemplate = [ * AttributeTemplate ] / text / bytes
 
 AttributeTemplate = (( attributeType: int, attributeValue: text / null ) //
                      ( attributeType: ~oid, attributeValue: bytes / null ))
 
-ExtensionsTemplate = [ * ExtensionTemplate ]
+ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
-ExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //
-                     ( extensionID: ~oid, ? critical: bool,
+ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
+                     ( extensionID: ~oid, ? critical: true,
                        extensionValue: bytes / null ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
