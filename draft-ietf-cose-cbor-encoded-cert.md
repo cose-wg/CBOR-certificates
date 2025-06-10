@@ -722,10 +722,10 @@ The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 C509CertificateRequestTemplate = [
    c509CertificateRequestType: int / null,
    subjectSignatureAlgorithm: AlgorithmIdentifier / null,
-   subject: NameTemplate,
+   subject: NameTemplate / null,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
    subjectPublicKey: any / null,
-   extensionsRequest: ExtensionsTemplate,
+   extensionsRequest: ExtensionsTemplate / null,
 ]
 
 NameTemplate = [ * AttributeTemplate ] / text / bytes
