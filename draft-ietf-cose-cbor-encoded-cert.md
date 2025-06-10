@@ -1160,48 +1160,6 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | Comments:                                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
-|    36 | Name:            Biometric Information                    |
-|       | Identifiers:     id-pe-biometricInfo                      |
-|       | OID:             1.3.6.1.5.5.7.1.2                        |
-|       | DER:             06 08 2B 06 01 05 05 07 01 02            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    37 | Name:            Precertificate Signing Certificate       |
-|       | Identifiers:                                              |
-|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |
-|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    38 | Name:            OCSP No Check                            |
-|       | Identifiers:     id-pkix-ocsp-nocheck                     |
-|       | OID:             1.3.6.1.5.5.7.48.1.5                     |
-|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    39 | Name:            Qualified Certificate Statements         |
-|       | Identifiers:     id-pe-qcStatements                       |
-|       | OID:             1.3.6.1.5.5.7.1.3                        |
-|       | DER:             06 08 2B 06 01 05 05 07 01 03            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    40 | Name:            S/MIME Capabilities                      |
-|       | Identifiers:     smimeCapabilities                        |
-|       | OID:             1.2.840.113549.1.9.15                    |
-|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    41 | Name:            TLS Features                             |
-|       | Identifiers:     id-pe-tlsfeature                         |
-|       | OID:             1.3.6.1.5.5.7.1.24                       |
-|       | DER:             06 08 2B 06 01 05 05 07 01 18            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
 |   255 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
