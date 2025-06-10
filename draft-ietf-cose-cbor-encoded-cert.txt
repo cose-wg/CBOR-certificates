@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 7 December 2025                                      J. Höglund
+Expires: 12 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                             5 June 2025
+                                                            10 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 December 2025.
+   This Internet-Draft will expire on 12 December 2025.
 
 Copyright Notice
 
@@ -436,12 +436,13 @@ Table of Contents
       extensions is encoded as a single CBOR int with the absolute value
       of the second int and the sign of the first int.
 
-   *  If 'extensionID' is encoded as an unwrapped CBOR OID tag, then it
-      is followed by an optional CBOR bool 'critical', and the DER
-      encoded value of the 'extnValue'.  The boolean element in the
-      array is used to indicate if the extension is critical, see
-      Figure 1.  The 'extnValue' OCTET STRING value field is encoded as
-      the CBOR byte string 'extensionValue'.
+   *  If extensionID is encoded as an unwrapped CBOR OID tag, then it is
+      followed by an optional CBOR true 'critical', and the DER-encoded
+      value of the extnValue.  The presence of the true value in the
+      array indicates that the extension is critical; its absence means
+      the extension is non-critical (see Figure 1).  The extnValue OCTET
+      STRING value field is encoded as the CBOR byte string
+      'extensionValue'.
 
    The currently defined extension values for which there is CBOR int
    encoded 'extensionID' is specified in Section 3.3.  The extensions
