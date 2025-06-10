@@ -2125,10 +2125,10 @@ challengePassword = tstr / bstr
 C509CertificateRequestTemplate = [
    c509CertificateRequestType: int / null,
    subjectSignatureAlgorithm: AlgorithmIdentifier / null,
-   subject: NameTemplate / null,
+   subject: NameTemplate,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
    subjectPublicKey: any / null,
-   extensionsRequest: ExtensionsTemplate / null,
+   extensionsRequest: ExtensionsTemplate,
 ]
 
 NameTemplate = [ * AttributeTemplate ] / text / bytes
