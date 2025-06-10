@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-08T02:11:46.977863+00:00",
+  "timestamp": "2025-06-10T02:05:00.934650+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -5956,7 +5956,7 @@
       ],
       "body": "I would like to discuss whether it would make sense to define the CDDL of `application/csrattrs` in this document. \n\n`application/csrattrs` is defined in [Section 4.5 of RFC 7030](https://datatracker.ietf.org/doc/html/rfc7030#section-4.5) and the semantics is clarified in https://datatracker.ietf.org/doc/draft-ietf-lamps-rfc7030-csrattrs/.\n\nThe definition of `application/csrattrs` was brought up to `draft-ietf-ace-coap-est-oscore` in https://github.com/ace-wg/est-oscore/issues/34. However, the est-oscore document does not define any of the formats itself and relies for all CBOR formats on this document.",
       "createdAt": "2025-03-07T16:37:17Z",
-      "updatedAt": "2025-06-05T01:58:17Z",
+      "updatedAt": "2025-06-09T10:18:53Z",
       "closedAt": null,
       "comments": [
         {
@@ -5979,6 +5979,20 @@
           "body": "As far as I understand, it suffices with the three first lines from @cabo \n\n> CsrAttrs = [* AttrOrOID]\n>\n> AttrOrOID = ~oid / Attribute\n\nThe rest is already defined in the draft. The examples in the referenced documents seems to match.",
           "createdAt": "2025-06-05T01:58:15Z",
           "updatedAt": "2025-06-05T01:58:15Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Talking we G\u00f6ran, the way forward is to specify a format based on TBSCertificateRequest. This is a similar solution as \nhttps://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc7030-csrattrs-22#name-use-of-csr-templates",
+          "createdAt": "2025-06-09T08:30:56Z",
+          "updatedAt": "2025-06-09T08:30:56Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Here is a suggestion that I think would work\n\n```\nC509CertificateRequestTemplate = [\n   c509CertificateRequestType: int / null,\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n   subject: NameTemplate,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n   subjectPublicKey: any / null,\n   extensionsRequest: ExtensionsTemplate,\n]\n\nNameTemplate = [ * AttributeTemplate ]\n\nAttributeTemplate = (( attributeType: int, attributeValue: text / null ) //\n                     ( attributeType: ~oid, attributeValue: bytes / null ))\n\nExtensionsTemplate = [ * ExtensionTemplate ]\n\nExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //\n                     ( extensionID: ~oid, ? critical: bool,\n                       extensionValue: bytes / null ))\n```\n",
+          "createdAt": "2025-06-09T10:18:52Z",
+          "updatedAt": "2025-06-09T10:18:52Z"
         }
       ]
     },
@@ -6166,6 +6180,30 @@
       "updatedAt": "2025-06-05T11:48:01Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 236,
+      "id": "I_kwDOCpt5cM66jbmP",
+      "title": "\"critical: true\" should be \"critical: bool\"",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/236",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The CDDL for extensions were changes in -01...\n\n-00\ncritical: bool\n\n-01\ncritical: true\n\nThis seems incorrect and contradicts\n\n\" If 'extensionID' is\n   encoded as an unwrapped CBOR OID tag, then an optional boolean\n   element in the array is used to indicate that the extension is\n   critical\"\n\n",
+      "createdAt": "2025-06-09T10:15:50Z",
+      "updatedAt": "2025-06-09T17:50:50Z",
+      "closedAt": "2025-06-09T17:50:49Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "CDDL is correct. Should update the text. There is no longer a 'bool', only a  ",
+          "createdAt": "2025-06-09T17:50:49Z",
+          "updatedAt": "2025-06-09T17:50:49Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -8651,7 +8689,7 @@
       "labels": [],
       "body": "Addresses #223",
       "createdAt": "2025-06-05T01:51:28Z",
-      "updatedAt": "2025-06-05T01:51:29Z",
+      "updatedAt": "2025-06-09T10:10:02Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6dae6e2477e105b11c8e625aa841aedef062e461",
@@ -8662,7 +8700,98 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't see how this works. Refers to the CDDL 'Attributes' which I don't think is related to this. This cannot be used to request signature algorithms. \r\n\r\nMixing everything together in the same oid space does not fit well with the design choices made in C509.\r\n\r\nI suggest we state that CSR Attributes are out of scope...",
+          "createdAt": "2025-06-08T21:53:42Z",
+          "updatedAt": "2025-06-08T21:53:42Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "To support this I think we would need a CSRAttribute table, where each entry is something like\r\nint, ? any\r\nthen everything would need to be reregistered there.\r\n\r\nA more c509 way would be to change the format. If I understand correctly the information is\r\n\r\n-   subjectPublicKeyAlgorithm: AlgorithmIdentifier,\r\n   subjectPublicKey: any,\r\n\r\n-   issuerSignatureAlgorithm: AlgorithmIdentifier,\r\n   \r\n -  RFC2985 Attributes\r\n \r\n - extensionsRequest: Extensions,\r\n\r\nJust resusing\r\n\r\nTBSCertificateRequest = (\r\n   c509CertificateRequestType: int,\r\n   subjectSignatureAlgorithm: AlgorithmIdentifier,\r\n   subject: Name,\r\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier,\r\n   subjectPublicKey: any,\r\n   extensionRequest: Extensions,\r\n)\r\n\r\nSeems perfect....\r\n\r\nDo we still like the hack of encoding challengePassword as an extension?\r\n\r\n\r\n\r\n\r\n",
+          "createdAt": "2025-06-09T06:30:37Z",
+          "updatedAt": "2025-06-09T06:30:37Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't think \"CSR Attributes\" is the right name. challengePassword is a CRS attribute. This seems EST related, and not related to any of the two other kinds of attributes.\r\n\r\n",
+          "createdAt": "2025-06-09T06:36:50Z",
+          "updatedAt": "2025-06-09T06:36:50Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I suggest we just reuse TBSCertificateRequest for EST attributes.",
+          "createdAt": "2025-06-09T06:40:07Z",
+          "updatedAt": "2025-06-09T06:40:07Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Here is a suggestion that I think would work\r\n\r\n```\r\nC509CertificateRequestTemplate = [\r\n   c509CertificateRequestType: int / null,\r\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\r\n   subject: NameTemplate,\r\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\r\n   subjectPublicKey: any / null,\r\n   extensionsRequest: ExtensionsTemplate,\r\n]\r\n\r\nNameTemplate = [ * AttributeTemplate ]\r\n\r\nAttributeTemplate = (( attributeType: int, attributeValue: text / null ) //\r\n                     ( attributeType: ~oid, attributeValue: bytes / null ))\r\n\r\nExtensionsTemplate = [ * ExtensionTemplate ]\r\n\r\nExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //\r\n                     ( extensionID: ~oid, ? critical: bool,\r\n                       extensionValue: bytes / null ))\r\n```",
+          "createdAt": "2025-06-09T09:53:02Z",
+          "updatedAt": "2025-06-09T10:10:02Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "C509CertificateRequestTemplate is based on 509CertificateRequest but without the subjectSignatureValue field. C509CertificateRequest looks like this\r\n\r\n```\r\nC509CertificateRequest = [\r\n  c509CertificateRequestType: int,\r\n   subjectSignatureAlgorithm: AlgorithmIdentifier,\r\n   subject: Name,\r\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier,\r\n   subjectPublicKey: any,\r\n   extensionsRequest: Extensions,\r\n   subjectSignatureValue: any,\r\n]\r\n\r\nName = [ * Attribute ] / text / bytes\r\n\r\nAttribute = (( attributeType: int, attributeValue: text ) //\r\n             ( attributeType: ~oid, attributeValue: bytes ))\r\n\r\nExtensions = [ * Extension ] / int\r\n\r\nExtension = (( extensionID: int, extensionValue: any ) //\r\n             ( extensionID: ~oid, ? critical: true,\r\n              extensionValue: bytes ))\r\n```\r\n\r\nName and Extensions needws changes. \r\n",
+          "createdAt": "2025-06-09T10:06:21Z",
+          "updatedAt": "2025-06-09T10:06:21Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 237,
+      "id": "PR_kwDOCpt5cM6ZqSqc",
+      "title": "Correct text on critical true, not bool",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/237",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "#236",
+      "createdAt": "2025-06-09T10:17:08Z",
+      "updatedAt": "2025-06-09T20:55:04Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "d53c5177d6ce38383a68b4ba7b9b19e92f2c2c22",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "CDDL-to-support-non-critical-ext",
+      "headRefOid": "f670ddbffedbbf21f38cd9587f1590fc29e1f52b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good to me!",
+          "createdAt": "2025-06-09T10:22:41Z",
+          "updatedAt": "2025-06-09T10:22:41Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "... although the discussions long ago were to have it optional, and to let the absence of the field indicate that the extension is non-critical. If I understand this update correctly, you want the field to be always present.",
+          "createdAt": "2025-06-09T11:30:28Z",
+          "updatedAt": "2025-06-09T11:30:28Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good, then the CDDL is correct and the text is wrong\r\n\r\nSent from Commodore VIC-20\r\n________________________________\r\nFrom: highlunder ***@***.***>\r\nSent: Monday, June 9, 2025 1:30:50 PM\r\nTo: cose-wg/CBOR-certificates ***@***.***>\r\nCc: John Mattsson ***@***.***>; Author ***@***.***>\r\nSubject: Re: [cose-wg/CBOR-certificates] CDDL to support non-critical ext (PR #237)\r\n\r\n[https://avatars.githubusercontent.com/u/8503789?s=20&v=4]highlunder left a comment (cose-wg/CBOR-certificates#237)<https://github.com/cose-wg/CBOR-certificates/pull/237#issuecomment-2955521215>\r\n\r\n... although the discussions long ago were to have it optional, and to let the absence of the field indicate that the extension is non-critical. If I understand this update correctly, you want the field to be always present.\r\n\r\n\u2014\r\nReply to this email directly, view it on GitHub<https://github.com/cose-wg/CBOR-certificates/pull/237#issuecomment-2955521215>, or unsubscribe<https://github.com/notifications/unsubscribe-auth/AFYXKYTIIR3WXHPJOHHYN7L3CVV6VAVCNFSM6AAAAAB64RVP62VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDSNJVGUZDCMRRGU>.\r\nYou are receiving this because you authored the thread.Message ID: ***@***.***>\r\n",
+          "createdAt": "2025-06-09T12:07:49Z",
+          "updatedAt": "2025-06-09T12:07:49Z"
+        }
+      ],
       "reviews": []
     }
   ]
