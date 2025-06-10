@@ -50,6 +50,8 @@ normative:
   RFC6698:
   RFC6838:
   RFC6962:
+  RFC7030:
+  RFC8295:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -88,6 +90,7 @@ informative:
   RFC9528: edhoc
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
+  I-D.ietf-lamps-rfc7030-csrattrs:
 
 
   CAB-TLS:
@@ -621,9 +624,13 @@ Where there is support for a specific and a generic CBOR encoding, the specific 
 
 Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.
 
-# C509 Certificate Signing Request {#CSR}
+# C509 Certificate (Signing) Request {#CSR}
 
-This section defines the format of a C509 Certificate Signing Request (CSR), also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
+This section defines the format of a C509 Certificate Signing Request, also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The CDDL is shown in {{fig-C509CSRCDDL}}.
+
+The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
+
+## Certificate Request Types
 
 Different types of C509 Certificate Requests are defined, see {{csr-type}}, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:
 
@@ -634,19 +641,19 @@ Different types of C509 Certificate Requests are defined, see {{csr-type}}, all 
 Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}} and illustrated in {{fig-csr-types2}}.
 
 ~~~~~~~~~~~~~~~~~~~~~~~ aasvg
-+------------------+---------------------------------------------------+
-|                  |              Requested certificate                |
-+------------------+---------------------------------------------------+
-| Signed object    | c509CertificateType = 2 | c509CertificateType = 3 |
-+==================+=========================+=========================+
-|                  |                         |                         |
-| CBOR encoded CSR |            0            |             2           |
-|                  |                         |                         |
-+------------------+-------------------------+-------------------------+
-|                  |                         |                         |
-| DER encoded CSR  |            1            |             3           |
-|                  |                         |                         |
-+------------------+-------------------------+-------------------------+
++---------------------+---------------------------------------------------+
+|                     |              Requested certificate                |
++---------------------+---------------------------------------------------+
+| Signed object       | c509CertificateType = 2 | c509CertificateType = 3 |
++=====================+=========================+=========================+
+|                     |                         |                         |
+| CBOR encoded C509   |            0            |             2           |
+| Certificate Request |                         |                         |
++---------------------+-------------------------+-------------------------+
+|                     |                         |                         |
+| DER encoded C509    |            1            |             3           |
+| Certificate Request |                         |                         |
++---------------------+-------------------------+-------------------------+
 ~~~~~~~~~~~~~~~~~~~~~~~
 {: #fig-csr-types2 title="C509 Certificate Request Types 0, 1, 2 and 3." artwork-align="center"}
 
@@ -656,11 +663,23 @@ An implementation MAY only support c509CertificateRequestType = 0. The most comm
 
 * c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
 
-subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both ignature algorithm or a non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
+## Subject Signature Algorithm
 
-Certificate request attributes, i.e. attributes for use with certificate requests providing additional information about the subject of the certificate, are defined in {{Section 5.4 of RFC2985}}. The attribute extensionRequest is supported with a dedicated element. Other certificate request attributes are included using the same Extensions structure as in extensionsRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword which is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
+## Certificate Request Attributes
 
+{{Section 5.4 of RFC2985}} specifies two attribute types that may be included in the certificate request both of which are supported: extension request and challenge password. The extensionRequest field is used to carry information
+   about certificate extensions the requester wishes to be included in a
+   certificate.
+
+Other certificate request attributes are included using the same Extensions structure as in extensionRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword.
+
+challengePassword is defined for printableString or utf8String values and encoded as CBOR text string, except if the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', in which case it is encoded as a CBOR byte string. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in other extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+
+##  C509 Certificate Request
+
+The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. Fields not detailed in {{CSR}} have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
 
 ~~~~~~~~~~~ cddl
@@ -686,6 +705,44 @@ challengePassword = tstr / bstr
 {: artwork-align="center"}
 
 After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
+
+## Certificate Request Template
+
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how Certificate Signing Request Attributes can be used to specify what the EST server expects the EST client to include in a subsequent Certificate Signing Request (CSR).
+
+Alternatively to the unstructured inclusion of CSR attributes specified in {{RFC7030}}, Appendix B of {{RFC8295}} describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client.
+
+One drawback to that approach is that some unnecessary fields would to be included; specifically, the 'signature' field on the CSR.
+
+For C509, we follow the approach of {{RFC8295}} but, to avoid the aforementioned drawback, base the C509CertificateRequestTemplate on the TBSCertificateRequest, rather than the C509CertificateRequest, since the former excludes the subjectSignatureValue field, see {{fig-C509CSRCDDL}}.
+
+The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
+
+~~~~~~~~~~~ cddl
+C509CertificateRequestTemplate = [
+   c509CertificateRequestType: int / null,
+   subjectSignatureAlgorithm: AlgorithmIdentifier / null,
+   subject: NameTemplate,
+   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
+   subjectPublicKey: any / null,
+   extensionsRequest: ExtensionsTemplate,
+]
+
+NameTemplate = [ * AttributeTemplate ]
+
+AttributeTemplate = (( attributeType: int, attributeValue: text / null ) //
+                     ( attributeType: ~oid, attributeValue: bytes / null ))
+
+ExtensionsTemplate = [ * ExtensionTemplate ]
+
+ExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //
+                     ( extensionID: ~oid, ? critical: bool,
+                       extensionValue: bytes / null ))
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
+{: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
+{: artwork-align="center"}
+
 
 # C509 Processing and Certificate Issuance
 
