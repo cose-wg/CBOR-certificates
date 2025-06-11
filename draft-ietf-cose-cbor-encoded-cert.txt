@@ -180,22 +180,29 @@ Table of Contents
    [RFC9528], or Compact TLS 1.3 [I-D.ietf-tls-ctls].  RFC 7925
    [RFC7925], RFC7925bis [I-D.ietf-uta-tls13-iot-profile], and IEEE
    802.1AR [IEEE-802.1AR] specifically target Internet of Things
-   deployments.  This document specifies a CBOR encoding based on
-   [X.509-IoT], which can support large parts of RFC 5280.  The encoding
-   supports all RFC 7925, IEEE 802.1AR, CAB Baseline [CAB-TLS],
-   [CAB-Code], RPKI [RFC6487], eUICC [GSMA-eUICC] profiled X.509
-   certificates, and is designed to render a compact encoding of
-   certificates used in constrained environments.
+   deployments.
+
+   This document specifies a CBOR encoding of X.509 certificates based
+   on [X.509-IoT].  The resulting certificates are called C509
+   Certificates.  The CBOR encoding supports a large subset of RFC 5280
+   and all certificates compatible with the RFC 7925, IEEE 802.1AR
+   (DevID), CAB Baseline [CAB-TLS], [CAB-Code], RPKI [RFC6487], eUICC
+   [GSMA-eUICC] profiled X.509 certificates, and is designed to render a
+   compact encoding of certificates used in constrained environments.
+   When used to re-encode DER encoded X.509 certificates, the CBOR
+   encoding can in many cases reduce the size of RFC 7925 profiled
+   certificates with over 50% while also significantly reducing memory
+   and code size compared to ASN.1.  C509 is not a general CBOR ecoding
+   for Abstract Syntax Notation One (ASN.1) data structures.
 
    C509 is designed to be extensible to additional features of X.509,
    for example support for new algorithms, including new post-quantum
    algorithms, which can be registered in the IANA registry as they
    become specified, see Section 9.10.
 
-   The resulting certificates are called C509 Certificates.  This
-   document does not specify a certificate profile.  Two variants are
-   defined using the same CBOR encoding and differing only in what is
-   being signed:
+   This document does not specify a certificate profile.  Two variants
+   are defined using the same CBOR encoding and differing only in what
+   is being signed:
 
    1.  An invertible CBOR re-encoding of DER encoded X.509 certificates
        [RFC5280], which can be reversed to obtain the original DER
@@ -217,7 +224,7 @@ Table of Contents
    Section 4; COSE headers for use of the C509 certificates with COSE,
    see Section 9.12; and a TLS certificate type for use of the C509
    certificates with TLS and QUIC (with or without additional TLS
-   certificate compression), see Section 9.18.
+   certificate compression), see Section 9.18, and a C509 file format.
 
 2.  Notational Conventions
 
