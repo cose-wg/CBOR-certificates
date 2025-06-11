@@ -715,11 +715,11 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +---------------------------------------+-----------+-----------+
 |                                       | COSE_X509 | COSE_C509 |
 +---------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1) |       317 |       140 |
+| RFC 7925 profiled IoT Certificate (1) |       317 |       142 |
 +---------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain (2)     |      2193 |      1394 |
+| ECDSA HTTPS Certificate Chain (2)     |      2193 |      1397 |
 +---------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain (4)       |      5175 |      3934 |
+| RSA HTTPS Certificate Chain (4)       |      5175 |      3937 |
 +---------------------------------------+-----------+-----------+
 ~~~~~~~~~~~
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain)."}
@@ -729,15 +729,15 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +-------------------+-------+----------------+------+---------------+
 |                   | X.509 | X.509 + Brotli | C509 | C509 + Brotli |
 +-------------------+-------+----------------+------+---------------+
-| RFC 7925 Cert (1) |   327 |            324 |  151 |           167 |
+| RFC 7925 Cert (1) |   327 |            324 |  152 |           170 |
 +-------------------+-------+----------------+------+---------------+
-| RPKI Cert (1)     | 20991 |           9134 | 8660 |          5668 |
+| RPKI Cert (1)     | 20991 |           9134 | 8663 |          5671 |
 +-------------------+-------+----------------+------+---------------+
-| HTTPS Chain (2)   |  2204 |           1455 | 1414 |          1063 |
+| HTTPS Chain (2)   |  2204 |           1455 | 1417 |          1066 |
 +-------------------+-------+----------------+------+---------------+
-| HTTPS Chain (4)   |  5190 |           3244 | 3958 |          2845 |
+| HTTPS Chain (4)   |  5190 |           3244 | 3961 |          2848 |
 +-------------------+-------+----------------+------+---------------+
-| HTTPS Bag (8)     | 11578 |           3979 | 8882 |          3519 |
+| HTTPS Bag (8)     | 11578 |           3979 | 8885 |          3522 |
 +-------------------+-------+----------------+------+---------------+
 ~~~~~~~~~~~
 {: #fig-size-TLS title="Comparing Sizes of Certificate Chains with TLS. Number of bytes (length of certificate chain). X.509 and C509 are Certificate messages. X.509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
