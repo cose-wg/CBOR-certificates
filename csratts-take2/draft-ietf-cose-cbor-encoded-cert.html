@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 12 December 2025</td>
+<td class="center">Expires 13 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-10" class="published">10 June 2025</time>
+<time datetime="2025-06-11" class="published">11 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-12">12 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-13">13 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 13 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1405,7 +1405,7 @@ TBSCertificate = (
    validityNotAfter: ~time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: any,
+   subjectPublicKey: any .ne null,
    extensions: Extensions,
 )
 
@@ -1506,7 +1506,8 @@ Extension = (( extensionID: int, extensionValue: any .ne null ) //
           <h4 id="name-subjectpublickeyinfo">
 <a href="#section-3.1.7" class="section-number selfRef">3.1.7. </a><a href="#name-subjectpublickeyinfo" class="section-name selfRef">subjectPublicKeyInfo</a>
           </h4>
-<p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 9.11</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string. In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 9.11</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.7-2">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except null. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="issueruniqueid">
@@ -2094,7 +2095,7 @@ TBSCertificateRequest = (
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: any,
+   subjectPublicKey: any .ne null,
    extensionsRequest: Extensions,
 )
 
@@ -2108,7 +2109,7 @@ challengePassword = tstr / bstr
 <p id="section-4.4-3">After verifying the subjectSignatureValue, the CA <span class="bcp14">MAY</span> transform the C509CertificateRequest into a <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span> CertificationRequestInfo for compatibility with existing procedures and code.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="certificate-request-template">
+<div id="CRT">
 <section id="section-4.5">
         <h3 id="name-certificate-request-templat">
 <a href="#section-4.5" class="section-number selfRef">4.5. </a><a href="#name-certificate-request-templat" class="section-name selfRef">Certificate Request Template</a>
@@ -2127,7 +2128,7 @@ C509CertificateRequestTemplate = [
    subjectSignatureAlgorithm: AlgorithmIdentifier / null,
    subject: NameTemplate,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
-   subjectPublicKey: any / null,
+   subjectPublicKey: any,
    extensionsRequest: ExtensionsTemplate,
 ]
 

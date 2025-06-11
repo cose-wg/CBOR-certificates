@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 12 December 2025                                     J. Höglund
+Expires: 13 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            10 June 2025
+                                                            11 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 December 2025.
+   This Internet-Draft will expire on 13 December 2025.
 
 Copyright Notice
 
@@ -294,7 +294,7 @@ Table of Contents
        validityNotAfter: ~time / null,
        subject: Name,
        subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-       subjectPublicKey: any,
+       subjectPublicKey: any .ne null,
        extensions: Extensions,
     )
 
@@ -407,12 +407,14 @@ Table of Contents
    The 'AlgorithmIdentifier' field including parameters is encoded as
    the CBOR int 'subjectPublicKeyAlgorithm' (see Section 9.11) or as an
    array with an unwrapped CBOR OID tag [RFC9090] optionally followed by
-   the parameters encoded as a CBOR byte string.  In general, the
-   'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte
-   string.  This specification assumes the BIT STRING has zero unused
-   bits, and the unused bits byte is omitted.  For rsaEncryption and id-
-   ecPublicKey, the encoding of subjectPublicKey is further optimized as
-   described in Section 3.2.
+   the parameters encoded as a CBOR byte string.
+
+   In general, the 'subjectPublicKey' BIT STRING value field is encoded
+   as a CBOR byte string, but may be encoded as a CBOR item of any type
+   except null.  This specification assumes the BIT STRING has zero
+   unused bits, and the unused bits byte is omitted.  For rsaEncryption
+   and id-ecPublicKey, the encoding of subjectPublicKey is further
+   optimized as described in Section 3.2.
 
 3.1.8.  issuerUniqueID
 
@@ -990,7 +992,7 @@ Table of Contents
        subjectSignatureAlgorithm: AlgorithmIdentifier,
        subject: Name,
        subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-       subjectPublicKey: any,
+       subjectPublicKey: any .ne null,
        extensionsRequest: Extensions,
     )
 
@@ -1033,7 +1035,7 @@ C509CertificateRequestTemplate = [
    subjectSignatureAlgorithm: AlgorithmIdentifier / null,
    subject: NameTemplate,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
-   subjectPublicKey: any / null,
+   subjectPublicKey: any,
    extensionsRequest: ExtensionsTemplate,
 ]
 
