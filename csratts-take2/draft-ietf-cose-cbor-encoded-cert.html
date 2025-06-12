@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 13 December 2025</td>
+<td class="center">Expires 14 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-11" class="published">11 June 2025</time>
+<time datetime="2025-06-12" class="published">12 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-13">13 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-14">14 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 14 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1405,7 +1405,7 @@ TBSCertificate = (
    validityNotAfter: ~time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: any .ne null,
+   subjectPublicKey: NonNull,
    extensions: Extensions,
 )
 
@@ -1419,9 +1419,11 @@ Attribute = (( attributeType: int, attributeValue: text ) //
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
+NonNull = any .ne null
+
 Extensions = [ * Extension ] / int
 
-Extension = (( extensionID: int, extensionValue: any .ne null ) //
+Extension = (( extensionID: int, extensionValue: NonNull ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
 </pre>
@@ -2095,7 +2097,7 @@ TBSCertificateRequest = (
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: any .ne null,
+   subjectPublicKey: NonNull,
    extensionsRequest: Extensions,
 )
 
