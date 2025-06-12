@@ -633,9 +633,33 @@ Native C509 certificates MUST only use specific CBOR encoded fields. However, wh
 
 # C509 Certificate (Signing) Request {#CSR}
 
-This section defines the format of a C509 Certificate Signing Request, also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The CDDL is shown in {{fig-C509CSRCDDL}}.
+This section defines the format of a C509 Certificate Signing Request, also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. Except as specified in this section, the fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
-The media type is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
+~~~~~~~~~~~ cddl
+C509CertificateRequest = [
+   TBSCertificateRequest,
+   subjectSignatureValue: any,
+]
+
+; The elements of the following group are used in a CBOR Sequence:
+TBSCertificateRequest = (
+   c509CertificateRequestType: int,
+   subjectSignatureAlgorithm: AlgorithmIdentifier,
+   subject: Name,
+   subjectPublicKeyAlgorithm: AlgorithmIdentifier,
+   subjectPublicKey: NonNull,
+   extensionsRequest: Extensions,
+)
+
+challengePassword = SpecialText
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
+{: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
+{: artwork-align="center"}
+
+After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
+
+The media type of C509CertificateRequest is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
 
 ## Certificate Request Types
 
@@ -676,42 +700,20 @@ subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-
 
 ## Certificate Request Attributes
 
-{{Section 5.4 of RFC2985}} specifies two attribute types that may be included in the certificate request: extension request and challenge password. The extensionRequest field is used to carry information
+{{Section 5.4 of RFC2985}} specifies two attribute types that may be included in the certificate request: extension request and challenge password.
+
+### Extensions Request
+
+ The extensionRequest field is used to carry information
    about certificate extensions the requester wishes to be included in a
-   certificate.
+   certificate, encoded as Extensions in {{message-fields}}.
 
-Other certificate request attributes are included using the same Extensions structure as in extensionRequest, both extensions and attributes are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is ChallengePassword.
+### Challenge Password
 
-ChallengePassword is defined for printableString or utf8String values. For printableString it is encoded as CBOR text string, and for utf8String as SpecialText, see {{issuer}}. The sign of extensionID of ChallengePassword indicates the string type (instead the criticalness in extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+Other certificate request attributes are included using the same Extensions structure as in extensionRequest, and are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword.
 
-##  C509 Certificate Request
+challengePassword is defined for printableString or utf8String values. For printableString it is encoded as CBOR text string, and for utf8String as SpecialText, see {{issuer}}. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
 
-The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. Fields not detailed in {{CSR}} have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
-
-
-~~~~~~~~~~~ cddl
-C509CertificateRequest = [
-   TBSCertificateRequest,
-   subjectSignatureValue: any,
-]
-
-; The elements of the following group are used in a CBOR Sequence:
-TBSCertificateRequest = (
-   c509CertificateRequestType: int,
-   subjectSignatureAlgorithm: AlgorithmIdentifier,
-   subject: Name,
-   subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: NonNull,
-   extensionsRequest: Extensions,
-)
-
-ChallengePassword = SpecialText
-~~~~~~~~~~~
-{: sourcecode-name="c509.cddl"}
-{: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
-{: artwork-align="center"}
-
-After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
 ## Certificate Request Template {#CRT}
 
