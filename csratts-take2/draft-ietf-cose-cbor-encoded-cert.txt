@@ -884,10 +884,12 @@ Table of Contents
    This section defines the format of a C509 Certificate Signing
    Request, also known as a C509 Certificate Request, based on and
    compatible with RFC 2986 [RFC2986], and reusing the formatting of
-   C509 certificates defined in Section 3.  The CDDL for the C509
-   Certificate Request is shown in Figure 2.  Except as specified in
-   this section, the fields have the same encoding as the corresponding
-   fields of the C509 Certificate, see Section 3.1.
+   C509 certificates defined in Section 3.
+
+   The CDDL for the C509 Certificate Request is shown in Figure 2.
+   Except as specified in this section, the fields have the same
+   encoding as the corresponding fields of the C509 Certificate, see
+   Section 3.1.
 
     C509CertificateRequest = [
        TBSCertificateRequest,
@@ -903,8 +905,6 @@ Table of Contents
        subjectPublicKey: NonNull,
        extensionsRequest: Extensions,
     )
-
-    challengePassword = SpecialText
 
                  Figure 2: CDDL for C509CertificateRequest.
 
@@ -989,15 +989,19 @@ Table of Contents
 4.3.1.  Extensions Request
 
    The extensionRequest field is used to carry information about
-   certificate extensions the requester wishes to be included in a
-   certificate, encoded as Extensions in Section 3.1.
+   certificate extensions the EST client wishes to be included in a
+   certificate, encoded as Extensions in Section 3.1.  An empty CBOR
+   array indicate no extensions.
 
 4.3.2.  Challenge Password
 
-   Other certificate request attributes are included using the same
-   Extensions structure as in extensionRequest, and are listed in the
-   C509 Extensions Registry, see Figure 10.  The only other certificate
-   request attribute specified in this document is challengePassword.
+   Other certificate request attributes are included using the
+   Extensions structure and the extensionRequest field.  The only other
+   certificate request attribute specified in this document is
+   challengePassword, listed in the C509 Extensions Registry, see
+   Figure 10.
+
+   challengePassword = SpecialText
 
    challengePassword is defined for printableString or utf8String
    values.  For printableString it is encoded as CBOR text string, and
@@ -1022,14 +1026,10 @@ Table of Contents
    filled out, and other fields waiting to be filled in by the EST
    client.
 
-   One drawback to that approach is that some unnecessary fields would
-   to be included; specifically, the 'signature' field on the CSR.
-
-   For C509, we follow the approach of [RFC8295] but, to avoid the
-   aforementioned drawback, base the C509CertificateRequestTemplate on
-   the TBSCertificateRequest, rather than the C509CertificateRequest,
-   since the former excludes the subjectSignatureValue field, see
-   Figure 2.
+   For C509 we follow this approach but base the
+   C509CertificateRequestTemplate on the TBSCertificateRequest rather
+   than the C509CertificateRequest, to exclude the subjectSignatureValue
+   field which needs no further specification, see Figure 2.
 
    The C509 Certificate Request Template is shown in Figure 4.
 
@@ -1054,6 +1054,22 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                        extensionValue: bytes / null ))
 
           Figure 4: CDDL for C509CertificateRequestTemplate.
+
+   Except as specified in this section, the fields have the same
+   encoding as the corresponding fields of the TBSCertificateRequest,
+   see Figure 2.
+
+   The presence of a non-null value in a C509CertificateRequestTemplate
+   indicates that the EST server expects this value to be used in the
+   certificate request by the EST client.  The presence of a null value
+   in a C509CertificateRequestTemplate indicates that the EST server
+   expects the EST client to replace it with a relevant value for that
+   message field.
+
+   Note that while a null value is not allowed in the fields
+   subjectPublicKey and extensionValue of a certificate request, it can
+   be used in the certificate request template to indicate a missing
+   value to be filled in by the EST client.
 
 5.  C509 Processing and Certificate Issuance
 
