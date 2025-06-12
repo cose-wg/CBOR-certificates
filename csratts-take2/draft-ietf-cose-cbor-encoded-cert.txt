@@ -95,8 +95,7 @@ Table of Contents
      4.1.  Certificate Request Types
      4.2.  Subject Signature Algorithm
      4.3.  Certificate Request Attributes
-     4.4.  C509 Certificate Request
-     4.5.  Certificate Request Template
+     4.4.  Certificate Request Template
    5.  C509 Processing and Certificate Issuance
    6.  Legacy Considerations
    7.  Expected Certificate Sizes
@@ -885,14 +884,39 @@ Table of Contents
    This section defines the format of a C509 Certificate Signing
    Request, also known as a C509 Certificate Request, based on and
    compatible with RFC 2986 [RFC2986], and reusing the formatting of
-   C509 certificates defined in Section 3.  The CDDL is shown in
-   Figure 3.
+   C509 certificates defined in Section 3.  The CDDL for the C509
+   Certificate Request is shown in Figure 2.  Except as specified in
+   this section, the fields have the same encoding as the corresponding
+   fields of the C509 Certificate, see Section 3.1.
 
-   The media type is application/cose-c509-pkcs10, see Section 9.14,
-   with corresponding CoAP Content-Format defined in Section 9.17.  The
-   "magic number" TBD9 is composed of the reserved CBOR tag 55799
-   concatenated with the CBOR tag calculated from the CoAP Content-
-   Format value, see [RFC9277].
+    C509CertificateRequest = [
+       TBSCertificateRequest,
+       subjectSignatureValue: any,
+    ]
+
+    ; The elements of the following group are used in a CBOR Sequence:
+    TBSCertificateRequest = (
+       c509CertificateRequestType: int,
+       subjectSignatureAlgorithm: AlgorithmIdentifier,
+       subject: Name,
+       subjectPublicKeyAlgorithm: AlgorithmIdentifier,
+       subjectPublicKey: NonNull,
+       extensionsRequest: Extensions,
+    )
+
+    challengePassword = SpecialText
+
+                 Figure 2: CDDL for C509CertificateRequest.
+
+   After verifying the subjectSignatureValue, the CA MAY transform the
+   C509CertificateRequest into a [RFC2986] CertificationRequestInfo for
+   compatibility with existing procedures and code.
+
+   The media type of C509CertificateRequest is application/cose-
+   c509-pkcs10, see Section 9.14, with corresponding CoAP Content-Format
+   defined in Section 9.17.  The "magic number" TBD9 is composed of the
+   reserved CBOR tag 55799 concatenated with the CBOR tag calculated
+   from the CoAP Content-Format value, see [RFC9277].
 
 4.1.  Certificate Request Types
 
@@ -911,7 +935,7 @@ Table of Contents
 
    Combining these options enables the four instances of
    c509CertificateRequestType defined in Section 9.2 and illustrated in
-   Figure 2.
+   Figure 3.
 
 +---------------------+---------------------------------------------------+
 |                     |              Requested certificate                |
@@ -927,7 +951,7 @@ Table of Contents
 | Certificate Request |                         |                         |
 +---------------------+-------------------------+-------------------------+
 
-       Figure 2: C509 Certificate Request Types 0, 1, 2 and 3.
+       Figure 3: C509 Certificate Request Types 0, 1, 2 and 3.
 
    An implementation MAY only support c509CertificateRequestType = 0.
    The most common variants are expected to be:
@@ -960,54 +984,30 @@ Table of Contents
 
    Section 5.4 of [RFC2985] specifies two attribute types that may be
    included in the certificate request: extension request and challenge
-   password.  The extensionRequest field is used to carry information
-   about certificate extensions the requester wishes to be included in a
-   certificate.
+   password.
+
+4.3.1.  Extensions Request
+
+   The extensionRequest field is used to carry information about
+   certificate extensions the requester wishes to be included in a
+   certificate, encoded as Extensions in Section 3.1.
+
+4.3.2.  Challenge Password
 
    Other certificate request attributes are included using the same
-   Extensions structure as in extensionRequest, both extensions and
-   attributes are listed in the C509 Extensions Registry, see Figure 10.
-   The only other certificate request attribute specified in this
-   document is ChallengePassword.
+   Extensions structure as in extensionRequest, and are listed in the
+   C509 Extensions Registry, see Figure 10.  The only other certificate
+   request attribute specified in this document is challengePassword.
 
-   ChallengePassword is defined for printableString or utf8String
+   challengePassword is defined for printableString or utf8String
    values.  For printableString it is encoded as CBOR text string, and
    for utf8String as SpecialText, see Section 3.1.4.  The sign of
-   extensionID of ChallengePassword indicates the string type (instead
+   extensionID of challengePassword indicates the string type (instead
    the criticalness in extensions): positive for utf8String and negative
    for printableString.  In the native certificate request (types 0 and
    2), only utf8String is allowed.
 
-4.4.  C509 Certificate Request
-
-   The CDDL for the C509 Certificate Request is shown in Figure 3.
-   Fields not detailed in Section 4 have the same encoding as the
-   corresponding fields of the C509 Certificate, see Section 3.1.
-
-    C509CertificateRequest = [
-       TBSCertificateRequest,
-       subjectSignatureValue: any,
-    ]
-
-    ; The elements of the following group are used in a CBOR Sequence:
-    TBSCertificateRequest = (
-       c509CertificateRequestType: int,
-       subjectSignatureAlgorithm: AlgorithmIdentifier,
-       subject: Name,
-       subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-       subjectPublicKey: NonNull,
-       extensionsRequest: Extensions,
-    )
-
-    ChallengePassword = SpecialText
-
-                 Figure 3: CDDL for C509CertificateRequest.
-
-   After verifying the subjectSignatureValue, the CA MAY transform the
-   C509CertificateRequest into a [RFC2986] CertificationRequestInfo for
-   compatibility with existing procedures and code.
-
-4.5.  Certificate Request Template
+4.4.  Certificate Request Template
 
    Enrollment over Secure Transport (EST, [RFC7030]) defines, and
    [I-D.ietf-lamps-rfc7030-csrattrs] clarifies, how Certificate Signing
@@ -1029,7 +1029,7 @@ Table of Contents
    aforementioned drawback, base the C509CertificateRequestTemplate on
    the TBSCertificateRequest, rather than the C509CertificateRequest,
    since the former excludes the subjectSignatureValue field, see
-   Figure 3.
+   Figure 2.
 
    The C509 Certificate Request Template is shown in Figure 4.
 
