@@ -300,7 +300,9 @@ Table of Contents
 
     CertificateSerialNumber = ~biguint
 
-    Name = [ * Attribute ] / text / bytes
+    Name = [ * Attribute ] / SpecialText
+
+    SpecialText = text / bytes
 
     Attribute = (( attributeType: int, attributeValue: text ) //
                  ( attributeType: ~oid, attributeValue: bytes ))
@@ -370,7 +372,7 @@ Table of Contents
    teletexString, universalString, and bmpString are not supported.
 
    If Name contains a single Attribute containing an utf8String encoded
-   'common name' it is encoded as follows:
+   'common name' it is encoded as SpecialText:
 
    *  If the text string has an even length ≥ 2 and contains only the
       symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
@@ -957,25 +959,24 @@ Table of Contents
 4.3.  Certificate Request Attributes
 
    Section 5.4 of [RFC2985] specifies two attribute types that may be
-   included in the certificate request both of which are supported:
-   extension request and challenge password.  The extensionRequest field
-   is used to carry information about certificate extensions the
-   requester wishes to be included in a certificate.
+   included in the certificate request: extension request and challenge
+   password.  The extensionRequest field is used to carry information
+   about certificate extensions the requester wishes to be included in a
+   certificate.
 
    Other certificate request attributes are included using the same
    Extensions structure as in extensionRequest, both extensions and
    attributes are listed in the C509 Extensions Registry, see Figure 10.
    The only other certificate request attribute specified in this
-   document is challengePassword.
+   document is ChallengePassword.
 
-   challengePassword is defined for printableString or utf8String values
-   and encoded as CBOR text string, except if the text string has an
-   even length ≥ 2 and contains only the symbols '0'–'9' or 'a'–'f', in
-   which case it is encoded as a CBOR byte string.  The sign of
-   extensionID of challengePassword indicates the string type (instead
-   the criticalness in other extensions): positive for utf8String and
-   negative for printableString.  In the native certificate request
-   (types 0 and 2), only utf8String is allowed.
+   ChallengePassword is defined for printableString or utf8String
+   values.  For printableString it is encoded as CBOR text string, and
+   for utf8String as SpecialText, see Section 3.1.4.  The sign of
+   extensionID of ChallengePassword indicates the string type (instead
+   the criticalness in extensions): positive for utf8String and negative
+   for printableString.  In the native certificate request (types 0 and
+   2), only utf8String is allowed.
 
 4.4.  C509 Certificate Request
 
@@ -998,7 +999,7 @@ Table of Contents
        extensionsRequest: Extensions,
     )
 
-    challengePassword = tstr / bstr
+    ChallengePassword = SpecialText
 
                  Figure 3: CDDL for C509CertificateRequest.
 
@@ -1041,7 +1042,7 @@ C509CertificateRequestTemplate = [
    extensionsRequest: ExtensionsTemplate,
 ]
 
-NameTemplate = [ * AttributeTemplate ] / text / bytes
+NameTemplate = [ * AttributeTemplate ] / SpecialText
 
 AttributeTemplate = (( attributeType: int, attributeValue: text / null ) //
                      ( attributeType: ~oid, attributeValue: bytes / null ))
