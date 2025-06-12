@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-10T02:05:00.934650+00:00",
+  "timestamp": "2025-06-12T02:02:30.356852+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -4129,7 +4129,7 @@
       "id": "I_kwDOCpt5cM6Cc_dA",
       "title": "SW-Implementation of CBOR-certificate decoding",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/163",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "highlunder",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -4140,8 +4140,8 @@
       ],
       "body": "An updated example implementation of X.509 to C509 encoding has been added through #162. To highlight the ongoing work on also providing an example C509 to X509 implementation, we create this new issue and close the old #93 ",
       "createdAt": "2024-03-15T14:23:55Z",
-      "updatedAt": "2025-06-03T09:37:21Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-10T13:44:02Z",
+      "closedAt": "2025-06-10T13:44:02Z",
       "comments": [
         {
           "author": "gselander",
@@ -4156,6 +4156,13 @@
           "body": "PR #229 adds more details ",
           "createdAt": "2025-05-23T08:04:51Z",
           "updatedAt": "2025-05-23T08:04:51Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing this as #229 is merged",
+          "createdAt": "2025-06-10T13:44:02Z",
+          "updatedAt": "2025-06-10T13:44:02Z"
         }
       ]
     },
@@ -5836,7 +5843,7 @@
       "id": "I_kwDOCpt5cM6sY021",
       "title": "Avoid duplication about extensions in 3.3 and 3.1.10",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/221",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
@@ -5847,9 +5854,17 @@
       ],
       "body": "",
       "createdAt": "2025-03-03T20:01:27Z",
-      "updatedAt": "2025-06-04T19:52:23Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-10T13:42:53Z",
+      "closedAt": "2025-06-10T13:42:53Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Close this as #233 is merged",
+          "createdAt": "2025-06-10T13:42:53Z",
+          "updatedAt": "2025-06-10T13:42:53Z"
+        }
+      ]
     },
     {
       "number": 222,
@@ -5956,7 +5971,7 @@
       ],
       "body": "I would like to discuss whether it would make sense to define the CDDL of `application/csrattrs` in this document. \n\n`application/csrattrs` is defined in [Section 4.5 of RFC 7030](https://datatracker.ietf.org/doc/html/rfc7030#section-4.5) and the semantics is clarified in https://datatracker.ietf.org/doc/draft-ietf-lamps-rfc7030-csrattrs/.\n\nThe definition of `application/csrattrs` was brought up to `draft-ietf-ace-coap-est-oscore` in https://github.com/ace-wg/est-oscore/issues/34. However, the est-oscore document does not define any of the formats itself and relies for all CBOR formats on this document.",
       "createdAt": "2025-03-07T16:37:17Z",
-      "updatedAt": "2025-06-09T10:18:53Z",
+      "updatedAt": "2025-06-10T17:53:32Z",
       "closedAt": null,
       "comments": [
         {
@@ -5990,9 +6005,37 @@
         {
           "author": "emanjon",
           "authorAssociation": "COLLABORATOR",
-          "body": "Here is a suggestion that I think would work\n\n```\nC509CertificateRequestTemplate = [\n   c509CertificateRequestType: int / null,\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n   subject: NameTemplate,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n   subjectPublicKey: any / null,\n   extensionsRequest: ExtensionsTemplate,\n]\n\nNameTemplate = [ * AttributeTemplate ]\n\nAttributeTemplate = (( attributeType: int, attributeValue: text / null ) //\n                     ( attributeType: ~oid, attributeValue: bytes / null ))\n\nExtensionsTemplate = [ * ExtensionTemplate ]\n\nExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //\n                     ( extensionID: ~oid, ? critical: bool,\n                       extensionValue: bytes / null ))\n```\n",
+          "body": "Here is a suggestion that I think would work.\n\nUpdated (2025-06-10) with oids and text, bytes, int optimizations to change as little as possible.\n\nNote that Name and Extensions do not need an extra \"null\" as they already support an empty array [].\n\n```\nC509CertificateRequestTemplate = [\n   c509CertificateRequestType: int / null,\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n   subject: NameTemplate,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n   subjectPublicKey: any / null,\n   extensionsRequest: ExtensionsTemplate,\n]\n\nNameTemplate = [ * AttributeTemplate ] / text / bytes\n\nAttributeTemplate = (( attributeType: int, attributeValue: text / null ) //\n                     ( attributeType: ~oid, attributeValue: bytes / null ))\n\nExtensionsTemplate = [ * ExtensionTemplate ] / int\n\nExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //\n                     ( extensionID: ~oid, ? critical: true,\n                       extensionValue: bytes / null ))\n```\n",
           "createdAt": "2025-06-09T10:18:52Z",
-          "updatedAt": "2025-06-09T10:18:52Z"
+          "updatedAt": "2025-06-10T13:52:36Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Alternative CDDL for AttributeTemplate and ExtensionTemplate\n\n```\nAttributeTemplate = (( attributeType: int, ? attributeValue: text ) //\n                     ( attributeType: ~oid, ? attributeValue: bytes ))\n\nExtensionTemplate = (( extensionID: int, extensionValue: any / null ) //\n                     ( extensionID: ~oid, ? critical: true,\n                       ? extensionValue: bytes ))\n```\n\n",
+          "createdAt": "2025-06-10T14:02:04Z",
+          "updatedAt": "2025-06-10T14:02:04Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Need to make sure that null is not a valid extensionValue for any extension\n",
+          "createdAt": "2025-06-10T14:02:38Z",
+          "updatedAt": "2025-06-10T14:02:38Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "To not get any collisions with ordinary extensionValues, I think we need to do this\n\n```\nExtension = (( extensionID: int, extensionValue: any .ne null )\nExtensionTemplate = (( extensionID: int, extensionValue: any )\n```",
+          "createdAt": "2025-06-10T17:49:36Z",
+          "updatedAt": "2025-06-10T17:49:36Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "New full suggestion. \n\n```\n   Extension = (( extensionID: int, extensionValue: any .ne null ) //\n                 ( extensionID: ~oid, ? critical: true,\n                  extensionValue: bytes ))\n\n```\n\n```\nC509CertificateRequestTemplate = [\n   c509CertificateRequestType: int / null,\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n   subject: NameTemplate,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n   subjectPublicKey: any / null,\n   extensionsRequest: ExtensionsTemplate,\n]\n\nNameTemplate = [ * AttributeTemplate ] / text / bytes\n\nAttributeTemplate = (( attributeType: int, attributeValue: text / null ) //\n                     ( attributeType: ~oid, attributeValue: bytes / null ))\n\nExtensionsTemplate = [ * ExtensionTemplate ] / int\n\nExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                     ( extensionID: ~oid, ? critical: true,\n                       extensionValue: bytes / null ))\n```",
+          "createdAt": "2025-06-10T17:53:32Z",
+          "updatedAt": "2025-06-10T17:53:32Z"
         }
       ]
     },
@@ -6170,15 +6213,15 @@
       "id": "I_kwDOCpt5cM66BR_q",
       "title": "Figure 4 is incorrect",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/235",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The size of ~C509Certificate is 140 bytes, the size of COSE_C509 is larger. Should change the number of bytes or the heading",
       "createdAt": "2025-06-05T11:48:01Z",
-      "updatedAt": "2025-06-05T11:48:01Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-11T05:15:12Z",
+      "closedAt": "2025-06-11T05:15:12Z",
       "comments": []
     },
     {
@@ -6204,6 +6247,63 @@
           "updatedAt": "2025-06-09T17:50:49Z"
         }
       ]
+    },
+    {
+      "number": 239,
+      "id": "I_kwDOCpt5cM661nTv",
+      "title": "Sevel extensions in Figure 9 does not have a extensionValue which is not allowed by the CDDL",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/239",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Sevel extensions in Figure 9 does not have a extensionValue which is not allowed by the CDDL.\n\nNeed to fix how to encode extensions without extensionValue\n\n```\n    Extension = (( extensionID: int, extensionValue: any ) //\n                 ( extensionID: ~oid, ? critical: true,\n                  extensionValue: bytes ))\n\n```\n\n```\n  +-------+-----------------------------------------------------------+\n   |    36 | Name:            Biometric Information                    |\n   |       | Identifiers:     id-pe-biometricInfo                      |\n   |       | OID:             1.3.6.1.5.5.7.1.2                        |\n   |       | DER:             06 08 2B 06 01 05 05 07 01 02            |\n   |       | Comments:                                                 |\n   |       | extensionValue:                                           |\n   +-------+-----------------------------------------------------------+\n   |    37 | Name:            Precertificate Signing Certificate       |\n   |       | Identifiers:                                              |\n   |       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\n   |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\n   |       | Comments:                                                 |\n   |       | extensionValue:                                           |\n   +-------+-----------------------------------------------------------+\n   |    38 | Name:            OCSP No Check                            |\n   |       | Identifiers:     id-pkix-ocsp-nocheck                     |\n   |       | OID:             1.3.6.1.5.5.7.48.1.5                     |\n   |       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |\n   |       | Comments:                                                 |\n   |       | extensionValue:                                           |\n   +-------+-----------------------------------------------------------+\n   |    39 | Name:            Qualified Certificate Statements         |\n   |       | Identifiers:     id-pe-qcStatements                       |\n   |       | OID:             1.3.6.1.5.5.7.1.3                        |\n   |       | DER:             06 08 2B 06 01 05 05 07 01 03            |\n   |       | Comments:                                                 |\n   |       | extensionValue:                                           |\n   +-------+-----------------------------------------------------------+\n   |    40 | Name:            S/MIME Capabilities                      |\n   |       | Identifiers:     smimeCapabilities                        |\n   |       | OID:             1.2.840.113549.1.9.15                    |\n   |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |\n   |       | Comments:                                                 |\n   |       | extensionValue:                                           |\n   +-------+-----------------------------------------------------------+\n   |    41 | Name:            TLS Features                             |\n   |       | Identifiers:     id-pe-tlsfeature                         |\n   |       | OID:             1.3.6.1.5.5.7.1.24                       |\n   |       | DER:             06 08 2B 06 01 05 05 07 01 18            |\n   |       | Comments:                                                 |\n   |       | extensionValue:                                           |\n   +-------+-----------------------------------------------------------+\n\n```",
+      "createdAt": "2025-06-10T19:17:13Z",
+      "updatedAt": "2025-06-11T04:56:48Z",
+      "closedAt": "2025-06-11T04:56:48Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "h'' seems like a good extensionValue for extensions that do not have an extensionValue\n",
+          "createdAt": "2025-06-10T19:27:18Z",
+          "updatedAt": "2025-06-10T19:27:18Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "S/MIME Capabilities definitly have a value. This should never have been added to the table without a CBOR encoding of the value\nhttps://datatracker.ietf.org/doc/html/rfc3851\n\n",
+          "createdAt": "2025-06-10T19:36:37Z",
+          "updatedAt": "2025-06-10T19:36:37Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I will go through and remove all registered extensions without CBOR encoding. These can be registered later and should not delay publication",
+          "createdAt": "2025-06-10T19:38:37Z",
+          "updatedAt": "2025-06-10T19:38:37Z"
+        }
+      ]
+    },
+    {
+      "number": 241,
+      "id": "I_kwDOCpt5cM66434Q",
+      "title": "Re-add extensions",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/241",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "low priority for core spec",
+        "separate from core spec"
+      ],
+      "body": "These extensions was at one point in the draft, but removed as they did not have CBOR encoding of the extensionValue defined. They also did not have any description is section 3.3. like all other registered extensions. Could be readded if these criteria are met.\n\n```\n|    36 | Name:            Biometric Information                    |\n|       | Identifiers:     id-pe-biometricInfo                      |\n|       | OID:             1.3.6.1.5.5.7.1.2                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 02            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    37 | Name:            Precertificate Signing Certificate       |\n|       | Identifiers:                                              |\n|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\n|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    38 | Name:            OCSP No Check                            |\n|       | Identifiers:     id-pkix-ocsp-nocheck                     |\n|       | OID:             1.3.6.1.5.5.7.48.1.5                     |\n|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    39 | Name:            Qualified Certificate Statements         |\n|       | Identifiers:     id-pe-qcStatements                       |\n|       | OID:             1.3.6.1.5.5.7.1.3                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 03            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    40 | Name:            S/MIME Capabilities                      |\n|       | Identifiers:     smimeCapabilities                        |\n|       | OID:             1.2.840.113549.1.9.15                    |\n|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    41 | Name:            TLS Features                             |\n|       | Identifiers:     id-pe-tlsfeature                         |\n|       | OID:             1.3.6.1.5.5.7.1.24                       |\n|       | DER:             06 08 2B 06 01 05 05 07 01 18            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n```",
+      "createdAt": "2025-06-11T04:56:07Z",
+      "updatedAt": "2025-06-11T08:49:59Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -6839,7 +6939,7 @@
       "labels": [],
       "body": "The text describing the COSE Header Parameters gets its own subchapter, keeping the IANA section minimal",
       "createdAt": "2023-04-26T09:39:00Z",
-      "updatedAt": "2023-05-10T09:01:04Z",
+      "updatedAt": "2025-06-10T19:41:31Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4ab2dfe575995fe39c8641ec91d7b7a1024127cf",
@@ -6889,7 +6989,7 @@
       "labels": [],
       "body": "Copy-paste-update from the application/cose-x509 in 9360. Not sure if we need to keep all N/A fields",
       "createdAt": "2023-04-26T09:55:15Z",
-      "updatedAt": "2023-05-10T08:47:56Z",
+      "updatedAt": "2025-06-10T19:41:30Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4ab2dfe575995fe39c8641ec91d7b7a1024127cf",
@@ -6981,7 +7081,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-05-03T07:48:34Z",
-      "updatedAt": "2023-05-10T08:33:27Z",
+      "updatedAt": "2025-06-10T19:41:32Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4ab2dfe575995fe39c8641ec91d7b7a1024127cf",
@@ -7017,7 +7117,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-05-17T03:56:25Z",
-      "updatedAt": "2023-05-17T08:40:10Z",
+      "updatedAt": "2025-06-10T19:41:26Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bd5bd3ada9abddac49976afc42757ee37becc9d9",
@@ -7173,7 +7273,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2023-08-11T10:09:06Z",
-      "updatedAt": "2023-08-16T11:19:05Z",
+      "updatedAt": "2025-06-10T19:41:23Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "b9d3f8293147aa71daeebd666b1713eb1f414ab5",
@@ -7530,7 +7630,7 @@
       ],
       "body": "Changed CDDL, need more text changes",
       "createdAt": "2023-12-14T13:00:45Z",
-      "updatedAt": "2024-02-29T14:50:24Z",
+      "updatedAt": "2025-06-10T19:41:21Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "5764d7a0e51cc422900e1104d67f2eeed4198bf6",
@@ -7601,7 +7701,7 @@
       "labels": [],
       "body": "Implementing the change proposed in #149\r\n+ We need to update the textual description as well",
       "createdAt": "2024-01-12T14:48:54Z",
-      "updatedAt": "2024-04-04T11:15:27Z",
+      "updatedAt": "2025-06-10T19:40:54Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "d543f100e49abb896d2edc14a2810ad8ce222d5e",
@@ -7976,7 +8076,7 @@
       "labels": [],
       "body": "Fixes #168.",
       "createdAt": "2024-04-19T08:00:02Z",
-      "updatedAt": "2024-06-24T08:11:02Z",
+      "updatedAt": "2025-06-10T19:40:44Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "ddee9d7fc248f80311e4abdbb3d73ff36c4c9086",
@@ -8508,7 +8608,7 @@
       ],
       "body": "New definitions of COSE-C509 and how to hash C509 certificates. Addresses #222.",
       "createdAt": "2025-05-14T14:29:40Z",
-      "updatedAt": "2025-06-03T13:34:57Z",
+      "updatedAt": "2025-06-10T19:41:53Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4f04f66a18adaaa39a148d77c683d00970974643",
@@ -8579,7 +8679,7 @@
       "labels": [],
       "body": "- Minor bugfixes\r\n- Separate README\r\n- Improved batch test mode\r\n- List of successfully tested URLs",
       "createdAt": "2025-05-17T21:27:29Z",
-      "updatedAt": "2025-06-05T09:08:50Z",
+      "updatedAt": "2025-06-10T19:40:42Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "c3fab7257a05caf794e480f494e684123a50ed3e",
@@ -8647,7 +8747,7 @@
       "labels": [],
       "body": "Addresses #221",
       "createdAt": "2025-06-04T19:51:31Z",
-      "updatedAt": "2025-06-05T11:10:11Z",
+      "updatedAt": "2025-06-10T19:41:54Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6dae6e2477e105b11c8e625aa841aedef062e461",
@@ -8682,21 +8782,21 @@
       "id": "PR_kwDOCpt5cM6ZHgIQ",
       "title": "CDDL for CSR Attributes",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/234",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #223",
       "createdAt": "2025-06-05T01:51:28Z",
-      "updatedAt": "2025-06-09T10:10:02Z",
+      "updatedAt": "2025-06-11T07:23:41Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6dae6e2477e105b11c8e625aa841aedef062e461",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "csrattrs",
       "headRefOid": "3c4b63529518ac4e2cb306d082b678eb786d0652",
-      "closedAt": null,
+      "closedAt": "2025-06-10T19:39:06Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -8742,6 +8842,13 @@
           "body": "C509CertificateRequestTemplate is based on 509CertificateRequest but without the subjectSignatureValue field. C509CertificateRequest looks like this\r\n\r\n```\r\nC509CertificateRequest = [\r\n  c509CertificateRequestType: int,\r\n   subjectSignatureAlgorithm: AlgorithmIdentifier,\r\n   subject: Name,\r\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier,\r\n   subjectPublicKey: any,\r\n   extensionsRequest: Extensions,\r\n   subjectSignatureValue: any,\r\n]\r\n\r\nName = [ * Attribute ] / text / bytes\r\n\r\nAttribute = (( attributeType: int, attributeValue: text ) //\r\n             ( attributeType: ~oid, attributeValue: bytes ))\r\n\r\nExtensions = [ * Extension ] / int\r\n\r\nExtension = (( extensionID: int, extensionValue: any ) //\r\n             ( extensionID: ~oid, ? critical: true,\r\n              extensionValue: bytes ))\r\n```\r\n\r\nName and Extensions needws changes. \r\n",
           "createdAt": "2025-06-09T10:06:21Z",
           "updatedAt": "2025-06-09T10:06:21Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "(Was closed in favor of #238)",
+          "createdAt": "2025-06-11T07:23:41Z",
+          "updatedAt": "2025-06-11T07:23:41Z"
         }
       ],
       "reviews": []
@@ -8751,24 +8858,26 @@
       "id": "PR_kwDOCpt5cM6ZqSqc",
       "title": "Correct text on critical true, not bool",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/237",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "#236",
       "createdAt": "2025-06-09T10:17:08Z",
-      "updatedAt": "2025-06-09T20:55:04Z",
+      "updatedAt": "2025-06-10T19:40:41Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "d53c5177d6ce38383a68b4ba7b9b19e92f2c2c22",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "CDDL-to-support-non-critical-ext",
       "headRefOid": "f670ddbffedbbf21f38cd9587f1590fc29e1f52b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-10T13:40:19Z",
+      "mergedAt": "2025-06-10T13:40:19Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "dc78968df863c965f63fe2653b1de7cbf743b55d"
+      },
       "comments": [
         {
           "author": "highlunder",
@@ -8790,6 +8899,102 @@
           "body": "Good, then the CDDL is correct and the text is wrong\r\n\r\nSent from Commodore VIC-20\r\n________________________________\r\nFrom: highlunder ***@***.***>\r\nSent: Monday, June 9, 2025 1:30:50 PM\r\nTo: cose-wg/CBOR-certificates ***@***.***>\r\nCc: John Mattsson ***@***.***>; Author ***@***.***>\r\nSubject: Re: [cose-wg/CBOR-certificates] CDDL to support non-critical ext (PR #237)\r\n\r\n[https://avatars.githubusercontent.com/u/8503789?s=20&v=4]highlunder left a comment (cose-wg/CBOR-certificates#237)<https://github.com/cose-wg/CBOR-certificates/pull/237#issuecomment-2955521215>\r\n\r\n... although the discussions long ago were to have it optional, and to let the absence of the field indicate that the extension is non-critical. If I understand this update correctly, you want the field to be always present.\r\n\r\n\u2014\r\nReply to this email directly, view it on GitHub<https://github.com/cose-wg/CBOR-certificates/pull/237#issuecomment-2955521215>, or unsubscribe<https://github.com/notifications/unsubscribe-auth/AFYXKYTIIR3WXHPJOHHYN7L3CVV6VAVCNFSM6AAAAAB64RVP62VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDSNJVGUZDCMRRGU>.\r\nYou are receiving this because you authored the thread.Message ID: ***@***.***>\r\n",
           "createdAt": "2025-06-09T12:07:49Z",
           "updatedAt": "2025-06-09T12:07:49Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks fine!\r\n",
+          "createdAt": "2025-06-10T13:40:15Z",
+          "updatedAt": "2025-06-10T13:40:15Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 238,
+      "id": "PR_kwDOCpt5cM6Z6DRg",
+      "title": "Certificate Request Template - take 2",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/238",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "First commit, need to add details about how to use the template.",
+      "createdAt": "2025-06-10T17:59:51Z",
+      "updatedAt": "2025-06-11T12:28:49Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "dc78968df863c965f63fe2653b1de7cbf743b55d",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "csratts-take2",
+      "headRefOid": "ed6c6b81287e35f82eecda0a5bc88d91ea08770b",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Addresses #223 ... oops, John working in parallel",
+          "createdAt": "2025-06-10T18:01:38Z",
+          "updatedAt": "2025-06-10T18:01:38Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We are already using the term \"CSR Attribute\" for ChallengePassword. We cannot use the same term for a different use case.\r\n\r\nI suggest using the term \"CSR Template\" in this PR",
+          "createdAt": "2025-06-11T05:58:17Z",
+          "updatedAt": "2025-06-11T05:59:18Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This is another any\r\n\r\n`subjectPublicKey: any,`",
+          "createdAt": "2025-06-11T07:59:05Z",
+          "updatedAt": "2025-06-11T07:59:05Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 240,
+      "id": "PR_kwDOCpt5cM6Z661y",
+      "title": "Remove undefined extention registrations",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/240",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-10T19:56:30Z",
+      "updatedAt": "2025-06-11T04:59:26Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "dc78968df863c965f63fe2653b1de7cbf743b55d",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "Remove-undefined-extention-registrations",
+      "headRefOid": "13830edf04cfde10d63e553a77e7cb85d0c87169",
+      "closedAt": "2025-06-11T04:56:30Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Extention registrations need a extension value, and should have have explaining text in the extension section. Right now the only option is to remove these. They can be readded if done correctly.",
+          "createdAt": "2025-06-10T19:58:00Z",
+          "updatedAt": "2025-06-10T19:58:00Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closes #239",
+          "createdAt": "2025-06-11T04:56:30Z",
+          "updatedAt": "2025-06-11T04:56:30Z"
         }
       ],
       "reviews": []
