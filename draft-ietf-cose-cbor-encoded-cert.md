@@ -233,7 +233,7 @@ TBSCertificate = (
    validityNotAfter: ~time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: any .ne null,
+   subjectPublicKey: NonNull,
    extensions: Extensions,
 )
 
@@ -247,9 +247,11 @@ Attribute = (( attributeType: int, attributeValue: text ) //
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
+NonNull = any .ne null
+
 Extensions = [ * Extension ] / int
 
-Extension = (( extensionID: int, extensionValue: any .ne null ) //
+Extension = (( extensionID: int, extensionValue: NonNull ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
 ~~~~~~~~~~~
@@ -697,7 +699,7 @@ TBSCertificateRequest = (
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: any .ne null,
+   subjectPublicKey: NonNull,
    extensionsRequest: Extensions,
 )
 
