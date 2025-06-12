@@ -633,7 +633,9 @@ Native C509 certificates MUST only use specific CBOR encoded fields. However, wh
 
 # C509 Certificate (Signing) Request {#CSR}
 
-This section defines the format of a C509 Certificate Signing Request, also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}. The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. Except as specified in this section, the fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
+This section defines the format of a C509 Certificate Signing Request, also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
+
+The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. Except as specified in this section, the fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~ cddl
 C509CertificateRequest = [
@@ -651,7 +653,6 @@ TBSCertificateRequest = (
    extensionsRequest: Extensions,
 )
 
-challengePassword = SpecialText
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
@@ -705,12 +706,17 @@ subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-
 ### Extensions Request
 
  The extensionRequest field is used to carry information
-   about certificate extensions the requester wishes to be included in a
-   certificate, encoded as Extensions in {{message-fields}}.
+   about certificate extensions the EST client wishes to be included in a
+   certificate, encoded as Extensions in {{message-fields}}. An empty CBOR array indicate no extensions.
 
 ### Challenge Password
 
-Other certificate request attributes are included using the same Extensions structure as in extensionRequest, and are listed in the C509 Extensions Registry, see {{fig-extype}}. The only other certificate request attribute specified in this document is challengePassword.
+Other certificate request attributes are included using the Extensions structure and the extensionRequest field. The only other certificate request attribute specified in this document is challengePassword, listed in the C509 Extensions Registry, see {{fig-extype}}.
+
+~~~~~~~~~~~ cddl
+challengePassword = SpecialText
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 challengePassword is defined for printableString or utf8String values. For printableString it is encoded as CBOR text string, and for utf8String as SpecialText, see {{issuer}}. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
 
@@ -721,9 +727,8 @@ Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamp
 
 Alternatively to the unstructured inclusion of CSR attributes specified in {{RFC7030}}, Appendix B of {{RFC8295}} describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client.
 
-One drawback to that approach is that some unnecessary fields would to be included; specifically, the 'signature' field on the CSR.
 
-For C509, we follow the approach of {{RFC8295}} but, to avoid the aforementioned drawback, base the C509CertificateRequestTemplate on the TBSCertificateRequest, rather than the C509CertificateRequest, since the former excludes the subjectSignatureValue field, see {{fig-C509CSRCDDL}}.
+For C509 we follow this approach but base the C509CertificateRequestTemplate on the TBSCertificateRequest rather than the C509CertificateRequest, to exclude the subjectSignatureValue field which needs no further specification, see {{fig-C509CSRCDDL}}.
 
 The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
@@ -751,6 +756,12 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
 {: artwork-align="center"}
+
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}.
+
+The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that message field.
+
+Note that while a null value is not allowed in the fields subjectPublicKey and extensionValue of a certificate request, it can be used in the certificate request template to indicate a missing value to be filled in by the EST client.
 
 
 # C509 Processing and Certificate Issuance
