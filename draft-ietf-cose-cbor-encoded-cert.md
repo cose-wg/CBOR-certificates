@@ -45,6 +45,7 @@ author:
 normative:
   RFC2985:
   RFC2986:
+  RFC3986:
   RFC4108:
   RFC5280:
   RFC6698:
@@ -558,7 +559,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are CBOR encoded instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -2048,19 +2049,84 @@ Author: COSE WG
 
 Change controller: IESG
 
+## Media Type application/cose-certhash {#cose-certhash}
+When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see {{RFC9360}}.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+
+Subtype name: cose-certhash
+
+Required parameters: N/A
+
+Optional parameters: usage
+
+* Can be absent to provide no further information about what the hash value is calculated over.
+* Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate, see {{cose-header-params}}.
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of {{RFC9360}}.
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and use X.509 or C509 as certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+* Deprecated alias names for this type: N/A
+* Magic number(s): N/A
+* File extension(s): N/A
+* Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
+
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add the media types "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
+
+IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
+
+IANA is requested to add media types for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
 ~~~~~~~~~~~ aasvg
-+--------------------------------+----------+-------+-------------------+
-| Media Type                     | Encoding | ID    | Reference         |
-+================================+==========+=======+===================+
-| application/cose-c509-cert     | -        |  TBD6 | [[this document]] |
-| application/cose-c509-pkcs10   | -        |  TBD7 | [[this document]] |
-| application/cose-c509-privkey  | -        | TBD10 | [[this document]] |
-| application/cose-c509-pem      | -        | TBD11 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
++-------------------------------+-----------+-------+-------------------+
+| Media Type                    | Encoding  | ID    | Reference         |
++===============================+===========+=======+===================+
+| application/cose-c509-cert    | -         |  TBD6 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-cert    |           |       |                   |
+| "usage" = "chain"             | -         | TBD15 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-pkcs10  | -         |  TBD7 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-privkey | -         | TBD10 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-pem     | -         | TBD11 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-certhash     | -         | TBD16 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-certhash     |           |       |                   |
+| "usage" = "c509"              | -         | TBD17 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cbor              |           |       |                   |
+| containing a URI              | CBOR text | TBD18 | [RFC9360]         |
++-------------------------------+-----------+-------+-------------------+
+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
