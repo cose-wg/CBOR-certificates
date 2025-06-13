@@ -708,9 +708,7 @@ subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-
 
 ### Extensions Request
 
- The extensionRequest field is used to carry information
-   about certificate extensions the EST client wishes to be included in a
-   certificate, encoded as Extensions in {{message-fields}}. An empty CBOR array indicate no extensions.
+The extensionRequest field is used to carry information about certificate extensions the entity requesting certification wishes to be included in the certificate, encoded as Extensions in {{message-fields}}. An empty CBOR array indicate no extensions.
 
 ### Challenge Password
 
