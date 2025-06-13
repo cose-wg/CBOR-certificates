@@ -1148,7 +1148,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 7.  Expected Certificate Sizes
 
    The CBOR encoding of the sample certificate chains given in
-   Appendix A results in the numbers shown in Figure 5 and Figure 6.
+   Appendix A results in the numbers shown in Figures 5 and 6.
    COSE_X509 is defined in [RFC9360] and COSE_C509 is defined in
    Section 9.12.  After RFC 7925 profiling, most duplicated information
    has been removed, and the remaining text strings are minimal in size.
