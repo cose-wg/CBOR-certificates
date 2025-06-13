@@ -2494,7 +2494,7 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 Note that C509CertData is identical to ~C509Certificate in {{example-native}} except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).
 
 
-## Example IEEE 802.1AR profiled X.509 Certificate
+## Example: IEEE 802.1AR profiled X.509 Certificate
 
 An example of an IEEE 802.1AR profiled X.509 certificate (Secure Device Identifier, DevID) is provided in Appendix C.2 of {{RFC9148}}. The certificate is shown below including details of the hardwareModuleName type of otherName in subjectAltName, see {{ext-encoding}}.
 
@@ -2576,7 +2576,7 @@ F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F
 ~~~~~~~~~~~
 
 
-### Example C509 Certificate Encoding
+### Example: C509 Certificate Encoding
 
 The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
 
@@ -2635,7 +2635,7 @@ FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD
 ~~~~~~~~~~~
 
 
-## Example CAB Baseline ECDSA HTTPS X.509 Certificate
+## Example: CAB Baseline ECDSA HTTPS X.509 Certificate
 
 The www.ietf.org HTTPS server replies with a certificate message with 2 certificates. The DER encoding of the first certificate is 1209 bytes.
 
@@ -2695,7 +2695,7 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 31 72 5b 1a 82 02 e0 da 5b 59 f9 54 02
 ~~~~~~~~~~~
 
-### Example C509 Certificate Encoding
+### Example: C509 Certificate Encoding
 
 The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
@@ -2752,7 +2752,7 @@ h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
 
 The size of the CBOR encoding (CBOR sequence) is 783 bytes.
 
-## Example CAB Baseline RSA HTTPS X.509 Certificate
+## Example: CAB Baseline RSA HTTPS X.509 Certificate
 
 The tools.ietf.org HTTPS server replies with a certificate message with 4 certificates. The DER encoding of the first certificate is 1647 bytes.
 
@@ -2831,7 +2831,7 @@ fd 30 3c f5 52 f4 05 34 a0 8a 3e 19 41 58 c8 a8 e0 51 71 84 09 15 ae
 ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 ~~~~~~~~~~~
 
-### Example C509 Certificate Encoding
+### Example: C509 Certificate Encoding
 
 The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
