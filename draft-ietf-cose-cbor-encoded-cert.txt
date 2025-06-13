@@ -1015,7 +1015,7 @@ Table of Contents
    Extensions structure and the extensionRequest field.  The only other
    certificate request attribute specified in this document is
    challengePassword, listed in the C509 Extensions Registry, see
-   Figure 10.
+   Figure 10.  The extensionValue is encoded as follows:
 
    challengePassword = SpecialText
 
