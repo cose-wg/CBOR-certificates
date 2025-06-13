@@ -901,10 +901,9 @@ Table of Contents
    compatible with RFC 2986 [RFC2986], and reusing the formatting of
    C509 certificates defined in Section 3.
 
-   The CDDL for the C509 Certificate Request is shown in Figure 2.
-   Except as specified in this section, the fields have the same
-   encoding as the corresponding fields of the C509 Certificate, see
-   Section 3.1.
+   The CDDL for the C509 Certificate Request is shown in Figure 2.  The
+   fields have the same encoding as the corresponding fields of the C509
+   Certificate, see Section 3.1.
 
     C509CertificateRequest = [
        TBSCertificateRequest,
@@ -1080,12 +1079,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    certificate request by the EST client.  The presence of a null value
    in a C509CertificateRequestTemplate indicates that the EST server
    expects the EST client to replace it with a relevant value for that
-   message field.
-
-   Note that while a null value is not allowed in the fields
-   subjectPublicKey and extensionValue of a certificate request, it can
-   be used in the certificate request template to indicate a missing
-   value to be filled in by the EST client.
+   field.
 
 5.  C509 Processing and Certificate Issuance
 
