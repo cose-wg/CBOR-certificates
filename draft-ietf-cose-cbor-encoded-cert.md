@@ -714,7 +714,7 @@ subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-
 
 ### Challenge Password
 
-Other certificate request attributes are included using the Extensions structure and the extensionRequest field. The only other certificate request attribute specified in this document is challengePassword, listed in the C509 Extensions Registry, see {{fig-extype}}.
+Other certificate request attributes are included using the Extensions structure and the extensionRequest field. The only other certificate request attribute specified in this document is challengePassword, listed in the C509 Extensions Registry, see {{fig-extype}}. The extensionValue is encoded as follows:
 
 ~~~~~~~~~~~ cddl
 challengePassword = SpecialText
