@@ -638,7 +638,7 @@ Native C509 certificates MUST only use specific CBOR encoded fields. However, wh
 
 This section defines the format of a C509 Certificate Signing Request, also known as a C509 Certificate Request, based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
 
-The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. Except as specified in this section, the fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
+The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~ cddl
 C509CertificateRequest = [
@@ -760,10 +760,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
 Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}.
 
-The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that message field.
-
-Note that while a null value is not allowed in the fields subjectPublicKey and extensionValue of a certificate request, it can be used in the certificate request template to indicate a missing value to be filled in by the EST client.
-
+The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field.
 
 # C509 Processing and Certificate Issuance
 
