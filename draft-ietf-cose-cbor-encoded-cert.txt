@@ -128,9 +128,9 @@ Table of Contents
      10.2.  Informative References
    Appendix A.  C509 Certificate Examples
      A.1.  Example: RFC 7925 profiled X.509 Certificate
-     A.2.  Example IEEE 802.1AR profiled X.509 Certificate
-     A.3.  Example CAB Baseline ECDSA HTTPS X.509 Certificate
-     A.4.  Example CAB Baseline RSA HTTPS X.509 Certificate
+     A.2.  Example: IEEE 802.1AR profiled X.509 Certificate
+     A.3.  Example: CAB Baseline ECDSA HTTPS X.509 Certificate
+     A.4.  Example: CAB Baseline RSA HTTPS X.509 Certificate
    Acknowledgments
    Contributors
    Authors' Addresses
@@ -3300,7 +3300,7 @@ A.1.5.  Examples: C509Certificate and C509CertData
    Appendix A.1.2 except for the prefix 58 8C (which indicates that it
    is a CBOR byte string of 140 bytes).
 
-A.2.  Example IEEE 802.1AR profiled X.509 Certificate
+A.2.  Example: IEEE 802.1AR profiled X.509 Certificate
 
    An example of an IEEE 802.1AR profiled X.509 certificate (Secure
    Device Identifier, DevID) is provided in Appendix C.2 of [RFC9148].
@@ -3380,7 +3380,7 @@ Certificate:
    5C F2 5D 83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34
    92 36
 
-A.2.1.  Example C509 Certificate Encoding
+A.2.1.  Example: C509 Certificate Encoding
 
    The CBOR encoding (~C509Certificate) of the same X.509 certificate is
    shown below in CBOR diagnostic format.
@@ -3435,7 +3435,7 @@ A.2.1.  Example C509 Certificate Encoding
    21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D
    83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36
 
-A.3.  Example CAB Baseline ECDSA HTTPS X.509 Certificate
+A.3.  Example: CAB Baseline ECDSA HTTPS X.509 Certificate
 
    The www.ietf.org HTTPS server replies with a certificate message with
    2 certificates.  The DER encoding of the first certificate is 1209
@@ -3495,7 +3495,7 @@ A.3.  Example CAB Baseline ECDSA HTTPS X.509 Certificate
    ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
    31 72 5b 1a 82 02 e0 da 5b 59 f9 54 02
 
-A.3.1.  Example C509 Certificate Encoding
+A.3.1.  Example: C509 Certificate Encoding
 
    The CBOR encoding (~C509Certificate) of the first X.509 certificate
    is shown below in CBOR diagnostic format.
@@ -3551,7 +3551,7 @@ h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
 
    The size of the CBOR encoding (CBOR sequence) is 783 bytes.
 
-A.4.  Example CAB Baseline RSA HTTPS X.509 Certificate
+A.4.  Example: CAB Baseline RSA HTTPS X.509 Certificate
 
    The tools.ietf.org HTTPS server replies with a certificate message
    with 4 certificates.  The DER encoding of the first certificate is
@@ -3630,7 +3630,7 @@ A.4.  Example CAB Baseline RSA HTTPS X.509 Certificate
    fd 30 3c f5 52 f4 05 34 a0 8a 3e 19 41 58 c8 a8 e0 51 71 84 09 15 ae
    ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 
-A.4.1.  Example C509 Certificate Encoding
+A.4.1.  Example: C509 Certificate Encoding
 
    The CBOR encoding (~C509Certificate) of the first X.509 certificate
    is shown below in CBOR diagnostic format.
