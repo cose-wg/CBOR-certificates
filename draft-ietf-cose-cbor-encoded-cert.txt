@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 13 December 2025                                     J. Höglund
+Expires: 15 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            11 June 2025
+                                                            13 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 December 2025.
+   This Internet-Draft will expire on 15 December 2025.
 
 Copyright Notice
 
@@ -939,7 +939,7 @@ Table of Contents
    signature proof-of-possession algorithm, e.g., as defined in
    [RFC6955].  In the case of [RFC6955], the signature is replaced by a
    MAC and requires a public Diffie-Hellman key of the verifier
-   distributed out-of-band.  Both ignature algorithm or a non-signature
+   distributed out-of-band.  Both signature algorithms and non-signature
    proof-of-possession algorithms are listed in the C509 Signature
    Algorithms Registry, see Section 9.10.  Note that a key agreement key
    pair may be used with a signature algorithm in a certificate request,
