@@ -45,6 +45,7 @@ author:
 normative:
   RFC2985:
   RFC2986:
+  RFC3986:
   RFC4108:
   RFC5280:
   RFC6698:
@@ -183,11 +184,13 @@ CBOR is a data format designed for small code size and small message size. CBOR 
 
 CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
 
-CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments. This document specifies a CBOR encoding based on {{X.509-IoT}}, which can support large parts of RFC 5280. The encoding supports all RFC 7925, IEEE 802.1AR, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.
+CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments.
+
+This document specifies a CBOR encoding of X.509 certificates based on {{X.509-IoT}}. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline {{CAB-TLS}},  {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50% while also significantly reducing memory and code size compared to ASN.1. C509 is not a general CBOR ecoding for Abstract Syntax Notation One (ASN.1) data structures.
 
 C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see {{sigalg}}.
 
-The resulting certificates are called C509 Certificates. This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
+This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
 
 1. An invertible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
 
@@ -195,7 +198,7 @@ The resulting certificates are called C509 Certificates. This document does not 
 
 Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
-This document also specifies C509 Certificate Signing Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}.
+This document also specifies C509 Certificate Signing Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}, and a C509 file format.
 
 # Notational Conventions {#notation}
 
@@ -566,7 +569,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are CBOR encoded instead of DER encoded X.509, and uses a COSE_C509 structure instead of COSE_X509.
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -697,7 +700,7 @@ An implementation MAY only support c509CertificateRequestType = 0. The most comm
 
 ## Subject Signature Algorithm
 
-subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the latter case, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both kinds are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
+subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both signature algorithms and non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
 
 ## Certificate Request Attributes
 
@@ -792,11 +795,11 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +---------------------------------------+-----------+-----------+
 |                                       | COSE_X509 | COSE_C509 |
 +---------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1) |       317 |       140 |
+| RFC 7925 profiled IoT Certificate (1) |       317 |       142 |
 +---------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain (2)     |      2193 |      1394 |
+| ECDSA HTTPS Certificate Chain (2)     |      2193 |      1397 |
 +---------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain (4)       |      5175 |      3934 |
+| RSA HTTPS Certificate Chain (4)       |      5175 |      3937 |
 +---------------------------------------+-----------+-----------+
 ~~~~~~~~~~~
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain)."}
@@ -806,15 +809,15 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 +-------------------+-------+----------------+------+---------------+
 |                   | X.509 | X.509 + Brotli | C509 | C509 + Brotli |
 +-------------------+-------+----------------+------+---------------+
-| RFC 7925 Cert (1) |   327 |            324 |  151 |           167 |
+| RFC 7925 Cert (1) |   327 |            324 |  152 |           170 |
 +-------------------+-------+----------------+------+---------------+
-| RPKI Cert (1)     | 20991 |           9134 | 8660 |          5668 |
+| RPKI Cert (1)     | 20991 |           9134 | 8663 |          5671 |
 +-------------------+-------+----------------+------+---------------+
-| HTTPS Chain (2)   |  2204 |           1455 | 1414 |          1063 |
+| HTTPS Chain (2)   |  2204 |           1455 | 1417 |          1066 |
 +-------------------+-------+----------------+------+---------------+
-| HTTPS Chain (4)   |  5190 |           3244 | 3958 |          2845 |
+| HTTPS Chain (4)   |  5190 |           3244 | 3961 |          2848 |
 +-------------------+-------+----------------+------+---------------+
-| HTTPS Bag (8)     | 11578 |           3979 | 8882 |          3519 |
+| HTTPS Bag (8)     | 11578 |           3979 | 8885 |          3522 |
 +-------------------+-------+----------------+------+---------------+
 ~~~~~~~~~~~
 {: #fig-size-TLS title="Comparing Sizes of Certificate Chains with TLS. Number of bytes (length of certificate chain). X.509 and C509 are Certificate messages. X.509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
@@ -1236,48 +1239,6 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
 |       | Comments:                                                 |
 |       | extensionValue:  ASIdentifiers                            |
-+-------+-----------------------------------------------------------+
-|    36 | Name:            Biometric Information                    |
-|       | Identifiers:     id-pe-biometricInfo                      |
-|       | OID:             1.3.6.1.5.5.7.1.2                        |
-|       | DER:             06 08 2B 06 01 05 05 07 01 02            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    37 | Name:            Precertificate Signing Certificate       |
-|       | Identifiers:                                              |
-|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |
-|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    38 | Name:            OCSP No Check                            |
-|       | Identifiers:     id-pkix-ocsp-nocheck                     |
-|       | OID:             1.3.6.1.5.5.7.48.1.5                     |
-|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    39 | Name:            Qualified Certificate Statements         |
-|       | Identifiers:     id-pe-qcStatements                       |
-|       | OID:             1.3.6.1.5.5.7.1.3                        |
-|       | DER:             06 08 2B 06 01 05 05 07 01 03            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    40 | Name:            S/MIME Capabilities                      |
-|       | Identifiers:     smimeCapabilities                        |
-|       | OID:             1.2.840.113549.1.9.15                    |
-|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
-+-------+-----------------------------------------------------------+
-|    41 | Name:            TLS Features                             |
-|       | Identifiers:     id-pe-tlsfeature                         |
-|       | OID:             1.3.6.1.5.5.7.1.24                       |
-|       | DER:             06 08 2B 06 01 05 05 07 01 18            |
-|       | Comments:                                                 |
-|       | extensionValue:                                           |
 +-------+-----------------------------------------------------------+
 |   255 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
@@ -2165,19 +2126,84 @@ Author: COSE WG
 
 Change controller: IESG
 
+## Media Type application/cose-certhash {#cose-certhash}
+When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see {{RFC9360}}.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+
+Subtype name: cose-certhash
+
+Required parameters: N/A
+
+Optional parameters: usage
+
+* Can be absent to provide no further information about what the hash value is calculated over.
+* Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate, see {{cose-header-params}}.
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of {{RFC9360}}.
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and use X.509 or C509 as certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+* Deprecated alias names for this type: N/A
+* Magic number(s): N/A
+* File extension(s): N/A
+* Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IESG
+
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add the media types "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
+
+IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
+
+IANA is requested to add media types for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
 ~~~~~~~~~~~ aasvg
-+--------------------------------+----------+-------+-------------------+
-| Media Type                     | Encoding | ID    | Reference         |
-+================================+==========+=======+===================+
-| application/cose-c509-cert     | -        |  TBD6 | [[this document]] |
-| application/cose-c509-pkcs10   | -        |  TBD7 | [[this document]] |
-| application/cose-c509-privkey  | -        | TBD10 | [[this document]] |
-| application/cose-c509-pem      | -        | TBD11 | [[this document]] |
-+--------------------------------+----------+-------+-------------------+
++-------------------------------+-----------+-------+-------------------+
+| Media Type                    | Encoding  | ID    | Reference         |
++===============================+===========+=======+===================+
+| application/cose-c509-cert    | -         |  TBD6 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-cert    |           |       |                   |
+| "usage" = "chain"             | -         | TBD15 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-pkcs10  | -         |  TBD7 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-privkey | -         | TBD10 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-c509-pem     | -         | TBD11 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-certhash     | -         | TBD16 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cose-certhash     |           |       |                   |
+| "usage" = "c509"              | -         | TBD17 | [[this document]] |
++-------------------------------+-----------+-------+-------------------+
+| application/cbor              |           |       |                   |
+| containing a URI              | CBOR text | TBD18 | [RFC9360]         |
++-------------------------------+-----------+-------+-------------------+
+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
