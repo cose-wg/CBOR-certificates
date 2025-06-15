@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-12T02:02:30.356852+00:00",
+  "timestamp": "2025-06-15T02:19:10.802817+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -5960,7 +5960,7 @@
       "id": "I_kwDOCpt5cM6tDzU5",
       "title": "Define `csrattrs`",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/223",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "malishav",
       "authorAssociation": "NONE",
       "assignees": [
@@ -5971,8 +5971,8 @@
       ],
       "body": "I would like to discuss whether it would make sense to define the CDDL of `application/csrattrs` in this document. \n\n`application/csrattrs` is defined in [Section 4.5 of RFC 7030](https://datatracker.ietf.org/doc/html/rfc7030#section-4.5) and the semantics is clarified in https://datatracker.ietf.org/doc/draft-ietf-lamps-rfc7030-csrattrs/.\n\nThe definition of `application/csrattrs` was brought up to `draft-ietf-ace-coap-est-oscore` in https://github.com/ace-wg/est-oscore/issues/34. However, the est-oscore document does not define any of the formats itself and relies for all CBOR formats on this document.",
       "createdAt": "2025-03-07T16:37:17Z",
-      "updatedAt": "2025-06-10T17:53:32Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-13T08:30:12Z",
+      "closedAt": "2025-06-13T08:30:12Z",
       "comments": [
         {
           "author": "gselander",
@@ -6036,6 +6036,13 @@
           "body": "New full suggestion. \n\n```\n   Extension = (( extensionID: int, extensionValue: any .ne null ) //\n                 ( extensionID: ~oid, ? critical: true,\n                  extensionValue: bytes ))\n\n```\n\n```\nC509CertificateRequestTemplate = [\n   c509CertificateRequestType: int / null,\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n   subject: NameTemplate,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n   subjectPublicKey: any / null,\n   extensionsRequest: ExtensionsTemplate,\n]\n\nNameTemplate = [ * AttributeTemplate ] / text / bytes\n\nAttributeTemplate = (( attributeType: int, attributeValue: text / null ) //\n                     ( attributeType: ~oid, attributeValue: bytes / null ))\n\nExtensionsTemplate = [ * ExtensionTemplate ] / int\n\nExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                     ( extensionID: ~oid, ? critical: true,\n                       extensionValue: bytes / null ))\n```",
           "createdAt": "2025-06-10T17:53:32Z",
           "updatedAt": "2025-06-10T17:53:32Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merged to main",
+          "createdAt": "2025-06-13T08:30:12Z",
+          "updatedAt": "2025-06-13T08:30:12Z"
         }
       ]
     },
@@ -6108,7 +6115,7 @@
       "id": "I_kwDOCpt5cM6uKUxF",
       "title": "Media type for certificates by reference",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/226",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "malishav",
       "authorAssociation": "NONE",
       "assignees": [
@@ -6119,8 +6126,8 @@
       ],
       "body": "As just discussed during the IETF 122 Hackathon, we agreed on registering a new media type that indicates certificate by reference. This media type is to be used by `draft-ietf-ace-coap-est-oscore` draft during the negotiation in order to indicate support of the client for cert references. We discussed that it would make sense to have this media type indicate support for *any* kind of reference, i.e. irrespective whether it is `c5t` or `c5u`, as that would be equivalent from the point of view of a constrained device handling the certificate by reference (opaque binary blob of data without access to the actual certificate).\n\nSee https://github.com/ace-wg/est-oscore/issues/69",
       "createdAt": "2025-03-15T09:35:35Z",
-      "updatedAt": "2025-06-03T14:02:02Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-13T08:30:03Z",
+      "closedAt": "2025-06-13T08:30:03Z",
       "comments": [
         {
           "author": "gselander",
@@ -6149,6 +6156,13 @@
           "body": "Another update, removing specifications only targeting X.509:\nhttps://github.com/cose-wg/CBOR-certificates/pull/231/files\n\n@malishav With the last table entry, it is intended to be able to request a URI, but it doesn't distinguish between c5u and x5u. \n\n@cabo Please sanity check table at the end of the link above. Would it be appropriate to specify a dedicated Content-Format for a URI to a C509 certificate (as opposed to a URI to a x.509 certificate)?\n\n\n",
           "createdAt": "2025-06-03T14:02:00Z",
           "updatedAt": "2025-06-03T14:02:00Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merged to main",
+          "createdAt": "2025-06-13T08:30:03Z",
+          "updatedAt": "2025-06-13T08:30:03Z"
         }
       ]
     },
@@ -6302,6 +6316,22 @@
       "body": "These extensions was at one point in the draft, but removed as they did not have CBOR encoding of the extensionValue defined. They also did not have any description is section 3.3. like all other registered extensions. Could be readded if these criteria are met.\n\n```\n|    36 | Name:            Biometric Information                    |\n|       | Identifiers:     id-pe-biometricInfo                      |\n|       | OID:             1.3.6.1.5.5.7.1.2                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 02            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    37 | Name:            Precertificate Signing Certificate       |\n|       | Identifiers:                                              |\n|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\n|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    38 | Name:            OCSP No Check                            |\n|       | Identifiers:     id-pkix-ocsp-nocheck                     |\n|       | OID:             1.3.6.1.5.5.7.48.1.5                     |\n|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    39 | Name:            Qualified Certificate Statements         |\n|       | Identifiers:     id-pe-qcStatements                       |\n|       | OID:             1.3.6.1.5.5.7.1.3                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 03            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    40 | Name:            S/MIME Capabilities                      |\n|       | Identifiers:     smimeCapabilities                        |\n|       | OID:             1.2.840.113549.1.9.15                    |\n|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    41 | Name:            TLS Features                             |\n|       | Identifiers:     id-pe-tlsfeature                         |\n|       | OID:             1.3.6.1.5.5.7.1.24                       |\n|       | DER:             06 08 2B 06 01 05 05 07 01 18            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n```",
       "createdAt": "2025-06-11T04:56:07Z",
       "updatedAt": "2025-06-11T08:49:59Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 242,
+      "id": "I_kwDOCpt5cM67VPEc",
+      "title": "Reserve part of \"C509 Extensions Registry\" for CSR attributes.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/242",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "If someone specifies something more that challengepassword, it would be good to make sure they are in the same part of the registry\n",
+      "createdAt": "2025-06-13T09:28:56Z",
+      "updatedAt": "2025-06-13T09:28:56Z",
       "closedAt": null,
       "comments": []
     }
@@ -8714,26 +8744,42 @@
       "id": "PR_kwDOCpt5cM6Yrdvs",
       "title": "Additional media types and content formats",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/231",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing #226",
       "createdAt": "2025-06-02T18:18:36Z",
-      "updatedAt": "2025-06-03T13:49:38Z",
+      "updatedAt": "2025-06-13T08:21:51Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "4773d2298f8d659585aaabb101c6687ef72396b2",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "additional-media-types",
       "headRefOid": "f8ade70f0ad76e46a0b777d0e6ed7300bee0c404",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-13T08:21:51Z",
+      "mergedAt": "2025-06-13T08:21:51Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "b60ad507d1da8e6950dac743bf26521b703fc313"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM6uRhQ6",
+          "commit": {
+            "abbreviatedOid": "f8ade70"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-13T08:21:43Z",
+          "updatedAt": "2025-06-13T08:21:43Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 233,
@@ -8915,24 +8961,26 @@
       "id": "PR_kwDOCpt5cM6Z6DRg",
       "title": "Certificate Request Template - take 2",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/238",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "First commit, need to add details about how to use the template.",
       "createdAt": "2025-06-10T17:59:51Z",
-      "updatedAt": "2025-06-11T12:28:49Z",
+      "updatedAt": "2025-06-13T08:29:44Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "dc78968df863c965f63fe2653b1de7cbf743b55d",
+      "baseRefOid": "b60ad507d1da8e6950dac743bf26521b703fc313",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "csratts-take2",
-      "headRefOid": "ed6c6b81287e35f82eecda0a5bc88d91ea08770b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0feb14bc40c0180e244c2e211550715e9a55339a",
+      "closedAt": "2025-06-13T08:29:44Z",
+      "mergedAt": "2025-06-13T08:29:44Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "2df04f7f41c0fd0d32f4fe292599c32fe240df94"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -8956,7 +9004,21 @@
           "updatedAt": "2025-06-11T07:59:05Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM6uRk7F",
+          "commit": {
+            "abbreviatedOid": "c2e9b0d"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-13T08:26:53Z",
+          "updatedAt": "2025-06-13T08:26:53Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 240,
