@@ -1836,7 +1836,7 @@ Extension = (( extensionID: int, extensionValue: NonNull ) //
             <p id="section-3.3-44.1.1">IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-44.2">
-            <p id="section-3.3-44.2.1">Signed Certificate Timestamp. If all the SCTs are version v1 <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, and there are no SCT extensions, the extension value can be CBOR encoded. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.<a href="#section-3.3-44.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-44.2.1">Signed Certificate Timestamp. If all the SCTs are version v1 <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.<a href="#section-3.3-44.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-45">
