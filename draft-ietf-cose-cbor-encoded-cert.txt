@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 15 December 2025                                     J. Höglund
+Expires: 18 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            13 June 2025
+                                                            16 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 December 2025.
+   This Internet-Draft will expire on 18 December 2025.
 
 Copyright Notice
 
@@ -309,7 +309,7 @@ Table of Contents
 
     Name = [ * Attribute ] / SpecialText
 
-    SpecialText = text / bytes
+    SpecialText = text / bytes / #6
 
     Attribute = (( attributeType: int, attributeValue: text ) //
                  ( attributeType: ~oid, attributeValue: bytes ))
@@ -379,7 +379,7 @@ Table of Contents
    teletexString, universalString, and bmpString are not supported.
 
    If Name contains a single Attribute containing an utf8String encoded
-   'common name' it is encoded as SpecialText:
+   'common name' it is for compactness encoded as SpecialText:
 
    *  If the text string has an even length ≥ 2 and contains only the
       symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
