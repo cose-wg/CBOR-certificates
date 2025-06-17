@@ -244,7 +244,7 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * Attribute ] / SpecialText
 
-SpecialText = text / bytes / #6
+SpecialText = text / bytes / tag
 
 Attribute = (( attributeType: int, attributeValue: text ) //
              ( attributeType: ~oid, attributeValue: bytes ))
@@ -252,13 +252,15 @@ Attribute = (( attributeType: int, attributeValue: text ) //
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
-NonNull = any .ne null
-
 Extensions = [ * Extension ] / int
 
 Extension = (( extensionID: int, extensionValue: NonNull ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
+
+NonNull = any .ne null
+
+tag = #6
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
@@ -540,7 +542,7 @@ CBOR encoding of the following extension values are partly supported:
 
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
 
-* Signed Certificate Timestamp. If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
+* Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
 ~~~~~~~~~~~ cddl
    SignedCertificateTimestamp = (
@@ -2204,8 +2206,6 @@ IANA is requested to add media types for "application/cbor" to the "CoAP Content
 ## TLS Certificate Types Registry {#tls}
 
 This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).
-
-Editor's Note: The TLS registrations should be discussed and approved by the TLS WG at a later stage. The TLS WG might e.g. want a separate draft in the TLS WG.
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
