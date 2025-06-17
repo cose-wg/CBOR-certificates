@@ -1985,7 +1985,7 @@ C509PEM = [
       <h2 id="name-c509-certificate-signing-re">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-c509-certificate-signing-re" class="section-name selfRef">C509 Certificate (Signing) Request</a>
       </h2>
-<p id="section-4-1">This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Singing Request (CSR), based on and compatible with RFC 2986 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, and reusing the formatting of C509 certificates defined in <a href="#certificate" class="auto internal xref">Section 3</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), based on and compatible with RFC 2986 <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, and reusing the formatting of C509 certificates defined in <a href="#certificate" class="auto internal xref">Section 3</a>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">The CDDL for the C509 Certificate Request is shown in <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. The fields have the same encoding as the corresponding fields of the C509 Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificatereq"></span><div id="fig-C509CSRCDDL">
 <figure id="figure-2">
@@ -2131,11 +2131,12 @@ challengePassword = SpecialText
         <h3 id="name-certificate-request-templat">
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-certificate-request-templat" class="section-name selfRef">Certificate Request Template</a>
         </h3>
-<p id="section-4.4-1">Enrollment over Secure Transport (EST, <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>) defines, and <span>[<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span> clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>, Appendix B of <span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span> describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client. For C509 we follow the approach of <span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span>. The C509CertificateRequestTemplate is based on TBSCertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>, which excludes the subjectSignatureValue field from the template since that needs no further specification.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.4-2">The C509 Certificate Request Template is shown in <a href="#fig-C509CSRTemplateCDDL" class="auto internal xref">Figure 4</a>.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-1">Enrollment over Secure Transport (EST, <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>) defines, and <span>[<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span> clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>, <span><a href="https://rfc-editor.org/rfc/rfc8295#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC8295" class="cite xref">RFC8295</a>]</span> describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+<p id="section-4.4-2">For C509 we follow the approach of <span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span>. The C509CertificateRequestTemplate is based on TBSCertificateRequest of the C509CertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>, which excludes the subjectSignatureValue field from the template since that needs no further specification.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">The C509 Certificate Request Template is shown in <a href="#fig-C509CSRTemplateCDDL" class="auto internal xref">Figure 4</a>.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificaterequ"></span><div id="fig-C509CSRTemplateCDDL">
 <figure id="figure-4">
-          <div class="alignCenter art-cddl art-text artwork" id="section-4.4-3.1">
+          <div class="alignCenter art-cddl art-text artwork" id="section-4.4-4.1">
 <pre>
 C509CertificateRequestTemplate = [
    c509CertificateRequestType: int / null,
@@ -2162,8 +2163,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <a href="#name-cddl-for-c509certificaterequ" class="selfRef">CDDL for C509CertificateRequestTemplate.</a>
           </figcaption></figure>
 </div>
-<p id="section-4.4-4">Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>.<a href="#section-4.4-4" class="pilcrow">¶</a></p>
-<p id="section-4.4-5">The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.4-5">Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.4-6">The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2174,7 +2175,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-c509-processing-and-certifi" class="section-name selfRef">C509 Processing and Certificate Issuance</a>
       </h2>
 <p id="section-5-1">It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The Certificate Signing Request (CSR) format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-2">The Certificate Request format defined in <a href="#CSR" class="auto internal xref">Section 4</a> follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <p id="section-5-4">In the reverse direction, in case c509CertificateType = 3 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 2 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with the CA may be needed.<a href="#section-5-4" class="pilcrow">¶</a></p>
 </section>

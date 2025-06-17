@@ -900,7 +900,7 @@ Table of Contents
 4.  C509 Certificate (Signing) Request
 
    This section defines the format of a C509 Certificate Request, also
-   known as a C509 Certificate Singing Request (CSR), based on and
+   known as a C509 Certificate Signing Request (CSR), based on and
    compatible with RFC 2986 [RFC2986], and reusing the formatting of
    C509 certificates defined in Section 3.
 
@@ -1039,10 +1039,13 @@ Table of Contents
    an approach using a CSR template: In response to GET /csrattrs by the
    EST client, the EST server returns an entire CSR object with various
    fields filled out, and other fields waiting to be filled in by the
-   EST client.  For C509 we follow the approach of [RFC8295].  The
-   C509CertificateRequestTemplate is based on TBSCertificateRequest, see
-   Figure 2, which excludes the subjectSignatureValue field from the
-   template since that needs no further specification.
+   EST client.
+
+   For C509 we follow the approach of [RFC8295].  The
+   C509CertificateRequestTemplate is based on TBSCertificateRequest of
+   the C509CertificateRequest, see Figure 2, which excludes the
+   subjectSignatureValue field from the template since that needs no
+   further specification.
 
    The C509 Certificate Request Template is shown in Figure 4.
 
@@ -1086,9 +1089,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    performed as an isolated function of the CA, or as a separate
    function trusted by the CA.
 
-   The Certificate Signing Request (CSR) format defined in Section 4
-   follows the PKCS#10 format to enable a direct mapping to the
-   certification request information, see Section 4.1 of [RFC2986].
+   The Certificate Request format defined in Section 4 follows the
+   PKCS#10 format to enable a direct mapping to the certification
+   request information, see Section 4.1 of [RFC2986].
 
    When a certificate request is received, the CA, or function trusted
    by the CA, needs to perform some limited C509 processing and verify
