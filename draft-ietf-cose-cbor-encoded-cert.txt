@@ -1044,10 +1044,11 @@ Table of Contents
    filled out, and other fields waiting to be filled in by the EST
    client.
 
-   For C509 we follow this approach but base the
+   For C509 we follow the approach of [RFC8295] but base the
    C509CertificateRequestTemplate on the TBSCertificateRequest rather
-   than the C509CertificateRequest, to exclude the subjectSignatureValue
-   field which needs no further specification, see Figure 2.
+   than on the C509CertificateRequest, see Figure 2.  This excludes the
+   subjectSignatureValue field from the template since that needs no
+   further specification.
 
    The C509 Certificate Request Template is shown in Figure 4.
 
