@@ -2740,10 +2740,6 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR
    sequence ~C509Certificate (an unwrapped C509Certificate).
 
-   Editor's Note: The TLS registrations should be discussed and approved
-   by the TLS WG at a later stage.  The TLS WG might e.g. want a
-   separate draft in the TLS WG.
-
    +-------+------------------+-------------+--------------------------+
    | Value | Name             | Recommended | Comment                  |
    +=======+==================+=============+==========================+
