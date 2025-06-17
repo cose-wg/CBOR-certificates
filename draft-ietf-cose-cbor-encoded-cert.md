@@ -1070,6 +1070,12 @@ The initial contents of the registry are:
 |       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
+|    31 | Name:            Mac Address                              |
+|       | Identifiers:     macAddress                               |
+|       | OID:             1.3.6.1.1.1.1.22                         |
+|       | DER:             06 07 2B 06 01 01 01 01 16               |
+|       | Comments:                                                 |
++-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="C509 Attributes"}
 {: artwork-align="center"}
