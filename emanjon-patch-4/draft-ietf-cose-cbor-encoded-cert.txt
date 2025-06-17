@@ -1294,7 +1294,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    new heading "CBOR Encoded X.509 (C509) Parameters".  The columns of
    the registry are Value, Name, Identifiers, OID, DER, Comments, and
    Reference, where Value is a non-negative integer, and the other
-   columns are text strings.  All columns exept Comments are mandatory.
+   columns are text strings.  All columns except Comments are mandatory.
    For values in the interval [0, 23] the registration procedure is
    "IETF Review" and "Expert Review".  Values ≥ 32768 are reserved for
    Private Use. For all other values the registration procedure is
@@ -1503,7 +1503,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, Name, Identifiers, OID, DER,
    Comments, extensionValue, and Reference, where Value is a positive
-   integer, and the other columns are text strings.  All columns exept
+   integer, and the other columns are text strings.  All columns except
    Comments are mandatory.  The registry also contains CSR attributes
    for use in Certificate Requests, see Section 4.  For values in the
    interval [1, 23] the registration procedure is "IETF Review" and
@@ -1684,7 +1684,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  All columns exept
+   integer, and the other columns are text strings.  All columns except
    Comments are mandatory.  For values in the interval [-24, 23] the
    registration procedure is "IETF Review" and "Expert Review".  Values
    ≥ 32768 are reserved for Private Use. For all other values the
@@ -1801,7 +1801,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  All columns exept
+   integer, and the other columns are text strings.  All columns except
    Comments are mandatory.  For values in the interval [-24, 23] the
    registration procedure is "IETF Review" and "Expert Review".  Values
    ≥ 32768 are reserved for Private Use. For all other values the
@@ -1832,7 +1832,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  All columns exept
+   integer, and the other columns are text strings.  All columns except
    Comments are mandatory.  For values in the interval [-24, 23] the
    registration procedure is "IETF Review" and "Expert Review".  For all
    other values the registration procedure is "Expert Review".  The
@@ -1892,7 +1892,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  All columns exept
+   integer, and the other columns are text strings.  All columns except
    Comments are mandatory.  For values in the interval [-24, 23] the
    registration procedure is "IETF Review" and "Expert Review".  Values
    ≥ 32768 are reserved for Private Use. For all other values the
@@ -2007,7 +2007,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, General Name, and Reference, where
    Value is an integer, and the other columns are text strings.  All
-   columns exept Comments are mandatory.  For values in the interval
+   columns except Comments are mandatory.  For values in the interval
    [-24, 23] the registration procedure is "IETF Review" and "Expert
    Review".  For all other values the registration procedure is "Expert
    Review".  The initial contents of the registry are:
@@ -2066,10 +2066,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    of-possession algorithms.  The columns of the registry are Value,
    Name, Identifiers, OID, Parameters, DER, Comments, and Reference,
    where Value is an integer, and the other columns are text strings.
-   All columns exept Comments are mandatory.  For values in the interval
-   [-24, 23] the registration procedure is "IETF Review" and "Expert
-   Review".  For all other values the registration procedure is "Expert
-   Review".  The initial contents of the registry are:
+   All columns except Comments are mandatory.  For values in the
+   interval [-24, 23] the registration procedure is "IETF Review" and
+   "Expert Review".  For all other values the registration procedure is
+   "Expert Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Signature Algorithms                                |
@@ -2271,7 +2271,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, Name, Identifiers, OID,
    Parameters, DER, Comments, and Reference, where Value is an integer,
-   and the other columns are text strings.  All columns exept Comments
+   and the other columns are text strings.  All columns except Comments
    are mandatory.  For values in the interval [-24, 23] the registration
    procedure is "IETF Review" and "Expert Review".  For all other values
    the registration procedure is "Expert Review".  The initial contents
