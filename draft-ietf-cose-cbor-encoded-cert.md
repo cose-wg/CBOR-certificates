@@ -48,6 +48,7 @@ normative:
   RFC3986:
   RFC4108:
   RFC5280:
+  RFC5958:
   RFC6698:
   RFC6838:
   RFC6962:
@@ -606,11 +607,14 @@ Certificate management also makes use of data structures including private keys,
 
 ~~~~~~~~~~~ cddl
 C509PrivateKey = [
+   C509PrivateKeyType: int,
    subjectPrivateKeyAlgorithm: AlgorithmIdentifier,
    subjectPrivateKey: any,
 ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
+
+The field 'C509PrivateKeyType' indicates the type of the C509 private key. Currently, the only defined type (C509PrivateKeyType = 0) is based on Asymmetric Key Packages {{RFC5958}}. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in {{RFC5958}}.
 
 The C509PrivateKey item is served with the application/cose-c509-privkey media type, see {{c509-privkey}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
@@ -623,8 +627,6 @@ C509PEM = [
 {: sourcecode-name="c509.cddl"}
 
 The C509PEM item is served with the application/cose-c509-pem media type, see {{c509-pem}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD13 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
-
-Editor's note: Include further details for encoding of subjectPrivateKey.
 
 ## Deterministic Encoding
 
