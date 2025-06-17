@@ -1239,10 +1239,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    IANA has created a new registry titled "C509 Certificate Types" under
    the new heading "CBOR Encoded X.509 (C509) Parameters".  The columns
    of the registry are Value, Description, and Reference, where Value is
-   an integer, and the other columns are text strings.  For values in
-   the interval [-24, 23] the registration procedure is "IETF Review"
-   and "Expert Review".  For all other values the registration procedure
-   is "Expert Review".  The initial contents of the registry are:
+   an integer, and the other columns are text strings.  All columns are
+   mandatory.  For values in the interval [-24, 23] the registration
+   procedure is "IETF Review" and "Expert Review".  For all other values
+   the registration procedure is "Expert Review".  The initial contents
+   of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Description                                               |
@@ -1264,10 +1265,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Types" under the new heading "CBOR Encoded X.509 (C509) Parameters".
    The columns of the registry are Value, Description, and Reference,
    where Value is an integer, and the other columns are text strings.
-   For values in the interval [-24, 23] the registration procedure is
-   "IETF Review" and "Expert Review".  For all other values the
-   registration procedure is "Expert Review".  The initial contents of
-   the registry are:
+   All columns are mandatory.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review" and "Expert Review".  For all
+   other values the registration procedure is "Expert Review".  The
+   initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Description                                               |
@@ -1293,13 +1294,13 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    new heading "CBOR Encoded X.509 (C509) Parameters".  The columns of
    the registry are Value, Name, Identifiers, OID, DER, Comments, and
    Reference, where Value is a non-negative integer, and the other
-   columns are text strings.  For values in the interval [0, 23] the
-   registration procedure is "IETF Review" and "Expert Review".  Values
-   ≥ 32768 are reserved for Private Use. For all other values the
-   registration procedure is "Expert Review".  Name and Identifiers are
-   informal descriptions.  The OID is given in dotted decimal
-   representation.  The DER column contains the hex string of the DER-
-   encoded OID [X.690].
+   columns are text strings.  All columns except Comments are mandatory.
+   For values in the interval [0, 23] the registration procedure is
+   "IETF Review" and "Expert Review".  Values ≥ 32768 are reserved for
+   Private Use. For all other values the registration procedure is
+   "Expert Review".  Name and Identifiers are informal descriptions.
+   The OID is given in dotted decimal representation.  The DER column
+   contains the hex string of the DER-encoded OID [X.690].
 
    The initial contents of the registry are:
 
@@ -1502,13 +1503,13 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, Name, Identifiers, OID, DER,
    Comments, extensionValue, and Reference, where Value is a positive
-   integer, and the other columns are text strings.  The registry also
-   contains CSR attributes for use in Certificate Requests, see
-   Section 4.  For values in the interval [1, 23] the registration
-   procedure is "IETF Review" and "Expert Review".  Values ≥ 32768 are
-   reserved for Private Use. For all other values the registration
-   procedure is "Expert Review".  The initial contents of the registry
-   are:
+   integer, and the other columns are text strings.  All columns except
+   Comments are mandatory.  The registry also contains CSR attributes
+   for use in Certificate Requests, see Section 4.  For values in the
+   interval [1, 23] the registration procedure is "IETF Review" and
+   "Expert Review".  Values ≥ 32768 are reserved for Private Use. For
+   all other values the registration procedure is "Expert Review".  The
+   initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Extension                                                 |
@@ -1683,11 +1684,12 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  For values in the
-   interval [-24, 23] the registration procedure is "IETF Review" and
-   "Expert Review".  Values ≥ 32768 are reserved for Private Use. For
-   all other values the registration procedure is "Expert Review".  The
-   initial contents of the registry are:
+   integer, and the other columns are text strings.  All columns except
+   Comments are mandatory.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review" and "Expert Review".  Values
+   ≥ 32768 are reserved for Private Use. For all other values the
+   registration procedure is "Expert Review".  The initial contents of
+   the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Certificate Policy                                        |
@@ -1799,11 +1801,12 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  For values in the
-   interval [-24, 23] the registration procedure is "IETF Review" and
-   "Expert Review".  Values ≥ 32768 are reserved for Private Use. For
-   all other values the registration procedure is "Expert Review".  The
-   initial contents of the registry are:
+   integer, and the other columns are text strings.  All columns except
+   Comments are mandatory.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review" and "Expert Review".  Values
+   ≥ 32768 are reserved for Private Use. For all other values the
+   registration procedure is "Expert Review".  The initial contents of
+   the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Certificate Policy                                        |
@@ -1829,10 +1832,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  For values in the
-   interval [-24, 23] the registration procedure is "IETF Review" and
-   "Expert Review".  For all other values the registration procedure is
-   "Expert Review".  The initial contents of the registry are:
+   integer, and the other columns are text strings.  All columns except
+   Comments are mandatory.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review" and "Expert Review".  For all
+   other values the registration procedure is "Expert Review".  The
+   initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Information Access                                        |
@@ -1888,11 +1892,12 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Registry" under the new heading "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
-   integer, and the other columns are text strings.  For values in the
-   interval [-24, 23] the registration procedure is "IETF Review" and
-   "Expert Review".  Values ≥ 32768 are reserved for Private Use. For
-   all other values the registration procedure is "Expert Review".  The
-   initial contents of the registry are:
+   integer, and the other columns are text strings.  All columns except
+   Comments are mandatory.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review" and "Expert Review".  Values
+   ≥ 32768 are reserved for Private Use. For all other values the
+   registration procedure is "Expert Review".  The initial contents of
+   the registry are:
 
     +-------+---------------------------------------------------------+
     | Value | Extended Key Usage                                      |
@@ -2001,11 +2006,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    IANA has created a new registry titled "C509 General Names Registry"
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, General Name, and Reference, where
-   Value is an integer, and the other columns are text strings.  For
-   values in the interval [-24, 23] the registration procedure is "IETF
-   Review" and "Expert Review".  For all other values the registration
-   procedure is "Expert Review".  The initial contents of the registry
-   are:
+   Value is an integer, and the other columns are text strings.  All
+   columns except Comments are mandatory.  For values in the interval
+   [-24, 23] the registration procedure is "IETF Review" and "Expert
+   Review".  For all other values the registration procedure is "Expert
+   Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | General Names                                             |
@@ -2061,10 +2066,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    of-possession algorithms.  The columns of the registry are Value,
    Name, Identifiers, OID, Parameters, DER, Comments, and Reference,
    where Value is an integer, and the other columns are text strings.
-   For values in the interval [-24, 23] the registration procedure is
-   "IETF Review" and "Expert Review".  For all other values the
-   registration procedure is "Expert Review".  The initial contents of
-   the registry are:
+   All columns except Comments are mandatory.  For values in the
+   interval [-24, 23] the registration procedure is "IETF Review" and
+   "Expert Review".  For all other values the registration procedure is
+   "Expert Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Signature Algorithms                                |
@@ -2266,10 +2271,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
    columns of the registry are Value, Name, Identifiers, OID,
    Parameters, DER, Comments, and Reference, where Value is an integer,
-   and the other columns are text strings.  For values in the interval
-   [-24, 23] the registration procedure is "IETF Review" and "Expert
-   Review".  For all other values the registration procedure is "Expert
-   Review".  The initial contents of the registry are:
+   and the other columns are text strings.  All columns except Comments
+   are mandatory.  For values in the interval [-24, 23] the registration
+   procedure is "IETF Review" and "Expert Review".  For all other values
+   the registration procedure is "Expert Review".  The initial contents
+   of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Public Key Algorithms                               |
