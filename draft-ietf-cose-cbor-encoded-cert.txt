@@ -30,9 +30,9 @@ Abstract
    alternatively be signed directly ("natively signed"), which does not
    require re-encoding for the signature to be verified.  The TLSA
    selectors registry defined in RFC 6698 is extended to include C509
-   certificates.  The document also specifies C509 Certificate Signing
-   Requests, C509 COSE headers, a C509 TLS certificate type, and a C509
-   file format.
+   certificates.  The document also specifies C509 Certificate Requests,
+   C509 COSE headers, a C509 TLS certificate type, and a C509 file
+   format.
 
 About This Document
 
@@ -225,7 +225,7 @@ Table of Contents
    deployments where the parties issuing and verifying certificates can
    be a restricted ecosystem.
 
-   This document also specifies C509 Certificate Signing Requests, see
+   This document also specifies C509 Certificate Requests, see
    Section 4; COSE headers for use of the C509 certificates with COSE,
    see Section 9.12; and a TLS certificate type for use of the C509
    certificates with TLS and QUIC (with or without additional TLS
@@ -899,8 +899,8 @@ Table of Contents
 
 4.  C509 Certificate (Signing) Request
 
-   This section defines the format of a C509 Certificate Signing
-   Request, also known as a C509 Certificate Request, based on and
+   This section defines the format of a C509 Certificate Request, also
+   known as a C509 Certificate Signing Request (CSR), based on and
    compatible with RFC 2986 [RFC2986], and reusing the formatting of
    C509 certificates defined in Section 3.
 
@@ -1032,21 +1032,18 @@ Table of Contents
 4.4.  Certificate Request Template
 
    Enrollment over Secure Transport (EST, [RFC7030]) defines, and
-   [I-D.ietf-lamps-rfc7030-csrattrs] clarifies, how Certificate Signing
-   Request Attributes can be used to specify what the EST server expects
-   the EST client to include in a subsequent Certificate Signing Request
-   (CSR).
+   [I-D.ietf-lamps-rfc7030-csrattrs] clarifies, how an EST server can
+   specify what it expects the EST client to include in a subsequent
+   Certificate Signing Request (CSR).  Alternatively to the unstructured
+   mechanism specified in [RFC7030], Appendix B of [RFC8295] describes
+   an approach using a CSR template: In response to GET /csrattrs by the
+   EST client, the EST server returns an entire CSR object with various
+   fields filled out, and other fields waiting to be filled in by the
+   EST client.
 
-   Alternatively to the unstructured inclusion of CSR attributes
-   specified in [RFC7030], Appendix B of [RFC8295] describes an approach
-   using a CSR template: In response to GET /csrattrs by the EST client,
-   the EST server returns an entire CSR object with various fields
-   filled out, and other fields waiting to be filled in by the EST
-   client.
-
-   For C509 we follow the approach of [RFC8295] but base the
-   C509CertificateRequestTemplate on the TBSCertificateRequest rather
-   than on the C509CertificateRequest, see Figure 2.  This excludes the
+   For C509 we follow the approach of [RFC8295].  The
+   C509CertificateRequestTemplate is based on TBSCertificateRequest of
+   the C509CertificateRequest, see Figure 2, which excludes the
    subjectSignatureValue field from the template since that needs no
    further specification.
 
@@ -1092,9 +1089,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    performed as an isolated function of the CA, or as a separate
    function trusted by the CA.
 
-   The Certificate Signing Request (CSR) format defined in Section 4
-   follows the PKCS#10 format to enable a direct mapping to the
-   certification request information, see Section 4.1 of [RFC2986].
+   The Certificate Request format defined in Section 4 follows the
+   PKCS#10 format to enable a direct mapping to the certification
+   request information, see Section 4.1 of [RFC2986].
 
    When a certificate request is received, the CA, or function trusted
    by the CA, needs to perform some limited C509 processing and verify
@@ -1504,12 +1501,12 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    columns of the registry are Value, Name, Identifiers, OID, DER,
    Comments, extensionValue, and Reference, where Value is a positive
    integer, and the other columns are text strings.  All columns except
-   Comments are mandatory.  The registry also contains CSR attributes
-   for use in Certificate Requests, see Section 4.  For values in the
-   interval [1, 23] the registration procedure is "IETF Review" and
-   "Expert Review".  Values ≥ 32768 are reserved for Private Use. For
-   all other values the registration procedure is "Expert Review".  The
-   initial contents of the registry are:
+   Comments are mandatory.  The registry also contains certificate
+   request attributes for use in Certificate Requests, see Section 4.
+   For values in the interval [1, 23] the registration procedure is
+   "IETF Review" and "Expert Review".  Values ≥ 32768 are reserved for
+   Private Use. For all other values the registration procedure is
+   "Expert Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Extension                                                 |
@@ -1672,11 +1669,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Identifiers:     challengePassword                        |
    |       | OID:             1.2.840.113549.1.9.7                     |
    |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
-   |       | Comments:        CSR Attribute                            |
+   |       | Comments:        Certificate Request Attributes           |
    |       | extensionValue:  ChallengePassword                        |
    +-------+-----------------------------------------------------------+
 
-               Figure 10: C509 Extensions and CSR Attributes
+       Figure 10: C509 Extensions and Certificate Request Attributes
 
 9.5.  C509 Certificate Policies Registry
 
