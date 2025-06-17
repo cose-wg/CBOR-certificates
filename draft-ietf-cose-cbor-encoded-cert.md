@@ -638,7 +638,7 @@ Native C509 certificates MUST only use specific CBOR encoded fields. However, wh
 
 # C509 Certificate (Signing) Request {#CSR}
 
-This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Singing Request (CSR), based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
+This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
 
 The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
@@ -726,7 +726,9 @@ challengePassword is defined for printableString or utf8String values. For print
 
 ## Certificate Request Template {#CRT}
 
-Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, Appendix B of {{RFC8295}} describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client. For C509 we follow the approach of {{RFC8295}}. The C509CertificateRequestTemplate is based on TBSCertificateRequest, see {{fig-C509CSRCDDL}}, which excludes the subjectSignatureValue field from the template since that needs no further specification.
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client.
+
+For C509 we follow the approach of {{RFC8295}}. The C509CertificateRequestTemplate is based on TBSCertificateRequest of the C509CertificateRequest, see {{fig-C509CSRCDDL}}, which excludes the subjectSignatureValue field from the template since that needs no further specification.
 
 The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
@@ -763,7 +765,7 @@ The presence of a non-null value in a C509CertificateRequestTemplate indicates t
 
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
 
-The Certificate Signing Request (CSR) format defined in Section 4 follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
+The Certificate Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
 
 When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
 
