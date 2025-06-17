@@ -889,8 +889,8 @@ IANA has created a new registry titled "C509 Private Key Types" under the new he
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Byte string encoding based on Asymmetric Key Packages     |
-|       | as defined in RFC 5958                                    |
+|     0 | CBOR byte string encoding based on Asymmetric Key         |
+|       | Packages as defined in RFC 5958                           |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-rivkeys title="C509 Private Key Types"}
