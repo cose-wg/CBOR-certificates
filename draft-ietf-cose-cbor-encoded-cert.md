@@ -893,7 +893,7 @@ IANA has created a new registry titled "C509 Private Key Types" under the new he
 |       | as defined in RFC 5958                                    |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-types title="C509 Certificate Types"}
+{: #fig-rivkeys title="C509 Private Key Types"}
 {: artwork-align="center"}
 
 ## C509 Attributes Registry {#atttype}
