@@ -728,8 +728,7 @@ Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamp
 
 Alternatively to the unstructured inclusion of CSR attributes specified in {{RFC7030}}, Appendix B of {{RFC8295}} describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client.
 
-
-For C509 we follow this approach but base the C509CertificateRequestTemplate on the TBSCertificateRequest rather than the C509CertificateRequest, to exclude the subjectSignatureValue field which needs no further specification, see {{fig-C509CSRCDDL}}.
+For C509 we follow the approach of {{RFC8295}} but base the C509CertificateRequestTemplate on the TBSCertificateRequest rather than on the C509CertificateRequest, see {{fig-C509CSRCDDL}}. This excludes the subjectSignatureValue field from the template since that needs no further specification.
 
 The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
