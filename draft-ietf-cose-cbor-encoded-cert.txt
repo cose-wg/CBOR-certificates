@@ -103,26 +103,27 @@ Table of Contents
    9.  IANA Considerations
      9.1.  C509 Certificate Types Registry
      9.2.  C509 Certificate Request Types Registry
-     9.3.  C509 Attributes Registry
-     9.4.  C509 Extensions Registry
-     9.5.  C509 Certificate Policies Registry
-     9.6.  C509 Policies Qualifiers Registry
-     9.7.  C509 Information Access Registry
-     9.8.  C509 Extended Key Usages Registry
-     9.9.  C509 General Names Registry
-     9.10. C509 Signature Algorithms Registry
-     9.11. C509 Public Key Algorithms Registry
-     9.12. COSE Header Parameters Registry
-     9.13. Media Type application/cose-c509-cert
-     9.14. Media Type application/cose-c509-pkcs10
-     9.15. Media Type application/cose-c509-privkey
-     9.16. Media Type application/cose-c509-pem
-     9.17. Media Type application/cose-certhash
-     9.18. CoAP Content-Formats Registry
-     9.19. TLS Certificate Types Registry
-     9.20. CBOR Tags Registry
-     9.21. TLSA Selectors Registry
-     9.22. EDHOC Authentication Credential Types Registry
+     9.3.  C509 Private Key Types
+     9.4.  C509 Attributes Registry
+     9.5.  C509 Extensions Registry
+     9.6.  C509 Certificate Policies Registry
+     9.7.  C509 Policies Qualifiers Registry
+     9.8.  C509 Information Access Registry
+     9.9.  C509 Extended Key Usages Registry
+     9.10. C509 General Names Registry
+     9.11. C509 Signature Algorithms Registry
+     9.12. C509 Public Key Algorithms Registry
+     9.13. COSE Header Parameters Registry
+     9.14. Media Type application/cose-c509-cert
+     9.15. Media Type application/cose-c509-pkcs10
+     9.16. Media Type application/cose-c509-privkey
+     9.17. Media Type application/cose-c509-pem
+     9.18. Media Type application/cose-certhash
+     9.19. CoAP Content-Formats Registry
+     9.20. TLS Certificate Types Registry
+     9.21. CBOR Tags Registry
+     9.22. TLSA Selectors Registry
+     9.23. EDHOC Authentication Credential Types Registry
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -203,7 +204,7 @@ Table of Contents
    C509 is designed to be extensible to additional features of X.509,
    for example support for new algorithms, including new post-quantum
    algorithms, which can be registered in the IANA registry as they
-   become specified, see Section 9.10.
+   become specified, see Section 9.11.
 
    This document does not specify a certificate profile.  Two variants
    are defined using the same CBOR encoding and differing only in what
@@ -227,9 +228,9 @@ Table of Contents
 
    This document also specifies C509 Certificate Requests, see
    Section 4; COSE headers for use of the C509 certificates with COSE,
-   see Section 9.12; and a TLS certificate type for use of the C509
+   see Section 9.13; and a TLS certificate type for use of the C509
    certificates with TLS and QUIC (with or without additional TLS
-   certificate compression), see Section 9.19, and a C509 file format.
+   certificate compression), see Section 9.20, and a C509 file format.
 
 2.  Notational Conventions
 
@@ -351,7 +352,7 @@ Table of Contents
 3.1.3.  signature
 
    The 'signature' field, containing the signature algorithm including
-   parameters, is encoded as a CBOR int (see Section 9.10) or as an
+   parameters, is encoded as a CBOR int (see Section 9.11) or as an
    array with an unwrapped CBOR OID tag [RFC9090] optionally followed by
    the parameters encoded as a CBOR byte string.
 
@@ -366,7 +367,7 @@ Table of Contents
 
    *  a (unwrapped CBOR OID, CBOR bytes) pair.
 
-   The absolute value of the CBOR int (see Figure 9) encodes the
+   The absolute value of the CBOR int (see Figure 10) encodes the
    attribute type and the sign is used to represent the character string
    type; positive for utf8String, negative for printableString.  The
    attribute value for emailAddress and domainComponent are always of
@@ -418,7 +419,7 @@ Table of Contents
 3.1.7.  subjectPublicKeyInfo
 
    The 'AlgorithmIdentifier' field including parameters is encoded as
-   the CBOR int 'subjectPublicKeyAlgorithm' (see Section 9.11) or as an
+   the CBOR int 'subjectPublicKeyAlgorithm' (see Section 9.12) or as an
    array with an unwrapped CBOR OID tag [RFC9090] optionally followed by
    the parameters encoded as a CBOR byte string.
 
@@ -444,7 +445,7 @@ Table of Contents
    array.
 
    Each 'extensionID' in the CBOR array is encoded either as a CBOR int
-   (see Section 9.4) or as an unwrapped CBOR OID tag [RFC9090].
+   (see Section 9.5) or as an unwrapped CBOR OID tag [RFC9090].
 
    *  If 'extensionID' is encoded as a CBOR int, it is followed by a
       CBOR item of any type except null, and the sign of the int is used
@@ -575,7 +576,7 @@ Table of Contents
       ]
 
    *  Extended Key Usage (extKeyUsage). extensionValue is encoded as an
-      array of CBOR ints (see Section 9.8), or unwrapped CBOR OID tags
+      array of CBOR ints (see Section 9.9), or unwrapped CBOR OID tags
       [RFC9090], where each int or OID encodes a key usage purpose.  If
       the array contains a single KeyPurposeId, the array is omitted.
 
@@ -591,9 +592,9 @@ Table of Contents
 
    *  Subject Alternative Name (subjectAltName).  If the subject
       alternative name only contains general names registered in
-      Section 9.9 the extension value can be CBOR encoded.
+      Section 9.10 the extension value can be CBOR encoded.
       extensionValue is encoded as an array of (int, any) pairs where
-      each pair encodes a general name (see Section 9.9).  If
+      each pair encodes a general name (see Section 9.10).  If
       subjectAltName contains exactly one dNSName, the array and the int
       are omitted and extensionValue is the dNSName encoded as a CBOR
       text string.  In addition to the general names defined in
@@ -601,8 +602,8 @@ Table of Contents
       its own int due to its mandatory use in IEEE 802.1AR.  When
       'otherName + hardwareModuleName' is used, then [ ~oid, bytes ] is
       used to contain the pair ( hwType, hwSerialNum ) directly as
-      specified in [RFC4108].  Only the general names in Section 9.9 are
-      supported.
+      specified in [RFC4108].  Only the general names in Section 9.10
+      are supported.
 
       GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
       GeneralNames = [ + GeneralName ]
@@ -631,7 +632,7 @@ Table of Contents
       GeneralNames in authorityInfoAccess are of type
       uniformResourceIdentifier, the extension value can be CBOR
       encoded.  Each accessMethod is encoded as a CBOR int (see
-      Section 9.7) or an unwrapped CBOR OID tag [RFC9090].  The
+      Section 9.8) or an unwrapped CBOR OID tag [RFC9090].  The
       uniformResourceIdentifiers are encoded as CBOR text strings.
 
       AccessDescription = ( accessMethod: int / ~oid , uri: text )
@@ -658,9 +659,9 @@ Table of Contents
 
    *  Certificate Policies (certificatePolicies).  If noticeRef is not
       used and any explicitText are encoded as UTF8String, the extension
-      value can be CBOR encoded.  OIDs registered in Section 9.5 are
+      value can be CBOR encoded.  OIDs registered in Section 9.6 are
       encoded as an int.  The policyQualifierId is encoded as an CBOR
-      int (see Section 9.6) or an unwrapped CBOR OID tag [RFC9090].
+      int (see Section 9.7) or an unwrapped CBOR OID tag [RFC9090].
 
       PolicyIdentifier = int / ~oid
       PolicyQualifierInfo = (
@@ -672,7 +673,7 @@ Table of Contents
       ]
 
    *  Name Constraints (nameConstraints).  If the name constraints only
-      contain general names registered in Section 9.9 the extension
+      contain general names registered in Section 9.10 the extension
       value can be CBOR encoded.  C509 uses the same additions and
       restrictions as defined in Section 4.2.1.10 of [RFC5280].  Note
       that the minimum and maximum fields are not used and therefore
@@ -747,8 +748,8 @@ Table of Contents
 
 3.3.1.  Example Encoding of Extensions
 
-   The examples below use values from Section 9.4, Section 9.8, and
-   Section 9.9:
+   The examples below use values from Section 9.5, Section 9.9, and
+   Section 9.10:
 
    *  A critical basicConstraints ('cA' = true) without
       pathLenConstraint is encoded as the two CBOR ints -4, -1.
@@ -778,8 +779,8 @@ Table of Contents
    c5u provides an alternative way to identify an untrusted certificate
    chain by reference with a URI [RFC3986], encoded as a CBOR text
    string.  The content is a COSE_C509 item served with the application/
-   cose-c509-cert media type ("usage" = "chain"), see Section 9.13, with
-   corresponding CoAP Content-Format defined in Section 9.18.  A stored
+   cose-c509-cert media type ("usage" = "chain"), see Section 9.14, with
+   corresponding CoAP Content-Format defined in Section 9.19.  A stored
    file format is defined in [RFC9277], with "magic number" TBD8
    composed of the reserved CBOR tag 55799 concatenated with the CBOR
    tag calculated from the CoAP Content-Format value.
@@ -801,8 +802,8 @@ Table of Contents
    bag/chain by reference with a URI.
 
    The COSE_C509 item has media type application/cose-c509-cert, see
-   Section 9.13, with corresponding CoAP Content-Format defined in
-   Section 9.18.  A stored file format is defined in [RFC9277], with
+   Section 9.14, with corresponding CoAP Content-Format defined in
+   Section 9.19.  A stored file format is defined in [RFC9277], with
    "magic number" TBD8 composed of the reserved CBOR tag 55799
    concatenated with the CBOR tag calculated from the CoAP Content-
    Format value.
@@ -843,13 +844,22 @@ Table of Contents
    CBOR encoded structures:
 
    C509PrivateKey = [
+      C509PrivateKeyType: int,
       subjectPrivateKeyAlgorithm: AlgorithmIdentifier,
       subjectPrivateKey: any,
    ]
 
+   The field 'C509PrivateKeyType' indicates the type of the C509 private
+   key.  Different types of C509 Private Key Structures can be defined,
+   see Section 9.3.  Currently, the only defined type
+   (C509PrivateKeyType = 0) is based on Asymmetric Key Packages
+   [RFC5958].  When C509PrivateKeyType = 0, the subjectPrivateKey is the
+   CBOR byte string encoding of the PrivateKey OCTET STRING value field
+   defined in [RFC5958].
+
    The C509PrivateKey item is served with the application/cose-
-   c509-privkey media type, see Section 9.15, with corresponding CoAP
-   Content-Format defined in Section 9.18.  A stored file format is
+   c509-privkey media type, see Section 9.16, with corresponding CoAP
+   Content-Format defined in Section 9.19.  A stored file format is
    defined in [RFC9277], with "magic number" TBD12 composed of the
    reserved CBOR tag 55799 concatenated with the CBOR tag calculated
    from the CoAP Content-Format value.
@@ -860,14 +870,11 @@ Table of Contents
    ]
 
    The C509PEM item is served with the application/cose-c509-pem media
-   type, see Section 9.16, with corresponding CoAP Content-Format
-   defined in Section 9.18.  A stored file format is defined in
+   type, see Section 9.17, with corresponding CoAP Content-Format
+   defined in Section 9.19.  A stored file format is defined in
    [RFC9277], with "magic number" TBD13 composed of the reserved CBOR
    tag 55799 concatenated with the CBOR tag calculated from the CoAP
    Content-Format value.
-
-   Editor's note: Include further details for encoding of
-   subjectPrivateKey.
 
 3.6.  Deterministic Encoding
 
@@ -930,8 +937,8 @@ Table of Contents
    compatibility with existing procedures and code.
 
    The media type of C509CertificateRequest is application/cose-
-   c509-pkcs10, see Section 9.14, with corresponding CoAP Content-Format
-   defined in Section 9.18.  The "magic number" TBD9 is composed of the
+   c509-pkcs10, see Section 9.15, with corresponding CoAP Content-Format
+   defined in Section 9.19.  The "magic number" TBD9 is composed of the
    reserved CBOR tag 55799 concatenated with the CBOR tag calculated
    from the CoAP Content-Format value, see [RFC9277].
 
@@ -994,7 +1001,7 @@ Table of Contents
    MAC and requires a public Diffie-Hellman key of the verifier
    distributed out-of-band.  Both signature algorithms and non-signature
    proof-of-possession algorithms are listed in the C509 Signature
-   Algorithms Registry, see Section 9.10.  Note that a key agreement key
+   Algorithms Registry, see Section 9.11.  Note that a key agreement key
    pair may be used with a signature algorithm in a certificate request,
    see Appendix A.1.3.
 
@@ -1017,7 +1024,7 @@ Table of Contents
    Extensions structure and the extensionRequest field.  The only other
    certificate request attribute specified in this document is
    challengePassword, listed in the C509 Extensions Registry, see
-   Figure 10.  The extensionValue is encoded as follows:
+   Figure 11.  The extensionValue is encoded as follows:
 
    challengePassword = SpecialText
 
@@ -1145,7 +1152,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    The CBOR encoding of the sample certificate chains given in
    Appendix A results in the numbers shown in Figures 5 and 6.
    COSE_X509 is defined in [RFC9360] and COSE_C509 is defined in
-   Section 9.12.  After RFC 7925 profiling, most duplicated information
+   Section 9.13.  After RFC 7925 profiling, most duplicated information
    has been removed, and the remaining text strings are minimal in size.
    Therefore, the further size reduction reached with general
    compression mechanisms such as Brotli will be small, mainly
@@ -1285,7 +1292,26 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
                   Figure 8: C509 Certificate Request Types
 
-9.3.  C509 Attributes Registry
+9.3.  C509 Private Key Types
+
+   IANA has created a new registry titled "C509 Private Key Types" under
+   the new heading "CBOR Encoded X.509 (C509) Parameters".  The columns
+   of the registry are Value, Description, and Reference, where Value is
+   an integer, and the other columns are text strings.  For values in
+   the interval [-24, 23] the registration procedure is "IETF Review"
+   and "Expert Review".  For all other values the registration procedure
+   is "Expert Review".  The initial contents of the registry are:
+
+   +-------+-----------------------------------------------------------+
+   | Value | Description                                               |
+   +=======+===========================================================+
+   |     0 | CBOR byte string encoding based on Asymmetric Key         |
+   |       | Packages as defined in RFC 5958                           |
+   +-------+-----------------------------------------------------------+
+
+                      Figure 9: C509 Private Key Types
+
+9.4.  C509 Attributes Registry
 
    IANA has created a new registry titled "C509 Attributes" under the
    new heading "CBOR Encoded X.509 (C509) Parameters".  The columns of
@@ -1492,9 +1518,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
 
-                         Figure 9: C509 Attributes
+                         Figure 10: C509 Attributes
 
-9.4.  C509 Extensions Registry
+9.5.  C509 Extensions Registry
 
    IANA has created a new registry titled "C509 Extensions Registry"
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
@@ -1673,9 +1699,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | extensionValue:  ChallengePassword                        |
    +-------+-----------------------------------------------------------+
 
-       Figure 10: C509 Extensions and Certificate Request Attributes
+       Figure 11: C509 Extensions and Certificate Request Attributes
 
-9.5.  C509 Certificate Policies Registry
+9.6.  C509 Certificate Policies Registry
 
    IANA has created a new registry titled "C509 Certificate Policies
    Registry" under the new heading "CBOR Encoded X.509 (C509)
@@ -1790,9 +1816,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
 
-                    Figure 11: C509 Certificate Policies
+                    Figure 12: C509 Certificate Policies
 
-9.6.  C509 Policies Qualifiers Registry
+9.7.  C509 Policies Qualifiers Registry
 
    IANA has created a new registry titled "C509 Policies Qualifiers
    Registry" under the new heading "CBOR Encoded X.509 (C509)
@@ -1821,9 +1847,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
 
-                    Figure 12: C509 Policies Qualifiers
+                    Figure 13: C509 Policies Qualifiers
 
-9.7.  C509 Information Access Registry
+9.8.  C509 Information Access Registry
 
    IANA has created a new registry titled "C509 Information Access
    Registry" under the new heading "CBOR Encoded X.509 (C509)
@@ -1881,9 +1907,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Comments:        RFC 8182                                 |
    +-------+-----------------------------------------------------------+
 
-                    Figure 13: C509 Information Accesses
+                    Figure 14: C509 Information Accesses
 
-9.8.  C509 Extended Key Usages Registry
+9.9.  C509 Extended Key Usages Registry
 
    IANA has created a new registry titled "C509 Extended Key Usages
    Registry" under the new heading "CBOR Encoded X.509 (C509)
@@ -1996,9 +2022,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
     |       | Comments:        RFC 9480                               |
     +-------+---------------------------------------------------------+
 
-                    Figure 14: C509 Extended Key Usages
+                    Figure 15: C509 Extended Key Usages
 
-9.9.  C509 General Names Registry
+9.10.  C509 General Names Registry
 
    IANA has created a new registry titled "C509 General Names Registry"
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
@@ -2053,9 +2079,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Value:           ~oid                                     |
    +-------+-----------------------------------------------------------+
 
-                       Figure 15: C509 General Names
+                       Figure 16: C509 General Names
 
-9.10.  C509 Signature Algorithms Registry
+9.11.  C509 Signature Algorithms Registry
 
    IANA has created a new registry titled "C509 Signature Algorithms"
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
@@ -2260,9 +2286,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Comments:    Compressed signature value                   |
    +-------+-----------------------------------------------------------+
 
-                    Figure 16: C509 Signature Algorithms
+                    Figure 17: C509 Signature Algorithms
 
-9.11.  C509 Public Key Algorithms Registry
+9.12.  C509 Public Key Algorithms Registry
 
    IANA has created a new registry titled "C509 Public Key Algorithms"
    under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
@@ -2411,27 +2437,27 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | Comments:    Point compressed subjectPublicKey            |
    +-------+-----------------------------------------------------------+
 
-                   Figure 17: C509 Public Key Algorithms
+                   Figure 18: C509 Public Key Algorithms
 
-9.11.1.  Suitability of different public key algorithms for use within
+9.12.1.  Suitability of different public key algorithms for use within
          IoT scenarios
 
-   The public key algorithms registry Section 9.11 specify a number of
+   The public key algorithms registry Section 9.12 specify a number of
    algorithms, not all which are suitable for usage with constrained
    devices.  RSA requires large keys and large signature sizes compared
    to elliptic curve cryptography (ECC), which together with resource-
    efficient implementations of named elliptic curves (Montgomery,
    Edwards and Weierstraß curves), make them suitable candidates for IoT
    public key usage.  These curves are represented by ids 1–11 and 24–28
-   in Section 9.11.
+   in Section 9.12.
 
-9.12.  COSE Header Parameters Registry
+9.13.  COSE Header Parameters Registry
 
    IANA is requested to assign the entries in Table 1 to the "COSE
    Header Parameters" registry under the "CBOR Object Signing and
    Encryption (COSE)" heading with this document as reference.
 
-9.13.  Media Type application/cose-c509-cert
+9.14.  Media Type application/cose-c509-cert
 
    When the application/cose-c509-cert media type is used, the data is a
    COSE_C509 structure.  If the parameter "usage" is set to "chain",
@@ -2488,7 +2514,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
    Change controller: IESG
 
-9.14.  Media Type application/cose-c509-pkcs10
+9.15.  Media Type application/cose-c509-pkcs10
 
    When the application/cose-c509-pkcs10 media type is used, the data is
    a C509CertificateRequest structure.
@@ -2538,7 +2564,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
    Change controller: IESG
 
-9.15.  Media Type application/cose-c509-privkey
+9.16.  Media Type application/cose-c509-privkey
 
    When the application/cose-c509-privkey media type is used, the data
    is a C509PrivateKey structure.
@@ -2588,7 +2614,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
    Change controller: IESG
 
-9.16.  Media Type application/cose-c509-pem
+9.17.  Media Type application/cose-c509-pem
 
    When the application/cose-c509-pem media type is used, the data is a
    C509PEM structure.
@@ -2638,7 +2664,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
    Change controller: IESG
 
-9.17.  Media Type application/cose-certhash
+9.18.  Media Type application/cose-certhash
 
    When the application/cose-certhash media type is used, the data is a
    COSE_CertHash structure, see [RFC9360].
@@ -2694,7 +2720,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 
    Change controller: IESG
 
-9.18.  CoAP Content-Formats Registry
+9.19.  CoAP Content-Formats Registry
 
    IANA is requested to add media types for "application/cose-
    c509-cert", "application/cose-c509-pkcs10", "application/cose-
@@ -2702,13 +2728,13 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    Formats" registry under the registry group "Constrained RESTful
    Environments (CoRE) Parameters".  A dedicated Content-Format ID is
    requested for the "application/cose-c509-cert" media type in the case
-   when the parameter "usage" is set to "chain", see Section 9.13.
+   when the parameter "usage" is set to "chain", see Section 9.14.
 
    IANA is requested to add media types for "application/cose-certhash"
    to the "CoAP Content-Formats" registry under the registry group
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested in the case when the parameter "usage"
-   is set to "c509", see Section 9.13.
+   is set to "c509", see Section 9.14.
 
    IANA is requested to add media types for "application/cbor" to the
    "CoAP Content-Formats" registry under the registry group "Constrained
@@ -2738,9 +2764,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 | containing a URI              | CBOR text | TBD18 | [RFC9360]         |
 +-------------------------------+-----------+-------+-------------------+
 
-                  Figure 18: CoAP Content-Format IDs
+                  Figure 19: CoAP Content-Format IDs
 
-9.19.  TLS Certificate Types Registry
+9.20.  TLS Certificate Types Registry
 
    This document registers the following entry in the "TLS Certificate
    Types" registry under the "Transport Layer Security (TLS) Extensions"
@@ -2756,7 +2782,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |  TBD5 | C509 Certificate |           Y |                          |
    +-------+------------------+-------------+--------------------------+
 
-9.20.  CBOR Tags Registry
+9.21.  CBOR Tags Registry
 
    This document registers the following entries in the "CBOR Tags"
    registry under the "Concise Binary Object Representation (CBOR) Tags"
@@ -2770,7 +2796,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |      | Reference: This document                                   |
    +------+------------------------------------------------------------+
 
-9.21.  TLSA Selectors Registry
+9.22.  TLSA Selectors Registry
 
    This document registers the following entries in the "TLSA Selectors"
    registry under the "DNS-Based Authentication of Named Entities (DANE)
@@ -2787,7 +2813,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    specification updates [RFC6698] to accept the use of C509
    certificates, which are essentially CBOR encoded PKIX certificates.
 
-9.22.  EDHOC Authentication Credential Types Registry
+9.23.  EDHOC Authentication Credential Types Registry
 
    This document registers the following entry in the "EDHOC
    Authentication Credential Types" registry under the "Ephemeral
@@ -2835,6 +2861,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
               <https://www.rfc-editor.org/rfc/rfc5280>.
+
+   [RFC5958]  Turner, S., "Asymmetric Key Packages", RFC 5958,
+              DOI 10.17487/RFC5958, August 2010,
+              <https://www.rfc-editor.org/rfc/rfc5958>.
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
@@ -3119,7 +3149,7 @@ A.1.1.  Example: C509 Certificate Encoding
    previous section.  The point compressed public key is represented as
    described in Section 3.2.1.
 
-   Figure 19 shows the diagnostic notation of the unwrapped CBOR
+   Figure 20 shows the diagnostic notation of the unwrapped CBOR
    sequence, ~C509Certificate, see Section 3.1.
 
    /This defines a CBOR Sequence (RFC 8742):/
@@ -3141,9 +3171,9 @@ A.1.1.  Example: C509 Certificate Encoding
        EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
        3314EA19191E8B607DA5AE3BDA16'
 
-          Figure 19: CBOR diagnostic notation of ~C509Certificate
+          Figure 20: CBOR diagnostic notation of ~C509Certificate
 
-   Figure 20 shows the plain hex format of the unwrapped CBOR sequence,
+   Figure 21 shows the plain hex format of the unwrapped CBOR sequence,
    the size is 140 bytes.
 
    03
@@ -3161,7 +3191,7 @@ A.1.1.  Example: C509 Certificate Encoding
    DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
    62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
 
-           Figure 20: CBOR plain hex format of ~C509Certificate.
+           Figure 21: CBOR plain hex format of ~C509Certificate.
 
 A.1.2.  Example: Natively Signed C509 Certificate
 
@@ -3170,7 +3200,7 @@ A.1.2.  Example: Natively Signed C509 Certificate
    c509CertificateType, encoding of point compression (see
    Section 3.2.1), and signatureValue.
 
-   Figure 21 shows the diagnostic notation of the natively signed
+   Figure 22 shows the diagnostic notation of the natively signed
    unwrapped CBOR sequence, ~C509Certificate.
 
    /This defines a CBOR Sequence (RFC 8742):/
@@ -3190,9 +3220,9 @@ A.1.2.  Example: Natively Signed C509 Certificate
        0F3F241B60A202579CAC28CD3B7494D5FA5D8BBAB4600357E5
        50AB9FA9A65D9BA2B3B82E668CC6'
 
-          Figure 21: CBOR diagnostic notation of ~C509Certificate
+          Figure 22: CBOR diagnostic notation of ~C509Certificate
 
-   Figure 22 shows the plain hex format of the natively signed unwrapped
+   Figure 23 shows the plain hex format of the natively signed unwrapped
    CBOR sequence, the size is 140 bytes.
 
    02
@@ -3210,7 +3240,7 @@ A.1.2.  Example: Natively Signed C509 Certificate
    DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
    BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 
-           Figure 22: CBOR plain hex format of ~C509Certificate.
+           Figure 23: CBOR plain hex format of ~C509Certificate.
 
 A.1.3.  C509 for Diffie-Hellman keys
 
@@ -3249,7 +3279,7 @@ A.1.5.  Examples: C509Certificate and C509CertData
    specification, based on the natively signed C509 certificate in
    Appendix A.1.2.
 
-   Figure 23 shows the encoding of the corresponding C509Certificate,
+   Figure 24 shows the encoding of the corresponding C509Certificate,
    i.e. the CBOR array wrapping of the CBOR sequence ~C509Certificate,
    see Section 3.1.
 
@@ -3269,14 +3299,14 @@ A.1.5.  Examples: C509Certificate and C509CertData
    DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
    BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 
-           Figure 23: C509Certificate: The CBOR array wrapping of
+           Figure 24: C509Certificate: The CBOR array wrapping of
                               ~C509Certificate
 
    Note that C509Certificate is identical to ~C509Certificate in
    Appendix A.1.2 except for the prefix 8B (which indicates that it is a
    CBOR array with 11 elements).
 
-   Figure 24 shows the encoding of the corresponding C509CertData, i.e.
+   Figure 25 shows the encoding of the corresponding C509CertData, i.e.
    the CBOR byte string wrapping of the CBOR sequence ~C509Certificate,
    see Section 3.4.
 
@@ -3296,7 +3326,7 @@ A.1.5.  Examples: C509Certificate and C509CertData
    DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
    BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 
-           Figure 24: C509CertData: CBOR byte string wrapping of
+           Figure 25: C509CertData: CBOR byte string wrapping of
                              ~C509Certificate.
 
    Note that C509CertData is identical to ~C509Certificate in
