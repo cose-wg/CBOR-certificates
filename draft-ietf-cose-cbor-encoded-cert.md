@@ -244,7 +244,7 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * Attribute ] / SpecialText
 
-SpecialText = text / bytes / #6
+SpecialText = text / bytes / tag
 
 Attribute = (( attributeType: int, attributeValue: text ) //
              ( attributeType: ~oid, attributeValue: bytes ))
@@ -252,13 +252,15 @@ Attribute = (( attributeType: int, attributeValue: text ) //
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
-NonNull = any .ne null
-
 Extensions = [ * Extension ] / int
 
 Extension = (( extensionID: int, extensionValue: NonNull ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
+
+NonNull = any .ne null
+
+tag = #6
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
