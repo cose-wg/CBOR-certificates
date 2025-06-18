@@ -857,7 +857,7 @@ Table of Contents
    [RFC5958].  When C509PrivateKeyType = 1, the subjectPrivateKey is a
    COSE_KEY structure containing a private key as defined in [RFC9052].
    Note that COSE_KEY might not be possible to use with all algorithms
-   that have C509 AlgorithmIdentifiers defined.
+   that have a C509 AlgorithmIdentifier defined.
 
    The C509PrivateKey item is served with the application/cose-
    c509-privkey media type, see Section 9.16, with corresponding CoAP
