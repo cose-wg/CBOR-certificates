@@ -556,6 +556,8 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
+* OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL it can be CBOR encoded. The CBOR encoded extensionValue is the empty string h''.
+
 ### Example Encoding of Extensions
 
 The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
@@ -1259,6 +1261,13 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
 |       | Comments:                                                 |
 |       | extensionValue:  ASIdentifiers                            |
++-------+-----------------------------------------------------------+
+|    36 | Name:            OCSP No Check                            |
+|       | Identifiers:     id-pkix-ocsp-nocheck                     |
+|       | OID:             1.3.6.1.5.5.7.48.1.5                     |
+|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
+|       | Comments:                                                 |
+|       | extensionValue: h''                                       |
 +-------+-----------------------------------------------------------+
 |   255 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
