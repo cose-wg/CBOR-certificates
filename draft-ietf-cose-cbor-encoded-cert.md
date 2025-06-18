@@ -288,9 +288,9 @@ In the general case, the sequence of 'Attribute' is encoded as a CBOR array of A
    * a (CBOR int, CBOR text string) pair, or
    * a (unwrapped CBOR OID, CBOR bytes) pair.
 
-   The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}). In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. In re-encoded C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported.
+   The absolute value of the CBOR int (see {{fig-attrtype}}) encodes the attribute type and the sign is used to represent the character string type; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}), and is unambiguously represented using non-negative CBOR int. In natively signed C509 certificates all text strings are UTF-8 encoded and all attributeType SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. In non-native (re-encoded) C509 certificates, attribute values of types ia5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String are allowed, and the string types teletexString, universalString, and bmpString are not supported.
 
-   If Name contains a single Attribute containing an utf8String encoded 'common name' it is for compactness encoded as SpecialText:
+   If Name contains a single Attribute containing an utf8String encoded 'common name' it may for compactness be encoded as CBOR byte string or CBOR tag:
 
   * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
   * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
@@ -723,7 +723,7 @@ challengePassword = SpecialText
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-challengePassword is defined for printableString or utf8String values. For printableString it is encoded as CBOR text string, and for utf8String as SpecialText, see {{issuer}}. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
+challengePassword is defined for printableString or utf8String values. For printableString it is encoded as CBOR text string, and for utf8String the same optimization applies as in {{issuer}}. The sign of extensionID of challengePassword indicates the string type (instead the criticalness in extensions): positive for utf8String and negative for printableString. In the native certificate request (types 0 and 2), only utf8String is allowed.
 
 
 ## Certificate Request Template {#CRT}
