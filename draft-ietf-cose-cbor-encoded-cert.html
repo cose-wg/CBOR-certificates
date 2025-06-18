@@ -1855,6 +1855,11 @@ tag = #6
    SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
 </pre><a href="#section-3.3-45" class="pilcrow">¶</a>
 </div>
+<ul class="normal">
+<li class="normal" id="section-3.3-46.1">
+            <p id="section-3.3-46.1.1">OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL it can be CBOR encoded. The CBOR encoded extensionValue is the empty string h''.<a href="#section-3.3-46.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 <div id="example-encoding-of-extensions">
 <section id="section-3.3.1">
           <h4 id="name-example-encoding-of-extensi">
@@ -3136,10 +3141,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <figure id="figure-11">
           <div id="section-9.5-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.5-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2656" width="560" viewBox="0 0 560 2656" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,2640" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,2640" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,2640" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2768" width="560" viewBox="0 0 560 2768" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,2752" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,2752" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,2752" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
@@ -3166,6 +3171,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                 <path d="M 8,2416 L 552,2416" fill="none" stroke="black"></path>
                 <path d="M 8,2528 L 552,2528" fill="none" stroke="black"></path>
                 <path d="M 8,2640 L 552,2640" fill="none" stroke="black"></path>
+                <path d="M 8,2752 L 552,2752" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
                   <text x="120" y="52">Extension</text>
@@ -3592,32 +3598,56 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="120" y="2500">Comments:</text>
                   <text x="144" y="2516">extensionValue:</text>
                   <text x="272" y="2516">ASIdentifiers</text>
-                  <text x="48" y="2548">255</text>
+                  <text x="52" y="2548">36</text>
                   <text x="104" y="2548">Name:</text>
-                  <text x="256" y="2548">Challenge</text>
-                  <text x="332" y="2548">Password</text>
+                  <text x="236" y="2548">OCSP</text>
+                  <text x="268" y="2548">No</text>
+                  <text x="304" y="2548">Check</text>
                   <text x="132" y="2564">Identifiers:</text>
-                  <text x="288" y="2564">challengePassword</text>
+                  <text x="300" y="2564">id-pkix-ocsp-nocheck</text>
                   <text x="100" y="2580">OID:</text>
-                  <text x="300" y="2580">1.2.840.113549.1.9.7</text>
+                  <text x="300" y="2580">1.3.6.1.5.5.7.48.1.5</text>
                   <text x="100" y="2596">DER:</text>
                   <text x="228" y="2596">06</text>
                   <text x="252" y="2596">09</text>
-                  <text x="276" y="2596">2A</text>
-                  <text x="300" y="2596">86</text>
-                  <text x="324" y="2596">48</text>
-                  <text x="348" y="2596">86</text>
-                  <text x="372" y="2596">F7</text>
-                  <text x="396" y="2596">0D</text>
-                  <text x="420" y="2596">01</text>
-                  <text x="444" y="2596">09</text>
-                  <text x="468" y="2596">07</text>
+                  <text x="276" y="2596">2B</text>
+                  <text x="300" y="2596">06</text>
+                  <text x="324" y="2596">01</text>
+                  <text x="348" y="2596">05</text>
+                  <text x="372" y="2596">05</text>
+                  <text x="396" y="2596">07</text>
+                  <text x="420" y="2596">30</text>
+                  <text x="444" y="2596">01</text>
+                  <text x="468" y="2596">05</text>
                   <text x="120" y="2612">Comments:</text>
-                  <text x="264" y="2612">Certificate</text>
-                  <text x="344" y="2612">Request</text>
-                  <text x="420" y="2612">Attributes</text>
                   <text x="144" y="2628">extensionValue:</text>
-                  <text x="288" y="2628">ChallengePassword</text>
+                  <text x="224" y="2628">h''</text>
+                  <text x="48" y="2660">255</text>
+                  <text x="104" y="2660">Name:</text>
+                  <text x="256" y="2660">Challenge</text>
+                  <text x="332" y="2660">Password</text>
+                  <text x="132" y="2676">Identifiers:</text>
+                  <text x="288" y="2676">challengePassword</text>
+                  <text x="100" y="2692">OID:</text>
+                  <text x="300" y="2692">1.2.840.113549.1.9.7</text>
+                  <text x="100" y="2708">DER:</text>
+                  <text x="228" y="2708">06</text>
+                  <text x="252" y="2708">09</text>
+                  <text x="276" y="2708">2A</text>
+                  <text x="300" y="2708">86</text>
+                  <text x="324" y="2708">48</text>
+                  <text x="348" y="2708">86</text>
+                  <text x="372" y="2708">F7</text>
+                  <text x="396" y="2708">0D</text>
+                  <text x="420" y="2708">01</text>
+                  <text x="444" y="2708">09</text>
+                  <text x="468" y="2708">07</text>
+                  <text x="120" y="2724">Comments:</text>
+                  <text x="264" y="2724">Certificate</text>
+                  <text x="344" y="2724">Request</text>
+                  <text x="420" y="2724">Attributes</text>
+                  <text x="144" y="2740">extensionValue:</text>
+                  <text x="288" y="2740">ChallengePassword</text>
                 </g>
               </svg><a href="#section-9.5-2.1.1" class="pilcrow">¶</a>
 </div>

@@ -749,6 +749,10 @@ Table of Contents
       )
       SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
 
+   *  OCSP No Check (id-pkix-ocsp-nocheck).  If the extension value is
+      NULL it can be CBOR encoded.  The CBOR encoded extensionValue is
+      the empty string h''.
+
 3.3.1.  Example Encoding of Extensions
 
    The examples below use values from Section 9.5, Section 9.9, and
@@ -1699,6 +1703,13 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
    |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
    |       | Comments:                                                 |
    |       | extensionValue:  ASIdentifiers                            |
+   +-------+-----------------------------------------------------------+
+   |    36 | Name:            OCSP No Check                            |
+   |       | Identifiers:     id-pkix-ocsp-nocheck                     |
+   |       | OID:             1.3.6.1.5.5.7.48.1.5                     |
+   |       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
+   |       | Comments:                                                 |
+   |       | extensionValue: h''                                       |
    +-------+-----------------------------------------------------------+
    |   255 | Name:            Challenge Password                       |
    |       | Identifiers:     challengePassword                        |
