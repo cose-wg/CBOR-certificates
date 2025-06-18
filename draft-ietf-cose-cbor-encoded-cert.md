@@ -614,7 +614,7 @@ C509PrivateKey = [
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-The field 'C509PrivateKeyType' indicates the type of the C509 private key. Different types of C509 Private Key Structures can be defined, see {{privkeys}}. Currently, the only defined type (C509PrivateKeyType = 0) is based on Asymmetric Key Packages {{RFC5958}}. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in {{RFC5958}}.
+The field 'C509PrivateKeyType' indicates the type of the C509 private key. Different types of C509 Private Key Structures can be defined, see {{privkeys}}. Currently, two types are defined. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in {{RFC5958}}. When C509PrivateKeyType = 1, the subjectPrivateKey is a COSE_KEY structure containing a private key as defined in {{RFC9052}}. Note that COSE_KEY might not be possible to use with all algorithms that have C509 AlgorithmIdentifiers defined.
 
 The C509PrivateKey item is served with the application/cose-c509-privkey media type, see {{c509-privkey}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
@@ -881,14 +881,17 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 
 ## C509 Private Key Types {#privkeys}
 
-IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
-| Value | Description                                               |
+| Value | Private Key Types                                         |
 +=======+===========================================================+
-|     0 | CBOR byte string encoding based on Asymmetric Key         |
-|       | Packages as defined in RFC 5958                           |
+|     0 | Comments:          Asymmetric Key Package (RFC 5958)      |
+|       | subjectPrivateKey: bytes                                  |
++-------+-----------------------------------------------------------+
+|     1 | Comments:          COSE Key Object (RFC 9052)             |
+|       | subjectPrivateKey: COSE_Key                               |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-rivkeys title="C509 Private Key Types"}
