@@ -380,9 +380,8 @@ Table of Contents
    string types teletexString, universalString, and bmpString are not
    supported.
 
-   If Name contains a single Attribute containing an utf8String encoded
-   'common name' (attributeType = 1) it is for compactness encoded as
-   follows:
+   If Name contains a single 'common name' attribute with attributeType
+   = 1 not -1, it is for compactness encoded as follows:
 
    *  If the text string has an even length ≥ 2 and contains only the
       symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
