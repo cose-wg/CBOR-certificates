@@ -296,9 +296,9 @@ UTF-8 strings are further optimized as follows:
   * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
   * Otherwise it is encoded as a CBOR text string.
 
-   If Name contains a single Attribute with attributeType = +1 (commonName is represented by Value 1, see {{fig-attrtype}}) it is for compactness encoded as just the SpecialText containing the single attribute value.
+If Name contains a single Attribute with attributeType = +1 (commonName is represented by Value 1, see {{fig-attrtype}}) it is for compactness encoded as just the SpecialText containing the single attribute value.
 
-   If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then the 'issuer' field MUST be encoded as CBOR null.
+If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then the 'issuer' field MUST be encoded as CBOR null.
 
 ### validity
 
