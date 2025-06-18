@@ -13,10 +13,10 @@
 <meta content='
        This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50% while also significantly reducing memory and code size compared to ASN.1. The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The TLSA selectors registry defined in RFC 6698 is extended to include C509 certificates. The document also specifies C509 Certificate Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format. 
     ' name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
+  xml2rfc 3.29.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 19 December 2025</td>
+<td class="center">Expires 20 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-17" class="published">17 June 2025</time>
+<time datetime="2025-06-18" class="published">18 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-19">19 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-20">20 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1958,7 +1958,7 @@ C509PrivateKey = [
 ]
 </pre><a href="#section-3.5-2" class="pilcrow">¶</a>
 </div>
-<p id="section-3.5-3">The field 'C509PrivateKeyType' indicates the type of the C509 private key. Different types of C509 Private Key Structures can be defined, see <a href="#privkeys" class="auto internal xref">Section 9.3</a>. Currently, the only defined type (C509PrivateKeyType = 0) is based on Asymmetric Key Packages <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">The field 'C509PrivateKeyType' indicates the type of the C509 private key. Different types of C509 Private Key Structures can be defined, see <a href="#privkeys" class="auto internal xref">Section 9.3</a>. Currently, two types are defined. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>. When C509PrivateKeyType = 1, the subjectPrivateKey is a COSE_KEY structure containing a private key as defined in <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>. Note that COSE_KEY might not be possible to use with all algorithms that have C509 AlgorithmIdentifiers defined.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <p id="section-3.5-4">The C509PrivateKey item is served with the application/cose-c509-privkey media type, see <a href="#c509-privkey" class="auto internal xref">Section 9.16</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.19</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD12 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.5-4" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.5-5">
 <pre>
@@ -2483,37 +2483,43 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-private-key-types">
 <a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-c509-private-key-types" class="section-name selfRef">C509 Private Key Types</a>
         </h3>
-<p id="section-9.3-1">IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+<p id="section-9.3-1">IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 <span id="name-c509-private-key-types-2"></span><div id="fig-rivkeys">
 <figure id="figure-9">
           <div id="section-9.3-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.3-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="128" width="560" viewBox="0 0 560 128" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,112" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,112" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,112" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="560" viewBox="0 0 560 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,160" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,160" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,160" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
                 <path d="M 8,112 L 552,112" fill="none" stroke="black"></path>
+                <path d="M 8,160 L 552,160" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
-                  <text x="128" y="52">Description</text>
+                  <text x="112" y="52">Private</text>
+                  <text x="160" y="52">Key</text>
+                  <text x="200" y="52">Types</text>
                   <text x="56" y="84">0</text>
-                  <text x="100" y="84">CBOR</text>
-                  <text x="140" y="84">byte</text>
-                  <text x="188" y="84">string</text>
-                  <text x="252" y="84">encoding</text>
-                  <text x="312" y="84">based</text>
-                  <text x="348" y="84">on</text>
-                  <text x="404" y="84">Asymmetric</text>
-                  <text x="464" y="84">Key</text>
-                  <text x="116" y="100">Packages</text>
-                  <text x="164" y="100">as</text>
-                  <text x="208" y="100">defined</text>
-                  <text x="252" y="100">in</text>
-                  <text x="280" y="100">RFC</text>
-                  <text x="316" y="100">5958</text>
+                  <text x="120" y="84">Comments:</text>
+                  <text x="276" y="84">Asymmetric</text>
+                  <text x="336" y="84">Key</text>
+                  <text x="384" y="84">Package</text>
+                  <text x="436" y="84">(RFC</text>
+                  <text x="480" y="84">5958)</text>
+                  <text x="156" y="100">subjectPrivateKey:</text>
+                  <text x="256" y="100">bytes</text>
+                  <text x="56" y="132">1</text>
+                  <text x="120" y="132">Comments:</text>
+                  <text x="252" y="132">COSE</text>
+                  <text x="288" y="132">Key</text>
+                  <text x="332" y="132">Object</text>
+                  <text x="380" y="132">(RFC</text>
+                  <text x="424" y="132">9052)</text>
+                  <text x="156" y="148">subjectPrivateKey:</text>
+                  <text x="268" y="148">COSE_Key</text>
                 </g>
               </svg><a href="#section-9.3-2.1.1" class="pilcrow">¶</a>
 </div>
