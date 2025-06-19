@@ -755,8 +755,10 @@ C509CertificateRequestTemplate = [
 
 NameTemplate = [ * AttributeTemplate ] / SpecialText
 
-AttributeTemplate = (( attributeType: int, attributeValue: text / null ) //
-                     ( attributeType: ~oid, attributeValue: bytes / null ))
+AttributeTemplate = (( attributeType: int,
+                       attributeValue: text / null ) //
+                     ( attributeType: ~oid,
+                       attributeValue: bytes / null ))
 
 ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
@@ -766,7 +768,6 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
-{: artwork-align="center"}
 
 Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}.
 
