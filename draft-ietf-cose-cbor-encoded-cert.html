@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 20 December 2025</td>
+<td class="center">Expires 21 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-18" class="published">18 June 2025</time>
+<time datetime="2025-06-19" class="published">19 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-20">20 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-21">21 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -3129,15 +3129,15 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-extensions-registry">
 <a href="#section-9.5" class="section-number selfRef">9.5. </a><a href="#name-c509-extensions-registry" class="section-name selfRef">C509 Extensions Registry</a>
         </h3>
-<p id="section-9.5-1">IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. All columns except Comments are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>. For values in the interval [1, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.5-1" class="pilcrow">¶</a></p>
+<p id="section-9.5-1">IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. All columns except Identifiers and Comments are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>. For values in the interval [1, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.5-1" class="pilcrow">¶</a></p>
 <span id="name-c509-extensions-and-certifi"></span><div id="fig-extype">
 <figure id="figure-11">
           <div id="section-9.5-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.5-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2768" width="560" viewBox="0 0 560 2768" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,2752" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,2752" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,2752" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2880" width="560" viewBox="0 0 560 2880" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,2864" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,2864" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,2864" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
@@ -3165,6 +3165,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                 <path d="M 8,2528 L 552,2528" fill="none" stroke="black"></path>
                 <path d="M 8,2640 L 552,2640" fill="none" stroke="black"></path>
                 <path d="M 8,2752 L 552,2752" fill="none" stroke="black"></path>
+                <path d="M 8,2864 L 552,2864" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
                   <text x="120" y="52">Extension</text>
@@ -3614,33 +3615,59 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="468" y="2596">05</text>
                   <text x="120" y="2612">Comments:</text>
                   <text x="144" y="2628">extensionValue:</text>
-                  <text x="224" y="2628">h''</text>
-                  <text x="48" y="2660">255</text>
+                  <text x="232" y="2628">h''</text>
+                  <text x="52" y="2660">37</text>
                   <text x="104" y="2660">Name:</text>
-                  <text x="256" y="2660">Challenge</text>
-                  <text x="332" y="2660">Password</text>
+                  <text x="276" y="2660">Precertificate</text>
+                  <text x="368" y="2660">Signing</text>
+                  <text x="448" y="2660">Certificate</text>
                   <text x="132" y="2676">Identifiers:</text>
-                  <text x="288" y="2676">challengePassword</text>
                   <text x="100" y="2692">OID:</text>
-                  <text x="300" y="2692">1.2.840.113549.1.9.7</text>
+                  <text x="312" y="2692">1.3.6.1.4.1.11129.2.4.3</text>
                   <text x="100" y="2708">DER:</text>
                   <text x="228" y="2708">06</text>
-                  <text x="252" y="2708">09</text>
-                  <text x="276" y="2708">2A</text>
-                  <text x="300" y="2708">86</text>
-                  <text x="324" y="2708">48</text>
-                  <text x="348" y="2708">86</text>
-                  <text x="372" y="2708">F7</text>
-                  <text x="396" y="2708">0D</text>
-                  <text x="420" y="2708">01</text>
-                  <text x="444" y="2708">09</text>
-                  <text x="468" y="2708">07</text>
+                  <text x="252" y="2708">0A</text>
+                  <text x="276" y="2708">2B</text>
+                  <text x="300" y="2708">06</text>
+                  <text x="324" y="2708">01</text>
+                  <text x="348" y="2708">04</text>
+                  <text x="372" y="2708">01</text>
+                  <text x="396" y="2708">D6</text>
+                  <text x="420" y="2708">79</text>
+                  <text x="444" y="2708">02</text>
+                  <text x="468" y="2708">04</text>
+                  <text x="492" y="2708">03</text>
                   <text x="120" y="2724">Comments:</text>
-                  <text x="264" y="2724">Certificate</text>
-                  <text x="344" y="2724">Request</text>
-                  <text x="420" y="2724">Attributes</text>
+                  <text x="232" y="2724">RFC</text>
+                  <text x="268" y="2724">6962</text>
                   <text x="144" y="2740">extensionValue:</text>
-                  <text x="288" y="2740">ChallengePassword</text>
+                  <text x="232" y="2740">h''</text>
+                  <text x="48" y="2772">255</text>
+                  <text x="104" y="2772">Name:</text>
+                  <text x="256" y="2772">Challenge</text>
+                  <text x="332" y="2772">Password</text>
+                  <text x="132" y="2788">Identifiers:</text>
+                  <text x="288" y="2788">challengePassword</text>
+                  <text x="100" y="2804">OID:</text>
+                  <text x="300" y="2804">1.2.840.113549.1.9.7</text>
+                  <text x="100" y="2820">DER:</text>
+                  <text x="228" y="2820">06</text>
+                  <text x="252" y="2820">09</text>
+                  <text x="276" y="2820">2A</text>
+                  <text x="300" y="2820">86</text>
+                  <text x="324" y="2820">48</text>
+                  <text x="348" y="2820">86</text>
+                  <text x="372" y="2820">F7</text>
+                  <text x="396" y="2820">0D</text>
+                  <text x="420" y="2820">01</text>
+                  <text x="444" y="2820">09</text>
+                  <text x="468" y="2820">07</text>
+                  <text x="120" y="2836">Comments:</text>
+                  <text x="264" y="2836">Certificate</text>
+                  <text x="344" y="2836">Request</text>
+                  <text x="420" y="2836">Attributes</text>
+                  <text x="144" y="2852">extensionValue:</text>
+                  <text x="288" y="2852">ChallengePassword</text>
                 </g>
               </svg><a href="#section-9.5-2.1.1" class="pilcrow">¶</a>
 </div>
@@ -4287,10 +4314,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <figure id="figure-15">
           <div id="section-9.9-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.9-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1616" width="544" viewBox="0 0 544 1616" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,1600" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,1600" fill="none" stroke="black"></path>
-                <path d="M 536,32 L 536,1600" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1712" width="544" viewBox="0 0 544 1712" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,1696" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,1696" fill="none" stroke="black"></path>
+                <path d="M 536,32 L 536,1696" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 536,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 536,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 536,66" fill="none" stroke="black"></path>
@@ -4310,6 +4337,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                 <path d="M 8,1408 L 536,1408" fill="none" stroke="black"></path>
                 <path d="M 8,1504 L 536,1504" fill="none" stroke="black"></path>
                 <path d="M 8,1600 L 536,1600" fill="none" stroke="black"></path>
+                <path d="M 8,1696 L 536,1696" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
                   <text x="116" y="52">Extended</text>
@@ -4673,6 +4701,30 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="120" y="1588">Comments:</text>
                   <text x="232" y="1588">RFC</text>
                   <text x="268" y="1588">9480</text>
+                  <text x="52" y="1620">19</text>
+                  <text x="104" y="1620">Name:</text>
+                  <text x="276" y="1620">Precertificate</text>
+                  <text x="368" y="1620">Signing</text>
+                  <text x="448" y="1620">Certificate</text>
+                  <text x="132" y="1636">Identifiers:</text>
+                  <text x="100" y="1652">OID:</text>
+                  <text x="312" y="1652">1.3.6.1.4.1.11129.2.4.4</text>
+                  <text x="100" y="1668">DER:</text>
+                  <text x="228" y="1668">06</text>
+                  <text x="252" y="1668">0A</text>
+                  <text x="276" y="1668">2B</text>
+                  <text x="300" y="1668">06</text>
+                  <text x="324" y="1668">01</text>
+                  <text x="348" y="1668">04</text>
+                  <text x="372" y="1668">01</text>
+                  <text x="396" y="1668">D6</text>
+                  <text x="420" y="1668">79</text>
+                  <text x="444" y="1668">02</text>
+                  <text x="468" y="1668">04</text>
+                  <text x="492" y="1668">04</text>
+                  <text x="120" y="1684">Comments:</text>
+                  <text x="232" y="1684">RFC</text>
+                  <text x="268" y="1684">6962</text>
                 </g>
               </svg><a href="#section-9.9-2.1.1" class="pilcrow">¶</a>
 </div>
