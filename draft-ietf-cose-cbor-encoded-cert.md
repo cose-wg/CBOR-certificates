@@ -1100,7 +1100,7 @@ The initial contents of the registry are:
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. All columns except Comments are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. All columns except Identifiers and Comments are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1265,7 +1265,14 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             1.3.6.1.5.5.7.48.1.5                     |
 |       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
 |       | Comments:                                                 |
-|       | extensionValue: h''                                       |
+|       | extensionValue:  h''                                      |
++-------+-----------------------------------------------------------+
+|    37 | Name:            Precertificate Signing Certificate       |
+|       | Identifiers:                                              |
+|       | OID:             1.3.6.1.4.1.11129.2.4.3                  |
+|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 03      |
+|       | Comments:        RFC 6962                                 |
+|       | extensionValue:  h''                                      |
 +-------+-----------------------------------------------------------+
 |   255 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
@@ -1569,6 +1576,12 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | OID:             1.3.6.1.5.5.7.3.32                     |
 |       | DER:             06 08 2B 06 01 05 05 07 03 20          |
 |       | Comments:        RFC 9480                               |
++-------+---------------------------------------------------------+
+|    19 | Name:            Precertificate Signing Certificate     |
+|       | Identifiers:                                            |
+|       | OID:             1.3.6.1.4.1.11129.2.4.4                |
+|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |
+|       | Comments:        RFC 6962                               |
 +-------+---------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-eku title="C509 Extended Key Usages"}
