@@ -508,8 +508,7 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
 ~~~~~~~~~~~ cddl
-
-   Attributes = (( attributeType: int, attributeValue: [+text] ) //
+   Attributes = (( attributeType: int, attributeValue: [+SpecialText] ) //
                  ( attributeType: ~oid, attributeValue: [+bytes] ))
    SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
