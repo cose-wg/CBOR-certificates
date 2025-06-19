@@ -359,28 +359,29 @@ Table of Contents
 3.1.4.  issuer
 
    In the general case, the sequence of 'Attribute' is encoded as a CBOR
-   array of Attributes.  RelativeDistinguishedName with more than one
-   AttributeTypeAndValue is not supported.  Each Attribute is encoded as
-   either a (CBOR int, CBOR text string) pair, or a (unwrapped CBOR OID,
-   CBOR bytes) pair.
+   array consisting of Attribute elements.  RelativeDistinguishedName
+   with more than one AttributeTypeAndValue is not supported.  Each
+   Attribute is encoded as (type, value) either as a (CBOR int, CBOR
+   text string) pair, or a (unwrapped CBOR OID, CBOR bytes) pair.
 
-   The absolute value of the CBOR int (see Figure 10) encodes the
-   attribute type and the sign is used to represent the character string
-   type in the X.509 certificate; positive for utf8String, negative for
-   printableString.  The attribute value for emailAddress and
-   domainComponent are always of type IA5String (see [RFC5280]), and is
-   unambiguously represented using a non-negative CBOR int.  In CBOR all
-   text strings are UTF-8 encoded and in natively signed C509
-   certificates all attributeType SHALL be non-negative.  Text strings
-   SHALL still adhere to any X.509 restrictions, i.e., serialNumber
-   SHALL only contain the 74-character subset of ASCII allowed by
-   printableString and countryName SHALL have length 2.  CBOR encoding
-   of ia5String (if this is the only allowed type, e.g. emailAddress),
-   printableString and utf8String are allowed, and the string types
-   teletexString, universalString, and bmpString are not supported.
+   In the former case, the absolute value of the CBOR int encodes the
+   attribute type (see Figure 10) and the sign is used to represent the
+   character string type in the X.509 certificate; positive for
+   utf8String, negative for printableString.  The attribute value for
+   emailAddress and domainComponent are always of type IA5String (see
+   [RFC5280]), and is for this reason unambiguously represented using a
+   non-negative CBOR int.  In CBOR all text strings are UTF-8 encoded
+   and in natively signed C509 certificates all CBOR ints SHALL be non-
+   negative.  Text strings SHALL still adhere to any X.509 restrictions,
+   i.e., serialNumber SHALL only contain the 74-character subset of
+   ASCII allowed by printableString and countryName SHALL have length 2.
+   CBOR encoding is allowed for IA5String (if this is the only allowed
+   type, e.g. emailAddress), printableString and utf8String, whereas the
+   string types teletexString, universalString, and bmpString are not
+   supported.
 
    If Name contains a single 'common name' attribute with attributeType
-   = 1, not -1, it is for compactness encoded as follows:
+   = +1 it is for compactness encoded as follows:
 
    *  If the text string has an even length ≥ 2 and contains only the
       symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
