@@ -752,6 +752,9 @@ Table of Contents
       NULL it can be CBOR encoded.  The CBOR encoded extensionValue is
       the empty string h''.
 
+   *  Precertificate Signing Certificate.  The CBOR encoded
+      extensionValue is the empty string h''.
+
 3.3.1.  Example Encoding of Extensions
 
    The examples below use values from Section 9.5, Section 9.9, and
