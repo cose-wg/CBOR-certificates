@@ -1072,27 +1072,29 @@ Table of Contents
 
    The C509 Certificate Request Template is shown in Figure 4.
 
-C509CertificateRequestTemplate = [
-   c509CertificateRequestType: int / null,
-   subjectSignatureAlgorithm: AlgorithmIdentifier / null,
-   subject: NameTemplate,
-   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
-   subjectPublicKey: any,
-   extensionsRequest: ExtensionsTemplate,
-]
+   C509CertificateRequestTemplate = [
+      c509CertificateRequestType: int / null,
+      subjectSignatureAlgorithm: AlgorithmIdentifier / null,
+      subject: NameTemplate,
+      subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
+      subjectPublicKey: any,
+      extensionsRequest: ExtensionsTemplate,
+   ]
 
-NameTemplate = [ * AttributeTemplate ] / SpecialText
+   NameTemplate = [ * AttributeTemplate ] / SpecialText
 
-AttributeTemplate = (( attributeType: int, attributeValue: text / null ) //
-                     ( attributeType: ~oid, attributeValue: bytes / null ))
+   AttributeTemplate = (( attributeType: int,
+                          attributeValue: text / null ) //
+                        ( attributeType: ~oid,
+                          attributeValue: bytes / null ))
 
-ExtensionsTemplate = [ * ExtensionTemplate ] / int
+   ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
-ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
-                     ( extensionID: ~oid, ? critical: true,
-                       extensionValue: bytes / null ))
+   ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
+                        ( extensionID: ~oid, ? critical: true,
+                          extensionValue: bytes / null ))
 
-          Figure 4: CDDL for C509CertificateRequestTemplate.
+             Figure 4: CDDL for C509CertificateRequestTemplate.
 
    Except as specified in this section, the fields have the same
    encoding as the corresponding fields of the TBSCertificateRequest,

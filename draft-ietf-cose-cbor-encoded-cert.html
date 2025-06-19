@@ -2149,7 +2149,7 @@ challengePassword = SpecialText
 <p id="section-4.4-3">The C509 Certificate Request Template is shown in <a href="#fig-C509CSRTemplateCDDL" class="auto internal xref">Figure 4</a>.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificaterequ"></span><div id="fig-C509CSRTemplateCDDL">
 <figure id="figure-4">
-          <div class="alignCenter art-cddl art-text artwork" id="section-4.4-4.1">
+          <div class="lang-cddl sourcecode" id="section-4.4-4.1">
 <pre>
 C509CertificateRequestTemplate = [
    c509CertificateRequestType: int / null,
@@ -2162,8 +2162,10 @@ C509CertificateRequestTemplate = [
 
 NameTemplate = [ * AttributeTemplate ] / SpecialText
 
-AttributeTemplate = (( attributeType: int, attributeValue: text / null ) //
-                     ( attributeType: ~oid, attributeValue: bytes / null ))
+AttributeTemplate = (( attributeType: int,
+                       attributeValue: text / null ) //
+                     ( attributeType: ~oid,
+                       attributeValue: bytes / null ))
 
 ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
