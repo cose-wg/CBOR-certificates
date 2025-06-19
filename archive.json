@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-15T02:19:10.802817+00:00",
+  "timestamp": "2025-06-19T02:04:19.187204+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -4006,20 +4006,35 @@
       "id": "I_kwDOCpt5cM5_egUl",
       "title": "Encoding of subjectPrivateKey",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/159",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
         "emanjon"
       ],
       "labels": [
-        "separate from core spec"
+        "PR exists"
       ],
       "body": "Include further details for encoding of subjectPrivateKey in C509PrivateKey. Relates to #150.",
       "createdAt": "2024-02-16T14:09:54Z",
-      "updatedAt": "2025-06-03T09:36:46Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-17T20:22:57Z",
+      "closedAt": "2025-06-17T20:22:57Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Resolved in #244",
+          "createdAt": "2025-06-17T13:46:57Z",
+          "updatedAt": "2025-06-17T13:46:57Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing since #244 is merged",
+          "createdAt": "2025-06-17T20:22:57Z",
+          "updatedAt": "2025-06-17T20:22:57Z"
+        }
+      ]
     },
     {
       "number": 161,
@@ -4672,11 +4687,11 @@
         "highlunder"
       ],
       "labels": [
-        "less priority"
+        "needs PR"
       ],
       "body": "Syntax for the following extensions needs to be added:\r\n- code 36, Biometric Information (RFC 3739)\r\n- code 37, Precertificate Signing Certificate (RFC 6962)\r\n- code 38, OCSP No Check (RFC 6960)\r\n- code 39, Qualified Certificate Statements (RFC 3739)\r\n- code 40, S/MIME Capabilities (RFC 8551)\r\n- code 41, TLS Features (RFC 7633)",
       "createdAt": "2024-04-16T15:58:29Z",
-      "updatedAt": "2024-12-19T10:37:55Z",
+      "updatedAt": "2025-06-18T15:01:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -4727,6 +4742,13 @@
           "body": "*For now we keep 38 & 41 as relevant,  and wait for a PR/PRs from Lijun*",
           "createdAt": "2024-06-24T08:54:19Z",
           "updatedAt": "2024-06-24T08:54:19Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was also an essential errata to fix. Mislabaled as low priority. I found this and have begun fixes.",
+          "createdAt": "2025-06-18T15:01:26Z",
+          "updatedAt": "2025-06-18T15:01:26Z"
         }
       ]
     },
@@ -5216,11 +5238,11 @@
       "assignees": [],
       "labels": [
         "waiting for input",
-        "less priority"
+        "needs PR"
       ],
       "body": "In Table \"Figure 8: C509 Extensions and CSR Attributes\" of draft -09:\r\n```\r\n   +-------+-----------------------------------------------------------+\r\n   |    37 | Name:            Precertificate Signing Certificate       |\r\n   |       | Identifiers:                                              |\r\n   |       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\r\n   |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\r\n   |       | Comments:                                                 |\r\n   |       | extensionValue:                                           |\r\n   +-------+-----------------------------------------------------------+\r\n```\r\n\r\nHowever, `1.3.6.1.4.1.11129.2.4.4` is not extension ID, but a key purpose ID (ExtendedKeyUsage), as specified in RFC 6962:\r\n```\r\n   o  a special-purpose (CA:true, Extended Key Usage: Certificate\r\n      Transparency, OID 1.3.6.1.4.1.11129.2.4.4) Precertificate Signing\r\n      Certificate.  The Precertificate Signing Certificate MUST be\r\n      directly certified by the (root or intermediate) CA certificate\r\n      that will ultimately sign the end-entity TBSCertificate yielding\r\n      the end-entity certificate (note that the log may relax standard\r\n      validation rules to allow this, so long as the issued certificate\r\n      will be valid),\r\n```\r\n\r\nThus, a new entry shall be added to \"Figure 12: C509 Extended Key Usages\", e.g. as follows:\r\n```\r\n    +-------+---------------------------------------------------------+\r\n    |    19 | Name:            Certificate Transparency               |\r\n    |       | Identifiers:                                            |\r\n    |       | OID:             1.3.6.1.4.1.11129.2.4.4                |\r\n    |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |\r\n    |       | Comments:        RFC 6962                               |\r\n    +-------+---------------------------------------------------------+\r\n```\r\n\r\nAnd the entry `Precertificate Signing Certificate (code 37)` in Figure 8 shall be replaced by another OID (with ending 2.4.3 instead 2.4.4):\r\n```\r\n   +-------+-----------------------------------------------------------+\r\n   |    37 | Name:            Precertificate Signing Certificate       |\r\n   |       | Identifiers:                                              |\r\n   |       | OID:             1.3.6.1.4.1.11129.2.4.3                  |\r\n   |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 03      |\r\n   |       | Comments:        RFC 6962                                 |\r\n   |       | extensionValue:  null                                     |\r\n   +-------+-----------------------------------------------------------+\r\n```",
       "createdAt": "2024-04-28T10:01:15Z",
-      "updatedAt": "2024-12-13T10:53:23Z",
+      "updatedAt": "2025-06-18T14:59:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -5229,6 +5251,13 @@
           "body": "Not clear if certificate transparency is relevant for target use cases. More input is requested in order to consider include this.",
           "createdAt": "2024-07-01T08:28:33Z",
           "updatedAt": "2024-07-01T08:28:33Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was an errata, not addition. I discovered these independently. This needs to be fixed.",
+          "createdAt": "2025-06-18T14:59:40Z",
+          "updatedAt": "2025-06-18T14:59:40Z"
         }
       ]
     },
@@ -5566,11 +5595,11 @@
       "assignees": [],
       "labels": [
         "waiting for input",
-        "separate from core spec"
+        "needs PR"
       ],
       "body": "As specified in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00:\r\n\r\n```\r\npk-XMSS-HashSig PUBLIC-KEY ::= {\r\n   IDENTIFIER id-alg-xmss-hashsig\r\n   KEY XMSS-HashSig-PublicKey\r\n   PARAMS ARE absent\r\n   CERT-KEY-USAGE\r\n      { digitalSignature, nonRepudiation, keyCertSign, cRLSign } }\r\n\r\nXMSS-HashSig-PublicKey ::= OCTET STRING\r\n```\r\n\r\nAnd here the definition of SubjectPublicKeyInfo in RFC 5280\r\n```\r\n   SubjectPublicKeyInfo  ::=  SEQUENCE  {\r\n        algorithm            AlgorithmIdentifier,\r\n        subjectPublicKey     BIT STRING  }\r\n```\r\n\r\nShall the XMSS public key be an OCTET-STRING(public key bytes), or just the \"public key bytes\"?\r\n\r\nThis applies also to the XMSS-MT, HSS-LMS.\r\n\r\n",
       "createdAt": "2024-05-06T08:58:08Z",
-      "updatedAt": "2024-12-13T10:52:26Z",
+      "updatedAt": "2025-06-18T14:57:03Z",
       "closedAt": null,
       "comments": [
         {
@@ -5579,6 +5608,13 @@
           "body": "draft-ietf-lamps-x509-shbs-00 is an early draft still, leave this open until it has matured.",
           "createdAt": "2024-06-03T07:59:00Z",
           "updatedAt": "2024-06-03T07:59:00Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "These algorithms have already been added. Need to fix or remove\n\n```\n|    42 | Name:        HSS / LMS                                    |\n|       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |\n|       | OID:         1.2.840.113549.1.9.16.3.17                   |\n|       | Parameters:  Absent                                       |\n|       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |\n|       | Comments:                                                 |\n+-------+-----------------------------------------------------------+\n|    43 | Name:        XMSS                                         |\n|       | Identifiers: id_alg_xmss                                  |\n|       | OID:         0.4.0.127.0.15.1.1.13.0                      |\n|       | Parameters:  Absent                                       |\n|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |\n|       | Comments:                                                 |\n+-------+-----------------------------------------------------------+\n|    44 | Name:        XMSS^MT                                      |\n|       | Identifiers: id_alg_xmssmt                                |\n|       | OID:         0.4.0.127.0.15.1.1.14.0                      |\n|       | Parameters:  Absent                                       |\n|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |\n|       | Comments:                                                 |\n```\n",
+          "createdAt": "2025-06-18T14:57:02Z",
+          "updatedAt": "2025-06-18T14:57:02Z"
         }
       ]
     },
@@ -6315,25 +6351,62 @@
       ],
       "body": "These extensions was at one point in the draft, but removed as they did not have CBOR encoding of the extensionValue defined. They also did not have any description is section 3.3. like all other registered extensions. Could be readded if these criteria are met.\n\n```\n|    36 | Name:            Biometric Information                    |\n|       | Identifiers:     id-pe-biometricInfo                      |\n|       | OID:             1.3.6.1.5.5.7.1.2                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 02            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    37 | Name:            Precertificate Signing Certificate       |\n|       | Identifiers:                                              |\n|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\n|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    38 | Name:            OCSP No Check                            |\n|       | Identifiers:     id-pkix-ocsp-nocheck                     |\n|       | OID:             1.3.6.1.5.5.7.48.1.5                     |\n|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    39 | Name:            Qualified Certificate Statements         |\n|       | Identifiers:     id-pe-qcStatements                       |\n|       | OID:             1.3.6.1.5.5.7.1.3                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 03            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    40 | Name:            S/MIME Capabilities                      |\n|       | Identifiers:     smimeCapabilities                        |\n|       | OID:             1.2.840.113549.1.9.15                    |\n|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    41 | Name:            TLS Features                             |\n|       | Identifiers:     id-pe-tlsfeature                         |\n|       | OID:             1.3.6.1.5.5.7.1.24                       |\n|       | DER:             06 08 2B 06 01 05 05 07 01 18            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n```",
       "createdAt": "2025-06-11T04:56:07Z",
-      "updatedAt": "2025-06-11T08:49:59Z",
+      "updatedAt": "2025-06-18T13:59:54Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "1.3.6.1.4.1.11129.2.4.4 is an extend key usage not an extension",
+          "createdAt": "2025-06-18T13:44:44Z",
+          "updatedAt": "2025-06-18T13:44:44Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It could be added to EKU, but it seems unlikely that Certificate transparency will use C509.\n```\n    +-------+---------------------------------------------------------+\n    |    19 | Name:            Precertificate Signing Certificate     |\n    |       | Identifiers:                                            |\n    |       | OID:             1.3.6.1.4.1.11129.2.4.4                |\n    |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |\n    |       | Comments:        RFC 6962                               |\n    +-------+---------------------------------------------------------+\n```\n\n",
+          "createdAt": "2025-06-18T13:48:37Z",
+          "updatedAt": "2025-06-18T13:48:37Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "OCSP No Check has been readded as 36",
+          "createdAt": "2025-06-18T13:59:54Z",
+          "updatedAt": "2025-06-18T13:59:54Z"
+        }
+      ]
     },
     {
       "number": 242,
       "id": "I_kwDOCpt5cM67VPEc",
       "title": "Reserve part of \"C509 Extensions Registry\" for CSR attributes.",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/242",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "If someone specifies something more that challengepassword, it would be good to make sure they are in the same part of the registry\n",
       "createdAt": "2025-06-13T09:28:56Z",
-      "updatedAt": "2025-06-13T09:28:56Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-18T08:12:27Z",
+      "closedAt": "2025-06-18T08:12:27Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Sufficient with \n\n\"Comments: Certificate Request Attribute\"\n\nin the IANA registry?",
+          "createdAt": "2025-06-17T14:39:12Z",
+          "updatedAt": "2025-06-17T14:39:12Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The likelyhood of a new CSR attributes is low, lets just close this",
+          "createdAt": "2025-06-18T08:12:27Z",
+          "updatedAt": "2025-06-18T08:12:27Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -9057,6 +9130,173 @@
           "body": "Closes #239",
           "createdAt": "2025-06-11T04:56:30Z",
           "updatedAt": "2025-06-11T04:56:30Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 243,
+      "id": "PR_kwDOCpt5cM6a2Z4E",
+      "title": "SpecialText in attribute values",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/243",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The current optimization seems a bit strange as it bundles to optimizations together. This suggestion seems like a simplification.",
+      "createdAt": "2025-06-17T08:16:46Z",
+      "updatedAt": "2025-06-18T12:59:08Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "6699da842ffd8102d1b270b5a1ed4a9ebe2321c5",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-1",
+      "headRefOid": "87d21e5c63e86c8f334e33a1824e767a7ed49cdc",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This PR is not ready. I don't see why printableString should be encoded as SpecialText. (CBOR int, CBOR SpecialText) allows that but the text only mention further optimization for UTF-8 strings. \r\n\r\nChallenge Response is encoded as SpecialText but there printableString is restricted to CBOR text.",
+          "createdAt": "2025-06-17T14:25:17Z",
+          "updatedAt": "2025-06-17T14:25:17Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think this is an improvement! But I still find it hard to tell \"how easy\" the new version is to understand for someone from the outside who hasn't followed the work.",
+          "createdAt": "2025-06-18T12:59:08Z",
+          "updatedAt": "2025-06-18T12:59:08Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 244,
+      "id": "PR_kwDOCpt5cM6a3to5",
+      "title": "C509PrivateKey - Remove editors note",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/244",
+      "state": "MERGED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "C509PrivateKey - Remove editors note\r\n\r\nIntroduced a type field and refer to RFC 5958. Removed editor's note.",
+      "createdAt": "2025-06-17T10:08:20Z",
+      "updatedAt": "2025-06-17T20:22:17Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "ad51471ca3041a0a35e7df8a2a1f485e74e9b59d",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-2",
+      "headRefOid": "1a98c9446db30424e02b291df413e7370dacadfa",
+      "closedAt": "2025-06-17T20:22:17Z",
+      "mergedAt": "2025-06-17T20:22:17Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "7f6a6e3f4477baaed75e12d22e7d886bad98cef4"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Do we need an IANA registry for C509PrivateKeyType?",
+          "createdAt": "2025-06-17T14:00:49Z",
+          "updatedAt": "2025-06-17T14:00:49Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, if we have for C509 Certificate Types and C509 Certificate Request Types we should have for C509 Private Key Types as well.\r\n",
+          "createdAt": "2025-06-17T14:05:26Z",
+          "updatedAt": "2025-06-17T14:10:42Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good. Just added \"CBOR\" to the description. We can merge and close #159.",
+          "createdAt": "2025-06-17T14:36:21Z",
+          "updatedAt": "2025-06-17T14:36:21Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 245,
+      "id": "PR_kwDOCpt5cM6a4q-m",
+      "title": "Try to remove some of the attribute overlap.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/245",
+      "state": "MERGED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "ready-to-merge"
+      ],
+      "body": "X.509 has attributes in subject and issuer\r\nCSR has a new field called attributes...\r\nEST defines the term CRS attributes to mean everything in the CSR...\r\n\r\nWe actually don't need to talk about 7030 attributes in the template section",
+      "createdAt": "2025-06-17T11:42:16Z",
+      "updatedAt": "2025-06-17T14:08:35Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "084e15da1625460d48df8f18e0ec0bba67544251",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-3",
+      "headRefOid": "97b647234cb33a288abf5e7e699cef8f28b9f233",
+      "closedAt": "2025-06-17T14:08:34Z",
+      "mergedAt": "2025-06-17T14:08:34Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "22ba6429cb97acca3807bea7bca3483464ebf544"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Made some additional removals, I'm fine with this.",
+          "createdAt": "2025-06-17T14:02:41Z",
+          "updatedAt": "2025-06-17T14:02:41Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 246,
+      "id": "PR_kwDOCpt5cM6a40_u",
+      "title": "All columns exept Comments are mandatory.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/246",
+      "state": "MERGED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "ready-to-merge"
+      ],
+      "body": "As we had non-working rows in the extension table, it might be good with this clarification.",
+      "createdAt": "2025-06-17T11:57:55Z",
+      "updatedAt": "2025-06-17T14:05:37Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "80fcce8a30f437d499ba444ec70a2d87a1b0da5c",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-4",
+      "headRefOid": "a5226301d4e3c69514f12ac5ee272d71c0f58cc8",
+      "closedAt": "2025-06-17T14:05:37Z",
+      "mergedAt": "2025-06-17T14:05:37Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "084e15da1625460d48df8f18e0ec0bba67544251"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good housekeeping, fixed a typo.",
+          "createdAt": "2025-06-17T14:01:40Z",
+          "updatedAt": "2025-06-17T14:01:40Z"
         }
       ],
       "reviews": []
