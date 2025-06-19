@@ -733,7 +733,7 @@ challengePassword = SpecialText
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-In natively signed requests (types 0 and 2), a positive extensionID is used. In CBOR re-encoding of a DER encoded request (types 1 and 3), the sign of extensionID of challengePassword indicates the string type in the DER encoded certification request (instead of the criticalness in extensions): positive for utf8String and negative for printableString. The same encoding optimization applies as in {{issuer}}.
+In natively signed requests (types 0 and 2), a positive extensionID is used. In CBOR re-encoding of a DER encoded request (types 1 and 3), the sign of extensionID of challengePassword indicates the string type in the DER encoded challengePassword (instead of the criticalness in extensions): positive for utf8String and negative for printableString. The same encoding optimization applies as in {{issuer}}.
 
 ## Certificate Request Template {#CRT}
 
