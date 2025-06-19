@@ -265,7 +265,6 @@ tag = #6
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
-{: artwork-align="center"}
 
 C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates as detailed in the following subsections.
 
@@ -673,7 +672,6 @@ TBSCertificateRequest = (
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
-{: artwork-align="center"}
 
 After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
