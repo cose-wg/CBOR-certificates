@@ -557,6 +557,8 @@ CBOR encoding of the following extension values are partly supported:
 
 * OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL it can be CBOR encoded. The CBOR encoded extensionValue is the empty string h''.
 
+* Precertificate Signing Certificate. The CBOR encoded extensionValue is the empty string h''.
+
 ### Example Encoding of Extensions
 
 The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
