@@ -559,6 +559,13 @@ CBOR encoding of the following extension values are partly supported:
 
 * Precertificate Signing Certificate. The CBOR encoded extensionValue is the empty string h''.
 
+* TLS Features (id-pe-tlsfeature). The extensionValue is encoded as an array of integers, where each integer represents a TLS extension.
+
+~~~~~~~~~~~ cddl
+   TLSFeatures = [* feature: uint]
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
+
 ### Example Encoding of Extensions
 
 The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
@@ -1275,6 +1282,13 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 03      |
 |       | Comments:        RFC 6962                                 |
 |       | extensionValue:  h''                                      |
++-------+-----------------------------------------------------------+
+|    38 | Name:            TLS Features                             |
+|       | Identifiers:     id-pe-tlsfeature                         |
+|       | OID:             1.3.6.1.5.5.7.1.24                       |
+|       | DER:             06 08 2B 06 01 05 05 07 01 18            |
+|       | Comments:        RFC 7633                                 |
+|       | extensionValue:  TLSFeatures                              |
 +-------+-----------------------------------------------------------+
 |   255 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
