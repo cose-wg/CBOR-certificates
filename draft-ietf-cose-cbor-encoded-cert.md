@@ -1822,27 +1822,6 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    42 | Name:        HSS / LMS                                    |
-|       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |
-|       | OID:         1.2.840.113549.1.9.16.3.17                   |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    43 | Name:        XMSS                                         |
-|       | Identifiers: id_alg_xmss                                  |
-|       | OID:         0.4.0.127.0.15.1.1.13.0                      |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    44 | Name:        XMSS^MT                                      |
-|       | Identifiers: id_alg_xmssmt                                |
-|       | OID:         0.4.0.127.0.15.1.1.14.0                      |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
 |    45 | Name:        SM2 with SM3                                 |
 |       | Identifiers: sm2-with-sm3                                 |
 |       | OID:         1.2.156.10197.1.501                          |
