@@ -688,16 +688,17 @@ Different types of C509 Certificate Requests are defined, see {{csr-type}}, all 
 Combining these options enables the four instances of c509CertificateRequestType defined in {{csr-type}} and illustrated in {{fig-csr-types2}}.
 
 ~~~~~~~~~~~~~~~~~~~~~~~ aasvg
-+-------------------------+-------------------------------------------+
-|                         |               Signed object               |
-+-------------------------+-------------------------------------------+
-|                         | CBOR encoded C509   | DER encoded C509    |
-| Requested certificate   | Certificate Request | Certificate Request |
-+=========================+=====================+=====================+
-| c509CertificateType = 2 |          0          |            1        |
-+-------------------------+---------------------+---------------------+
-| c509CertificateType = 3 |          2          |            3        |
-+-------------------------+---------------------+---------------------+
++-------------------------+---------------------------------------+
+|                         |             Signed object             |
++-------------------------+---------------------------------------+
+|                         | CBOR encoded C509 | DER encoded C509  |
+|                         |    Certificate    |    Certificate    |
+| Requested certificate   |      Request      |      Request      |
++=========================+===================+===================+
+| c509CertificateType = 2 |         0         |           1       |
++-------------------------+-------------------+-------------------+
+| c509CertificateType = 3 |         2         |           3       |
++-------------------------+-------------------+-------------------+
 ~~~~~~~~~~~~~~~~~~~~~~~
 {: #fig-csr-types2 title="C509 Certificate Request Types 0, 1, 2 and 3." artwork-align="center"}
 
