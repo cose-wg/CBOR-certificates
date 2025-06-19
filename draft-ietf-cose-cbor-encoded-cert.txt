@@ -287,46 +287,46 @@ Table of Contents
    C509Certificate).  Examples are given in the appendices, e.g.
    Appendix A.1.
 
-    C509Certificate = [
-       TBSCertificate,
-       issuerSignatureValue : any,
-    ]
+   C509Certificate = [
+      TBSCertificate,
+      issuerSignatureValue : any,
+   ]
 
-    ; The elements of the following group are used in a CBOR Sequence:
-    TBSCertificate = (
-       c509CertificateType: int,
-       certificateSerialNumber: CertificateSerialNumber,
-       issuerSignatureAlgorithm: AlgorithmIdentifier,
-       issuer: Name / null,
-       validityNotBefore: ~time,
-       validityNotAfter: ~time / null,
-       subject: Name,
-       subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-       subjectPublicKey: NonNull,
-       extensions: Extensions,
-    )
+   ; The elements of the following group are used in a CBOR Sequence:
+   TBSCertificate = (
+      c509CertificateType: int,
+      certificateSerialNumber: CertificateSerialNumber,
+      issuerSignatureAlgorithm: AlgorithmIdentifier,
+      issuer: Name / null,
+      validityNotBefore: ~time,
+      validityNotAfter: ~time / null,
+      subject: Name,
+      subjectPublicKeyAlgorithm: AlgorithmIdentifier,
+      subjectPublicKey: NonNull,
+      extensions: Extensions,
+   )
 
-    CertificateSerialNumber = ~biguint
+   CertificateSerialNumber = ~biguint
 
-    Name = [ * Attribute ] / SpecialText
+   Name = [ * Attribute ] / SpecialText
 
-    Attribute = (( attributeType: int, attributeValue: text ) //
-                 ( attributeType: ~oid, attributeValue: bytes ))
+   Attribute = (( attributeType: int, attributeValue: text ) //
+                ( attributeType: ~oid, attributeValue: bytes ))
 
-    AlgorithmIdentifier = int / ~oid /
-                        [ algorithm: ~oid, parameters: bytes ]
+   AlgorithmIdentifier = int / ~oid /
+                       [ algorithm: ~oid, parameters: bytes ]
 
-    Extensions = [ * Extension ] / int
+   Extensions = [ * Extension ] / int
 
-    Extension = (( extensionID: int, extensionValue: NonNull ) //
-                 ( extensionID: ~oid, ? critical: true,
-                  extensionValue: bytes ))
+   Extension = (( extensionID: int, extensionValue: NonNull ) //
+                ( extensionID: ~oid, ? critical: true,
+                 extensionValue: bytes ))
 
-    SpecialText = text / bytes / tag
+   SpecialText = text / bytes / tag
 
-    NonNull = any .ne null
+   NonNull = any .ne null
 
-    tag = #6
+   tag = #6
 
                     Figure 1: CDDL for C509Certificate.
 
@@ -931,20 +931,20 @@ Table of Contents
    fields have the same encoding as the corresponding fields of the C509
    Certificate, see Section 3.1.
 
-    C509CertificateRequest = [
-       TBSCertificateRequest,
-       subjectSignatureValue: any,
-    ]
+   C509CertificateRequest = [
+      TBSCertificateRequest,
+      subjectSignatureValue: any,
+   ]
 
-    ; The elements of the following group are used in a CBOR Sequence:
-    TBSCertificateRequest = (
-       c509CertificateRequestType: int,
-       subjectSignatureAlgorithm: AlgorithmIdentifier,
-       subject: Name,
-       subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-       subjectPublicKey: NonNull,
-       extensionsRequest: Extensions,
-    )
+   ; The elements of the following group are used in a CBOR Sequence:
+   TBSCertificateRequest = (
+      c509CertificateRequestType: int,
+      subjectSignatureAlgorithm: AlgorithmIdentifier,
+      subject: Name,
+      subjectPublicKeyAlgorithm: AlgorithmIdentifier,
+      subjectPublicKey: NonNull,
+      extensionsRequest: Extensions,
+   )
 
                  Figure 2: CDDL for C509CertificateRequest.
 
