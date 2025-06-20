@@ -362,7 +362,7 @@ Table of Contents
    array consisting of Attribute elements.  RelativeDistinguishedName
    with more than one AttributeTypeAndValue is not supported.  Each
    Attribute is CBOR encoded either as a (int, SpecialText) pair, or a
-   (~oid, ? true, bytes) tuple.
+   (~oid, bytes) tuple.
 
    In the former case, the absolute value of the int encodes the
    attribute type (see Figure 10) and the sign is used to represent the
