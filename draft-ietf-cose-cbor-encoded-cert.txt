@@ -361,8 +361,8 @@ Table of Contents
    In the general case, the sequence of 'Attribute' is encoded as a CBOR
    array consisting of Attribute elements.  RelativeDistinguishedName
    with more than one AttributeTypeAndValue is not supported.  Each
-   Attribute is CBOR encoded either as a (int, SpecialText) pair, or a
-   (~oid, bytes) tuple.
+   Attribute is CBOR encoded as (type, value) either as a (int,
+   SpecialText) pair, or a (~oid, bytes) tuple.
 
    In the former case, the absolute value of the int encodes the
    attribute type (see Figure 10) and the sign is used to represent the
@@ -395,9 +395,13 @@ Table of Contents
    *  Otherwise it is encoded as a CBOR text string.
 
    The final encoding of the extension value may therefore be text,
-   bytes, or tag.  If Name contains a single 'common name' attribute
-   with attributeType = +1 it is for compactness encoded as just the
-   SpecialText containing the single attribute value.
+   bytes, or tag, i.e. SpecialText.  If Name contains a single 'common
+   name' attribute with attributeType = +1 it is for compactness encoded
+   as just the SpecialText containing the single attribute value.
+
+   In natively signed C509 certificates, CBOR tag 48 may also be used
+   for the macAddress attribute and does not correspond to any
+   predefined text string encoding.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in
    case of self-signed certificates, then the 'issuer' field MUST be
