@@ -361,8 +361,8 @@ Table of Contents
    In the general case, the sequence of 'Attribute' is encoded as a CBOR
    array consisting of Attribute elements.  RelativeDistinguishedName
    with more than one AttributeTypeAndValue is not supported.  Each
-   Attribute is CBOR encoded as (type, value) either as a (int,
-   SpecialText) pair, or a (~oid, ? true, bytes) tuple.
+   Attribute is CBOR encoded either as a (int, SpecialText) pair, or a
+   (~oid, ? true, bytes) tuple.
 
    In the former case, the absolute value of the int encodes the
    attribute type (see Figure 10) and the sign is used to represent the
@@ -692,9 +692,10 @@ Table of Contents
       Encoded as attributes in issuer and subject with the difference
       that there can be more than one attributeValue.
 
-      Attributes = (( attributeType: int, attributeValue: [+ SpecialText ) //
-                    ( attributeType: ~oid, attributeValue: [+ bytes] ))
-      SubjectDirectoryAttributes = [+Attributes]
+         Attributes = (( attributeType: int,
+                         attributeValue: [+ SpecialText] ) //
+                       ( attributeType: ~oid, attributeValue: [+ bytes] ))
+         SubjectDirectoryAttributes = [+Attributes]
 
    *  AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the
       extension value can be CBOR encoded.  Each ASId is encoded as an

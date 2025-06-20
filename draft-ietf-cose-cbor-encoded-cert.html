@@ -1470,7 +1470,7 @@ tag = #6
           <h4 id="name-issuer">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
-<p id="section-3.1.4-1">In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, ? true, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded either as a (int, SpecialText) pair, or a (~oid, ? true, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>), and is for this reason unambiguously represented using a non-negative int. In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1794,9 +1794,10 @@ tag = #6
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-39">
 <pre>
-   Attributes = (( attributeType: int, attributeValue: [+ SpecialText ) //
-                 ( attributeType: ~oid, attributeValue: [+ bytes] ))
-   SubjectDirectoryAttributes = [+Attributes]
+      Attributes = (( attributeType: int,
+                      attributeValue: [+ SpecialText] ) //
+                    ( attributeType: ~oid, attributeValue: [+ bytes] ))
+      SubjectDirectoryAttributes = [+Attributes]
 </pre><a href="#section-3.3-39" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
