@@ -294,7 +294,7 @@ The text strings are further optimized as follows:
 
 The final encoding of the extension value may therefore be text, bytes, or tag, i.e. SpecialText. If Name contains a single 'common name' attribute with attributeType = +1 it is for compactness encoded as just the SpecialText containing the single attribute value.
 
-In natively signed C509 certificates, CBOR tag 48 may also be used for the macAddress attribute and does not correspond to any predefined text string encoding.
+In natively signed C509 certificates, CBOR tag 48 may also be used for the attribute type macAddress and does not correspond to any predefined text string encoding.
 
 If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then the 'issuer' field MUST be encoded as CBOR null.
 
