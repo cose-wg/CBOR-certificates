@@ -245,7 +245,7 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * Attribute ] / SpecialText
 
-Attribute = (( attributeType: int, attributeValue: text ) //
+Attribute = (( attributeType: int, attributeValue: SpecialText ) //
              ( attributeType: ~oid, attributeValue: bytes ))
 
 AlgorithmIdentifier = int / ~oid /
@@ -282,17 +282,17 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 ### issuer {#issuer}
 
-In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is encoded as (type, value) either as a (CBOR int, CBOR text string) pair, or a (unwrapped CBOR OID, CBOR bytes) pair.
+In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, ? true, bytes) tuple.
 
-In the former case, the absolute value of the CBOR int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}), and is for this reason unambiguously represented using a non-negative CBOR int. In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
+In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}), and is for this reason unambiguously represented using a non-negative int. In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
-If Name contains a single 'common name' attribute with attributeType = +1 it is for compactness encoded as follows:
+The text strings are further optimized as follows:
 
   * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
   * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
   * Otherwise it is encoded as a CBOR text string.
 
-The final encoding of the extension value may therefore be text, bytes, or tag.
+The final encoding of the extension value may therefore be text, bytes, or tag. If Name contains a single 'common name' attribute with attributeType = +1 it is for compactness encoded as just the SpecialText containing the single attribute value.
 
 If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then the 'issuer' field MUST be encoded as CBOR null.
 
@@ -509,8 +509,8 @@ CBOR encoding of the following extension values are partly supported:
 
 ~~~~~~~~~~~ cddl
 
-   Attributes = (( attributeType: int, attributeValue: [+text] ) //
-                 ( attributeType: ~oid, attributeValue: [+bytes] ))
+   Attributes = (( attributeType: int, attributeValue: [+ SpecialText ) //
+                 ( attributeType: ~oid, attributeValue: [+ bytes] ))
    SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -752,7 +752,7 @@ C509CertificateRequestTemplate = [
 NameTemplate = [ * AttributeTemplate ] / SpecialText
 
 AttributeTemplate = (( attributeType: int,
-                       attributeValue: text / null ) //
+                       attributeValue: SpecialText / null ) //
                      ( attributeType: ~oid,
                        attributeValue: bytes / null ))
 
