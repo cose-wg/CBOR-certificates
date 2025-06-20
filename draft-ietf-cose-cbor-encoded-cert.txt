@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 21 December 2025                                     J. Höglund
+Expires: 22 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            19 June 2025
+                                                            20 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 December 2025.
+   This Internet-Draft will expire on 22 December 2025.
 
 Copyright Notice
 
@@ -310,7 +310,7 @@ Table of Contents
 
    Name = [ * Attribute ] / SpecialText
 
-   Attribute = (( attributeType: int, attributeValue: text ) //
+   Attribute = (( attributeType: int, attributeValue: SpecialText ) //
                 ( attributeType: ~oid, attributeValue: bytes ))
 
    AlgorithmIdentifier = int / ~oid /
@@ -361,17 +361,17 @@ Table of Contents
    In the general case, the sequence of 'Attribute' is encoded as a CBOR
    array consisting of Attribute elements.  RelativeDistinguishedName
    with more than one AttributeTypeAndValue is not supported.  Each
-   Attribute is encoded as (type, value) either as a (CBOR int, CBOR
-   text string) pair, or a (unwrapped CBOR OID, CBOR bytes) pair.
+   Attribute is CBOR encoded as (type, value) either as a (int,
+   SpecialText) pair, or a (~oid, ? true, bytes) tuple.
 
-   In the former case, the absolute value of the CBOR int encodes the
+   In the former case, the absolute value of the int encodes the
    attribute type (see Figure 10) and the sign is used to represent the
    character string type in the X.509 certificate; positive for
    utf8String, negative for printableString.  The attribute value for
    emailAddress and domainComponent are always of type IA5String (see
    [RFC5280]), and is for this reason unambiguously represented using a
-   non-negative CBOR int.  In CBOR all text strings are UTF-8 encoded
-   and in natively signed C509 certificates all CBOR ints SHALL be non-
+   non-negative int.  In CBOR all text strings are UTF-8 encoded and in
+   natively signed C509 certificates all CBOR ints SHALL be non-
    negative.  Text strings SHALL still adhere to any X.509 restrictions,
    i.e., serialNumber SHALL only contain the 74-character subset of
    ASCII allowed by printableString and countryName SHALL have length 2.
@@ -380,8 +380,7 @@ Table of Contents
    string types teletexString, universalString, and bmpString are not
    supported.
 
-   If Name contains a single 'common name' attribute with attributeType
-   = +1 it is for compactness encoded as follows:
+   The text strings are further optimized as follows:
 
    *  If the text string has an even length ≥ 2 and contains only the
       symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
@@ -396,7 +395,9 @@ Table of Contents
    *  Otherwise it is encoded as a CBOR text string.
 
    The final encoding of the extension value may therefore be text,
-   bytes, or tag.
+   bytes, or tag.  If Name contains a single 'common name' attribute
+   with attributeType = +1 it is for compactness encoded as just the
+   SpecialText containing the single attribute value.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in
    case of self-signed certificates, then the 'issuer' field MUST be
@@ -691,8 +692,8 @@ Table of Contents
       Encoded as attributes in issuer and subject with the difference
       that there can be more than one attributeValue.
 
-      Attributes = (( attributeType: int, attributeValue: [+text] ) //
-                    ( attributeType: ~oid, attributeValue: [+bytes] ))
+      Attributes = (( attributeType: int, attributeValue: [+ SpecialText ) //
+                    ( attributeType: ~oid, attributeValue: [+ bytes] ))
       SubjectDirectoryAttributes = [+Attributes]
 
    *  AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the
@@ -1083,7 +1084,7 @@ Table of Contents
    NameTemplate = [ * AttributeTemplate ] / SpecialText
 
    AttributeTemplate = (( attributeType: int,
-                          attributeValue: text / null ) //
+                          attributeValue: SpecialText / null ) //
                         ( attributeType: ~oid,
                           attributeValue: bytes / null ))
 
