@@ -1485,7 +1485,7 @@ tag = #6
 </li>
           </ul>
 <p id="section-3.1.4-5">The final encoding of the extension value may therefore be text, bytes, or tag, i.e. SpecialText. If Name contains a single 'common name' attribute with attributeType = +1 it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-6">In natively signed C509 certificates, CBOR tag 48 may also be used for the macAddress attribute and does not correspond to any predefined text string encoding.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-6">In natively signed C509 certificates, CBOR tag 48 may also be used for the attribute type macAddress and does not correspond to any predefined text string encoding.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as CBOR null.<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>

@@ -400,7 +400,7 @@ Table of Contents
    as just the SpecialText containing the single attribute value.
 
    In natively signed C509 certificates, CBOR tag 48 may also be used
-   for the macAddress attribute and does not correspond to any
+   for the attribute type macAddress and does not correspond to any
    predefined text string encoding.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in
