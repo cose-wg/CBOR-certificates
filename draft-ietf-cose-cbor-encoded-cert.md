@@ -282,7 +282,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 ### issuer {#issuer}
 
-In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, ? true, bytes) tuple.
+In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded either as a (int, SpecialText) pair, or a (~oid, ? true, bytes) tuple.
 
 In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}), and is for this reason unambiguously represented using a non-negative int. In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
@@ -508,10 +508,10 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
 ~~~~~~~~~~~ cddl
-
-   Attributes = (( attributeType: int, attributeValue: [+ SpecialText ) //
-                 ( attributeType: ~oid, attributeValue: [+ bytes] ))
-   SubjectDirectoryAttributes = [+Attributes]
+      Attributes = (( attributeType: int,
+                      attributeValue: [+ SpecialText] ) //
+                    ( attributeType: ~oid, attributeValue: [+ bytes] ))
+      SubjectDirectoryAttributes = [+Attributes]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
