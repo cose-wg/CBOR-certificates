@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 22 December 2025                                     J. Höglund
+Expires: 23 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            20 June 2025
+                                                            21 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 December 2025.
+   This Internet-Draft will expire on 23 December 2025.
 
 Copyright Notice
 
@@ -399,9 +399,9 @@ Table of Contents
    name' attribute with attributeType = +1 it is for compactness encoded
    as just the SpecialText containing the single attribute value.
 
-   In natively signed C509 certificates, CBOR tag 48 may also be used
-   for the attribute type macAddress and does not correspond to any
-   predefined text string encoding.
+   In natively signed C509 certificates, bytes as tag 48 does not
+   correspond to any predefined text string encoding and may also be
+   used for the attribute types such as macAddress.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in
    case of self-signed certificates, then the 'issuer' field MUST be
