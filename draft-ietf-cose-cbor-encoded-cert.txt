@@ -401,7 +401,7 @@ Table of Contents
 
    In natively signed C509 certificates, bytes as tag 48 does not
    correspond to any predefined text string encoding and may also be
-   used for the attribute types such as macAddress.
+   used for attribute types such as macAddress.
 
    If the 'issuer' field is identical to the 'subject' field, e.g. in
    case of self-signed certificates, then the 'issuer' field MUST be
