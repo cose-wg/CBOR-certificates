@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-19T02:04:19.187204+00:00",
+  "timestamp": "2025-06-22T02:18:57.325709+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -4687,11 +4687,11 @@
         "highlunder"
       ],
       "labels": [
-        "needs PR"
+        "low priority for core spec"
       ],
       "body": "Syntax for the following extensions needs to be added:\r\n- code 36, Biometric Information (RFC 3739)\r\n- code 37, Precertificate Signing Certificate (RFC 6962)\r\n- code 38, OCSP No Check (RFC 6960)\r\n- code 39, Qualified Certificate Statements (RFC 3739)\r\n- code 40, S/MIME Capabilities (RFC 8551)\r\n- code 41, TLS Features (RFC 7633)",
       "createdAt": "2024-04-16T15:58:29Z",
-      "updatedAt": "2025-06-18T15:01:26Z",
+      "updatedAt": "2025-06-19T05:56:04Z",
       "closedAt": null,
       "comments": [
         {
@@ -4749,6 +4749,13 @@
           "body": "This was also an essential errata to fix. Mislabaled as low priority. I found this and have begun fixes.",
           "createdAt": "2025-06-18T15:01:26Z",
           "updatedAt": "2025-06-18T15:01:26Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks Lijun!\n\nI have fixed\n\n  Precertificate Signing Certificate (RFC 6962)\n  OCSP No Check (RFC 6960)\n  TLS Features (RFC 7633)\n\nI think the rest will have to be specified and registered later.\n\n  Biometric Information (RFC 3739)\n  Qualified Certificate Statements (RFC 3739)\n  S/MIME Capabilities (RFC 8551)\n",
+          "createdAt": "2025-06-19T05:55:36Z",
+          "updatedAt": "2025-06-19T05:55:36Z"
         }
       ]
     },
@@ -5232,7 +5239,7 @@
       "id": "I_kwDOCpt5cM6HJsrc",
       "title": "Extension and Extended Key Usage for Certificate Transparency (RFC 6962)",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/190",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -5242,8 +5249,8 @@
       ],
       "body": "In Table \"Figure 8: C509 Extensions and CSR Attributes\" of draft -09:\r\n```\r\n   +-------+-----------------------------------------------------------+\r\n   |    37 | Name:            Precertificate Signing Certificate       |\r\n   |       | Identifiers:                                              |\r\n   |       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\r\n   |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\r\n   |       | Comments:                                                 |\r\n   |       | extensionValue:                                           |\r\n   +-------+-----------------------------------------------------------+\r\n```\r\n\r\nHowever, `1.3.6.1.4.1.11129.2.4.4` is not extension ID, but a key purpose ID (ExtendedKeyUsage), as specified in RFC 6962:\r\n```\r\n   o  a special-purpose (CA:true, Extended Key Usage: Certificate\r\n      Transparency, OID 1.3.6.1.4.1.11129.2.4.4) Precertificate Signing\r\n      Certificate.  The Precertificate Signing Certificate MUST be\r\n      directly certified by the (root or intermediate) CA certificate\r\n      that will ultimately sign the end-entity TBSCertificate yielding\r\n      the end-entity certificate (note that the log may relax standard\r\n      validation rules to allow this, so long as the issued certificate\r\n      will be valid),\r\n```\r\n\r\nThus, a new entry shall be added to \"Figure 12: C509 Extended Key Usages\", e.g. as follows:\r\n```\r\n    +-------+---------------------------------------------------------+\r\n    |    19 | Name:            Certificate Transparency               |\r\n    |       | Identifiers:                                            |\r\n    |       | OID:             1.3.6.1.4.1.11129.2.4.4                |\r\n    |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |\r\n    |       | Comments:        RFC 6962                               |\r\n    +-------+---------------------------------------------------------+\r\n```\r\n\r\nAnd the entry `Precertificate Signing Certificate (code 37)` in Figure 8 shall be replaced by another OID (with ending 2.4.3 instead 2.4.4):\r\n```\r\n   +-------+-----------------------------------------------------------+\r\n   |    37 | Name:            Precertificate Signing Certificate       |\r\n   |       | Identifiers:                                              |\r\n   |       | OID:             1.3.6.1.4.1.11129.2.4.3                  |\r\n   |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 03      |\r\n   |       | Comments:        RFC 6962                                 |\r\n   |       | extensionValue:  null                                     |\r\n   +-------+-----------------------------------------------------------+\r\n```",
       "createdAt": "2024-04-28T10:01:15Z",
-      "updatedAt": "2025-06-18T14:59:40Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-19T05:37:52Z",
+      "closedAt": "2025-06-19T05:37:52Z",
       "comments": [
         {
           "author": "gselander",
@@ -5258,6 +5265,13 @@
           "body": "This was an errata, not addition. I discovered these independently. This needs to be fixed.",
           "createdAt": "2025-06-18T14:59:40Z",
           "updatedAt": "2025-06-18T14:59:40Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed with recent commits to main",
+          "createdAt": "2025-06-19T05:37:52Z",
+          "updatedAt": "2025-06-19T05:37:52Z"
         }
       ]
     },
@@ -5595,11 +5609,11 @@
       "assignees": [],
       "labels": [
         "waiting for input",
-        "needs PR"
+        "low priority for core spec"
       ],
       "body": "As specified in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00:\r\n\r\n```\r\npk-XMSS-HashSig PUBLIC-KEY ::= {\r\n   IDENTIFIER id-alg-xmss-hashsig\r\n   KEY XMSS-HashSig-PublicKey\r\n   PARAMS ARE absent\r\n   CERT-KEY-USAGE\r\n      { digitalSignature, nonRepudiation, keyCertSign, cRLSign } }\r\n\r\nXMSS-HashSig-PublicKey ::= OCTET STRING\r\n```\r\n\r\nAnd here the definition of SubjectPublicKeyInfo in RFC 5280\r\n```\r\n   SubjectPublicKeyInfo  ::=  SEQUENCE  {\r\n        algorithm            AlgorithmIdentifier,\r\n        subjectPublicKey     BIT STRING  }\r\n```\r\n\r\nShall the XMSS public key be an OCTET-STRING(public key bytes), or just the \"public key bytes\"?\r\n\r\nThis applies also to the XMSS-MT, HSS-LMS.\r\n\r\n",
       "createdAt": "2024-05-06T08:58:08Z",
-      "updatedAt": "2025-06-18T14:57:03Z",
+      "updatedAt": "2025-06-19T07:45:27Z",
       "closedAt": null,
       "comments": [
         {
@@ -5615,6 +5629,13 @@
           "body": "These algorithms have already been added. Need to fix or remove\n\n```\n|    42 | Name:        HSS / LMS                                    |\n|       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |\n|       | OID:         1.2.840.113549.1.9.16.3.17                   |\n|       | Parameters:  Absent                                       |\n|       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |\n|       | Comments:                                                 |\n+-------+-----------------------------------------------------------+\n|    43 | Name:        XMSS                                         |\n|       | Identifiers: id_alg_xmss                                  |\n|       | OID:         0.4.0.127.0.15.1.1.13.0                      |\n|       | Parameters:  Absent                                       |\n|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |\n|       | Comments:                                                 |\n+-------+-----------------------------------------------------------+\n|    44 | Name:        XMSS^MT                                      |\n|       | Identifiers: id_alg_xmssmt                                |\n|       | OID:         0.4.0.127.0.15.1.1.14.0                      |\n|       | Parameters:  Absent                                       |\n|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |\n|       | Comments:                                                 |\n```\n",
           "createdAt": "2025-06-18T14:57:02Z",
           "updatedAt": "2025-06-18T14:57:02Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Suggestion to remove the algorithms for now and readd them when https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00 is an RFC",
+          "createdAt": "2025-06-19T07:43:59Z",
+          "updatedAt": "2025-06-19T07:43:59Z"
         }
       ]
     },
@@ -6341,7 +6362,7 @@
       "id": "I_kwDOCpt5cM66434Q",
       "title": "Re-add extensions",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/241",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -6351,8 +6372,8 @@
       ],
       "body": "These extensions was at one point in the draft, but removed as they did not have CBOR encoding of the extensionValue defined. They also did not have any description is section 3.3. like all other registered extensions. Could be readded if these criteria are met.\n\n```\n|    36 | Name:            Biometric Information                    |\n|       | Identifiers:     id-pe-biometricInfo                      |\n|       | OID:             1.3.6.1.5.5.7.1.2                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 02            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    37 | Name:            Precertificate Signing Certificate       |\n|       | Identifiers:                                              |\n|       | OID:             1.3.6.1.4.1.11129.2.4.4                  |\n|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04      |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    38 | Name:            OCSP No Check                            |\n|       | Identifiers:     id-pkix-ocsp-nocheck                     |\n|       | OID:             1.3.6.1.5.5.7.48.1.5                     |\n|       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    39 | Name:            Qualified Certificate Statements         |\n|       | Identifiers:     id-pe-qcStatements                       |\n|       | OID:             1.3.6.1.5.5.7.1.3                        |\n|       | DER:             06 08 2B 06 01 05 05 07 01 03            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    40 | Name:            S/MIME Capabilities                      |\n|       | Identifiers:     smimeCapabilities                        |\n|       | OID:             1.2.840.113549.1.9.15                    |\n|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0F         |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n+-------+-----------------------------------------------------------+\n|    41 | Name:            TLS Features                             |\n|       | Identifiers:     id-pe-tlsfeature                         |\n|       | OID:             1.3.6.1.5.5.7.1.24                       |\n|       | DER:             06 08 2B 06 01 05 05 07 01 18            |\n|       | Comments:                                                 |\n|       | extensionValue:                                           |\n```",
       "createdAt": "2025-06-11T04:56:07Z",
-      "updatedAt": "2025-06-18T13:59:54Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-19T05:57:01Z",
+      "closedAt": "2025-06-19T05:57:01Z",
       "comments": [
         {
           "author": "emanjon",
@@ -6374,6 +6395,13 @@
           "body": "OCSP No Check has been readded as 36",
           "createdAt": "2025-06-18T13:59:54Z",
           "updatedAt": "2025-06-18T13:59:54Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "There is overlap with #176 and in #176 Lijun suggests CBOR encoding for several of the extensions. Closing this",
+          "createdAt": "2025-06-19T05:57:01Z",
+          "updatedAt": "2025-06-19T05:57:01Z"
         }
       ]
     },
@@ -6407,6 +6435,57 @@
           "updatedAt": "2025-06-18T08:12:27Z"
         }
       ]
+    },
+    {
+      "number": 247,
+      "id": "I_kwDOCpt5cM68S3aI",
+      "title": "Add RFC numbers in the comment column of the IANA tables.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/247",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "enhancement",
+        "good first issue"
+      ],
+      "body": "Low priority, but could be done when addressing WGLC comments.",
+      "createdAt": "2025-06-19T05:58:57Z",
+      "updatedAt": "2025-06-19T05:59:55Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 248,
+      "id": "I_kwDOCpt5cM68UMG_",
+      "title": "Compile warnings",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/248",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n    (652) Artwork too wide, reducing indentation from 0 to 0\n    (612) Artset too wide, reducing indentation from 0 to 0\n    (610) Figure too wide, reducing indentation from 3 to 0\n    (598) Section too wide, reducing indentation from 0 to 0\n    (706) Artwork too wide, reducing indentation from 0 to 0\n    (704) Figure too wide, reducing indentation from 3 to 0\n    (699) Section too wide, reducing indentation from 0 to 0\n    (572) Section too wide, reducing indentation from 0 to 0\n    (6122) Artwork too wide, reducing indentation from 0 to 0\n    (6046) Artset too wide, reducing indentation from 0 to 0\n    (6044) Figure too wide, reducing indentation from 3 to 0\n    (6038) Section too wide, reducing indentation from 0 to 0\n    (6262) Artwork too wide, reducing indentation from 3 to 0\n    (893) Section too wide, reducing indentation from 0 to 0\n    (67) Middle too wide, reducing indentation from 0 to 0\n    (7256) Artwork too wide, reducing indentation from 3 to 0\n    (7332) Artwork too wide, reducing indentation from 3 to 1\n    (7253) Section too wide, reducing indentation from 0 to 0\n    (7446) Artwork too wide, reducing indentation from 3 to 0\n    (7579) Artwork too wide, reducing indentation from 3 to 0\n    (7034) Section too wide, reducing indentation from 0 to 0\n    (6308) Back too wide, reducing indentation from 0 to 0\n    (652) Too long line found (L1156), 3 characters longer than 72 characters:\n    (652) Too long line found (L1157), 3 characters longer than 72 characters:\n    (652) Too long line found (L1158), 3 characters longer than 72 characters:\n    (652) Too long line found (L1159), 3 characters longer than 72 characters:\n    (652) Too long line found (L1160), 3 characters longer than 72 characters:\n    (652) Too long line found (L1161), 3 characters longer than 72 characters:\n    (652) Too long line found (L1162), 3 characters longer than 72 characters:\n    (652) Too long line found (L1163), 3 characters longer than 72 characters:\n    (652) Too long line found (L1164), 3 characters longer than 72 characters:\n    (652) Too long line found (L1165), 3 characters longer than 72 characters:\n    (652) Too long line found (L1166), 3 characters longer than 72 characters:\n    (652) Too long line found (L1167), 3 characters longer than 72 characters:\n    (652) Too long line found (L1168), 3 characters longer than 72 characters:\n    (706) Too long line found (L1304), 3 characters longer than 72 characters:\n    (706) Too long line found (L1305), 3 characters longer than 72 characters:\n    (6122) Too long line found (L3330), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3331), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3332), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3333), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3334), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3335), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3336), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3337), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3338), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3339), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3340), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3341), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3342), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3343), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3344), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3345), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3346), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3347), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3348), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3349), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3350), 1 characters longer than 72 characters:\n    (6122) Too long line found (L3351), 1 characters longer than 72 characters:\n    (7256) Too long line found (L4098), 3 characters longer than 72 characters:\n    (7256) Too long line found (L4102), 5 characters longer than 72 characters:\n    (7256) Too long line found (L4118), 3 characters longer than 72 characters:\n    (7256) Too long line found (L4120), 3 characters longer than 72 characters:\n    (7256) Too long line found (L4125), 1 characters longer than 72 characters: \n\n",
+      "createdAt": "2025-06-19T08:13:31Z",
+      "updatedAt": "2025-06-19T08:37:28Z",
+      "closedAt": "2025-06-19T08:37:28Z",
+      "comments": []
+    },
+    {
+      "number": 250,
+      "id": "I_kwDOCpt5cM68eDsB",
+      "title": "Partial encoding in Template",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/250",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Should say something similar to I-D.ietf-lamps-rfc7030-csrattrs\n\n```\nIn case the server requires use of an\n      RSA key and needs to specify its size, the field MUST be present\n      and contain a placeholder public key value of the desired RSA\n      modulus length.\n\n```\n```\nIn case the server includes an ExtensionTemplate with the extnID\n   'subjectAltName' and a partially filled in extnValue, such as a\n   'directoryName' choice containing the NULL-DN (i.e., an empty\n   sequence of RDNs) or the 'iPAddress' choice with an empty OCTET\n   STRING, this means that the client SHOULD fill in the respective\n   GeneralName value.\n```",
+      "createdAt": "2025-06-20T05:46:17Z",
+      "updatedAt": "2025-06-20T05:46:17Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -9139,21 +9218,21 @@
       "id": "PR_kwDOCpt5cM6a2Z4E",
       "title": "SpecialText in attribute values",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/243",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "The current optimization seems a bit strange as it bundles to optimizations together. This suggestion seems like a simplification.",
       "createdAt": "2025-06-17T08:16:46Z",
-      "updatedAt": "2025-06-18T12:59:08Z",
+      "updatedAt": "2025-06-19T08:56:04Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6699da842ffd8102d1b270b5a1ed4a9ebe2321c5",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "emanjon-patch-1",
       "headRefOid": "87d21e5c63e86c8f334e33a1824e767a7ed49cdc",
-      "closedAt": null,
+      "closedAt": "2025-06-19T08:56:04Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -9297,6 +9376,40 @@
           "body": "Good housekeeping, fixed a typo.",
           "createdAt": "2025-06-17T14:01:40Z",
           "updatedAt": "2025-06-17T14:01:40Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 249,
+      "id": "PR_kwDOCpt5cM6bN3JP",
+      "title": " SpecialText in attribute values - Take 2",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/249",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The current optimization seems a bit strange as it bundles to optimizations together. This suggestion is a simplification.\r\n\r\nThis is a resubmission of #243, which was based on a now old version. Analysing #243, we found some inconsistencies that have been fixed.\r\n\r\nA review comment from Joel on #243 was \"I think this is an improvement!\"",
+      "createdAt": "2025-06-19T08:54:32Z",
+      "updatedAt": "2025-06-20T05:44:11Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "8a48eabc050ba129d0962acb63e332cb4c82898d",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "SpecialText-in-attribute-values",
+      "headRefOid": "663c80afff45f48340597d613c33aa8ee87abdd1",
+      "closedAt": "2025-06-20T05:44:11Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "If the text string contains an EUI-64 of the form \"HH-HH-HH-HH-HH-\r\n      HH-HH-HH\" where each 'H' is one of the symbols '0'\u2013'9' or 'A'\u2013'F'\r\n      it is encoded as a CBOR tagged MAC address using the CBOR tag 48,\r\n      see Section 2.4 of [RFC9542].  If of the form \"HH-HH-HH-FF-FE-HH-\r\n      HH-HH\", it is encoded as a 48-bit MAC address, otherwise as a\r\n      64-bit MAC address.  See example in Appendix A.1.\r\n \r\n Given the existance of macAddress (1.3.6.1.1.1.1.22) with a different (colon-based) encoding, the above use of tag 48 feels a bit like a hack.\r\n - One option would be do define new tags for different encodings in the X.509 certificate.\r\n - Another option would be to skip tags in X.509 to C509 but write that native C509 can use tags instead of text.\r\n ",
+          "createdAt": "2025-06-19T09:09:54Z",
+          "updatedAt": "2025-06-19T09:09:54Z"
         }
       ],
       "reviews": []
