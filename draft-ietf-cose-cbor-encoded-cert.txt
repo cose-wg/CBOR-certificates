@@ -1155,9 +1155,10 @@ Table of Contents
    certificate can take place in a 6LoWPAN border gateway which allows
    the server side to stay unmodified.  This case gives the advantage of
    the low overhead of a C509 certificate over a constrained wireless
-   links.  The conversion to X.509 within an IoT device will incur a
-   computational overhead, however, measured in energy this is likely to
-   be negligible compared to the reduced communication overhead.
+   links.  The conversion to X.509 within a constrained IoT device will
+   incur a computational overhead, however, measured in energy this is
+   likely to be negligible compared to the reduced communication
+   overhead.
 
    For the setting with constrained server and server-only
    authentication, the server only needs to be provisioned with the C509
