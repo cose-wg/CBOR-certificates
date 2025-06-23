@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 23 December 2025                                     J. Höglund
+Expires: 25 December 2025                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            21 June 2025
+                                                            23 June 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 December 2025.
+   This Internet-Draft will expire on 25 December 2025.
 
 Copyright Notice
 
@@ -1054,8 +1054,8 @@ Table of Contents
    3), the sign of extensionID of challengePassword indicates the string
    type in the DER encoded challengePassword (instead of the
    criticalness in extensions): positive for utf8String and negative for
-   printableString.  The same encoding optimization applies as in
-   Section 3.1.4.
+   printableString.  The same text string encoding optimizations applies
+   as in Section 3.1.4.
 
 4.4.  Certificate Request Template
 
