@@ -289,7 +289,7 @@ In the former case, the absolute value of the int encodes the attribute type (se
 The text strings are further optimized as follows:
 
   * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
-  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'–'9' or 'A'–'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
+  * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'-'9' or 'A'-'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
   * Otherwise it is encoded as a CBOR text string.
 
 The final encoding of the extension value may therefore be text, bytes, or tag, i.e. SpecialText. If Name contains a single 'common name' attribute with attributeType = +1 it is for compactness encoded as just the SpecialText containing the single attribute value.
