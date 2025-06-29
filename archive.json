@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-24T02:05:10.706412+00:00",
+  "timestamp": "2025-06-29T02:21:39.666011+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -5627,7 +5627,7 @@
       ],
       "body": "As specified in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00:\r\n\r\n```\r\npk-XMSS-HashSig PUBLIC-KEY ::= {\r\n   IDENTIFIER id-alg-xmss-hashsig\r\n   KEY XMSS-HashSig-PublicKey\r\n   PARAMS ARE absent\r\n   CERT-KEY-USAGE\r\n      { digitalSignature, nonRepudiation, keyCertSign, cRLSign } }\r\n\r\nXMSS-HashSig-PublicKey ::= OCTET STRING\r\n```\r\n\r\nAnd here the definition of SubjectPublicKeyInfo in RFC 5280\r\n```\r\n   SubjectPublicKeyInfo  ::=  SEQUENCE  {\r\n        algorithm            AlgorithmIdentifier,\r\n        subjectPublicKey     BIT STRING  }\r\n```\r\n\r\nShall the XMSS public key be an OCTET-STRING(public key bytes), or just the \"public key bytes\"?\r\n\r\nThis applies also to the XMSS-MT, HSS-LMS.\r\n\r\n",
       "createdAt": "2024-05-06T08:58:08Z",
-      "updatedAt": "2025-06-19T07:45:27Z",
+      "updatedAt": "2025-06-27T06:11:51Z",
       "closedAt": null,
       "comments": [
         {
@@ -5650,6 +5650,13 @@
           "body": "Suggestion to remove the algorithms for now and readd them when https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00 is an RFC",
           "createdAt": "2025-06-19T07:43:59Z",
           "updatedAt": "2025-06-19T07:43:59Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "A new Request for Comments is now available in online RFC libraries.\n\n       \n        RFC 9802\n\n        Title:      Use of the HSS and XMSS Hash-Based\n                    Signature Algorithms in Internet\n                    X.509 Public Key Infrastructure\n        Author:     D. Van Geest,\n                    K. Bashiri,\n                    S. Fluhrer,\n                    S. Gazdag,\n                    S. Kousidis\n        Status:     Standards Track\n        Stream:     IETF\n        Date:       June 2025\n        Mailbox:    [daniel.vangeest@cryptonext-security.com](mailto:daniel.vangeest@cryptonext-security.com),\n                    [kaveh.bashiri.ietf@gmail.com](mailto:kaveh.bashiri.ietf@gmail.com),\n                    [sfluhrer@cisco.com](mailto:sfluhrer@cisco.com),\n                    [ietf@gazdag.de](mailto:ietf@gazdag.de),\n                    [kousidis.ietf@gmail.com](mailto:kousidis.ietf@gmail.com)\n        Pages:      30\n        Updates/Obsoletes/SeeAlso:   None",
+          "createdAt": "2025-06-27T06:11:50Z",
+          "updatedAt": "2025-06-27T06:11:50Z"
         }
       ]
     },
@@ -6193,7 +6200,7 @@
       "id": "I_kwDOCpt5cM6uKUxF",
       "title": "Media type for certificates by reference",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/226",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "malishav",
       "authorAssociation": "NONE",
       "assignees": [
@@ -6204,8 +6211,8 @@
       ],
       "body": "As just discussed during the IETF 122 Hackathon, we agreed on registering a new media type that indicates certificate by reference. This media type is to be used by `draft-ietf-ace-coap-est-oscore` draft during the negotiation in order to indicate support of the client for cert references. We discussed that it would make sense to have this media type indicate support for *any* kind of reference, i.e. irrespective whether it is `c5t` or `c5u`, as that would be equivalent from the point of view of a constrained device handling the certificate by reference (opaque binary blob of data without access to the actual certificate).\n\nSee https://github.com/ace-wg/est-oscore/issues/69",
       "createdAt": "2025-03-15T09:35:35Z",
-      "updatedAt": "2025-06-13T08:30:03Z",
-      "closedAt": "2025-06-13T08:30:03Z",
+      "updatedAt": "2025-06-27T07:17:32Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "gselander",
@@ -6241,6 +6248,13 @@
           "body": "Merged to main",
           "createdAt": "2025-06-13T08:30:03Z",
           "updatedAt": "2025-06-13T08:30:03Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The certificate request template also needs media type / content format.",
+          "createdAt": "2025-06-27T07:17:32Z",
+          "updatedAt": "2025-06-27T07:17:32Z"
         }
       ]
     },
@@ -6505,6 +6519,38 @@
       "body": "Should say something similar to I-D.ietf-lamps-rfc7030-csrattrs\n\n```\nIn case the server requires use of an\n      RSA key and needs to specify its size, the field MUST be present\n      and contain a placeholder public key value of the desired RSA\n      modulus length.\n\n```\n```\nIn case the server includes an ExtensionTemplate with the extnID\n   'subjectAltName' and a partially filled in extnValue, such as a\n   'directoryName' choice containing the NULL-DN (i.e., an empty\n   sequence of RDNs) or the 'iPAddress' choice with an empty OCTET\n   STRING, this means that the client SHOULD fill in the respective\n   GeneralName value.\n```",
       "createdAt": "2025-06-20T05:46:17Z",
       "updatedAt": "2025-06-20T05:46:17Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 251,
+      "id": "I_kwDOCpt5cM692MOm",
+      "title": "Error in Appendix A2.1.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/251",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- A.2.1.  Example: C509 Certificate Encoding\n  -  In the spec\n  ```\n   03 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78\n   61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F\n   6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55\n   53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09\n   63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 FD C8 B4 21 F1 1C 25 E4\n   7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C\n   FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD\n   66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20\n   5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02 03\n   04 00 58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB\n      ^^\n   21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D\n   83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36\n  ```\n \n  - Shall be\n  ```\n  03 48 7E 76 61 D7 B5 4E 46 32 00  \n                                ^^\n                                8A 23 62 55 53 06 62 43 41 08 6B 45 78\n  61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F\n  6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55 \n  53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09 \n  63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 FD C8 B4 21 F1 1C 25 E4 \n  7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C  \n  FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD \n  66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 \n  5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02 03 \n  04    58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB\n     ^^\n  21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D \n  83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36 \n  ```",
+      "createdAt": "2025-06-28T15:23:12Z",
+      "updatedAt": "2025-06-28T16:21:53Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 252,
+      "id": "I_kwDOCpt5cM692hvM",
+      "title": "Attribute macAddress",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/252",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Since macAddress can only be encoded as IA5String, the following text in Section \"3.1.4. Issuer\" needs to be extended:\n\nIs:\n```\nThe attribute value for\nemailAddress and domainComponent are always of type IA5String (see\n[RFC5280]), and is for this reason unambiguously represented using a\nnon-negative int.\n```\n\nShall be:\n```\nThe attribute value for\nemailAddress, domainComponent (see [RFC5280], and macAddress \n(see [RFC2307] are always of type IA5String, and is for this reason \nunambiguously represented using a \nnon-negative int.\n```\n\nAnd add an entry for RFC2308 in the Appendix \"10.1.  Normative References\".\n\nRFC2307 is quite old, I am not sure it is still state-of-art.",
+      "createdAt": "2025-06-28T16:18:51Z",
+      "updatedAt": "2025-06-28T16:18:51Z",
       "closedAt": null,
       "comments": []
     }
