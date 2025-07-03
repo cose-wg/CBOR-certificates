@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-01T02:22:32.971436+00:00",
+  "timestamp": "2025-07-03T02:05:13.426569+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -6622,9 +6622,17 @@
       "labels": [],
       "body": "When adding the support of a public key algorithm, we should make sure that the corresponding private key can also be stored in CBOR/COSE container `C509PrivateKey` defined in Section `3.5.  Private Key Structures`.\n\n```\n   C509PrivateKey = [\n      C509PrivateKeyType: int,\n      subjectPrivateKeyAlgorithm: AlgorithmIdentifier,\n      subjectPrivateKey: any,\n   ]\n```\n\nAs stated in https://www.iana.org/assignments/cose/cose.xhtml#key-type, there are still no `COSE Elliptic Curves` constants for the weierstra\u00df curve FRP256V1 and SM2P256V1.",
       "createdAt": "2025-06-29T18:22:42Z",
-      "updatedAt": "2025-06-29T19:16:11Z",
+      "updatedAt": "2025-07-01T06:18:58Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I am aware. The document has the text \"Note that COSE_KEY might not be possible to use with all algorithms that have a C509 AlgorithmIdentifier defined.\"\n\nI think registering COSE code points for FRP256V1 and SM2P256V1 is out-of-scope of this draft and should be done by another draft. You don't even need an RFC.\n\n",
+          "createdAt": "2025-07-01T06:18:58Z",
+          "updatedAt": "2025-07-01T06:18:58Z"
+        }
+      ]
     },
     {
       "number": 257,
@@ -6638,9 +6646,17 @@
       "labels": [],
       "body": "From draft -13 to -14, the syntax of extension value is changed from `any` to `NonNull`. And due to this change, the ASN.1 `NULL` is encoded now as `h''`. I am not sure this change is the best choice.\n\nI preferred to revert this change, since:\n- Converting ASN.1 `NULL` to CBOR `null`does not change the meaning, while to CBOR `h''`does.\n- Encoding as `h''` does not have less bytes compared to `null`.\n-  Encoding as `h''`does not cover the case where an extension may have both `NULL` and `OCTET STRING (0..MAX)`.",
       "createdAt": "2025-06-29T21:57:56Z",
-      "updatedAt": "2025-06-30T05:05:56Z",
+      "updatedAt": "2025-07-01T06:14:46Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The reason for the change is to avoid collisions with null in the C509CertificateRequestTemplate, so any changes need to consider also the C509CertificateRequestTemplate",
+          "createdAt": "2025-07-01T06:14:46Z",
+          "updatedAt": "2025-07-01T06:14:46Z"
+        }
+      ]
     },
     {
       "number": 258,
@@ -6670,9 +6686,17 @@
       "labels": [],
       "body": "In draft -14 (and before), if the extensions field has only one non-critical KeyUsage extension, its encoding is different than all other cases. IMHO this special encoding should be removed, since\n- It does not save many bytes, but only 2 bytes.\n- When occurs, the KeyUsage extension is usually critical. That means, the special encoding applies only to non-standard-conform certificates. Below is the text block from RFC 5280:\n   ```\n   Conforming CAs MUST include this extension in certificates that\n   contain public keys that are used to validate digital signatures on\n   other public key certificates or CRLs.  When present, conforming CAs\n   SHOULD mark this extension as critical.\n   ```\n- Removing the special case simplify the encoding and parsing of certificates.",
       "createdAt": "2025-06-30T05:35:40Z",
-      "updatedAt": "2025-06-30T05:35:40Z",
+      "updatedAt": "2025-07-01T06:11:10Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "In earlier discussions some people have expressed that they like to save 2 bytes....\n\nThe special encoding applies to both critical and non-critical. If the optimization stay, the following text shouuld be improved:\n\n`\"If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see [Section 3.3](https://cose-wg.github.io/CBOR-certificates/draft-ietf-cose-cbor-encoded-cert.html#ext-encoding)), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.\"`",
+          "createdAt": "2025-07-01T06:11:10Z",
+          "updatedAt": "2025-07-01T06:11:10Z"
+        }
+      ]
     },
     {
       "number": 260,
