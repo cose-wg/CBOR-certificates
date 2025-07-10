@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-03T02:05:13.426569+00:00",
+  "timestamp": "2025-07-10T02:07:32.039615+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -6670,9 +6670,17 @@
       "labels": [],
       "body": "The corresponding data type for `X509Certificate` (or `Certificate` as in RFC 5280) is `C509Certificate`, but not the unwrapped one `~C509Certificate`, and the unwrapped one saves ONLY 1 byte. Please use `C509Certificate` instead the unwrapped one, especially in the following contexts:\n\n1. C509CertData\n   ```\n   The COSE_C509 structure used in c5b, c5c, and c5u is defined as:\n\n   COSE_C509 = C509CertData / [ 2* C509CertData ]\n   C509CertData = bstr .cborseq C509Certificate\n\n   C509CertData thus includes the unwrapped CBOR sequence,\n   ~C509Certificate, see Appendix A.1.5 for an example.\n   ```\n   The last block shall be changed to `C509CertData thus includes the CBOR sequence\n   C509Certificate, see Appendix A.1.5 for an example.`\n2. COSE_CertHash\n   ```\n   The value type of c5t is the COSE_CertHash structure defined in\n   [RFC9360], which contains the hash value of the C509 certificate\n   calculated over ~C509Certificate\n   ```\n   For the X.509 certificate, COSE_CertHash is calculated over the whole `Certificate` including the leading tag and length. We shall follow here the same mechanism, and calculated over the `C509Certificate` instead the unwrapped one `~C509Certificate`.\n3. 9.20 TLS Certificate Types Registry\n   ```\n   C509 is defined in the same way\n   as as X.509, but uses a different value and instead of DER-encoded\n   X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR\n   sequence ~C509Certificate (an unwrapped C509Certificate)\n   ```\n   And the last block shall be changed to `contains a CBOR\n   sequence C509Certificate`\n\nPlease note in C509CertData and TLS, using `C509Certificate` is a much cleaner solution compared to the unwrapped one.\n\nLast but not least, for the above reasons, and also for user friendliness, please use `C509Certificate` instead`C509Certificate` in the examples.",
       "createdAt": "2025-06-29T22:10:18Z",
-      "updatedAt": "2025-06-30T06:24:52Z",
+      "updatedAt": "2025-07-10T01:54:42Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This relates to the discussion in #222 and #228, defining the C509CertData. I didn't and don't have a strong preference between array or unwrapped form, just that the same form be used for those three purposes listed above so that an ignorant processor doesn't need to care about the contents.\n\nIf there is a technical reason to use one or the other then I support that solution, and it sounds like the array form is preferred from the implementation side.",
+          "createdAt": "2025-07-10T01:54:42Z",
+          "updatedAt": "2025-07-10T01:54:42Z"
+        }
+      ]
     },
     {
       "number": 259,
