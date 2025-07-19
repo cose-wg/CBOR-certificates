@@ -1,5 +1,3 @@
-
-As stated in Section 3.4, the contents of the COSE Header Parameters c5b, c5c, c5t, c5u is untrusted input that potentially may be verified using existing trust anchors or other trust establishment mechanism out of scope of this document.
 ---
 v: 3
 title: "CBOR Encoded X.509 Certificates (C509 Certificates)"
