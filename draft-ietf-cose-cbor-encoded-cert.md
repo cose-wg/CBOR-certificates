@@ -1592,7 +1592,7 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | DER:             06 08 2B 06 01 05 05 07 03 20          |
 |       | Comments:        RFC 9480                               |
 +-------+---------------------------------------------------------+
-|    19 | Name:            Precertificate Signing Certificate     |
+|    19 | Name:            Certificate Transparency               |
 |       | Identifiers:                                            |
 |       | OID:             1.3.6.1.4.1.11129.2.4.4                |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |
