@@ -1110,7 +1110,14 @@ Table of Contents
    certificate request by the EST client.  The presence of a null value
    in a C509CertificateRequestTemplate indicates that the EST server
    expects the EST client to replace it with a relevant value for that
-   field.
+   field, following the same procedure as in
+   [I-D.ietf-lamps-rfc7030-csrattrs].  In case the EST server requires
+   use of an RSA key and needs to specify its size, the field MUST be
+   present and contain a placeholder public key value of the desired RSA
+   modulus length.  In case the EST server includes a subjectAltName
+   with a partially filled extensionValue, such as iPAddress with an
+   empty byte string, this means that the client SHOULD fill in the
+   corresponding GeneralName value.
 
 5.  C509 Processing and Certificate Issuance
 
