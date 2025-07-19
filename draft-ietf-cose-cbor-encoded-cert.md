@@ -1733,7 +1733,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1A          |
 |       | Comments:    Proof-of-possession algorithm, indexed with  |
 |       |              KDF and MAC, see RFC 6955. Requires          |
-|       |              recipient public static Diffie-Hellman key.  |
+|       |              recipient's public static Diffie-Hellman key |
 +-------+-----------------------------------------------------------+
 |    15 | Name:        SHA-384 with HMAC-SHA384                     |
 |       | Identifiers: sa-ecdhPop-sha384-hmac-sha384                |
@@ -1742,7 +1742,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1B          |
 |       | Comments:    Proof-of-possession algorithm, indexed with  |
 |       |              KDF and MAC, see RFC 6955. Requires          |
-|       |              recipient public static Diffie-Hellman key.  |
+|       |              recipient's public static Diffie-Hellman key |
 +-------+-----------------------------------------------------------+
 |    16 | Name:        SHA-512 with HMAC-SHA512                     |
 |       | Identifiers: sa-ecdhPop-sha512-hmac-sha512                |
@@ -1751,7 +1751,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1C          |
 |       | Comments:    Proof-of-possession algorithm, indexed with  |
 |       |              KDF and MAC, see RFC 6955. Requires          |
-|       |              recipient public static Diffie-Hellman key.  |
+|       |              recipient's public static Diffie-Hellman key |
 +-------+-----------------------------------------------------------+
 |    23 | Name:        RSASSA-PKCS1-v1_5 with SHA-256               |
 |       | Identifiers: sha256WithRSAEncryption                      |
