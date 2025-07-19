@@ -1853,7 +1853,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-256, ansip256r1, prime256v1  |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
@@ -1862,7 +1862,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-384, ansip384r1              |
 +-------+-----------------------------------------------------------+
 |     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
@@ -1871,7 +1871,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 23                                     |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-521, ansip521r1              |
 +-------+-----------------------------------------------------------+
 |     8 | Name:        X25519 (Montgomery)                          |
@@ -1931,7 +1931,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.3.36.3.3.2.8.1.1.7)                       |
 |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 07                         |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    25 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP384r1                              |
@@ -1941,7 +1941,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.3.36.3.3.2.8.1.1.11)                      |
 |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 0B                         |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    26 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP512r1                              |
@@ -1951,7 +1951,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.3.36.3.3.2.8.1.1.13)                      |
 |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 0D                         |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    27 | Name:        EC Public Key (Weierstraß) with              |
 |       |              FRP256v1                                     |
@@ -1961,7 +1961,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.2.250.1.223.101.256.1)                    |
 |       | DER:         30 15 06 07 2A 86 48 CE 3D 02 01 06 0A 2A 81 |
 |       |              7A 01 81 5F 65 82 00 01                      |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    28 | Name:        EC Public Key (Weierstraß) with              |
 |       |              sm2p256v1                                    |
@@ -1971,7 +1971,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.2.156.10197.1.301)                        |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
 |       |              1C CF 55 01 82 2D                            |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="C509 Public Key Algorithms"}
