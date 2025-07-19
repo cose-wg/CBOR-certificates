@@ -1346,7 +1346,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-1-1">One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, since those are not optimized for constrained environments <span>[<a href="#RFC7228" class="cite xref">RFC7228</a>]</span>. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS <span>[<a href="#RFC9190" class="cite xref">RFC9190</a>]</span> <span>[<a href="#RFC9191" class="cite xref">RFC9191</a>]</span> where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span> where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span> where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The use of CBOR also reduces code complexity, code size, memory usage, and CPU usage.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bytes), and text strings (text), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">CAB Baseline Requirements <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>, RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, and CNSA 1.0 <span>[<a href="#RFC8603" class="cite xref">RFC8603</a>]</span> specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span>, DTLS <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>, EDHOC <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, or Compact TLS 1.3 <span>[<a href="#I-D.ietf-tls-ctls" class="cite xref">I-D.ietf-tls-ctls</a>]</span>. RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, RFC7925bis <span>[<a href="#I-D.ietf-uta-tls13-iot-profile" class="cite xref">I-D.ietf-uta-tls13-iot-profile</a>]</span>, and IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> specifically target Internet of Things deployments.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This document specifies a CBOR encoding of X.509 certificates based on <span>[<a href="#X.509-IoT" class="cite xref">X.509-IoT</a>]</span>. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>,  <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span> profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50% while also significantly reducing memory and code size compared to ASN.1. C509 is not a general CBOR ecoding for Abstract Syntax Notation One (ASN.1) data structures.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see <a href="#sigalg" class="auto internal xref">Section 9.11</a>.<a href="#section-1-6" class="pilcrow">¶</a></p>
@@ -1471,7 +1471,7 @@ tag = #6
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
 <p id="section-3.1.4-1">In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>), and is for this reason unambiguously represented using a non-negative int. In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress, domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>) and macAddress (see <span>[<a href="#RFC2307" class="cite xref">RFC2307</a>]</span>). In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
@@ -1618,7 +1618,7 @@ tag = #6
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-8">
 <pre>
-   KeyUsage = int
+   KeyUsage = uint
 </pre><a href="#section-3.3-8" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
@@ -1836,14 +1836,14 @@ tag = #6
             <p id="section-3.3-44.1.1">IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-44.2">
-            <p id="section-3.3-44.2.1">Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.<a href="#section-3.3-44.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-44.2.1">Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.<a href="#section-3.3-44.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-45">
 <pre>
    SignedCertificateTimestamp = (
      logID: bytes,
-     timestamp: int,
+     timestamp: uint,
      sigAlg: AlgorithmIdentifier,
      sigValue: any,
    )
@@ -1901,7 +1901,7 @@ tag = #6
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
 COSE_C509 = C509CertData / [ 2* C509CertData ]
-C509CertData = bstr .cborseq C509Certificate
+C509CertData = bytes .cborseq C509Certificate
 </pre><a href="#section-3.4-3" class="pilcrow">¶</a>
 </div>
 <p id="section-3.4-4">C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate, see <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
@@ -1990,7 +1990,7 @@ C509PEM = [
 <p id="section-3.6-1">In some use cases it is desirable to be able to specify a unique C509 representation of a given X.509 certificate.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <p id="section-3.6-2">While this specification requires the use of Deterministically Encoded CBOR (see <a href="#notation" class="auto internal xref">Section 2</a>), it is still possible to represent certain X.509 certificate fields in different ways. This is a consequence of the extensibility of the C509 format where new encodings can be defined, for example to optimize extensions for which no special CBOR encoding have been previously defined.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
 <p id="section-3.6-3">Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding <span class="bcp14">MUST</span> be used. For example, when there is support for specific CBOR encoding of an extension, as specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a> and the C509 Extensions Registry, it <span class="bcp14">MUST</span> be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it <span class="bcp14">MUST</span> be used.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:NonNull)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4743,9 +4743,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="268" y="1588">9480</text>
                   <text x="52" y="1620">19</text>
                   <text x="104" y="1620">Name:</text>
-                  <text x="276" y="1620">Precertificate</text>
-                  <text x="368" y="1620">Signing</text>
-                  <text x="448" y="1620">Certificate</text>
+                  <text x="264" y="1620">Certificate</text>
+                  <text x="364" y="1620">Transparency</text>
                   <text x="132" y="1636">Identifiers:</text>
                   <text x="100" y="1652">OID:</text>
                   <text x="312" y="1652">1.3.6.1.4.1.11129.2.4.4</text>
@@ -5221,11 +5220,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="336" y="1220">RFC</text>
                   <text x="376" y="1220">6955.</text>
                   <text x="436" y="1220">Requires</text>
-                  <text x="224" y="1236">recipient</text>
-                  <text x="292" y="1236">public</text>
-                  <text x="348" y="1236">static</text>
-                  <text x="436" y="1236">Diffie-Hellman</text>
-                  <text x="516" y="1236">key.</text>
+                  <text x="232" y="1236">recipient's</text>
+                  <text x="308" y="1236">public</text>
+                  <text x="364" y="1236">static</text>
+                  <text x="452" y="1236">Diffie-Hellman</text>
+                  <text x="528" y="1236">key</text>
                   <text x="52" y="1268">15</text>
                   <text x="104" y="1268">Name:</text>
                   <text x="216" y="1268">SHA-384</text>
@@ -5262,11 +5261,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="336" y="1364">RFC</text>
                   <text x="376" y="1364">6955.</text>
                   <text x="436" y="1364">Requires</text>
-                  <text x="224" y="1380">recipient</text>
-                  <text x="292" y="1380">public</text>
-                  <text x="348" y="1380">static</text>
-                  <text x="436" y="1380">Diffie-Hellman</text>
-                  <text x="516" y="1380">key.</text>
+                  <text x="232" y="1380">recipient's</text>
+                  <text x="308" y="1380">public</text>
+                  <text x="364" y="1380">static</text>
+                  <text x="452" y="1380">Diffie-Hellman</text>
+                  <text x="528" y="1380">key</text>
                   <text x="52" y="1412">16</text>
                   <text x="104" y="1412">Name:</text>
                   <text x="216" y="1412">SHA-512</text>
@@ -5303,11 +5302,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="336" y="1508">RFC</text>
                   <text x="376" y="1508">6955.</text>
                   <text x="436" y="1508">Requires</text>
-                  <text x="224" y="1524">recipient</text>
-                  <text x="292" y="1524">public</text>
-                  <text x="348" y="1524">static</text>
-                  <text x="436" y="1524">Diffie-Hellman</text>
-                  <text x="516" y="1524">key.</text>
+                  <text x="232" y="1524">recipient's</text>
+                  <text x="308" y="1524">public</text>
+                  <text x="364" y="1524">static</text>
+                  <text x="452" y="1524">Diffie-Hellman</text>
+                  <text x="528" y="1524">key</text>
                   <text x="52" y="1556">23</text>
                   <text x="104" y="1556">Name:</text>
                   <text x="256" y="1556">RSASSA-PKCS1-v1_5</text>
@@ -5849,9 +5848,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="292" y="276">01</text>
                   <text x="316" y="276">07</text>
                   <text x="120" y="292">Comments:</text>
-                  <text x="208" y="292">Point</text>
-                  <text x="276" y="292">compressed</text>
-                  <text x="388" y="292">subjectPublicKey</text>
+                  <text x="228" y="292">Compressed</text>
+                  <text x="340" y="292">subjectPublicKey</text>
                   <text x="204" y="308">Also</text>
                   <text x="248" y="308">known</text>
                   <text x="284" y="308">as</text>
@@ -5896,9 +5894,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="220" y="420">00</text>
                   <text x="244" y="420">22</text>
                   <text x="120" y="436">Comments:</text>
-                  <text x="208" y="436">Point</text>
-                  <text x="276" y="436">compressed</text>
-                  <text x="388" y="436">subjectPublicKey</text>
+                  <text x="228" y="436">Compressed</text>
+                  <text x="340" y="436">subjectPublicKey</text>
                   <text x="204" y="452">Also</text>
                   <text x="248" y="452">known</text>
                   <text x="284" y="452">as</text>
@@ -5942,9 +5939,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="220" y="564">00</text>
                   <text x="244" y="564">23</text>
                   <text x="120" y="580">Comments:</text>
-                  <text x="208" y="580">Point</text>
-                  <text x="276" y="580">compressed</text>
-                  <text x="388" y="580">subjectPublicKey</text>
+                  <text x="228" y="580">Compressed</text>
+                  <text x="340" y="580">subjectPublicKey</text>
                   <text x="204" y="596">Also</text>
                   <text x="248" y="596">known</text>
                   <text x="284" y="596">as</text>
@@ -6148,9 +6144,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="316" y="1524">01</text>
                   <text x="340" y="1524">07</text>
                   <text x="120" y="1540">Comments:</text>
-                  <text x="208" y="1540">Point</text>
-                  <text x="276" y="1540">compressed</text>
-                  <text x="388" y="1540">subjectPublicKey</text>
+                  <text x="228" y="1540">Compressed</text>
+                  <text x="340" y="1540">subjectPublicKey</text>
                   <text x="52" y="1572">25</text>
                   <text x="104" y="1572">Name:</text>
                   <text x="196" y="1572">EC</text>
@@ -6193,9 +6188,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="316" y="1684">01</text>
                   <text x="340" y="1684">0B</text>
                   <text x="120" y="1700">Comments:</text>
-                  <text x="208" y="1700">Point</text>
-                  <text x="276" y="1700">compressed</text>
-                  <text x="388" y="1700">subjectPublicKey</text>
+                  <text x="228" y="1700">Compressed</text>
+                  <text x="340" y="1700">subjectPublicKey</text>
                   <text x="52" y="1732">26</text>
                   <text x="104" y="1732">Name:</text>
                   <text x="196" y="1732">EC</text>
@@ -6238,9 +6232,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="316" y="1844">01</text>
                   <text x="340" y="1844">0D</text>
                   <text x="120" y="1860">Comments:</text>
-                  <text x="208" y="1860">Point</text>
-                  <text x="276" y="1860">compressed</text>
-                  <text x="388" y="1860">subjectPublicKey</text>
+                  <text x="228" y="1860">Compressed</text>
+                  <text x="340" y="1860">subjectPublicKey</text>
                   <text x="52" y="1892">27</text>
                   <text x="104" y="1892">Name:</text>
                   <text x="196" y="1892">EC</text>
@@ -6284,9 +6277,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="340" y="2004">00</text>
                   <text x="364" y="2004">01</text>
                   <text x="120" y="2020">Comments:</text>
-                  <text x="208" y="2020">Point</text>
-                  <text x="276" y="2020">compressed</text>
-                  <text x="388" y="2020">subjectPublicKey</text>
+                  <text x="228" y="2020">Compressed</text>
+                  <text x="340" y="2020">subjectPublicKey</text>
                   <text x="52" y="2052">28</text>
                   <text x="104" y="2052">Name:</text>
                   <text x="196" y="2052">EC</text>
@@ -6328,9 +6320,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="292" y="2164">82</text>
                   <text x="316" y="2164">2D</text>
                   <text x="120" y="2180">Comments:</text>
-                  <text x="208" y="2180">Point</text>
-                  <text x="276" y="2180">compressed</text>
-                  <text x="388" y="2180">subjectPublicKey</text>
+                  <text x="228" y="2180">Compressed</text>
+                  <text x="340" y="2180">subjectPublicKey</text>
                 </g>
               </svg><a href="#section-9.12-2.1.1" class="pilcrow">¶</a>
 </div>
@@ -6958,6 +6949,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="IEEE-802.1AR">[IEEE-802.1AR]</dt>
         <dd>
 <span class="refAuthor">Institute of Electrical and Electronics Engineers</span>, <span class="refTitle">"IEEE Standard for Local and metropolitan area networks–Secure Device Identity"</span>, <span class="seriesInfo">IEEE Standard 802.1AR-2018 </span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://standards.ieee.org/standard/802_1AR-2018.html">https://standards.ieee.org/standard/802_1AR-2018.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2307">[RFC2307]</dt>
+        <dd>
+<span class="refAuthor">Howard, L.</span>, <span class="refTitle">"An Approach for Using LDAP as a Network Information Service"</span>, <span class="seriesInfo">RFC 2307</span>, <span class="seriesInfo">DOI 10.17487/RFC2307</span>, <time datetime="1998-03" class="refDate">March 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2307">https://www.rfc-editor.org/rfc/rfc2307</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6487">[RFC6487]</dt>
         <dd>
