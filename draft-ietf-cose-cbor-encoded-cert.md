@@ -758,6 +758,7 @@ The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
 ~~~~~~~~~~~ cddl
 C509CertificateRequestTemplate = [
+   c509CertificateRequestTemplateType: int,
    c509CertificateRequestType: int / null,
    subjectSignatureAlgorithm: AlgorithmIdentifier / null,
    subject: NameTemplate,
@@ -782,7 +783,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
 The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
@@ -918,6 +919,20 @@ IANA has created a new registry titled "C509 Private Key Types" under the new he
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-rivkeys title="C509 Private Key Types"}
+{: artwork-align="center"}
+
+## C509 Certificate Request Templates Types Registry {#temp-type}
+
+IANA has created a new registry titled "C509 Certificate Request Templates Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~ aasvg
++-------+-----------------------------------------------------------+
+| Value | Description                                               |
++=======+===========================================================+
+|     0 | Simple C509 Certificate Request Template                  |
++-------+-----------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-temp-types title="C509 Certificate Request Templates Types"}
 {: artwork-align="center"}
 
 ## C509 Attributes Registry {#atttype}
