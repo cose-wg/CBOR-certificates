@@ -183,7 +183,7 @@ One of the challenges with deploying a Public Key Infrastructure (PKI) for the I
 
 CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.
 
-CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bytes), and text strings (text), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
+CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null, undefined), byte strings (bytes), and text strings (text), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
 
 CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments.
 
@@ -237,7 +237,7 @@ TBSCertificate = (
    validityNotAfter: ~time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: NonNull,
+   subjectPublicKey: Defined,
    extensions: Extensions,
 )
 
@@ -253,13 +253,13 @@ AlgorithmIdentifier = int / ~oid /
 
 Extensions = [ * Extension ] / int
 
-Extension = (( extensionID: int, extensionValue: NonNull ) //
+Extension = (( extensionID: int, extensionValue: Defined ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
 
 SpecialText = text / bytes / tag
 
-NonNull = any .ne null
+Defined = any .ne undefined
 
 tag = #6
 ~~~~~~~~~~~
@@ -310,7 +310,7 @@ The 'subject' field is encoded exactly like issuer, except that CBOR null is not
 
 The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
 
-In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except null. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
+In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except undefined (see {{CRT}}). This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
 
 ### issuerUniqueID
 
@@ -326,7 +326,7 @@ The 'extensions' field is encoded either as a CBOR array or as a CBOR int. An om
 
 Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see {{extype}}) or as an unwrapped CBOR OID tag {{RFC9090}}.
 
-* If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except null, and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see {{ext-encoding}}), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.
+* If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except undefined (see {{CRT}}), and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see {{ext-encoding}}), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.
 
 * If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR true 'critical', and the DER-encoded value of the extnValue. The presence of the true value in the array indicates that the extension is critical; its absence means the extension is non-critical (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.
 
@@ -647,7 +647,7 @@ While this specification requires the use of Deterministically Encoded CBOR (see
 
 Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
 
-Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:NonNull)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
+Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
 
 # C509 Certificate (Signing) Request {#CSR}
 
@@ -667,7 +667,7 @@ TBSCertificateRequest = (
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: NonNull,
+   subjectPublicKey: Defined,
    extensionsRequest: Extensions,
 )
 
@@ -759,10 +759,10 @@ The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 ~~~~~~~~~~~ cddl
 C509CertificateRequestTemplate = [
    c509CertificateRequestTemplateType: int,
-   c509CertificateRequestType: int / null,
-   subjectSignatureAlgorithm: AlgorithmIdentifier / null,
+   c509CertificateRequestType: int / undefined,
+   subjectSignatureAlgorithm: AlgorithmIdentifier / undefined,
    subject: NameTemplate,
-   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
+   subjectPublicKeyAlgorithm: AlgorithmIdentifier / undefined,
    subjectPublicKey: any,
    extensionsRequest: ExtensionsTemplate,
 ]
@@ -770,22 +770,24 @@ C509CertificateRequestTemplate = [
 NameTemplate = [ * AttributeTemplate ] / SpecialText
 
 AttributeTemplate = (( attributeType: int,
-                       attributeValue: SpecialText / null ) //
+                       attributeValue: SpecialText / undefined ) //
                      ( attributeType: ~oid,
-                       attributeValue: bytes / null ))
+                       attributeValue: bytes / undefined ))
 
 ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
 ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                      ( extensionID: ~oid, ? critical: true,
-                       extensionValue: bytes / null ))
+                       extensionValue: bytes / undefined ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. This makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in.
 
-The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
+ Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
+
+The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
 # C509 Processing and Certificate Issuance
 
