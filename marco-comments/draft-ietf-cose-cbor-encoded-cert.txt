@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 20 January 2026                                      J. Höglund
+Expires: 21 January 2026                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            19 July 2025
+                                                            20 July 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2026.
+   This Internet-Draft will expire on 21 January 2026.
 
 Copyright Notice
 
@@ -2480,7 +2480,7 @@ Table of Contents
 9.12.1.  Suitability of different public key algorithms for use within
          IoT scenarios
 
-   The public key algorithms registry Section 9.12 specifis a number of
+   The public key algorithms registry Section 9.12 specifies a number of
    algorithms, not all which are suitable for usage with constrained
    devices.  RSA requires large keys and large signature sizes compared
    to elliptic curve cryptography (ECC), which together with resource-
