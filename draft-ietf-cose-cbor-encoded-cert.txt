@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 20 January 2026                                      J. Höglund
+Expires: 21 January 2026                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            19 July 2025
+                                                            20 July 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2026.
+   This Internet-Draft will expire on 21 January 2026.
 
 Copyright Notice
 
@@ -1029,12 +1029,12 @@ Table of Contents
 
    DhSigStatic = [
      ? issuerAndSerial: IssuerAndSerialNumber,
-     hashValue: bytes
+     hashValue: bytes,
    ]
 
    IssuerAndSerialNumber = [
      issuer: Name,
-     serialNumber: CertificateSerialNumber
+     serialNumber: CertificateSerialNumber,
    ]
 
    Note that a key agreement key pair may be used with a signature
