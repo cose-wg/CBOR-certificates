@@ -717,12 +717,12 @@ subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-
 ~~~~~~~~~~~ cddl
 DhSigStatic = [
   ? issuerAndSerial: IssuerAndSerialNumber,
-  hashValue: bytes
+  hashValue: bytes,
 ]
 
 IssuerAndSerialNumber = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber
+  serialNumber: CertificateSerialNumber,
 ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
