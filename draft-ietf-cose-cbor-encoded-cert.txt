@@ -800,7 +800,8 @@ Table of Contents
    encoded X.509 and uses a COSE_C509 structure instead of COSE_X509.
    c5u provides an alternative way to identify an untrusted certificate
    chain by reference with a URI [RFC3986], encoded as a CBOR text
-   string.  The content is a COSE_C509 item served with the application/
+   string (media type application/cbor and CoAP Content-Format 60).  The
+   referenced resource is a COSE_C509 item served with the application/
    cose-c509-cert media type ("usage" = "chain"), see Section 9.15, with
    corresponding CoAP Content-Format defined in Section 9.20.  A stored
    file format is defined in [RFC9277], with "magic number" TBD8
@@ -2839,9 +2840,6 @@ Table of Contents
 +-------------------------------+-----------+-------+-------------------+
 | application/cose-certhash     |           |       |                   |
 | "usage" = "c509"              | -         | TBD17 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cbor              |           |       |                   |
-| containing a URI              | CBOR text | TBD18 | [RFC9360]         |
 +-------------------------------+-----------+-------+-------------------+
 
                   Figure 20: CoAP Content-Format IDs

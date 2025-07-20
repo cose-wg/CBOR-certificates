@@ -1899,7 +1899,7 @@ tag = #6
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
         </h3>
-<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> below, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.20</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> below, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.20</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">The COSE_C509 structure used in c5b, c5c, and c5u is defined as:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
@@ -6627,12 +6627,12 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <figure id="figure-20">
           <div id="section-9.20-4.1">
             <div class="alignLeft art-svg artwork" id="section-9.20-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="592" viewBox="0 0 592 400" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,368" fill="none" stroke="black"></path>
-                <path d="M 264,32 L 264,368" fill="none" stroke="black"></path>
-                <path d="M 360,32 L 360,368" fill="none" stroke="black"></path>
-                <path d="M 424,32 L 424,368" fill="none" stroke="black"></path>
-                <path d="M 584,32 L 584,368" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="592" viewBox="0 0 592 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,320" fill="none" stroke="black"></path>
+                <path d="M 264,32 L 264,320" fill="none" stroke="black"></path>
+                <path d="M 360,32 L 360,320" fill="none" stroke="black"></path>
+                <path d="M 424,32 L 424,320" fill="none" stroke="black"></path>
+                <path d="M 584,32 L 584,320" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 584,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 584,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 584,66" fill="none" stroke="black"></path>
@@ -6643,7 +6643,6 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <path d="M 8,240 L 584,240" fill="none" stroke="black"></path>
                 <path d="M 8,272 L 584,272" fill="none" stroke="black"></path>
                 <path d="M 8,320 L 584,320" fill="none" stroke="black"></path>
-                <path d="M 8,368 L 584,368" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Media</text>
                   <text x="84" y="52">Type</text>
@@ -6691,14 +6690,6 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="392" y="308">TBD17</text>
                   <text x="460" y="308">[[this</text>
                   <text x="532" y="308">document]]</text>
-                  <text x="84" y="340">application/cbor</text>
-                  <text x="60" y="356">containing</text>
-                  <text x="112" y="356">a</text>
-                  <text x="136" y="356">URI</text>
-                  <text x="292" y="356">CBOR</text>
-                  <text x="332" y="356">text</text>
-                  <text x="392" y="356">TBD18</text>
-                  <text x="472" y="356">[RFC9360]</text>
                 </g>
               </svg><a href="#section-9.20-4.1.1" class="pilcrow">¶</a>
 </div>
