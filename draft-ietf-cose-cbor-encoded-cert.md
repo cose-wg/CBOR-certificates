@@ -53,6 +53,8 @@ normative:
   RFC6838:
   RFC6962:
   RFC7030:
+  RFC7120:
+  RFC8126:
   RFC8295:
   RFC8610:
   RFC8742:
@@ -183,7 +185,7 @@ One of the challenges with deploying a Public Key Infrastructure (PKI) for the I
 
 CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.
 
-CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g., null), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
+CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g., null = 0xf6), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
 
 CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments.
 
@@ -199,7 +201,7 @@ This document does not specify a certificate profile. Two variants are defined u
 
 Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
-This document also specifies C509 Certificate Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}; and a C509 file format.
+This document also specifies C509 Certificate Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates {{RFC6698}}.
 
 # Notational Conventions {#notation}
 
@@ -213,7 +215,7 @@ This section specifies the content and encoding for C509 certificates, with the 
 
 The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
-In the encoding described below, the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding.
+In the encoding described below, the elements in arrays are always encoded in the same order as elements of the corresponding SEQUENCE or SET in the DER encoding.
 
 ## Message Fields {#message-fields}
 
@@ -296,15 +298,15 @@ The final encoding of the extension value may therefore be text, bytes, or tag, 
 
 In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types such as macAddress.
 
-If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field MUST be encoded as CBOR null.
+If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field MUST be encoded as the CBOR simple value null (0xf6).
 
 ### validity
 
-The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as CBOR null.
+The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.
 
 ### subject
 
-The 'subject' field is encoded exactly like issuer, except that CBOR null is not a valid value.
+The 'subject' field is encoded exactly like issuer, except that the CBOR simple value is not a valid value.
 
 ### subjectPublicKeyInfo
 
@@ -328,7 +330,7 @@ Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see {{exty
 
 * If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except null, and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see {{ext-encoding}}), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.
 
-* If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR true 'critical', and the DER-encoded value of the extnValue. The presence of the true value in the array indicates that the extension is critical; its absence means that the extension is non-critical (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.
+* If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR simple value true (0xf5) 'critical', and the DER-encoded value of the extnValue. The presence of the CBOR true value in the array indicates that the extension is critical; its absence means that the extension is non-critical (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.
 
 
 The currently defined extension values for which there is CBOR int encoded 'extensionID' are specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment.
@@ -785,7 +787,7 @@ In the reverse direction, in case c509CertificateType = 3 was requested, a separ
 
 C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER encoded RFC 2986 CertificationRequestInfo and uses that with existing processes and code to produce an RFC 5280 DER encoded X.509 certificate. The DER encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
 
-For protocols like TLS/DTLS 1.2, where the handshake is sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway, which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over a constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead. However, measured in energy, this is likely to be negligible compared to the reduced communication overhead.
+For protocols like TLS/DTLS 1.2, where the certificates are sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway, which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over a constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead. However, measured in energy, this is likely to be negligible compared to the reduced communication overhead.
 
 For the setting with constrained server and server-only authentication, the server only needs to be provisioned with the C509 certificate and does not perform the conversion to X.509. This option is viable when client authentication can be asserted by other means.
 
@@ -829,7 +831,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 
 # Security Considerations {#sec-cons}
 
-The CBOR profiling of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors.
+The CBOR encoding of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors.
 
 The use of natively signed C509 certificates removes the need for ASN.1 encoding, which is a rich source of security vulnerabilities.
 
@@ -843,9 +845,11 @@ This document creates several new registries under the new heading "CBOR Encoded
 
 The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate an entry that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1-byte encoding, other values in the interval \[-256, 255\] have a 2-byte encoding, and the remaining values in the interval \[-65536, 65535\] have a 3-byte encoding.
 
+All assignments according to "IETF Review with Expert Review" are made on a "IETF Review" basis per Section 4.8 of {{RFC8126}} with "Expert Review" additionally required per Section 4.5 of {{RFC8126}}. The procedure for early IANA allocation of "standards track code points" defined in {{RFC7120}} also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{RFC7120}}.
+
 ## C509 Certificate Types Registry {#type}
 
-IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\], the registration procedure is "IETF Review" and "Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval \[-24, 23\], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -865,7 +869,7 @@ IANA has created a new registry titled "C509 Certificate Types" under the new he
 
 ## C509 Certificate Request Types Registry {#csr-type}
 
-IANA has created a new registry titled "C509 Certificate Request Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Request Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -889,7 +893,7 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 
 ## C509 Private Key Types {#privkeys}
 
-IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -907,7 +911,7 @@ IANA has created a new registry titled "C509 Private Key Types" under the new he
 
 ## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval \[0, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[0, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
@@ -1108,7 +1112,7 @@ The initial contents of the registry are:
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The columns Name, OID, DER, abd extensionValue are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, abd extensionValue are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1302,7 +1306,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 
 ## C509 Certificate Policies Registry {#CP}
 
-IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1412,7 +1416,7 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 
 ## C509 Policies Qualifiers Registry {#PQ}
 
-IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1436,7 +1440,7 @@ IANA has created a new registry titled "C509 Policies Qualifiers Registry" under
 
 ## C509 Information Access Registry {#IA}
 
-IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1490,7 +1494,7 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 
 ## C509 Extended Key Usages Registry {#EKU}
 
-IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+---------------------------------------------------------+
@@ -1603,7 +1607,7 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 {: artwork-align="center"}
 
 ## C509 General Names Registry {#GN}
-IANA has created a new registry titled "C509 General Names Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. The columns Name and Value are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 General Names Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and Value are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1655,7 +1659,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the n
 
 ## C509 Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1834,7 +1838,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 
 ## C509 Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -2031,7 +2035,7 @@ Restrictions on usage: N/A
 
 Author: COSE WG
 
-Change controller: IESG
+Change controller: IETF
 
 
 ## Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
@@ -2074,7 +2078,7 @@ Restrictions on usage: N/A
 
 Author: COSE WG
 
-Change controller: IESG
+Change controller: IETF
 
 ## Media Type application/cose-c509-privkey {#c509-privkey}
 When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.
@@ -2116,7 +2120,7 @@ Restrictions on usage: N/A
 
 Author: COSE WG
 
-Change controller: IESG
+Change controller: IETF
 
 ## Media Type application/cose-c509-pem {#c509-pem}
 When the application/cose-c509-pem media type is used, the data is a C509PEM structure.
@@ -2158,7 +2162,7 @@ Restrictions on usage: N/A
 
 Author: COSE WG
 
-Change controller: IESG
+Change controller: IETF
 
 ## Media Type application/cose-certhash {#cose-certhash}
 When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see {{RFC9360}}.
@@ -2203,41 +2207,45 @@ Restrictions on usage: N/A
 
 Author: COSE WG
 
-Change controller: IESG
+Change controller: IETF
 
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
 
-IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
+IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
 
-IANA is requested to add media types for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
+IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
 ~~~~~~~~~~~ aasvg
-+-------------------------------+-----------+-------+-------------------+
-| Media Type                    | Encoding  | ID    | Reference         |
-+===============================+===========+=======+===================+
-| application/cose-c509-cert    | -         |  TBD6 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cose-c509-cert    |           |       |                   |
-| "usage" = "chain"             | -         | TBD15 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cose-c509-pkcs10  | -         |  TBD7 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cose-c509-privkey | -         | TBD10 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cose-c509-pem     | -         | TBD11 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cose-certhash     | -         | TBD16 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cose-certhash     |           |       |                   |
-| "usage" = "c509"              | -         | TBD17 | [[this document]] |
-+-------------------------------+-----------+-------+-------------------+
-| application/cbor              |           |       |                   |
-| containing a URI              | CBOR text | TBD18 | [RFC9360]         |
-+-------------------------------+-----------+-------+-------------------+
-
++-------------------+---------+------------------+-------+--------------+
+| Content           | Content | Media            | ID    | Reference    |
+| Format            | Coding  | Type             |       |              |
++===================+=========+==================+=======+==============+
+| application/      | -       | [[link to 9.15]] | TBD6  | [[this       |
+| cose-c509-cert    |         |                  |       |   document]] |
++-------------------+---------+------------------+-------+--------------+
+| application/      |         |                  |       | [[this       |
+| cose-c509-cert;   | -       | [[link to 9.15]] | TBD15 |   document]] |
+| usage = chain     |         |                  |       |              |
++-------------------+---------+------------------+-------+--------------+
+| application/      | -       | [[link to 9.16]] | TBD7  | [[this       |
+| cose-c509-pkcs10  |         |                  |       |   document]] |
++-------------------+---------+------------------+-------+--------------+
+| application/      | -       | [[link to 9.17]] | TBD10 | [[this       |
+| cose-c509-privkey |         |                  |       |   document]] |
++-------------------+---------+------------------+-------+--------------+
+| application/      | -       | [[link to 9.18]] | TBD11 | [[this       |
+| cose-c509-pem     |         |                  |       |   document]] |
++-------------------+---------+------------------+-------+--------------+
+| application/      | -       | [[link to 9.19]] | TBD16 | [[this       |
+| cose-certhash     |         |                  |       |   document]] |
++-------------------+---------+------------------+-------+--------------+
+| application/      |         |                  |       | [[this       |
+  cose-certhash;    | -       | [[link to 9.19]] | TBD17 |   document]] |
+| usage = c509      |         |                  |       |              |
++-------------------+---------+------------------+-------+--------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
@@ -2259,7 +2267,7 @@ This document registers the following entries in the "CBOR Tags" registry under 
 
 ~~~~~~~~~~~ aasvg
 +------+------------------------------------------------------------+
-|  Tag | X.509 Public Key Algorithms                                |
+|  Tag | CBOR Tags                                                  |
 +======+============================================================+
 | TBD6 | Data Item: COSE_C509                                       |
 |      | Semantics: An ordered chain of C509 certificates           |
