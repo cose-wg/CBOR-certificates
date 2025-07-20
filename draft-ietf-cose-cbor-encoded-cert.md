@@ -1983,7 +1983,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 
 ### Suitability of different public key algorithms for use within IoT scenarios
 
-The public key algorithms registry {{pkalg}} specifis a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstraß curves) make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in {{pkalg}}.
+The public key algorithms registry {{pkalg}} specifies a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstraß curves) make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in {{pkalg}}.
 
 ## COSE Header Parameters Registry {#cose}
 
