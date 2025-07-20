@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-10T02:07:32.039615+00:00",
+  "timestamp": "2025-07-20T02:26:57.526095+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -6515,44 +6515,70 @@
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "close?"
+      ],
       "body": "Should say something similar to I-D.ietf-lamps-rfc7030-csrattrs\n\n```\nIn case the server requires use of an\n      RSA key and needs to specify its size, the field MUST be present\n      and contain a placeholder public key value of the desired RSA\n      modulus length.\n\n```\n```\nIn case the server includes an ExtensionTemplate with the extnID\n   'subjectAltName' and a partially filled in extnValue, such as a\n   'directoryName' choice containing the NULL-DN (i.e., an empty\n   sequence of RDNs) or the 'iPAddress' choice with an empty OCTET\n   STRING, this means that the client SHOULD fill in the respective\n   GeneralName value.\n```",
       "createdAt": "2025-06-20T05:46:17Z",
-      "updatedAt": "2025-06-20T05:46:17Z",
+      "updatedAt": "2025-07-19T19:05:57Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Also RSA dummy value",
+          "createdAt": "2025-07-19T13:05:42Z",
+          "updatedAt": "2025-07-19T13:05:42Z"
+        }
+      ]
     },
     {
       "number": 251,
       "id": "I_kwDOCpt5cM692MOm",
       "title": "Error in Appendix A2.1.",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/251",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- A.2.1.  Example: C509 Certificate Encoding\n  -  In the spec\n  ```\n   03 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78\n   61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F\n   6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55\n   53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09\n   63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 FD C8 B4 21 F1 1C 25 E4\n   7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C\n   FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD\n   66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20\n   5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02 03\n   04 00 58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB\n      ^^\n   21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D\n   83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36\n  ```\n \n  - Shall be\n  ```\n  03 48 7E 76 61 D7 B5 4E 46 32 00  \n                                ^^\n                                8A 23 62 55 53 06 62 43 41 08 6B 45 78\n  61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F\n  6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55 \n  53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09 \n  63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 FD C8 B4 21 F1 1C 25 E4 \n  7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C  \n  FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD \n  66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 \n  5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02 03 \n  04    58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB\n     ^^\n  21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D \n  83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36 \n  ```",
       "createdAt": "2025-06-28T15:23:12Z",
-      "updatedAt": "2025-06-28T16:21:53Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-07-19T11:30:21Z",
+      "closedAt": "2025-07-19T11:30:21Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good catch. I'll make a commit fixing this",
+          "createdAt": "2025-07-19T11:30:10Z",
+          "updatedAt": "2025-07-19T11:30:10Z"
+        }
+      ]
     },
     {
       "number": 252,
       "id": "I_kwDOCpt5cM692hvM",
       "title": "Attribute macAddress",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/252",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Since macAddress can only be encoded as IA5String, the following text in Section \"3.1.4. Issuer\" needs to be extended:\n\nIs:\n```\nThe attribute value for\nemailAddress and domainComponent are always of type IA5String (see\n[RFC5280]), and is for this reason unambiguously represented using a\nnon-negative int.\n```\n\nShall be:\n```\nThe attribute value for\nemailAddress, domainComponent (see [RFC5280], and macAddress \n(see [RFC2307] are always of type IA5String, and is for this reason \nunambiguously represented using a \nnon-negative int.\n```\n\nAnd add an entry for RFC2308 in the Appendix \"10.1.  Normative References\".\n\nRFC2307 is quite old, I am not sure it is still state-of-art.",
       "createdAt": "2025-06-28T16:18:51Z",
-      "updatedAt": "2025-06-28T16:18:51Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-07-19T11:35:35Z",
+      "closedAt": "2025-07-19T11:35:35Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks. To avoid future updates we should refrain from trying to make this a complete list and rather list them as examples.\n\nOLD\nThe attribute value for\nemailAddress and domainComponent are always of type IA5String (see\n[RFC5280]), and is for this reason unambiguously represented using a\nnon-negative int.\nNEW\nAttribute values which are always of type IA5String are unambiguously represented using a\nnon-negative int. Examples include emailAddress, domainComponent (see [RFC5280]) and macAddress (see [RFC2307]).",
+          "createdAt": "2025-07-19T11:29:39Z",
+          "updatedAt": "2025-07-19T11:29:39Z"
+        }
+      ]
     },
     {
       "number": 253,
@@ -6563,26 +6589,66 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "close?"
+      ],
       "body": "- In all document: do not mix-use `bstr`and `bytes`.\n- CDDL definition: ```*Type: int``` may be changed to ```*Type: uint``` if negative integer is not allowed.\n- Figure 17: C509 Signature Algorithms\n   For the algorithms 14, 15 and 16, `Requires recipient public key` --> `Requires recipient's public key`\n- Figure 18: Figure 18: C509 Public Key Algorithms\n   `compressed subjectPublicKey`: What is `compressed`here? For RSA public key, there is no `compressed`form, and for the Weierstra\u00df EC curve, both compressed form and uncompressed form are allowed.\n- Figure 15: C509 Extended Key Usages\n   The name for `19`: `Precertificate Signing Certificate` --> `Certificate Transparency`. As in RFC 6962:\n   ```\n   a special-purpose (CA:true, Extended Key Usage: Certificate\n   Transparency, OID 1.3.6.1.4.1.11129.2.4.4) Precertificate Signing\n   Certificate.\n   ```\n- Section \"3.6 Deterministic Encoding\"\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid,\n  extensionValue:bstr)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:any)-encoding.  One reason being\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```\n  to\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid, ***? critical: true,***\n  extensionValue:***bytes***)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:***NonNull***)-encoding.  One reason ***is***\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```",
       "createdAt": "2025-06-29T07:21:51Z",
-      "updatedAt": "2025-06-30T05:54:09Z",
+      "updatedAt": "2025-07-19T19:10:41Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "- In all document: do not mix-use `bstr`and `bytes`.\n-> Agree\n\n- CDDL definition: ```*Type: int``` may be changed to ```*Type: uint``` if negative integer is not allowed.\n-> Agree\n\n- Figure 17: C509 Signature Algorithms\n   For the algorithms 14, 15 and 16, `Requires recipient public key` --> `Requires recipient's public key`\n-> OK\n\n- Figure 18: Figure 18: C509 Public Key Algorithms\n   `compressed subjectPublicKey`: What is `compressed`here? \n-> See Section 3.2.1\n\nFor RSA public key, there is no `compressed`form, and for the Weierstra\u00df EC curve, both compressed form and uncompressed form are allowed.\n-> Correct\n\n- Figure 15: C509 Extended Key Usages\n   The name for `19`: `Precertificate Signing Certificate` --> `Certificate Transparency`. As in RFC 6962:\n   ```\n   a special-purpose (CA:true, Extended Key Usage: Certificate\n   Transparency, OID 1.3.6.1.4.1.11129.2.4.4) Precertificate Signing\n   Certificate.\n   ```\n-> OK\n\n- Section \"3.6 Deterministic Encoding\"\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid,\n  extensionValue:bstr)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:any)-encoding.  One reason being\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```\n  to\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid, ***? critical: true,***\n  extensionValue:***bytes***)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:***NonNull***)-encoding.  One reason ***is***\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```\n-> Correct",
+          "createdAt": "2025-07-19T11:46:06Z",
+          "updatedAt": "2025-07-19T11:46:06Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Same applies to tstr and text",
+          "createdAt": "2025-07-19T11:46:39Z",
+          "updatedAt": "2025-07-19T11:46:39Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I changed:\n- bstr and tstr to bytes and text\n- KeyUsage and timestamp to uint (@xipki are there more int that are in fact uints?)\n- Requires recipient public key --> Requires recipient's public key\n- I removed point compressed as that is no longer correct. As for now I left \"Compressed subjectPublicKey\". If we do any informative change here, it should also be done to \"Compressed signature value\"\n- Precertificate Signing Certificate --> Certificate Transparency\n- I made the change to the text",
+          "createdAt": "2025-07-19T12:43:41Z",
+          "updatedAt": "2025-07-19T12:43:41Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am not sure, but here a list of candidates of uint:\n- c509CertificateType\n- c509CertificateRequestType",
+          "createdAt": "2025-07-19T12:46:56Z",
+          "updatedAt": "2025-07-19T12:49:25Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> I am not sure, but here a list of candidates of uint:\n> \n>     * c509CertificateType\n> \n>     * c509CertificateRequestType\n\nIn this case I don't see any clear cut reason for either uint or int. One reason to use int is to allow more 1-byte values of these types. I don't have a strong opinion.",
+          "createdAt": "2025-07-19T19:10:41Z",
+          "updatedAt": "2025-07-19T19:10:41Z"
+        }
+      ]
     },
     {
       "number": 254,
       "id": "I_kwDOCpt5cM69502S",
-      "title": "Missing definition of the data structure for siganture value for the sa-ecdhPop-sha256-hmac-sha* algorithms.",
+      "title": "Missing definition of the data structure for siganture value for the sa-ecdhPop-sha*-hmac-sha* algorithms.",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/254",
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
-      "body": "As in RFC 6955, signatures algorithms `sa-ecdhPop-sha256-hmac-sha{256|384|512}` requires the signature value with syntax `DhSigStatic` as follows:\n\n```\nIn RFC6955:\n      DhSigStatic ::= SEQUENCE {\n          issuerAndSerial IssuerAndSerialNumber OPTIONAL,\n          hashValue       MessageDigest\n      }\n\nIn RFC 5652:\n      IssuerAndSerialNumber ::= SEQUENCE {\n        issuer Name,\n        serialNumber CertificateSerialNumber }\n\n      CertificateSerialNumber ::= INTEGER\n\n      MessageDigest ::= OCTET STRING\n```\n\nWe need to define a corresponding data structure.",
+      "labels": [
+        "close?"
+      ],
+      "body": "As in RFC 6955, signatures algorithms `sa-ecdhPop-sha{256|384|512}-hmac-sha{256|384|512}` requires the signature value with syntax `DhSigStatic` as follows:\n\n```\nIn RFC6955:\n      DhSigStatic ::= SEQUENCE {\n          issuerAndSerial IssuerAndSerialNumber OPTIONAL,\n          hashValue       MessageDigest\n      }\n\nIn RFC 5652:\n      IssuerAndSerialNumber ::= SEQUENCE {\n        issuer Name,\n        serialNumber CertificateSerialNumber }\n\n      CertificateSerialNumber ::= INTEGER\n\n      MessageDigest ::= OCTET STRING\n```\n\nWe need to define a corresponding data structure.",
       "createdAt": "2025-06-29T10:54:25Z",
-      "updatedAt": "2025-06-29T11:29:52Z",
+      "updatedAt": "2025-07-19T19:53:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -6591,6 +6657,20 @@
           "body": "Here my suggestion:\n\n```\nDhSigStatic = [\n  ? issuerAndSerial: IssuerAndSerialNumber,\n  hashValue: bytes\n]\n\nIssuerAndSerialNumber = [\n  issuer: Name,\n  serialNumber: CertificateSerialNumber\n]\n```",
           "createdAt": "2025-06-29T11:29:24Z",
           "updatedAt": "2025-06-29T11:29:24Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good spotted. This was an omission during registration. Your proposal is straightforward, let's add that.",
+          "createdAt": "2025-07-19T11:20:33Z",
+          "updatedAt": "2025-07-19T11:20:33Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "As this was straightforward I made the commit directly in the master branch.\n",
+          "createdAt": "2025-07-19T19:52:38Z",
+          "updatedAt": "2025-07-19T19:52:38Z"
         }
       ]
     },
@@ -6603,12 +6683,22 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
-      "body": "As defined in ITU-T X.520 (10/2019):\n```\npostalAddress ATTRIBUTE ::= {\n    WITH SYNTAX PostalAddress\n    EQUALITY MATCHING RULE caseIgnoreListMatch\n    SUBSTRINGS MATCHING RULE caseIgnoreListSubstringsMatch\n    LDAP-SYNTAX postalAddr.&id\n    LDAP-NAME {\"postalAddress\"}\n    ID id-at-postalAddress }\n\nPostalAddress ::= SEQUENCE SIZE (1..MAX) OF UnboundedDirectoryString\n\nUnboundedDirectoryString ::= CHOICE {\n    teletexString TeletexString(SIZE (1..MAX)),\n    printableString PrintableString(SIZE (1..MAX)),\n    bmpString BMPString(SIZE (1..MAX)),\n    universalString UniversalString(SIZE (1..MAX)),\n    uTF8String UTF8String(SIZE (1..MAX)) }\n```\n, postal address is a sequence of multiple strings. We need to add text block to cover the postalAddress with multiple lines (each line is an `UnboundedDirectoryString`). My suggestion is to use the `\\n`to separate the lines, as as the limitation, the line is not allowed to have `\\r` and `\\n`, and in re-encoded certificate, lines must be all `UTF8 String` or be all `Printable String`.\n",
+      "labels": [
+        "low priority for core spec"
+      ],
+      "body": "As defined in ITU-T X.520 (10/2019):\n```\npostalAddress ATTRIBUTE ::= {\n    WITH SYNTAX PostalAddress\n    EQUALITY MATCHING RULE caseIgnoreListMatch\n    SUBSTRINGS MATCHING RULE caseIgnoreListSubstringsMatch\n    LDAP-SYNTAX postalAddr.&id\n    LDAP-NAME {\"postalAddress\"}\n    ID id-at-postalAddress }\n\nPostalAddress ::= SEQUENCE SIZE (1..MAX) OF UnboundedDirectoryString\n\nUnboundedDirectoryString ::= CHOICE {\n    teletexString TeletexString(SIZE (1..MAX)),\n    printableString PrintableString(SIZE (1..MAX)),\n    bmpString BMPString(SIZE (1..MAX)),\n    universalString UniversalString(SIZE (1..MAX)),\n    uTF8String UTF8String(SIZE (1..MAX)) }\n```\npostal address is a sequence of multiple strings. We need to add text block to cover the postalAddress with multiple lines (each line is an `UnboundedDirectoryString`). My suggestion is to use the `\\n`to separate the lines, as as the limitation, the line is not allowed to have `\\r` and `\\n`, and in re-encoded certificate, lines must be all `UTF8 String` or be all `Printable String`.\n",
       "createdAt": "2025-06-29T18:05:40Z",
-      "updatedAt": "2025-06-29T21:00:19Z",
+      "updatedAt": "2025-07-19T14:06:18Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good comment. We need to either specify this or remove this attribute. Unless there is a proposal for specification we propose to remove it as part of processing WGLC comments.",
+          "createdAt": "2025-07-19T11:53:42Z",
+          "updatedAt": "2025-07-19T11:53:42Z"
+        }
+      ]
     },
     {
       "number": 256,
@@ -6619,10 +6709,12 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "low priority for core spec"
+      ],
       "body": "When adding the support of a public key algorithm, we should make sure that the corresponding private key can also be stored in CBOR/COSE container `C509PrivateKey` defined in Section `3.5.  Private Key Structures`.\n\n```\n   C509PrivateKey = [\n      C509PrivateKeyType: int,\n      subjectPrivateKeyAlgorithm: AlgorithmIdentifier,\n      subjectPrivateKey: any,\n   ]\n```\n\nAs stated in https://www.iana.org/assignments/cose/cose.xhtml#key-type, there are still no `COSE Elliptic Curves` constants for the weierstra\u00df curve FRP256V1 and SM2P256V1.",
       "createdAt": "2025-06-29T18:22:42Z",
-      "updatedAt": "2025-07-01T06:18:58Z",
+      "updatedAt": "2025-07-19T12:46:14Z",
       "closedAt": null,
       "comments": [
         {
@@ -6643,10 +6735,12 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "From draft -13 to -14, the syntax of extension value is changed from `any` to `NonNull`. And due to this change, the ASN.1 `NULL` is encoded now as `h''`. I am not sure this change is the best choice.\n\nI preferred to revert this change, since:\n- Converting ASN.1 `NULL` to CBOR `null`does not change the meaning, while to CBOR `h''`does.\n- Encoding as `h''` does not have less bytes compared to `null`.\n-  Encoding as `h''`does not cover the case where an extension may have both `NULL` and `OCTET STRING (0..MAX)`.",
       "createdAt": "2025-06-29T21:57:56Z",
-      "updatedAt": "2025-07-01T06:14:46Z",
+      "updatedAt": "2025-07-19T20:38:12Z",
       "closedAt": null,
       "comments": [
         {
@@ -6655,6 +6749,34 @@
           "body": "The reason for the change is to avoid collisions with null in the C509CertificateRequestTemplate, so any changes need to consider also the C509CertificateRequestTemplate",
           "createdAt": "2025-07-01T06:14:46Z",
           "updatedAt": "2025-07-01T06:14:46Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki: Would it be better if we used a different CBOR simple value instead of 'null', e.g. 'undefined' = 0x23 ?\n\nThis would change some of the CDDL in the document, e.g.\n\nOLD\nNonNull = any .ne null\nNEW\nDefined = any .ne undefined\n\nWe should make a PR.",
+          "createdAt": "2025-07-19T12:05:10Z",
+          "updatedAt": "2025-07-19T12:05:10Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "If there is an \"undefined\", I would like to apply this to C509CertificateRequestTemplate to indicate there is no limitation, and the extension value has the syntax \"any\".",
+          "createdAt": "2025-07-19T12:17:47Z",
+          "updatedAt": "2025-07-19T12:17:59Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki The reason for the reserved value (null or undefined) in C509Certificate is to make the C509CertificateRequestTemplate work, i.e. to be able to point out fields to be filled in. Thus \"any\" would not be possible, but \"any\" except for the reserved value. Would you be happy with \"any\" except \"undefined\"?\n",
+          "createdAt": "2025-07-19T13:32:43Z",
+          "updatedAt": "2025-07-19T13:47:39Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Sorry, I misread the text. Yes, it is fine to have the following definition as you suggested:\n\nOLD\n```\nExtension = (( extensionID: int, extensionValue: NonNull ) //\n                ( extensionID: ~oid, ? critical: true,\n                 extensionValue: bytes ))\n\nNonNull = any .ne null\n```\n-> NEW\n```\nExtension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, ? critical: true,\n                 extensionValue: bytes ))\n\nDefined = any .ne undefined\n```",
+          "createdAt": "2025-07-19T13:49:43Z",
+          "updatedAt": "2025-07-19T13:50:21Z"
         }
       ]
     },
@@ -6670,7 +6792,7 @@
       "labels": [],
       "body": "The corresponding data type for `X509Certificate` (or `Certificate` as in RFC 5280) is `C509Certificate`, but not the unwrapped one `~C509Certificate`, and the unwrapped one saves ONLY 1 byte. Please use `C509Certificate` instead the unwrapped one, especially in the following contexts:\n\n1. C509CertData\n   ```\n   The COSE_C509 structure used in c5b, c5c, and c5u is defined as:\n\n   COSE_C509 = C509CertData / [ 2* C509CertData ]\n   C509CertData = bstr .cborseq C509Certificate\n\n   C509CertData thus includes the unwrapped CBOR sequence,\n   ~C509Certificate, see Appendix A.1.5 for an example.\n   ```\n   The last block shall be changed to `C509CertData thus includes the CBOR sequence\n   C509Certificate, see Appendix A.1.5 for an example.`\n2. COSE_CertHash\n   ```\n   The value type of c5t is the COSE_CertHash structure defined in\n   [RFC9360], which contains the hash value of the C509 certificate\n   calculated over ~C509Certificate\n   ```\n   For the X.509 certificate, COSE_CertHash is calculated over the whole `Certificate` including the leading tag and length. We shall follow here the same mechanism, and calculated over the `C509Certificate` instead the unwrapped one `~C509Certificate`.\n3. 9.20 TLS Certificate Types Registry\n   ```\n   C509 is defined in the same way\n   as as X.509, but uses a different value and instead of DER-encoded\n   X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR\n   sequence ~C509Certificate (an unwrapped C509Certificate)\n   ```\n   And the last block shall be changed to `contains a CBOR\n   sequence C509Certificate`\n\nPlease note in C509CertData and TLS, using `C509Certificate` is a much cleaner solution compared to the unwrapped one.\n\nLast but not least, for the above reasons, and also for user friendliness, please use `C509Certificate` instead`C509Certificate` in the examples.",
       "createdAt": "2025-06-29T22:10:18Z",
-      "updatedAt": "2025-07-10T01:54:42Z",
+      "updatedAt": "2025-07-19T21:28:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -6679,6 +6801,27 @@
           "body": "This relates to the discussion in #222 and #228, defining the C509CertData. I didn't and don't have a strong preference between array or unwrapped form, just that the same form be used for those three purposes listed above so that an ignorant processor doesn't need to care about the contents.\n\nIf there is a technical reason to use one or the other then I support that solution, and it sounds like the array form is preferred from the implementation side.",
           "createdAt": "2025-07-10T01:54:42Z",
           "updatedAt": "2025-07-10T01:54:42Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I strongly recommend to use `C509Certificate` instead `~C509Certificate` in all above cases. \n\nConsidering \"TLS Certificate Types Registry\",  the `cert_data` is encoded in TLS as follows:\n\n```\ncert_data: length (certs) || certs\n\ncerts: cert 1 || ... || cert n\n```\n\n1. For X509 certificate, `cert` is of `Certificate` with the envelope `SEQUENCE`:\n```\n   Certificate  ::=  SEQUENCE  {\n        tbsCertificate       TBSCertificate,\n        signatureAlgorithm   AlgorithmIdentifier,\n        signatureValue       BIT STRING  }\n```\nAnd we shall not change the syntax here in C509.\n\n2. If `cert`has the unwrapped form `~C509Certificate`, there is no clear separation of two certificates. In worst case, if the C509 certificate later is extended to have additional fields, it is impossible to handle such cases.\n",
+          "createdAt": "2025-07-19T12:39:16Z",
+          "updatedAt": "2025-07-19T12:50:52Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Note that \n\nCOSE_C509 = C509CertData / [ 2* C509CertData ]\nC509CertData = bytes .cborseq C509Certificate\n\nso there is separation between consecutive certificates. They are a sequence of CBOR byte strings.",
+          "createdAt": "2025-07-19T20:41:26Z",
+          "updatedAt": "2025-07-19T20:41:26Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Nevertheless it may be worth considering the consequent change. I start a PR.\n\nEdit: I don't have time to start the PR. If someone else wants to start, please go ahead.",
+          "createdAt": "2025-07-19T20:43:25Z",
+          "updatedAt": "2025-07-19T21:28:20Z"
         }
       ]
     },
@@ -6694,7 +6837,7 @@
       "labels": [],
       "body": "In draft -14 (and before), if the extensions field has only one non-critical KeyUsage extension, its encoding is different than all other cases. IMHO this special encoding should be removed, since\n- It does not save many bytes, but only 2 bytes.\n- When occurs, the KeyUsage extension is usually critical. That means, the special encoding applies only to non-standard-conform certificates. Below is the text block from RFC 5280:\n   ```\n   Conforming CAs MUST include this extension in certificates that\n   contain public keys that are used to validate digital signatures on\n   other public key certificates or CRLs.  When present, conforming CAs\n   SHOULD mark this extension as critical.\n   ```\n- Removing the special case simplify the encoding and parsing of certificates.",
       "createdAt": "2025-06-30T05:35:40Z",
-      "updatedAt": "2025-07-01T06:11:10Z",
+      "updatedAt": "2025-07-19T12:25:04Z",
       "closedAt": null,
       "comments": [
         {
@@ -6703,6 +6846,34 @@
           "body": "In earlier discussions some people have expressed that they like to save 2 bytes....\n\nThe special encoding applies to both critical and non-critical. If the optimization stay, the following text shouuld be improved:\n\n`\"If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see [Section 3.3](https://cose-wg.github.io/CBOR-certificates/draft-ietf-cose-cbor-encoded-cert.html#ext-encoding)), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.\"`",
           "createdAt": "2025-07-01T06:11:10Z",
           "updatedAt": "2025-07-01T06:11:10Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I was OK with the current encoding as I thought there was already application in the fields, and the draft should provide  backwards-compatibility (that is why new syntax versions v2 and v3 have been introduced). Now I realize there were some changes which do not provide backwards-compatibility, e.g. the encoding of EUI-64 commonName.\n\nI am OK with the special case encoding for keyusage, but if possible, I prefer to have a cleaner version without such special cases.",
+          "createdAt": "2025-07-19T12:12:43Z",
+          "updatedAt": "2025-07-19T12:25:04Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> The special encoding applies to both critical and non-critical.\n\nYes.",
+          "createdAt": "2025-07-19T12:13:17Z",
+          "updatedAt": "2025-07-19T12:13:17Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki Thanks for your input. If we would keep this optimization, is there anything in the text that is unclear?",
+          "createdAt": "2025-07-19T12:13:22Z",
+          "updatedAt": "2025-07-19T12:13:55Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> [@xipki](https://github.com/xipki) Thanks for your input. If we would keep this optimization, is there anything in the text that is unclear?\n\nThe current text is fine.",
+          "createdAt": "2025-07-19T12:24:25Z",
+          "updatedAt": "2025-07-19T12:24:25Z"
         }
       ]
     },
@@ -6716,11 +6887,52 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "In draft -14:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestType: int / null,\n      subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n      subjectPublicKey: any,\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\nMy suggestion:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTypes: [ * int ], -- single type --> list of types\n      subjectSignatureAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithms\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithm\n                             -- remove field subjectPublicKey: how CA can specify the concrete public key value?\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```",
+      "body": "In draft -14:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestType: int / null,\n      subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n      subjectPublicKey: any,\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\nMy suggestion:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTypes: [ * int ], -- single type --> list of types\n      subjectSignatureAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithms\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithm\n                             -- remove field subjectPublicKey: how can CA specify the concrete public key value?\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```",
       "createdAt": "2025-06-30T06:03:50Z",
-      "updatedAt": "2025-06-30T06:03:50Z",
+      "updatedAt": "2025-07-19T21:25:40Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "See also #250\n",
+          "createdAt": "2025-07-19T12:58:17Z",
+          "updatedAt": "2025-07-19T12:58:17Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "With the replacement of null with undefined, this solution becomes something like\n\n>   C509CertificateRequestTemplate = [\n      c509CertificateRequestTypes: [ + int ] / undefined\n      subjectSignatureAlgorithms: [ + AlgorithmIdentifier ] / undefined\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithms: [ + AlgorithmIdentifier ] / undefined\n      subjectPublicKey: any, -- see text placeholder public key  \n      extensionsRequest: ExtensionsTemplate\n      ]\n\nwhich does not make use of the empty array.\n\nAlso, considering the template type #265, this could be defined in updated template later.",
+          "createdAt": "2025-07-19T21:25:40Z",
+          "updatedAt": "2025-07-19T21:25:40Z"
+        }
+      ]
+    },
+    {
+      "number": 263,
+      "id": "I_kwDOCpt5cM7Bb2Nd",
+      "title": "C509CertificateRequestTemplateType?",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/263",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "close?"
+      ],
+      "body": "C509CertificateRequestTemplate = [\n   **C509CertificateRequestTemplateType int,**\n   c509CertificateRequestType: int / null,\n   subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n   subject: NameTemplate,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n   subjectPublicKey: any,\n   extensionsRequest: ExtensionsTemplate,\n]",
+      "createdAt": "2025-07-19T13:19:27Z",
+      "updatedAt": "2025-07-19T21:01:45Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I made the commit directly to master in 08ee221 since this is just good practice.\n",
+          "createdAt": "2025-07-19T21:00:53Z",
+          "updatedAt": "2025-07-19T21:01:19Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -9645,6 +9857,172 @@
           "body": "If the text string contains an EUI-64 of the form \"HH-HH-HH-HH-HH-\r\n      HH-HH-HH\" where each 'H' is one of the symbols '0'\u2013'9' or 'A'\u2013'F'\r\n      it is encoded as a CBOR tagged MAC address using the CBOR tag 48,\r\n      see Section 2.4 of [RFC9542].  If of the form \"HH-HH-HH-FF-FE-HH-\r\n      HH-HH\", it is encoded as a 48-bit MAC address, otherwise as a\r\n      64-bit MAC address.  See example in Appendix A.1.\r\n \r\n Given the existance of macAddress (1.3.6.1.1.1.1.22) with a different (colon-based) encoding, the above use of tag 48 feels a bit like a hack.\r\n - One option would be do define new tags for different encodings in the X.509 certificate.\r\n - Another option would be to skip tags in X.509 to C509 but write that native C509 can use tags instead of text.\r\n ",
           "createdAt": "2025-06-19T09:09:54Z",
           "updatedAt": "2025-06-19T09:09:54Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 261,
+      "id": "PR_kwDOCpt5cM6frIGQ",
+      "title": "Ivaylo's comments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/261",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-19T08:19:39Z",
+      "updatedAt": "2025-07-19T13:29:05Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "30ef8aa90b4e6d7fc33ba2f3e5b50fd5a7c8d854",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "ivaylo-comments",
+      "headRefOid": "4537ec498250a26184ee7ba970832040ae421dc9",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good to me, thank you for the corrections!",
+          "createdAt": "2025-07-19T13:29:05Z",
+          "updatedAt": "2025-07-19T13:29:05Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 262,
+      "id": "PR_kwDOCpt5cM6frIHc",
+      "title": "Marco's comments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/262",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-19T08:19:51Z",
+      "updatedAt": "2025-07-19T13:34:22Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "30ef8aa90b4e6d7fc33ba2f3e5b50fd5a7c8d854",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "marco-comments",
+      "headRefOid": "361308929df1e009605098fca33316ee5c41aaa1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Also, a good number of corrections and improvements, thank you! \r\n\r\n(Personally, I don't think all the added \"that\" are needed, but I don't mind them.)",
+          "createdAt": "2025-07-19T13:34:21Z",
+          "updatedAt": "2025-07-19T13:34:21Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 264,
+      "id": "PR_kwDOCpt5cM6frxR5",
+      "title": "Template type",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/264",
+      "state": "MERGED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-19T13:34:48Z",
+      "updatedAt": "2025-07-19T20:02:44Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "067860dd97646023068b2cca523657563588659f",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-5",
+      "headRefOid": "8d66b99a175c573a8ef258a194c7dd45126f6c75",
+      "closedAt": "2025-07-19T20:02:44Z",
+      "mergedAt": "2025-07-19T20:02:44Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "14e46799bd43e4728515c9b5db1a45e98612a443"
+      },
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Is this in reply to #260 ? If Lijun is happy, I'm happy! (Although I see two failed checks.)",
+          "createdAt": "2025-07-19T13:42:55Z",
+          "updatedAt": "2025-07-19T13:42:55Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@highlunder No, this was just following the practice of typing the newly defined structures to allow updates. Since we reviewed and fixed the issues I merged this now.",
+          "createdAt": "2025-07-19T20:02:05Z",
+          "updatedAt": "2025-07-19T20:02:05Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM607Cc7",
+          "commit": {
+            "abbreviatedOid": "08ee221"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-19T13:37:24Z",
+          "updatedAt": "2025-07-19T13:37:25Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "Suggest to remove double space in front of \"The initial contents of the registry are:\"",
+              "createdAt": "2025-07-19T13:37:24Z",
+              "updatedAt": "2025-07-19T13:37:25Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 265,
+      "id": "PR_kwDOCpt5cM6fsxgW",
+      "title": "Replacing null with undefined",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/265",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addressing #257.",
+      "createdAt": "2025-07-19T20:34:58Z",
+      "updatedAt": "2025-07-19T20:37:26Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "14e46799bd43e4728515c9b5db1a45e98612a443",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "null-to-undefined",
+      "headRefOid": "ac0987442fe3fdf4efa52d9e75108e128755e605",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Please check the remaining null!",
+          "createdAt": "2025-07-19T20:37:26Z",
+          "updatedAt": "2025-07-19T20:37:26Z"
         }
       ],
       "reviews": []
