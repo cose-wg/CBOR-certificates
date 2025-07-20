@@ -1084,12 +1084,6 @@ The initial contents of the registry are:
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 19      |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Name:            Postal Address                           |
-|       | Identifiers:     postalAddress                            |
-|       | OID:             2.5.4.16                                 |
-|       | DER:             06 03 55 04 10                           |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
 |    25 | Name:            Name                                     |
 |       | Identifiers:     name                                     |
 |       | OID:             2.5.4.41                                 |
