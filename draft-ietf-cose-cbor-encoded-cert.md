@@ -715,14 +715,14 @@ An implementation MAY only support c509CertificateRequestType = 0. The most comm
 subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both signature algorithms and non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. The use of SHA with HMAC-SHA algorithms (see values 14-16 in {{sigalg}}) requires a signature value with syntax DhSigStatic defined as follows:
 
 ~~~~~~~~~~~ cddl
-DhSigStatic = HashValue / DhSigStaticType
+DhSigStatic = MessageDigest / DhSigStaticType
 
-HashValue = bytes
+MessageDigest = bytes
 
 DhSigStaticType = [
   issuer: Name,
   serialNumber: CertificateSerialNumber
-  hashValue: HashValue
+  hashValue: MessageDigest
 ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
