@@ -473,6 +473,9 @@ Table of Contents
       STRING value field is encoded as the CBOR byte string
       'extensionValue'.
 
+   The processing of critical and non-critical extensions is specified
+   in Section 4.2 of [RFC5280].
+
    The currently defined extension values for which there is CBOR int
    encoded 'extensionID' is specified in Section 3.3.  The extensions
    mandated to be supported by [RFC7925] and [IEEE-802.1AR] are given
@@ -1227,7 +1230,8 @@ Table of Contents
    The CBOR profiling of X.509 certificates does not change the security
    assumptions needed when deploying standard X.509 certificates but
    decreases the number of fields transmitted, which reduces the risk
-   for implementation errors.
+   for implementation errors.  The security considerations of [RFC5280]
+   apply.
 
    The use of natively signed C509 certificates removes the need for
    ASN.1 encoding, which is a rich source of security vulnerabilities.
@@ -1240,6 +1244,12 @@ Table of Contents
    will be possible to detect that this profile is used.  The gateway
    solution described in Section 6 requires unencrypted certificates and
    is not recommended.
+
+   Any issue to decode or parse a C509 certificate should be handled by
+   the certificate using system as would the issue of parsing the
+   corresponding X.509 certificate.  For example, a non-critical
+   extension MAY be ignored if it is not recognized, see Section 4.2 of
+   [RFC5280].
 
    As stated in Section 3.4, the contents of the COSE Header Parameters
    c5b, c5c, c5t, c5u is untrusted input that potentially may be
