@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 20 January 2026                                      J. Höglund
+Expires: 22 January 2026                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            19 July 2025
+                                                            21 July 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2026.
+   This Internet-Draft will expire on 22 January 2026.
 
 Copyright Notice
 
@@ -839,15 +839,15 @@ Table of Contents
       +======+=======+===============+=============================+
       | Name | Label | Value Type    | Description                 |
       +======+=======+===============+=============================+
-      |  c5b | TBD1  | COSE_C509     | An unordered bag of C509    |
+      |  c5b | 24    | COSE_C509     | An unordered bag of C509    |
       |      |       |               | certificates                |
       +------+-------+---------------+-----------------------------+
-      |  c5c | TBD2  | COSE_C509     | An ordered chain of C509    |
+      |  c5c | 25    | COSE_C509     | An ordered chain of C509    |
       |      |       |               | certificates                |
       +------+-------+---------------+-----------------------------+
-      |  c5t | TBD3  | COSE_CertHash | Hash of a ~C509Certificate  |
+      |  c5t | 22    | COSE_CertHash | Hash of a ~C509Certificate  |
       +------+-------+---------------+-----------------------------+
-      |  c5u | TBD4  | uri           | URI pointing to a COSE_C509 |
+      |  c5u | 23    | uri           | URI pointing to a COSE_C509 |
       |      |       |               | containing an ordered chain |
       |      |       |               | of certificates             |
       +------+-------+---------------+-----------------------------+
@@ -1240,6 +1240,14 @@ Table of Contents
    will be possible to detect that this profile is used.  The gateway
    solution described in Section 6 requires unencrypted certificates and
    is not recommended.
+
+   As stated in Section 3.4, the contents of the COSE Header Parameters
+   c5b, c5c, c5t, c5u is untrusted input that potentially may be
+   verified using existing trust anchors or other trust establishment
+   mechanism out of scope of this document.  Similar security
+   considerations as x5bag, x5chain, x5t and x5u applies, see [RFC9360].
+   Security considerations of the COSE protected and unprotected headers
+   is discussed in [RFC9052].
 
 9.  IANA Considerations
 

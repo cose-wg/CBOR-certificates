@@ -1051,7 +1051,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 20 January 2026</td>
+<td class="center">Expires 22 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-19" class="published">19 July 2025</time>
+<time datetime="2025-07-21" class="published">21 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-20">20 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-01-22">22 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1137,7 +1137,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1926,25 +1926,25 @@ C509CertData = bstr .cborseq C509Certificate
           <tbody>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5b</td>
-              <td class="text-left" rowspan="1" colspan="1">TBD1</td>
+              <td class="text-left" rowspan="1" colspan="1">24</td>
               <td class="text-left" rowspan="1" colspan="1">COSE_C509</td>
               <td class="text-left" rowspan="1" colspan="1">An unordered bag of C509 certificates</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5c</td>
-              <td class="text-left" rowspan="1" colspan="1">TBD2</td>
+              <td class="text-left" rowspan="1" colspan="1">25</td>
               <td class="text-left" rowspan="1" colspan="1">COSE_C509</td>
               <td class="text-left" rowspan="1" colspan="1">An ordered chain of C509 certificates</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5t</td>
-              <td class="text-left" rowspan="1" colspan="1">TBD3</td>
+              <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-left" rowspan="1" colspan="1">COSE_CertHash</td>
               <td class="text-left" rowspan="1" colspan="1">Hash of a ~C509Certificate</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5u</td>
-              <td class="text-left" rowspan="1" colspan="1">TBD4</td>
+              <td class="text-left" rowspan="1" colspan="1">23</td>
               <td class="text-left" rowspan="1" colspan="1">uri</td>
               <td class="text-left" rowspan="1" colspan="1">URI pointing to a COSE_C509 containing an ordered chain of certificates</td>
             </tr>
@@ -2343,6 +2343,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <p id="section-8-2">The use of natively signed C509 certificates removes the need for ASN.1 encoding, which is a rich source of security vulnerabilities.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <p id="section-8-3">Conversion between the certificate formats can be made in constant time to reduce risk of information leakage through side channels.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <p id="section-8-4">The mechanism in this draft does not reveal any additional information compared to X.509. Because of the difference in size, it will be possible to detect that this profile is used. The gateway solution described in <a href="#dep-set" class="auto internal xref">Section 6</a> requires unencrypted certificates and is not recommended.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-5">As stated in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>, the contents of the COSE Header Parameters c5b, c5c, c5t, c5u is untrusted input that potentially may be verified using existing trust anchors or other trust establishment mechanism out of scope of this document. Similar security considerations as x5bag, x5chain, x5t and x5u applies, see <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>. Security considerations of the COSE protected and unprotected headers is discussed in <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>.<a href="#section-8-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
