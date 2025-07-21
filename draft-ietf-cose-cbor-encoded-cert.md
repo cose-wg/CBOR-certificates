@@ -330,6 +330,7 @@ Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see {{exty
 
 * If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR true 'critical', and the DER-encoded value of the extnValue. The presence of the true value in the array indicates that the extension is critical; its absence means the extension is non-critical (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.
 
+The processing of critical and non-critical extensions is specified in {{Section 4.2 of RFC5280}}.
 
 The currently defined extension values for which there is CBOR int encoded 'extensionID' is specified in {{ext-encoding}}. The extensions mandated to be supported by {{RFC7925}} and {{IEEE-802.1AR}} are given special treatment.
 
@@ -829,7 +830,7 @@ The CBOR encoding of the sample certificate chains given in {{appA}} results in 
 
 # Security Considerations {#sec-cons}
 
-The CBOR profiling of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors.
+The CBOR profiling of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors. The security considerations of {{RFC5280}} apply.
 
 The use of natively signed C509 certificates removes the need for ASN.1 encoding, which is a rich source of security vulnerabilities.
 
@@ -837,7 +838,10 @@ Conversion between the certificate formats can be made in constant time to reduc
 
 The mechanism in this draft does not reveal any additional information compared to X.509. Because of the difference in size, it will be possible to detect that this profile is used. The gateway solution described in {{dep-set}} requires unencrypted certificates and is not recommended.
 
+Any issue to decode or parse a C509 certificate should be handled by the certificate using system as would the issue of parsing the corresponding X.509 certificate. For example, a non-critical extension MAY be ignored if it is not recognized, see {{Section 4.2 of RFC5280}}.
+
 As stated in {{cose-header-params}}, the contents of the COSE Header Parameters c5b, c5c, c5t, c5u is untrusted input that potentially may be verified using existing trust anchors or other trust establishment mechanism out of scope of this document. Similar security considerations as x5bag, x5chain, x5t and x5u applies, see {{RFC9360}}. Security considerations of the COSE protected and unprotected headers is discussed in {{RFC9052}}.
+
 
 # IANA Considerations {#iana}
 
