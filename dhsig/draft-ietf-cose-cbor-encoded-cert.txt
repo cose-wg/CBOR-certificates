@@ -1028,14 +1028,14 @@ Table of Contents
    algorithms (see values 14-16 in Section 9.12) requires a signature
    value with syntax DhSigStatic defined as follows:
 
-   DhSigStatic = HashValue / DhSigStaticType
+   DhSigStatic = MessageDigest / DhSigStaticType
 
-   HashValue = bytes
+   MessageDigest = bytes
 
    DhSigStaticType = [
      issuer: Name,
      serialNumber: CertificateSerialNumber
-     hashValue: HashValue
+     hashValue: MessageDigest
    ]
 
    Note that a key agreement key pair may be used with a signature
