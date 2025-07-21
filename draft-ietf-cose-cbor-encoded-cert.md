@@ -604,10 +604,10 @@ The COSE_C509 item has media type application/cose-c509-cert, see {{c509-cert}},
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without some out-of-band confirmation.
 
 | Name | Label | Value Type | Description |
-| c5b | TBD1 | COSE_C509 | An unordered bag of C509 certificates |
-| c5c | TBD2 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t | TBD3 | COSE_CertHash | Hash of a ~C509Certificate |
-| c5u | TBD4 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+| c5b | 24 | COSE_C509 | An unordered bag of C509 certificates |
+| c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
+| c5t | 22 | COSE_CertHash | Hash of a ~C509Certificate |
+| c5u | 23 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
 {: #iana-header title="COSE Header Parameters" cols="r l l l"}
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
@@ -836,6 +836,8 @@ The use of natively signed C509 certificates removes the need for ASN.1 encoding
 Conversion between the certificate formats can be made in constant time to reduce risk of information leakage through side channels.
 
 The mechanism in this draft does not reveal any additional information compared to X.509. Because of the difference in size, it will be possible to detect that this profile is used. The gateway solution described in {{dep-set}} requires unencrypted certificates and is not recommended.
+
+As stated in {{cose-header-params}}, the contents of the COSE Header Parameters c5b, c5c, c5t, c5u is untrusted input that potentially may be verified using existing trust anchors or other trust establishment mechanism out of scope of this document. Similar security considerations as x5bag, x5chain, x5t and x5u applies, see {{RFC9360}}. Security considerations of the COSE protected and unprotected headers is discussed in {{RFC9052}}.
 
 # IANA Considerations {#iana}
 
