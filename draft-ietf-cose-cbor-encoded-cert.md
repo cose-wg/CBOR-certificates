@@ -76,7 +76,7 @@ normative:
     target: https://www.itu.int/rec/T-REC-X.690
 
 informative:
-
+  RFC2307:
   RFC6487:
   RFC6955:
   RFC7228:
@@ -185,7 +185,7 @@ One of the challenges with deploying a Public Key Infrastructure (PKI) for the I
 
 CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.
 
-CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g., null = 0xf6), byte strings (bstr), and text strings (tstr), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
+CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g., null = 0xf6), byte strings (bytes), and text strings (text), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
 
 CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments.
 
@@ -286,7 +286,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.
 
-In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. The attribute value for emailAddress and domainComponent are always of type IA5String (see {{RFC5280}}), and is for this reason unambiguously represented using a non-negative int. In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
+In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress, domainComponent (see {{RFC5280}}) and macAddress (see {{RFC2307}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
 The text strings are further optimized as follows:
 
@@ -379,7 +379,7 @@ CBOR encoding of the following extension values is fully supported:
 * Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{ext-field}} for special encoding in case keyUsage is the only extension present.
 
 ~~~~~~~~~~~ cddl
-   KeyUsage = int
+   KeyUsage = uint
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
@@ -545,12 +545,12 @@ CBOR encoding of the following extension values are partly supported:
 
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
 
-* Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR int (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
+* Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
 ~~~~~~~~~~~ cddl
    SignedCertificateTimestamp = (
      logID: bytes,
-     timestamp: int,
+     timestamp: uint,
      sigAlg: AlgorithmIdentifier,
      sigValue: any,
    )
@@ -585,13 +585,13 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and use a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string. The content is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and use a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see {{c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined in {{RFC9277}}, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ cddl
 COSE_C509 = C509CertData / [ 2* C509CertData ]
-C509CertData = bstr .cborseq C509Certificate
+C509CertData = bytes .cborseq C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
@@ -649,7 +649,7 @@ While this specification requires the use of Deterministically Encoded CBOR (see
 
 Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
 
-Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, extensionValue:bstr)-encoding of an extension for which there is an (extensionID:int, extensionValue:any)-encoding. One reason being that the certificate was issued before the specific CBOR extension was registered.
+Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:NonNull)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
 
 # C509 Certificate (Signing) Request {#CSR}
 
@@ -745,6 +745,7 @@ The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
 ~~~~~~~~~~~ cddl
 C509CertificateRequestTemplate = [
+   c509CertificateRequestTemplateType: int,
    c509CertificateRequestType: int / null,
    subjectSignatureAlgorithm: AlgorithmIdentifier / null,
    subject: NameTemplate,
@@ -769,9 +770,9 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field.
+The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
 # C509 Processing and Certificate Issuance
 
@@ -907,6 +908,20 @@ IANA has created a new registry titled "C509 Private Key Types" under the new he
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-rivkeys title="C509 Private Key Types"}
+{: artwork-align="center"}
+
+## C509 Certificate Request Templates Types Registry {#temp-type}
+
+IANA has created a new registry titled "C509 Certificate Request Templates Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
+~~~~~~~~~~~ aasvg
++-------+-----------------------------------------------------------+
+| Value | Description                                               |
++=======+===========================================================+
+|     0 | Simple C509 Certificate Request Template                  |
++-------+-----------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-temp-types title="C509 Certificate Request Templates Types"}
 {: artwork-align="center"}
 
 ## C509 Attributes Registry {#atttype}
@@ -1596,7 +1611,7 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | DER:             06 08 2B 06 01 05 05 07 03 20          |
 |       | Comments:        RFC 9480                               |
 +-------+---------------------------------------------------------+
-|    19 | Name:            Precertificate Signing Certificate     |
+|    19 | Name:            Certificate Transparency               |
 |       | Identifiers:                                            |
 |       | OID:             1.3.6.1.4.1.11129.2.4.4                |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |
@@ -1737,7 +1752,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1A          |
 |       | Comments:    Proof-of-possession algorithm, indexed with  |
 |       |              KDF and MAC, see RFC 6955. Requires          |
-|       |              recipient public static Diffie-Hellman key.  |
+|       |              recipient's public static Diffie-Hellman key |
 +-------+-----------------------------------------------------------+
 |    15 | Name:        SHA-384 with HMAC-SHA384                     |
 |       | Identifiers: sa-ecdhPop-sha384-hmac-sha384                |
@@ -1746,7 +1761,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1B          |
 |       | Comments:    Proof-of-possession algorithm, indexed with  |
 |       |              KDF and MAC, see RFC 6955. Requires          |
-|       |              recipient public static Diffie-Hellman key.  |
+|       |              recipient's public static Diffie-Hellman key |
 +-------+-----------------------------------------------------------+
 |    16 | Name:        SHA-512 with HMAC-SHA512                     |
 |       | Identifiers: sa-ecdhPop-sha512-hmac-sha512                |
@@ -1755,7 +1770,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1C          |
 |       | Comments:    Proof-of-possession algorithm, indexed with  |
 |       |              KDF and MAC, see RFC 6955. Requires          |
-|       |              recipient public static Diffie-Hellman key.  |
+|       |              recipient's public static Diffie-Hellman key |
 +-------+-----------------------------------------------------------+
 |    23 | Name:        RSASSA-PKCS1-v1_5 with SHA-256               |
 |       | Identifiers: sha256WithRSAEncryption                      |
@@ -1857,7 +1872,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
 |       |              48 CE 3D 03 01 07                            |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-256, ansip256r1, prime256v1  |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
@@ -1866,7 +1881,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 22                                     |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-384, ansip384r1              |
 +-------+-----------------------------------------------------------+
 |     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
@@ -1875,7 +1890,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
 |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
 |       |              04 00 23                                     |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-521, ansip521r1              |
 +-------+-----------------------------------------------------------+
 |     8 | Name:        X25519 (Montgomery)                          |
@@ -1935,7 +1950,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.3.36.3.3.2.8.1.1.7)                       |
 |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 07                         |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    25 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP384r1                              |
@@ -1945,7 +1960,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.3.36.3.3.2.8.1.1.11)                      |
 |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 0B                         |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    26 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP512r1                              |
@@ -1955,7 +1970,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.3.36.3.3.2.8.1.1.13)                      |
 |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
 |       |              03 03 02 08 01 01 0D                         |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    27 | Name:        EC Public Key (Weierstraß) with              |
 |       |              FRP256v1                                     |
@@ -1965,7 +1980,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.2.250.1.223.101.256.1)                    |
 |       | DER:         30 15 06 07 2A 86 48 CE 3D 02 01 06 0A 2A 81 |
 |       |              7A 01 81 5F 65 82 00 01                      |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |    28 | Name:        EC Public Key (Weierstraß) with              |
 |       |              sm2p256v1                                    |
@@ -1975,7 +1990,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       |              (1.2.156.10197.1.301)                        |
 |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
 |       |              1C CF 55 01 82 2D                            |
-|       | Comments:    Point compressed subjectPublicKey            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="C509 Public Key Algorithms"}
@@ -2660,16 +2675,16 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
 The size of the CBOR encoding (CBOR sequence) is 275 bytes:
 
 ~~~~~~~~~~~
-03 48 7E 76 61 D7 B5 4E 46 32 8A 23 62 55 53 06 62 43 41 08 6B 45 78
-61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69 6F
-6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62 55
-53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63 09
-63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 FD C8 B4 21 F1 1C 25 E4
-7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5 0C
-FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77 AD
-66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20
-5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02 03
-04 00 58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB
+03 48 7E 76 61 D7 B5 4E 46 32 00 8A 23 62 55 53 06 62 43 41 08 6B 45
+78 61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69
+6F 6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62
+55 53 06 62 43 41 05 62 4C 41 08 6B 65 78 61 6D 70 6C 65 20 49 6E 63
+09 63 49 6F 54 22 66 57 74 31 32 33 34 01 58 21 FD C8 B4 21 F1 1C 25
+E4 7E 3A C5 71 23 BF 2D 9F DC 49 4F 02 8B C3 51 CC 80 C0 3F 15 0B F5
+0C FF 95 8A 04 21 01 54 96 60 0D 87 16 BF 7F D0 E7 52 D0 AC 76 07 77
+AD 66 5D 02 A0 07 54 68 D1 65 51 F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D
+20 5B 11 60 21 05 03 82 20 82 49 2B 06 01 04 01 B4 3B 0A 01 44 01 02
+03 04 58 40 C0 D8 19 96 D2 50 7D 69 3F 3C 48 EA A5 EE 94 91 BD A6 DB
 21 40 99 D9 81 17 C6 3B 36 13 74 CD 86 A7 74 98 9F 4C 32 1A 5C F2 5D
 83 2A 4D 33 6A 08 AD 67 DF 20 F1 50 64 21 18 8A 0A DE 6D 34 92 36
 ~~~~~~~~~~~
