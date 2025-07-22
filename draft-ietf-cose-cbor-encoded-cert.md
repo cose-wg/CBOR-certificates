@@ -496,7 +496,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 4.2.1.10 of RFC5280}}. Note that the minimum and maximum fields are not used and therefore omitted.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 4.2.1.10 of RFC5280}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain five 17 octets, where the last octet indicates the number of bits in the netmask. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
 
 ~~~~~~~~~~~ cddl
    GeneralSubtrees = [ + GeneralName ]
