@@ -3808,12 +3808,12 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
 
 Acknowledgments
 
-   The authors want to thank Henk Birkholz, Carsten Bormann, Russ
-   Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence
-   Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson,
-   Stefan Santesson, Jim Schaad, Brian Sipos, Fraser Tweedale, and Rene
-   Struik for reviewing and commenting on intermediate versions of the
-   draft and help with GitHub.
+   The authors want to thank Henk Birkholz, Corey Bonnell, Carsten
+   Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari
+   Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson,
+   Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser
+   Tweedale, and Rene Struik for reviewing and commenting on
+   intermediate versions of the draft and help with GitHub.
 
 Contributors
 
