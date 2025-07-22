@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-20T02:26:57.526095+00:00",
+  "timestamp": "2025-07-22T02:12:40.055481+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -4680,7 +4680,7 @@
       "id": "I_kwDOCpt5cM6F5V1b",
       "title": "Missing the extensionValue's syntax for several extensions",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/176",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -4691,8 +4691,8 @@
       ],
       "body": "Syntax for the following extensions needs to be added:\r\n- code 36, Biometric Information (RFC 3739)\r\n- code 37, Precertificate Signing Certificate (RFC 6962)\r\n- code 38, OCSP No Check (RFC 6960)\r\n- code 39, Qualified Certificate Statements (RFC 3739)\r\n- code 40, S/MIME Capabilities (RFC 8551)\r\n- code 41, TLS Features (RFC 7633)",
       "createdAt": "2024-04-16T15:58:29Z",
-      "updatedAt": "2025-06-19T05:56:04Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-22T00:20:23Z",
+      "closedAt": "2025-07-22T00:20:23Z",
       "comments": [
         {
           "author": "highlunder",
@@ -4756,6 +4756,13 @@
           "body": "Thanks Lijun!\n\nI have fixed\n\n  Precertificate Signing Certificate (RFC 6962)\n  OCSP No Check (RFC 6960)\n  TLS Features (RFC 7633)\n\nI think the rest will have to be specified and registered later.\n\n  Biometric Information (RFC 3739)\n  Qualified Certificate Statements (RFC 3739)\n  S/MIME Capabilities (RFC 8551)\n",
           "createdAt": "2025-06-19T05:55:36Z",
           "updatedAt": "2025-06-19T05:55:36Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For me, this issue can be closed.",
+          "createdAt": "2025-07-21T21:31:33Z",
+          "updatedAt": "2025-07-21T21:31:33Z"
         }
       ]
     },
@@ -5386,12 +5393,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "waiting for input",
         "separate from core spec"
       ],
       "body": "NIST is working on the standardization of the PQC mechanisms:\n- FIPS 203, [Module-Lattice-Based Key-Encapsulation Mechanism Standard](https://csrc.nist.gov/pubs/fips/203/ipd)\n- FIPS 204, [Module-Lattice-Based Digital Signature Standard](https://csrc.nist.gov/pubs/fips/204/ipd)\n- FIPS 205, [Stateless Hash-Based Digital Signature Standard](https://csrc.nist.gov/pubs/fips/205/ipd)\n\nThese Standards are still in the draft version, and only minor changes are expected.\nWhat do you think about to assign `int` numbers to the public key algorithms and signature algorithms?\n\nBelow are the public key algorithms and signature algorithms:\n- FIPS 203:\n  - Public Key Algorithms:\n    - ML-KEM-512\n    - ML-KEM-768\n    - ML-KEM-1024 \n  - Signature Algorithms: N/A\n- FIPS 204\n  - Public Key Algorithms/Signature Algorithms:\n    - ML-DSA-44\n    - ML-DSA-65\n    - ML-DSA-87\n- FIPS 204\n  - Public Key Algorithms/Signature Algorithms:\n    - SLH-DSA-SHA2-128s\n    - SLH-DSA-SHAKE-128s \n    - SLH-DSA-SHA2-128f\n    - SLH-DSA-SHAKE-128f \n    - SLH-DSA-SHA2-192s\n    - SLH-DSA-SHAKE-192s \n    - SLH-DSA-SHA2-192f\n    - SLH-DSA-SHAKE-192f\n    - SLH-DSA-SHA2-256s\n    - SLH-DSA-SHAKE-256s \n    - SLH-DSA-SHA2-256f\n    - SLH-DSA-SHAKE-256f ",
       "createdAt": "2024-05-04T14:32:07Z",
-      "updatedAt": "2025-06-22T18:18:52Z",
+      "updatedAt": "2025-07-20T07:00:23Z",
       "closedAt": null,
       "comments": [
         {
@@ -5704,12 +5710,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "waiting for input",
-        "less priority"
+        "separate from core spec"
       ],
       "body": "Please also consider the support of following IETF documents:\r\n- RFC 9509: X.509 Certificate Extended Key Usage (EKU) for 5G Network Functions\r\n- RFC 9336: X.509 Certificate General-Purpose Extended Key Usage (EKU) for Document Signing\r\n- RFC 9310: X.509 Certificate Extension for 5G Network Function Types\r\n- RFC 9399: Internet X.509 Public Key Infrastructure: Logotypes in X.509 Certificates\r\n- draft-ietf-lamps-im-keyusage-00: X.509 Certificate Extended Key Usage (EKU) for Instant Messaging URIs",
       "createdAt": "2024-05-17T07:00:00Z",
-      "updatedAt": "2024-12-13T10:50:50Z",
+      "updatedAt": "2025-07-20T06:59:54Z",
       "closedAt": null,
       "comments": [
         {
@@ -6207,11 +6212,11 @@
         "gselander"
       ],
       "labels": [
-        "PR exists"
+        "needs PR"
       ],
       "body": "As just discussed during the IETF 122 Hackathon, we agreed on registering a new media type that indicates certificate by reference. This media type is to be used by `draft-ietf-ace-coap-est-oscore` draft during the negotiation in order to indicate support of the client for cert references. We discussed that it would make sense to have this media type indicate support for *any* kind of reference, i.e. irrespective whether it is `c5t` or `c5u`, as that would be equivalent from the point of view of a constrained device handling the certificate by reference (opaque binary blob of data without access to the actual certificate).\n\nSee https://github.com/ace-wg/est-oscore/issues/69",
       "createdAt": "2025-03-15T09:35:35Z",
-      "updatedAt": "2025-06-27T07:17:32Z",
+      "updatedAt": "2025-07-20T06:52:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -6255,6 +6260,13 @@
           "body": "The certificate request template also needs media type / content format.",
           "createdAt": "2025-06-27T07:17:32Z",
           "updatedAt": "2025-06-27T07:17:32Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Removed \"PR exists\", PR is needed ",
+          "createdAt": "2025-07-20T06:52:23Z",
+          "updatedAt": "2025-07-20T06:52:23Z"
         }
       ]
     },
@@ -6511,7 +6523,7 @@
       "id": "I_kwDOCpt5cM68eDsB",
       "title": "Partial encoding in Template",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/250",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -6520,8 +6532,8 @@
       ],
       "body": "Should say something similar to I-D.ietf-lamps-rfc7030-csrattrs\n\n```\nIn case the server requires use of an\n      RSA key and needs to specify its size, the field MUST be present\n      and contain a placeholder public key value of the desired RSA\n      modulus length.\n\n```\n```\nIn case the server includes an ExtensionTemplate with the extnID\n   'subjectAltName' and a partially filled in extnValue, such as a\n   'directoryName' choice containing the NULL-DN (i.e., an empty\n   sequence of RDNs) or the 'iPAddress' choice with an empty OCTET\n   STRING, this means that the client SHOULD fill in the respective\n   GeneralName value.\n```",
       "createdAt": "2025-06-20T05:46:17Z",
-      "updatedAt": "2025-07-19T19:05:57Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-20T06:47:03Z",
+      "closedAt": "2025-07-20T06:47:03Z",
       "comments": [
         {
           "author": "emanjon",
@@ -6529,6 +6541,13 @@
           "body": "Also RSA dummy value",
           "createdAt": "2025-07-19T13:05:42Z",
           "updatedAt": "2025-07-19T13:05:42Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good",
+          "createdAt": "2025-07-20T06:47:03Z",
+          "updatedAt": "2025-07-20T06:47:03Z"
         }
       ]
     },
@@ -6561,15 +6580,17 @@
       "id": "I_kwDOCpt5cM692hvM",
       "title": "Attribute macAddress",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/252",
-      "state": "CLOSED",
+      "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "Since macAddress can only be encoded as IA5String, the following text in Section \"3.1.4. Issuer\" needs to be extended:\n\nIs:\n```\nThe attribute value for\nemailAddress and domainComponent are always of type IA5String (see\n[RFC5280]), and is for this reason unambiguously represented using a\nnon-negative int.\n```\n\nShall be:\n```\nThe attribute value for\nemailAddress, domainComponent (see [RFC5280], and macAddress \n(see [RFC2307] are always of type IA5String, and is for this reason \nunambiguously represented using a \nnon-negative int.\n```\n\nAnd add an entry for RFC2308 in the Appendix \"10.1.  Normative References\".\n\nRFC2307 is quite old, I am not sure it is still state-of-art.",
       "createdAt": "2025-06-28T16:18:51Z",
-      "updatedAt": "2025-07-19T11:35:35Z",
-      "closedAt": "2025-07-19T11:35:35Z",
+      "updatedAt": "2025-07-21T07:52:42Z",
+      "closedAt": null,
       "comments": [
         {
           "author": "gselander",
@@ -6577,6 +6598,20 @@
           "body": "Thanks. To avoid future updates we should refrain from trying to make this a complete list and rather list them as examples.\n\nOLD\nThe attribute value for\nemailAddress and domainComponent are always of type IA5String (see\n[RFC5280]), and is for this reason unambiguously represented using a\nnon-negative int.\nNEW\nAttribute values which are always of type IA5String are unambiguously represented using a\nnon-negative int. Examples include emailAddress, domainComponent (see [RFC5280]) and macAddress (see [RFC2307]).",
           "createdAt": "2025-07-19T11:29:39Z",
           "updatedAt": "2025-07-19T11:29:39Z"
+        },
+        {
+          "author": "russhousley",
+          "authorAssociation": "NONE",
+          "body": "RFC 2307 define attributes that can be stored in an LDAP directory.  The macAddress is oen such attribute.  I have never seen it used as a naming attribute as part of a distinguished name.  Has anyone seen it used this way?",
+          "createdAt": "2025-07-20T13:23:09Z",
+          "updatedAt": "2025-07-20T13:23:09Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Inspiration came from https://datatracker.ietf.org/doc/html/draft-ietf-lamps-rfc7030-csrattrs-22 but we may have moved away from original intent.\n\nEdit: Actually, the reason for including macAddress was to illustrate CBOR encoding of CSR attributes following an example in RFC 9148, in turn based on RFC 7030. We then removed this construction in favor of CSR templates. So there is currently no reason to keep it in. Unless someone objects I propose we remove the table entry, the mentioning in the current text (see above) and the reference. ",
+          "createdAt": "2025-07-20T13:26:40Z",
+          "updatedAt": "2025-07-21T04:57:51Z"
         }
       ]
     },
@@ -6585,7 +6620,7 @@
       "id": "I_kwDOCpt5cM695CEJ",
       "title": "Text optimzation",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/253",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -6594,8 +6629,8 @@
       ],
       "body": "- In all document: do not mix-use `bstr`and `bytes`.\n- CDDL definition: ```*Type: int``` may be changed to ```*Type: uint``` if negative integer is not allowed.\n- Figure 17: C509 Signature Algorithms\n   For the algorithms 14, 15 and 16, `Requires recipient public key` --> `Requires recipient's public key`\n- Figure 18: Figure 18: C509 Public Key Algorithms\n   `compressed subjectPublicKey`: What is `compressed`here? For RSA public key, there is no `compressed`form, and for the Weierstra\u00df EC curve, both compressed form and uncompressed form are allowed.\n- Figure 15: C509 Extended Key Usages\n   The name for `19`: `Precertificate Signing Certificate` --> `Certificate Transparency`. As in RFC 6962:\n   ```\n   a special-purpose (CA:true, Extended Key Usage: Certificate\n   Transparency, OID 1.3.6.1.4.1.11129.2.4.4) Precertificate Signing\n   Certificate.\n   ```\n- Section \"3.6 Deterministic Encoding\"\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid,\n  extensionValue:bstr)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:any)-encoding.  One reason being\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```\n  to\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid, ***? critical: true,***\n  extensionValue:***bytes***)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:***NonNull***)-encoding.  One reason ***is***\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```",
       "createdAt": "2025-06-29T07:21:51Z",
-      "updatedAt": "2025-07-19T19:10:41Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-21T13:45:10Z",
+      "closedAt": "2025-07-20T06:45:10Z",
       "comments": [
         {
           "author": "gselander",
@@ -6631,6 +6666,20 @@
           "body": "> I am not sure, but here a list of candidates of uint:\n> \n>     * c509CertificateType\n> \n>     * c509CertificateRequestType\n\nIn this case I don't see any clear cut reason for either uint or int. One reason to use int is to allow more 1-byte values of these types. I don't have a strong opinion.",
           "createdAt": "2025-07-19T19:10:41Z",
           "updatedAt": "2025-07-19T19:10:41Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't think it has any benefits to make the types uint. They are just identifiers. And int allows lower overhead",
+          "createdAt": "2025-07-20T06:45:10Z",
+          "updatedAt": "2025-07-20T06:45:10Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "timestamp shall be changed from `uint` back to `int`, since the timestamp in the `SignedCertificateTimestamp`may be before certificate's notBefore due to time synchronization problem.",
+          "createdAt": "2025-07-21T13:45:10Z",
+          "updatedAt": "2025-07-21T13:45:10Z"
         }
       ]
     },
@@ -6644,11 +6693,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "close?"
+        "PR exists"
       ],
       "body": "As in RFC 6955, signatures algorithms `sa-ecdhPop-sha{256|384|512}-hmac-sha{256|384|512}` requires the signature value with syntax `DhSigStatic` as follows:\n\n```\nIn RFC6955:\n      DhSigStatic ::= SEQUENCE {\n          issuerAndSerial IssuerAndSerialNumber OPTIONAL,\n          hashValue       MessageDigest\n      }\n\nIn RFC 5652:\n      IssuerAndSerialNumber ::= SEQUENCE {\n        issuer Name,\n        serialNumber CertificateSerialNumber }\n\n      CertificateSerialNumber ::= INTEGER\n\n      MessageDigest ::= OCTET STRING\n```\n\nWe need to define a corresponding data structure.",
       "createdAt": "2025-06-29T10:54:25Z",
-      "updatedAt": "2025-07-19T19:53:24Z",
+      "updatedAt": "2025-07-21T16:32:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -6671,6 +6720,34 @@
           "body": "As this was straightforward I made the commit directly in the master branch.\n",
           "createdAt": "2025-07-19T19:52:38Z",
           "updatedAt": "2025-07-19T19:52:38Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Or better the following structure:\n\n```\nDhSigStatic = HashValue / DhSigStaticType\n\nHashValue = bytes\n\nDhSigStaticType = [\n  issuer: Name,\n  serialNumber: CertificateSerialNumber\n  hashValue: HashValue\n]\n```\n",
+          "createdAt": "2025-07-21T05:15:09Z",
+          "updatedAt": "2025-07-21T05:16:14Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I moved the edits from the master branch to a separate PR, including the latest proposal.",
+          "createdAt": "2025-07-21T07:56:39Z",
+          "updatedAt": "2025-07-21T07:56:39Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Or better the following structure:\n> \n> ```\n> DhSigStatic = HashValue / DhSigStaticType\n> \n> HashValue = bytes\n> \n> DhSigStaticType = [\n>   issuer: Name,\n>   serialNumber: CertificateSerialNumber\n>   hashValue: HashValue\n> ]\n> ```\n\n@gselander Hope it is not too late. Please change HashValue to MessageDigest as in the original ASN.1 definition.",
+          "createdAt": "2025-07-21T13:42:44Z",
+          "updatedAt": "2025-07-21T13:42:44Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Done",
+          "createdAt": "2025-07-21T16:32:58Z",
+          "updatedAt": "2025-07-21T16:32:58Z"
         }
       ]
     },
@@ -6710,11 +6787,12 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
+        "PR exists",
         "low priority for core spec"
       ],
       "body": "When adding the support of a public key algorithm, we should make sure that the corresponding private key can also be stored in CBOR/COSE container `C509PrivateKey` defined in Section `3.5.  Private Key Structures`.\n\n```\n   C509PrivateKey = [\n      C509PrivateKeyType: int,\n      subjectPrivateKeyAlgorithm: AlgorithmIdentifier,\n      subjectPrivateKey: any,\n   ]\n```\n\nAs stated in https://www.iana.org/assignments/cose/cose.xhtml#key-type, there are still no `COSE Elliptic Curves` constants for the weierstra\u00df curve FRP256V1 and SM2P256V1.",
       "createdAt": "2025-06-29T18:22:42Z",
-      "updatedAt": "2025-07-19T12:46:14Z",
+      "updatedAt": "2025-07-20T06:58:52Z",
       "closedAt": null,
       "comments": [
         {
@@ -6834,10 +6912,12 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "close?"
+      ],
       "body": "In draft -14 (and before), if the extensions field has only one non-critical KeyUsage extension, its encoding is different than all other cases. IMHO this special encoding should be removed, since\n- It does not save many bytes, but only 2 bytes.\n- When occurs, the KeyUsage extension is usually critical. That means, the special encoding applies only to non-standard-conform certificates. Below is the text block from RFC 5280:\n   ```\n   Conforming CAs MUST include this extension in certificates that\n   contain public keys that are used to validate digital signatures on\n   other public key certificates or CRLs.  When present, conforming CAs\n   SHOULD mark this extension as critical.\n   ```\n- Removing the special case simplify the encoding and parsing of certificates.",
       "createdAt": "2025-06-30T05:35:40Z",
-      "updatedAt": "2025-07-19T12:25:04Z",
+      "updatedAt": "2025-07-20T05:53:45Z",
       "closedAt": null,
       "comments": [
         {
@@ -6889,7 +6969,7 @@
       "labels": [],
       "body": "In draft -14:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestType: int / null,\n      subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n      subjectPublicKey: any,\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\nMy suggestion:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTypes: [ * int ], -- single type --> list of types\n      subjectSignatureAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithms\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithm\n                             -- remove field subjectPublicKey: how can CA specify the concrete public key value?\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```",
       "createdAt": "2025-06-30T06:03:50Z",
-      "updatedAt": "2025-07-19T21:25:40Z",
+      "updatedAt": "2025-07-20T08:41:39Z",
       "closedAt": null,
       "comments": [
         {
@@ -6905,6 +6985,34 @@
           "body": "With the replacement of null with undefined, this solution becomes something like\n\n>   C509CertificateRequestTemplate = [\n      c509CertificateRequestTypes: [ + int ] / undefined\n      subjectSignatureAlgorithms: [ + AlgorithmIdentifier ] / undefined\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithms: [ + AlgorithmIdentifier ] / undefined\n      subjectPublicKey: any, -- see text placeholder public key  \n      extensionsRequest: ExtensionsTemplate\n      ]\n\nwhich does not make use of the empty array.\n\nAlso, considering the template type #265, this could be defined in updated template later.",
           "createdAt": "2025-07-19T21:25:40Z",
           "updatedAt": "2025-07-19T21:25:40Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Seems quite straightforward.",
+          "createdAt": "2025-07-20T06:53:50Z",
+          "updatedAt": "2025-07-20T06:53:50Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "What shall be placed here in \"subjectPublicKey\"?",
+          "createdAt": "2025-07-20T07:05:21Z",
+          "updatedAt": "2025-07-20T07:05:21Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> What shall be placed here in \"subjectPublicKey\"?\n\nThe following text was added yesterday \"In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length.\"\n\nJust a copy paste from the ASN.1 template draft. ",
+          "createdAt": "2025-07-20T07:08:00Z",
+          "updatedAt": "2025-07-20T07:08:00Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Does this mean we need to use 256 bytes BigInt just to represent the uint 2048? An alternative is to define a new type e.g.\n```\nSubjectPublicKeyTemplate = KeyType / [2*KeyType] / undefined\n\nKeyType = int / text / ~oid\n\n- Where the int choice is for the key size, and the text choice for name, and the oid choide of OID.\n```",
+          "createdAt": "2025-07-20T08:18:52Z",
+          "updatedAt": "2025-07-20T08:41:39Z"
         }
       ]
     },
@@ -6931,6 +7039,127 @@
           "body": "I made the commit directly to master in 08ee221 since this is just good practice.\n",
           "createdAt": "2025-07-19T21:00:53Z",
           "updatedAt": "2025-07-19T21:01:19Z"
+        }
+      ]
+    },
+    {
+      "number": 266,
+      "id": "I_kwDOCpt5cM7Bek72",
+      "title": "Content format for c5u",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/266",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "close?"
+      ],
+      "body": "The Content-Format for use with c5u is defined as \"application/cbor\" containing a URI encoded as CBOR text, see Figure 19.\n\nIs this the right way to specify, or is it preferable to use \"usage\" as other entries in the table?\n\nSource: htps://www.mail-archive.com/cose@ietf.org/msg04746.html\n\n",
+      "createdAt": "2025-07-20T05:49:05Z",
+      "updatedAt": "2025-07-20T11:29:26Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 268,
+      "id": "I_kwDOCpt5cM7Be8-o",
+      "title": "Ivaylo's WGLC comments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/268",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\nSource: https://www.mail-archive.com/cose@ietf.org/msg04725.html\n\n\nPosting this here as an individual.\n\nThe draft fills an important gap and it is generally easy to read.\n\n\nHere are my high level comments and questions:\n\n1.\n> As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header\nparameters\n> can be in either the protected or unprotected header bucket. The trust\n> mechanism MUST process any certificates in the c5b, c5c, and c5u\nparameters as\n> untrusted input. The presence of a self-signed certificate in the\nparameter MUST\n> NOT cause the update of the set of trust anchors without some out-of-band\nconfirmation.\n\nI would expect something in the security considerations to point back at\nthis, but I didn't see anything.\n\n2. c5b, c5c, c5t, c5u have early allocations. Probably those should be\nreferenced in the draft instead of TBD1...\n\n3. Sec 3.6 Deterministic encoding\n\nWhat happens if the decoder doesn't know the int value for an extensionID?\nDoes this have security implications?\n\n4. The security considerations section feels fairly short. It might be more\nrelevant to discuss elsewhere, but how should an implementation behave when\ninvalid input is provided? For example in sec 3.1.10.\n\n\nNits:\n\n5. FYI: The formatting of the table in sec 9.4 and a number of others\nafterwards in the PDF version is broken.\n6. s/certificates with over 50%/certificates by over 50%/\n7. s/CBOR ecoding/CBOR encoding/\n8. s/subjectPublicKey consist of only/subjectPublicKey consists of only/\n9. s/as well as the any leading 0x00/as well as any leading 0x00/\n10. s/certSerialNumberm/certSerialNumber/\n11. s/SAFI is not present/SAFI are not present/\n12. s/the unused bits in max IPAddress is set to ones/the unused bits in\nmax IPAddress are set to ones/\n13. s/with the the difference/with the difference/\n14. s/An empty CBOR array indicate/An empty CBOR array indicates/\n15. s/constrained wireless links/constrained wireless link/\n16. For the example HTTPS certificate chains... - the sentence sounds not\nvery clear.\n17. s/C509 use dedicated/C509 uses dedicated/\n18. s/Because of difference in size,/ Because of the difference in size,/\n19. s/common key usage digitalSignature/common key usage of\ndigitalSignature/\n\n-- Ivaylo",
+      "createdAt": "2025-07-20T07:41:19Z",
+      "updatedAt": "2025-07-20T07:44:41Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The nits (except 5. table formatting) are handled in #261 ",
+          "createdAt": "2025-07-20T07:44:41Z",
+          "updatedAt": "2025-07-20T07:44:41Z"
+        }
+      ]
+    },
+    {
+      "number": 269,
+      "id": "I_kwDOCpt5cM7Be9MQ",
+      "title": "Marco's WGLC comments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/269",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Source: https://www.mail-archive.com/cose@ietf.org/msg04746.html\n\nI have reviewed the draft and I think it's basically ready.\n\n\nPlease find some minor comments below.\n\nBest,\n/Marco\n\n\n========================================\n\n[Abstract]\n\n* The second from last sentence should explicitly say that, because of that \nextension, this document updates RFC 6698.\n\n\n[Section 1]\n\n* The introduction should also mention that this document updates RFC 6698 and \nin what respect.\n\n\n[Section 3]\n\n* It says:\n\n  > ... the order of elements in arrays are always encoded in the same order as \nthe elements or the ...\n\n  Should be:\n\n  > ... the elements in arrays are always encoded in the same order as the \nelements of the ...\n\n\n[Section 3.1.4]\n\n* s/as CBOR null/as the CBOR simple value null (0xf6)\n\n  (I suggest the same for other instances of \"CBOR null\" and \"null\" throughout \nthe document)\n\n\n[Section 3.1.10]\n\n* s/CBOR true/CBOR simple value true (0xf5)\n\n  (I suggest the same for other instances of \"CBOR true\" and \"true\" throughout \nthe document)\n\n\n[Section 6]\n\n* It says:\n\n  > For protocols like TLS/DTLS 1.2, where the handshake is sent unencrypted, \n...\n\n  I guess you refer to the peers' certificates sent unencrypted during the \nhandshake, right?\n\n\n[Section 8]\n\n* It says:\n\n  > The CBOR profiling of X.509 certificates does not change ...\n\n  While Section 1 says:\n\n  > This document does not specify a certificate profile.\n\n  Here in Section 8, I think you actually mean:\n\n  > The CBOR encoding of X.509 certificates does not change ...\n\n\n[Section 9.1]\n\n* It says:\n\n  > All columns are mandatory.\n\n  I think you mean\n\n  > It is mandatory to specify content in all the columns.\n\n\n[Sections 9.1-9.12]\n\n* It says:\n\n  > For values in the interval [-24, 23] the registration procedure is \"IETF \nReview\" and \"Expert Review\".\n\n  Combined together? That's effectively a new policy \"IETF Review with Expert \nReview\", which has to be described here as the combination of the two \nindividual ones from BCP 26.\n\n  When doing so, it should also be described how and to what extent the early \nallocation procedure from BCP 100 applies.\n\n  High-level guidance was noted down in [0], while [1][2][3] are concrete \nrecent cases where combined policies have been defined.\n\n  A single paragraph should be sufficient, as covering all the sections in \nquestion.\n\n  [0] \nhttps://datatracker.ietf.org/doc/html/draft-bormann-gendispatch-with-expert-review\n\n  [1] https://www.ietf.org/rfc/rfc9668.html#section-8.3\n\n  [2] https://www.ietf.org/rfc/rfc9668.html#section-8.3\n\n  [3] https://www.ietf.org/rfc/rfc9770.html#section-15.5\n\n\n[Sections 9.5-9.12]\n\n* It says:\n\n  > The columns ... are mandatory.\n\n  I think you mean:\n\n  > The fields ... are mandatory.\n\n\n[Sections 9.14-9.18]\n\n* s/Change controller: IESG/Change controller: IETF\n\n\n[Section 9]\n\n* s/add media types/add entries  (3 instances)\n\n* As per [4] and [5], the columns of the registry are\n\n  - Content Type\n  - Content Coding\n  - Media Type\n  - ID\n  - Reference\n\n  [4] https://datatracker.ietf.org/doc/html/draft-ietf-core-cf-reg-update-09\n\n  [5] \nhttps://www.iana.org/assignments/core-parameters/core-parameters.xhtml#content-formats\n\n* As per [6]:\n\n  OLD:\n  application/cose-c509-cert \"usage\" = \"chain\"\n\n  NEW:\n  application/cose-c509-cert;usage=chain\n\n  OLD:\n  application/cose-certhash \"usage\" = \"c509\"\n\n  NEW:\n  application/cose-certhash;usage=c509\n\n  [6] \nhttps://datatracker.ietf.org/doc/html/draft-ietf-core-cf-reg-update-09#section-4.1.4\n\n* Can the last entry actually be added as-is?\n\n  The media type \"application/cbor\" does exist, but I am not sure that the \nContent Type specified in the first column can have a note like \"containing a \nURI\".\n\n\n[Section 9.21]\n\n* \"X.509 Public Key Algorithms\" seems to be remnant text from somewhere else.\n\n\n[Nits]\n* Abstract\n- s/with over 50%/by over 50%\n- s/The document/This document\n\n* Section 1\n- s/significantly which/significantly, which\n- s/by e.g. encoding/by, e.g., encoding\n- s/e.g. null/e.g., null\n- s/with over 50%/by over 50%\n- s/ecoding/encoding\n- s/as in 1/as in the first variant above\n- s/; and a TLS certificate type/; a TLS certificate type\n- s/, and a C509 file format/; and a C509 file format\n\n* Section 3.1\n- s/e.g. Appendix/e.g., Appendix\n\n* Section 3.1.4\n- s/In CBOR all text/In CBOR, all text\n- s/e.g. emailAddress/e.g., emailAddress\n- s/'A'-'F' it is/'A'-'F', it is\n- s/+1 it is for/+1, it is for\n- s/does not correspond/do not correspond\n- s/i.e. SpecialText/i.e., SpecialText\n- s/e.g. in case/e.g., in case\n\n* Section 3.1.7\n- s/assumes the BIT STRING/assumes that the BIT STRING\n\n* Section 3.1.10\n- s/means the extension/means that the extension\n- s/is CBOR int encoded 'extensionID' is specified/is a CBOR int encoded \n'extensionID' are specified\n\n* Section 3.1.12\n- s/assumes the BIT STRING/assumes that the BIT STRING\n- s/certificates the signatureValue/certificates, the signatureValue\n\n* Section 3.2.1\n- s/i.e. [ modulus/i.e., [ modulus\n- s/exponent is omitted and/exponent are omitted and\n- s/subjectPublicKey consist of/subjectPublicKey consists of\n\n* Section 3.2.2\n- s/as well as the any leading/as well as any leading\n\n* Section 3.3\n- s/databases most IDs/databases, most IDs\n- s/therefore omitted/therefore are omitted\n- s/is set to ones/are set to one\n- s/as an uint/as a uint\n- s/NULL it can/NULL, it can\n- s/empty string h''/empty byte string h''  (2 instances)\n\n* Section 3.4\n- s/and uses a/and use a\n\n* Section 3.5\n- s/see e.g. [RFC7468]/see, e.g., [RFC7468]\n\n* Section 6\n- s/and use that/and uses that\n- s/gateway which allows/gateway, which allows\n- s/overhead, however, measured in energy this/overhead. However, measured in \nenergy, this\n\n* Section 8\n- s/in this draft/in this document\n\n* Section 9\n- s/duplicate one that/duplicate one entry that\n- s/a 1-byte encodings/a 1-byte encoding\n- s/a 2-byte encodings/a 2-byte encoding\n- s/have 3-byte encodings/have a 3-byte encoding\n\n* Sections 9.1-9.12\n- s/ 23] the registration/ 23], the registration\n- s/values the registration/values, the registration\n\n* Section 9.12.1\n- s/specify a number/specifies a number\n- s/, make them suitable/ make them suitable\n\n",
+      "createdAt": "2025-07-20T07:43:00Z",
+      "updatedAt": "2025-07-20T07:52:42Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The nits are handled in #262.",
+          "createdAt": "2025-07-20T07:45:49Z",
+          "updatedAt": "2025-07-20T07:45:49Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\nOne of the comments is made into a separate issue, #266.\n\n> * Can the last entry actually be added as-is?\n>\n> The media type \"application/cbor\" does exist, but I am not sure that the\nContent Type specified in the first column can have a note like \"containing a\nURI\".",
+          "createdAt": "2025-07-20T07:52:42Z",
+          "updatedAt": "2025-07-20T07:52:42Z"
+        }
+      ]
+    },
+    {
+      "number": 272,
+      "id": "I_kwDOCpt5cM7Bk7jN",
+      "title": "Support for SCT extensions",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/272",
+      "state": "OPEN",
+      "author": "CBonnell",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The current language states that natively encoding SCTs with extensions is not supported. This is a reasonable choice for the current state of CT today, but the CT ecosystem will likely be moving to Sunlight/Static CT. The Static CT specification mandates the inclusion of the [`LeafIndex` SCT extension](https://github.com/C2SP/C2SP/blob/main/static-ct-api.md#sct-extension).\n\nIf the ability to CBOR encode SCTs is desired, then this extension should likely be accommodated in the specification.",
+      "createdAt": "2025-07-21T08:24:18Z",
+      "updatedAt": "2025-07-21T21:21:22Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for input. Like extensions, the CBOR encoding of extensions can be added later. So if you don't urgently need this I propose to postpone it. We need to submit a new version of the core specification this week. \n\n",
+          "createdAt": "2025-07-21T21:21:21Z",
+          "updatedAt": "2025-07-21T21:21:21Z"
+        }
+      ]
+    },
+    {
+      "number": 273,
+      "id": "I_kwDOCpt5cM7BlHEo",
+      "title": "Encoding of iPAddress name constraints",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/273",
+      "state": "OPEN",
+      "author": "CBonnell",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "[Section 4.2.1.10 of RFC 5280] defines the syntax of `iPAddress` constraints as:\n\n```\nThe syntax of iPAddress MUST be as described in [Section 4.2.1.6](https://datatracker.ietf.org/doc/html/rfc5280#section-4.2.1.6) with\n   the following additions specifically for name constraints.  For IPv4\n   addresses, the iPAddress field of GeneralName MUST contain eight (8)\n   octets, encoded in the style of [RFC 4632](https://datatracker.ietf.org/doc/html/rfc4632) (CIDR) to represent an\n   address range [[RFC4632](https://datatracker.ietf.org/doc/html/rfc4632)].  For IPv6 addresses, the iPAddress field\n   MUST contain 32 octets similarly encoded.  For example, a name\n   constraint for \"class C\" subnet 192.0.2.0 is represented as the\n   octets C0 00 02 00 FF FF FF 00, representing the CIDR notation\n   192.0.2.0/24 (mask 255.255.255.0).\n```\n\nThis encoding is quite inefficient, as 4 (for IPv4) or 16 (for IPv6) octets are used to encode a value that can be represented by one octet, namely the number of bits in the netmask. As an example, the \"class C\" subnet 192.0.2.0 can instead be encoded as `C0 00 02 00 18` (192.0.2.0/24).\n\n",
+      "createdAt": "2025-07-21T08:43:44Z",
+      "updatedAt": "2025-07-21T09:57:39Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Do we need a new encoding or would using RFC 9164 (https://datatracker.ietf.org/doc/rfc9164/) or the encoding form IP Resources (id-pe-ipAddrBlocks) be a solution?\n\n```\n      Address = bytes\n      AddressPrefix = (Address, unusedBits: uint)\n      AddressRange = [min: Address, max: Address]\n      IPAddressOrRange = AddressPrefix / AddressRange\n```\n\n",
+          "createdAt": "2025-07-21T09:57:39Z",
+          "updatedAt": "2025-07-21T09:57:39Z"
         }
       ]
     }
@@ -9873,13 +10102,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-07-19T08:19:39Z",
-      "updatedAt": "2025-07-19T13:29:05Z",
+      "updatedAt": "2025-07-21T06:49:01Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "30ef8aa90b4e6d7fc33ba2f3e5b50fd5a7c8d854",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "ivaylo-comments",
-      "headRefOid": "4537ec498250a26184ee7ba970832040ae421dc9",
+      "headRefOid": "a87d6dfaf799a2ea2999855c8afa989341ff0776",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -9893,7 +10122,21 @@
           "updatedAt": "2025-07-19T13:29:05Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM608sAI",
+          "commit": {
+            "abbreviatedOid": "4537ec4"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-20T06:39:03Z",
+          "updatedAt": "2025-07-20T06:39:03Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 262,
@@ -9907,13 +10150,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-07-19T08:19:51Z",
-      "updatedAt": "2025-07-19T13:34:22Z",
+      "updatedAt": "2025-07-21T21:34:44Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "30ef8aa90b4e6d7fc33ba2f3e5b50fd5a7c8d854",
+      "baseRefOid": "d8ed541618c92f355e7777618bf66971c2657945",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "marco-comments",
-      "headRefOid": "361308929df1e009605098fca33316ee5c41aaa1",
+      "headRefOid": "f1129129259a8ad923ead2486fc205e1c92b484d",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -9925,9 +10168,37 @@
           "body": "Also, a good number of corrections and improvements, thank you! \r\n\r\n(Personally, I don't think all the added \"that\" are needed, but I don't mind them.)",
           "createdAt": "2025-07-19T13:34:21Z",
           "updatedAt": "2025-07-19T13:34:21Z"
+        },
+        {
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "NONE",
+          "body": "Looks good to me.",
+          "createdAt": "2025-07-21T10:54:31Z",
+          "updatedAt": "2025-07-21T10:54:31Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@emanjon Could you check the changes since your previous approval?",
+          "createdAt": "2025-07-21T21:34:44Z",
+          "updatedAt": "2025-07-21T21:34:44Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM608slS",
+          "commit": {
+            "abbreviatedOid": "00dff08"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-20T06:40:36Z",
+          "updatedAt": "2025-07-20T06:40:36Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 264,
@@ -10005,7 +10276,7 @@
       "labels": [],
       "body": "Addressing #257.",
       "createdAt": "2025-07-19T20:34:58Z",
-      "updatedAt": "2025-07-19T20:37:26Z",
+      "updatedAt": "2025-07-20T06:47:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "14e46799bd43e4728515c9b5db1a45e98612a443",
@@ -10025,7 +10296,149 @@
           "updatedAt": "2025-07-19T20:37:26Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM608vCP",
+          "commit": {
+            "abbreviatedOid": "ac09874"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-20T06:47:50Z",
+          "updatedAt": "2025-07-20T06:47:50Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 267,
+      "id": "PR_kwDOCpt5cM6fuJsE",
+      "title": "Remove postalAddress",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/267",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "#255\r\n",
+      "createdAt": "2025-07-20T06:50:40Z",
+      "updatedAt": "2025-07-20T19:13:42Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "14e46799bd43e4728515c9b5db1a45e98612a443",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-6",
+      "headRefOid": "a4fbaba73f1dd12715b96f99aae3c71605551985",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM6097kr",
+          "commit": {
+            "abbreviatedOid": "a4fbaba"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-20T19:13:42Z",
+          "updatedAt": "2025-07-20T19:13:42Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 270,
+      "id": "PR_kwDOCpt5cM6fx1-q",
+      "title": "Remove macAddress",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/270",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "See #252.",
+      "createdAt": "2025-07-21T05:13:44Z",
+      "updatedAt": "2025-07-21T09:27:52Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "da11783b8d4c877c7d4fc9776f38cc087eb92674",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "remove-macaddress",
+      "headRefOid": "423d91c682f6ba0b8afb632383c7cadfefe104c4",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM61CI2U",
+          "commit": {
+            "abbreviatedOid": "423d91c"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-21T09:27:52Z",
+          "updatedAt": "2025-07-21T09:27:52Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 271,
+      "id": "PR_kwDOCpt5cM6fzITZ",
+      "title": "Signature structure for DH signatures",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/271",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "addressing #254",
+      "createdAt": "2025-07-21T07:50:55Z",
+      "updatedAt": "2025-07-21T16:32:46Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "d8ed541618c92f355e7777618bf66971c2657945",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "dhsig",
+      "headRefOid": "bb0bec0142956e71b11a0c171dd49b76a302e063",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "looks like an improvement compared to the initial suggestion",
+          "createdAt": "2025-07-21T09:34:56Z",
+          "updatedAt": "2025-07-21T09:34:56Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM61CO3v",
+          "commit": {
+            "abbreviatedOid": "506d054"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-21T09:34:29Z",
+          "updatedAt": "2025-07-21T09:34:29Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
