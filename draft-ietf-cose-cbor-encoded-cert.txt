@@ -373,16 +373,16 @@ Table of Contents
    character string type in the X.509 certificate; positive for
    utf8String, negative for printableString.  Attribute values which are
    always of type IA5String are unambiguously represented using a non-
-   negative int.  Examples include emailAddress, domainComponent (see
-   [RFC5280]) and macAddress (see [RFC2307]).  In CBOR, all text strings
-   are UTF-8 encoded and in natively signed C509 certificates all CBOR
-   ints SHALL be non-negative.  Text strings SHALL still adhere to any
-   X.509 restrictions, i.e., serialNumber SHALL only contain the
-   74-character subset of ASCII allowed by printableString and
-   countryName SHALL have length 2.  CBOR encoding is allowed for
-   IA5String (if this is the only allowed type, e.g., emailAddress),
-   printableString and utf8String, whereas the string types
-   teletexString, universalString, and bmpString are not supported.
+   negative int.  Examples include emailAddress and domainComponent (see
+   [RFC5280]).  In CBOR, all text strings are UTF-8 encoded and in
+   natively signed C509 certificates all CBOR ints SHALL be non-
+   negative.  Text strings SHALL still adhere to any X.509 restrictions,
+   i.e., serialNumber SHALL only contain the 74-character subset of
+   ASCII allowed by printableString and countryName SHALL have length 2.
+   CBOR encoding is allowed for IA5String (if this is the only allowed
+   type, e.g., emailAddress), printableString and utf8String, whereas
+   the string types teletexString, universalString, and bmpString are
+   not supported.
 
    The text strings are further optimized as follows:
 
@@ -406,7 +406,7 @@ Table of Contents
 
    In natively signed C509 certificates, bytes and tag 48 do not
    correspond to any predefined text string encoding and may also be
-   used for other attribute types such as macAddress.
+   used for other attribute types.
 
    If the 'issuer' field is identical to the 'subject' field, e.g., in
    case of self-signed certificates, then the 'issuer' field MUST be
@@ -1597,12 +1597,6 @@ Table of Contents
    |       | Identifiers:     unstructuredAddress                      |
    |       | OID:             1.2.840.113549.1.9.8                     |
    |       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
-   |       | Comments:                                                 |
-   +-------+-----------------------------------------------------------+
-   |    31 | Name:            Mac Address                              |
-   |       | Identifiers:     macAddress                               |
-   |       | OID:             1.3.6.1.1.1.1.22                         |
-   |       | DER:             06 07 2B 06 01 01 01 01 16               |
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
 
@@ -3110,10 +3104,6 @@ Table of Contents
               Device Identity", IEEE Standard 802.1AR-2018 , August
               2018,
               <https://standards.ieee.org/standard/802_1AR-2018.html>.
-
-   [RFC2307]  Howard, L., "An Approach for Using LDAP as a Network
-              Information Service", RFC 2307, DOI 10.17487/RFC2307,
-              March 1998, <https://www.rfc-editor.org/rfc/rfc2307>.
 
    [RFC6487]  Huston, G., Michaelson, G., and R. Loomans, "A Profile for
               X.509 PKIX Resource Certificates", RFC 6487,

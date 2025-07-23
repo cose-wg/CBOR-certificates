@@ -1474,7 +1474,7 @@ tag = #6
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
 <p id="section-3.1.4-1">In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress, domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>) and macAddress (see <span>[<a href="#RFC2307" class="cite xref">RFC2307</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
@@ -1488,7 +1488,7 @@ tag = #6
 </li>
           </ul>
 <p id="section-3.1.4-5">The final encoding of the extension value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types such as macAddress.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2599,10 +2599,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <figure id="figure-11">
           <div id="section-9.5-3.1">
             <div class="alignCenter art-svg artwork" id="section-9.5-3.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2976" width="560" viewBox="0 0 560 2976" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,2960" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,2960" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,2960" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2880" width="560" viewBox="0 0 560 2880" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,2864" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,2864" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,2864" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
@@ -2635,7 +2635,6 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                 <path d="M 8,2672 L 552,2672" fill="none" stroke="black"></path>
                 <path d="M 8,2768 L 552,2768" fill="none" stroke="black"></path>
                 <path d="M 8,2864 L 552,2864" fill="none" stroke="black"></path>
-                <path d="M 8,2960 L 552,2960" fill="none" stroke="black"></path>
                 <circle cx="368" cy="864" r="6" class="opendot" fill="white" stroke="black"></circle>
                 <g class="text">
                   <text x="40" y="52">Value</text>
@@ -3139,25 +3138,6 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="468" y="2836">08</text>
                   <text x="492" y="2836">00</text>
                   <text x="120" y="2852">Comments:</text>
-                  <text x="52" y="2884">31</text>
-                  <text x="104" y="2884">Name:</text>
-                  <text x="232" y="2884">Mac</text>
-                  <text x="280" y="2884">Address</text>
-                  <text x="132" y="2900">Identifiers:</text>
-                  <text x="260" y="2900">macAddress</text>
-                  <text x="100" y="2916">OID:</text>
-                  <text x="284" y="2916">1.3.6.1.1.1.1.22</text>
-                  <text x="100" y="2932">DER:</text>
-                  <text x="228" y="2932">06</text>
-                  <text x="252" y="2932">07</text>
-                  <text x="276" y="2932">2B</text>
-                  <text x="300" y="2932">06</text>
-                  <text x="324" y="2932">01</text>
-                  <text x="348" y="2932">01</text>
-                  <text x="372" y="2932">01</text>
-                  <text x="396" y="2932">01</text>
-                  <text x="420" y="2932">16</text>
-                  <text x="120" y="2948">Comments:</text>
                 </g>
               </svg><a href="#section-9.5-3.1.1" class="pilcrow">¶</a>
 </div>
@@ -7008,10 +6988,6 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="IEEE-802.1AR">[IEEE-802.1AR]</dt>
         <dd>
 <span class="refAuthor">Institute of Electrical and Electronics Engineers</span>, <span class="refTitle">"IEEE Standard for Local and metropolitan area networks–Secure Device Identity"</span>, <span class="seriesInfo">IEEE Standard 802.1AR-2018 </span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://standards.ieee.org/standard/802_1AR-2018.html">https://standards.ieee.org/standard/802_1AR-2018.html</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC2307">[RFC2307]</dt>
-        <dd>
-<span class="refAuthor">Howard, L.</span>, <span class="refTitle">"An Approach for Using LDAP as a Network Information Service"</span>, <span class="seriesInfo">RFC 2307</span>, <span class="seriesInfo">DOI 10.17487/RFC2307</span>, <time datetime="1998-03" class="refDate">March 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2307">https://www.rfc-editor.org/rfc/rfc2307</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6487">[RFC6487]</dt>
         <dd>
