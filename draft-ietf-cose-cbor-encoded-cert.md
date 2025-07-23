@@ -762,11 +762,10 @@ The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 ~~~~~~~~~~~ cddl
 C509CertificateRequestTemplate = [
    c509CertificateRequestTemplateType: int,
-   c509CertificateRequestType: int / undefined,
-   subjectSignatureAlgorithm: AlgorithmIdentifier / undefined,
+   c509CertificateRequestType: [+ int] / undefined,
+   subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate,
-   subjectPublicKeyAlgorithm: AlgorithmIdentifier / undefined,
-   subjectPublicKey: any,
+   subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
    extensionsRequest: ExtensionsTemplate,
 ]
 
