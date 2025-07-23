@@ -826,7 +826,11 @@ Table of Contents
 
    The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
-   COSE_C509 = C509Certificate / [ 2* C509Certificate ]
+   COSE_C509 = C509CertData / [ 2* C509CertData ]
+   C509CertData = bytes .cbor C509Certificate
+
+   C509CertData thus includes the CBOR array wrapped as a CBOR byte
+   string, see Appendix A.1.5 for an example.
 
    The value type of c5t is the COSE_CertHash structure defined in
    [RFC9360], which contains the hash value of the C509 certificate
@@ -3393,6 +3397,67 @@ A.1.4.  Example: Additional Keys for the Example Certificates
 
    subjectPrivateKey :
    h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
+
+A.1.5.  Examples: C509Certificate and C509CertData
+
+   This section examplifies other CBOR objects defined in this
+   specification, based on the natively signed C509 certificate in
+   Appendix A.1.2.
+
+   Figure 25 shows the encoding of the corresponding C509Certificate,
+   i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate,
+   see Section 3.1.
+
+   8B
+   02
+   43 01 F5 0D
+   00
+   6B 52 46 43 20 74 65 73 74 20 43 41
+   1A 63 B0 CD 00
+   1A 69 55 B9 00
+   D8 30 46 01 23 45 67 89 AB
+   01
+   58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+   5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+   01
+   58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+   DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+   BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+
+           Figure 25: C509Certificate: The CBOR array wrapping of
+                              ~C509Certificate
+
+   Note that C509Certificate is identical to ~C509Certificate in
+   Appendix A.1.2 except for the prefix 8B (which indicates a CBOR array
+   with 11 elements).
+
+   Figure 26 shows the encoding of the corresponding C509CertData, i.e.,
+   the CBOR byte string wrapping of the CBOR array C509Certificate, see
+   Section 3.4.
+
+   58 8D
+   8B
+   02
+   43 01 F5 0D
+   00
+   6B 52 46 43 20 74 65 73 74 20 43 41
+   1A 63 B0 CD 00
+   1A 69 55 B9 00
+   D8 30 46 01 23 45 67 89 AB
+   01
+   58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+   5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+   01
+   58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+   DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+   BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+
+         Figure 26: C509CertData: The CBOR byte string wrapping of
+                              C509Certificate.
+
+   Note that C509CertData is identical to C509Certificate in Figure 25
+   except for the prefix 58 8D (which indicates CBOR byte string of 141
+   bytes).
 
 A.2.  Example: IEEE 802.1AR profiled X.509 Certificate
 
