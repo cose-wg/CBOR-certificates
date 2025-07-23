@@ -2927,7 +2927,7 @@ Table of Contents
 | application/         | -       | [[link to 9.16]] | TBD7  | [[this       |
 | cose-c509-pkcs10     |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.17]] | TBD18 | [[this       |
+| application/         | -       | [[link to 9.17]] | TBD19 | [[this       |
 | cose-c509-crtemplate |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         | -       | [[link to 9.18]] | TBD10 | [[this       |
