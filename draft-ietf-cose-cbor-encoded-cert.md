@@ -76,7 +76,6 @@ normative:
     target: https://www.itu.int/rec/T-REC-X.690
 
 informative:
-  RFC2307:
   RFC6487:
   RFC6955:
   RFC7228:
@@ -286,7 +285,8 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.
 
-In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress, domainComponent (see {{RFC5280}}) and macAddress (see {{RFC2307}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
+In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
+
 
 The text strings are further optimized as follows:
 
@@ -296,7 +296,7 @@ The text strings are further optimized as follows:
 
 The final encoding of the extension value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.
 
-In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types such as macAddress.
+In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types.
 
 If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field MUST be encoded as the CBOR simple value null (0xf6).
 
@@ -1114,12 +1114,6 @@ The initial contents of the registry are:
 |       | Identifiers:     unstructuredAddress                      |
 |       | OID:             1.2.840.113549.1.9.8                     |
 |       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    31 | Name:            Mac Address                              |
-|       | Identifiers:     macAddress                               |
-|       | OID:             1.3.6.1.1.1.1.22                         |
-|       | DER:             06 07 2B 06 01 01 01 01 16               |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
