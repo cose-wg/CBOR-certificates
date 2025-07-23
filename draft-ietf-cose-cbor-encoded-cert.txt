@@ -1032,9 +1032,22 @@ Table of Contents
    MAC and requires a public Diffie-Hellman key of the verifier
    distributed out-of-band.  Both signature algorithms and non-signature
    proof-of-possession algorithms are listed in the C509 Signature
-   Algorithms Registry, see Section 9.12.  Note that a key agreement key
-   pair may be used with a signature algorithm in a certificate request,
-   see Appendix A.1.3.
+   Algorithms Registry, see Section 9.12.  The use of SHA with HMAC-SHA
+   algorithms (see values 14-16 in Section 9.12) requires a signature
+   value with syntax DhSigStatic defined as follows:
+
+   DhSigStatic = MessageDigest / DhSigStaticType
+
+   MessageDigest = bytes
+
+   DhSigStaticType = [
+     issuer: Name,
+     serialNumber: CertificateSerialNumber
+     hashValue: MessageDigest
+   ]
+
+   Note that a key agreement key pair may be used with a signature
+   algorithm in a certificate request, see Appendix A.1.3.
 
 4.3.  Certificate Request Attributes
 
