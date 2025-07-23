@@ -792,11 +792,13 @@ Except as specified in this section, the fields have the same encoding as the co
 
 The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
+The media type of C509CertificateRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
+
 # C509 Processing and Certificate Issuance
 
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
 
-The Certificate Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}.
+The Certificate Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}. The CA can make use of a Certificate Request Template defined in {{CRT}}, for simplified configuration.
 
 When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
 
@@ -2107,6 +2109,48 @@ Author: COSE WG
 
 Change controller: IETF
 
+## Media Type application/cose-c509-crtemplate {#c509-crtemplate}
+When the application/cose-c509-crtemplate media type is used, the data is a C509CertificateRequestTemplate structure.
+
+IANA has registered the following media type {{RFC6838}}:
+
+Type name: application
+
+Subtype name: cose-c509-crtemplate
+
+Required parameters: N/A
+
+Optional parameters: N/A
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of [[this document]].
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and C509 Certificate Request.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+* Deprecated alias names for this type: N/A
+* Magic number(s): TBD18
+* File extension(s): .c509
+* Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IETF
+
 ## Media Type application/cose-c509-privkey {#c509-privkey}
 When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.
 
@@ -2238,7 +2282,7 @@ Change controller: IETF
 
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-crtemplate", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
 
 IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
@@ -2246,33 +2290,36 @@ IANA is requested to add entries for "application/cose-certhash" to the "CoAP Co
 IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
 ~~~~~~~~~~~ aasvg
-+-------------------+---------+------------------+-------+--------------+
-| Content           | Content | Media            | ID    | Reference    |
-| Format            | Coding  | Type             |       |              |
-+===================+=========+==================+=======+==============+
-| application/      | -       | [[link to 9.15]] | TBD6  | [[this       |
-| cose-c509-cert    |         |                  |       |   document]] |
-+-------------------+---------+------------------+-------+--------------+
-| application/      |         |                  |       | [[this       |
-| cose-c509-cert;   | -       | [[link to 9.15]] | TBD15 |   document]] |
-| usage = chain     |         |                  |       |              |
-+-------------------+---------+------------------+-------+--------------+
-| application/      | -       | [[link to 9.16]] | TBD7  | [[this       |
-| cose-c509-pkcs10  |         |                  |       |   document]] |
-+-------------------+---------+------------------+-------+--------------+
-| application/      | -       | [[link to 9.17]] | TBD10 | [[this       |
-| cose-c509-privkey |         |                  |       |   document]] |
-+-------------------+---------+------------------+-------+--------------+
-| application/      | -       | [[link to 9.18]] | TBD11 | [[this       |
-| cose-c509-pem     |         |                  |       |   document]] |
-+-------------------+---------+------------------+-------+--------------+
-| application/      | -       | [[link to 9.19]] | TBD16 | [[this       |
-| cose-certhash     |         |                  |       |   document]] |
-+-------------------+---------+------------------+-------+--------------+
-| application/      |         |                  |       | [[this       |
-  cose-certhash;    | -       | [[link to 9.19]] | TBD17 |   document]] |
-| usage = c509      |         |                  |       |              |
-+-------------------+---------+------------------+-------+--------------+
++----------------------+---------+------------------+-------+--------------+
+| Content              | Content | Media            | ID    | Reference    |
+| Format               | Coding  | Type             |       |              |
++======================+=========+==================+=======+==============+
+| application/         | -       | [[link to 9.15]] | TBD6  | [[this       |
+| cose-c509-cert       |         |                  |       |   document]] |
++----------------------+---------+------------------+-------+--------------+
+| application/         |         |                  |       | [[this       |
+| cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
+| usage = chain        |         |                  |       |              |
++----------------------+---------+------------------+-------+--------------+
+| application/         | -       | [[link to 9.16]] | TBD7  | [[this       |
+| cose-c509-pkcs10     |         |                  |       |   document]] |
++----------------------+---------+------------------+-------+--------------+
+| application/         | -       | [[link to 9.17]] | TBD18 | [[this       |
+| cose-c509-crtemplate |         |                  |       |   document]] |
++----------------------+---------+------------------+-------+--------------+
+| application/         | -       | [[link to 9.18]] | TBD10 | [[this       |
+| cose-c509-privkey    |         |                  |       |   document]] |
++----------------------+---------+------------------+-------+--------------+
+| application/         | -       | [[link to 9.19]] | TBD11 | [[this       |
+| cose-c509-pem        |         |                  |       |   document]] |
++----------------------+---------+------------------+-------+--------------+
+| application/         | -       | [[link to 9.20]] | TBD16 | [[this       |
+| cose-certhash        |         |                  |       |   document]] |
++----------------------+---------+------------------+-------+--------------+
+| application/         |         |                  |       | [[this       |
+  cose-certhash;       | -       | [[link to 9.20]] | TBD17 |   document]] |
+| usage = c509         |         |                  |       |              |
++----------------------+---------+------------------+-------+--------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
