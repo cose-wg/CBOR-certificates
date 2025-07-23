@@ -1349,7 +1349,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
       </h2>
 <p id="section-1-1">One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, since those are not optimized for constrained environments <span>[<a href="#RFC7228" class="cite xref">RFC7228</a>]</span>. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS <span>[<a href="#RFC9190" class="cite xref">RFC9190</a>]</span> <span>[<a href="#RFC9191" class="cite xref">RFC9191</a>]</span> where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span> where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span> where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> reduces the certificate size significantly, which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The use of CBOR also reduces code complexity, code size, memory usage, and CPU usage.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g., null = 0xf6), byte strings (bytes), and text strings (text), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null, undefined), byte strings (bytes), and text strings (text), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">CAB Baseline Requirements <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>, RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, and CNSA 1.0 <span>[<a href="#RFC8603" class="cite xref">RFC8603</a>]</span> specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span>, DTLS <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>, EDHOC <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, or Compact TLS 1.3 <span>[<a href="#I-D.ietf-tls-ctls" class="cite xref">I-D.ietf-tls-ctls</a>]</span>. RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, RFC7925bis <span>[<a href="#I-D.ietf-uta-tls13-iot-profile" class="cite xref">I-D.ietf-uta-tls13-iot-profile</a>]</span>, and IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> specifically target Internet of Things deployments.<a href="#section-1-4" class="pilcrow">¶</a></p>
 <p id="section-1-5">This document specifies a CBOR encoding of X.509 certificates based on <span>[<a href="#X.509-IoT" class="cite xref">X.509-IoT</a>]</span>. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>,  <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span> profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments. C509 is deployed in, e.g., Unmanned Aircraft Systems (UAS) and Global Navigation Satellite System (GNSS). When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. C509 is not a general CBOR ecoding for Abstract Syntax Notation One (ASN.1) data structures.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see <a href="#sigalg" class="auto internal xref">Section 9.12</a>.<a href="#section-1-6" class="pilcrow">¶</a></p>
@@ -1412,7 +1412,7 @@ TBSCertificate = (
    validityNotAfter: ~time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: NonNull,
+   subjectPublicKey: Defined,
    extensions: Extensions,
 )
 
@@ -1428,13 +1428,13 @@ AlgorithmIdentifier = int / ~oid /
 
 Extensions = [ * Extension ] / int
 
-Extension = (( extensionID: int, extensionValue: NonNull ) //
+Extension = (( extensionID: int, extensionValue: Defined ) //
              ( extensionID: ~oid, ? critical: true,
               extensionValue: bytes ))
 
 SpecialText = text / bytes / tag
 
-NonNull = any .ne null
+Defined = any .ne undefined
 
 tag = #6
 </pre>
@@ -1514,7 +1514,7 @@ tag = #6
 <a href="#section-3.1.7" class="section-number selfRef">3.1.7. </a><a href="#name-subjectpublickeyinfo" class="section-name selfRef">subjectPublicKeyInfo</a>
           </h4>
 <p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 9.13</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.7-2">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except null. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.7-2">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except undefined (see <a href="#CRT" class="auto internal xref">Section 4.4</a>). This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="issueruniqueid">
@@ -1542,7 +1542,7 @@ tag = #6
 <p id="section-3.1.10-2">Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see <a href="#extype" class="auto internal xref">Section 9.6</a>) or as an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>.<a href="#section-3.1.10-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.10-3.1">
-              <p id="section-3.1.10-3.1.1">If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except null, and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.<a href="#section-3.1.10-3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.10-3.1.1">If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except undefined (see <a href="#CRT" class="auto internal xref">Section 4.4</a>), and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.<a href="#section-3.1.10-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.10-3.2">
               <p id="section-3.1.10-3.2.1">If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR simple value true (0xf5) 'critical', and the DER-encoded value of the extnValue. The presence of the CBOR true value in the array indicates that the extension is critical; its absence means that the extension is non-critical (see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.<a href="#section-3.1.10-3.2.1" class="pilcrow">¶</a></p>
@@ -1994,7 +1994,7 @@ C509PEM = [
 <p id="section-3.6-1">In some use cases it is desirable to be able to specify a unique C509 representation of a given X.509 certificate.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <p id="section-3.6-2">While this specification requires the use of Deterministically Encoded CBOR (see <a href="#notation" class="auto internal xref">Section 2</a>), it is still possible to represent certain X.509 certificate fields in different ways. This is a consequence of the extensibility of the C509 format where new encodings can be defined, for example to optimize extensions for which no special CBOR encoding have been previously defined.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
 <p id="section-3.6-3">Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding <span class="bcp14">MUST</span> be used. For example, when there is support for specific CBOR encoding of an extension, as specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a> and the C509 Extensions Registry, it <span class="bcp14">MUST</span> be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it <span class="bcp14">MUST</span> be used.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:NonNull)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2021,7 +2021,7 @@ TBSCertificateRequest = (
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
-   subjectPublicKey: NonNull,
+   subjectPublicKey: Defined,
    extensionsRequest: Extensions,
 )
 
@@ -2173,10 +2173,10 @@ challengePassword = SpecialText
 <pre>
 C509CertificateRequestTemplate = [
    c509CertificateRequestTemplateType: int,
-   c509CertificateRequestType: int / null,
-   subjectSignatureAlgorithm: AlgorithmIdentifier / null,
+   c509CertificateRequestType: int / undefined,
+   subjectSignatureAlgorithm: AlgorithmIdentifier / undefined,
    subject: NameTemplate,
-   subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,
+   subjectPublicKeyAlgorithm: AlgorithmIdentifier / undefined,
    subjectPublicKey: any,
    extensionsRequest: ExtensionsTemplate,
 ]
@@ -2184,23 +2184,24 @@ C509CertificateRequestTemplate = [
 NameTemplate = [ * AttributeTemplate ] / SpecialText
 
 AttributeTemplate = (( attributeType: int,
-                       attributeValue: SpecialText / null ) //
+                       attributeValue: SpecialText / undefined ) //
                      ( attributeType: ~oid,
-                       attributeValue: bytes / null ))
+                       attributeValue: bytes / undefined ))
 
 ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
 ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                      ( extensionID: ~oid, ? critical: true,
-                       extensionValue: bytes / null ))
+                       extensionValue: bytes / undefined ))
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-cddl-for-c509certificaterequ" class="selfRef">CDDL for C509CertificateRequestTemplate.</a>
           </figcaption></figure>
 </div>
-<p id="section-4.4-5">Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. Different types of Certificate Request Templates can be defined (see <a href="#temp-type" class="auto internal xref">Section 9.4</a>), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
-<p id="section-4.4-6">The presence of a non-null value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a null value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in <span>[<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span>. In case the EST server requires use of an RSA key and needs to specify its size, the field <span class="bcp14">MUST</span> be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client <span class="bcp14">SHOULD</span> fill in the corresponding GeneralName value.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
+<p id="section-4.4-5">Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. This makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
+<p id="section-4.4-6">Different types of Certificate Request Templates can be defined (see <a href="#temp-type" class="auto internal xref">Section 9.4</a>), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
+<p id="section-4.4-7">The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in <span>[<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span>. In case the EST server requires use of an RSA key and needs to specify its size, the field <span class="bcp14">MUST</span> be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client <span class="bcp14">SHOULD</span> fill in the corresponding GeneralName value.<a href="#section-4.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
