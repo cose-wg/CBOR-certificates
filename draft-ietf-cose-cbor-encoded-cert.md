@@ -790,7 +790,7 @@ Except as specified in this section, the fields have the same encoding as the co
 
  Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
+The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field. For example, in case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
 # C509 Processing and Certificate Issuance
 
