@@ -11,7 +11,7 @@
 <meta content="Joel Höglund" name="author">
 <meta content="Martin Furuhed" name="author">
 <meta content='
-       This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The TLSA selectors registry defined in RFC 6698 is extended to include C509 certificates. The document also specifies C509 Certificate Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format. 
+       This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The TLSA selectors registry defined in RFC 6698 is extended to include C509 certificates. This document also specifies C509 Certificate Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format. 
     ' name="description">
 <meta content="xml2rfc 3.30.0" name="generator">
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
@@ -1101,7 +1101,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">CBOR Encoded X.509 Certificates (C509 Certificates)</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The TLSA selectors registry defined in RFC 6698 is extended to include C509 certificates. The document also specifies C509 Certificate Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI, GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. The CBOR encoded structure can alternatively be signed directly ("natively signed"), which does not require re-encoding for the signature to be verified. The TLSA selectors registry defined in RFC 6698 is extended to include C509 certificates. This document also specifies C509 Certificate Requests, C509 COSE headers, a C509 TLS certificate type, and a C509 file format.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1347,11 +1347,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, since those are not optimized for constrained environments <span>[<a href="#RFC7228" class="cite xref">RFC7228</a>]</span>. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS <span>[<a href="#RFC9190" class="cite xref">RFC9190</a>]</span> <span>[<a href="#RFC9191" class="cite xref">RFC9191</a>]</span> where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span> where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span> where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> reduces the certificate size significantly which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The use of CBOR also reduces code complexity, code size, memory usage, and CPU usage.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by e.g. encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null), byte strings (bytes), and text strings (text), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-1">One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, since those are not optimized for constrained environments <span>[<a href="#RFC7228" class="cite xref">RFC7228</a>]</span>. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS <span>[<a href="#RFC9190" class="cite xref">RFC9190</a>]</span> <span>[<a href="#RFC9191" class="cite xref">RFC9191</a>]</span> where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span> where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span> where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> reduces the certificate size significantly, which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The use of CBOR also reduces code complexity, code size, memory usage, and CPU usage.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g., null = 0xf6), byte strings (bytes), and text strings (text), CBOR also supports arrays [] of data items, maps {} of pairs of data items, and sequences of data items. For a complete specification and examples, see <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. We recommend implementors to get used to CBOR by using the CBOR playground <span>[<a href="#CborMe" class="cite xref">CborMe</a>]</span>.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">CAB Baseline Requirements <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>, RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, and CNSA 1.0 <span>[<a href="#RFC8603" class="cite xref">RFC8603</a>]</span> specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, QUIC <span>[<a href="#RFC9000" class="cite xref">RFC9000</a>]</span>, DTLS <span>[<a href="#RFC9147" class="cite xref">RFC9147</a>]</span>, COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>, EDHOC <span>[<a href="#RFC9528" class="cite xref">RFC9528</a>]</span>, or Compact TLS 1.3 <span>[<a href="#I-D.ietf-tls-ctls" class="cite xref">I-D.ietf-tls-ctls</a>]</span>. RFC 7925 <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, RFC7925bis <span>[<a href="#I-D.ietf-uta-tls13-iot-profile" class="cite xref">I-D.ietf-uta-tls13-iot-profile</a>]</span>, and IEEE 802.1AR <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> specifically target Internet of Things deployments.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">This document specifies a CBOR encoding of X.509 certificates based on <span>[<a href="#X.509-IoT" class="cite xref">X.509-IoT</a>]</span>. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>,  <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span> profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates with over 50% while also significantly reducing memory and code size compared to ASN.1. C509 is not a general CBOR encoding for Abstract Syntax Notation One (ASN.1) data structures.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-5">This document specifies a CBOR encoding of X.509 certificates based on <span>[<a href="#X.509-IoT" class="cite xref">X.509-IoT</a>]</span>. The resulting certificates are called C509 Certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span>,  <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span> profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments. When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. C509 is not a general CBOR ecoding for Abstract Syntax Notation One (ASN.1) data structures.<a href="#section-1-5" class="pilcrow">¶</a></p>
 <p id="section-1-6">C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see <a href="#sigalg" class="auto internal xref">Section 9.12</a>.<a href="#section-1-6" class="pilcrow">¶</a></p>
 <p id="section-1-7">This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:<a href="#section-1-7" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-1-8">
@@ -1359,11 +1359,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <p id="section-1-8.1.1">An invertible CBOR re-encoding of DER encoded X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, which can be reversed to obtain the original DER encoded X.509 certificate.<a href="#section-1-8.1.1" class="pilcrow">¶</a></p>
 </li>
         <li id="section-1-8.2">
-          <p id="section-1-8.2.1">Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in 1. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER encoded X.509.<a href="#section-1-8.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-8.2.1">Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in the first variant. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER encoded X.509.<a href="#section-1-8.2.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
 <p id="section-1-9">Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10">This document also specifies C509 Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.14</a>; and a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.21</a>, and a C509 file format.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-10">This document also specifies C509 Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.14</a>; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.21</a>; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -1385,14 +1385,14 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       </h2>
 <p id="section-3-1">This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, and everything in <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, GSMA eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span>, and CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span> <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see <a href="#fig-size-TLS" class="auto internal xref">Figure 6</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">In the encoding described below, the order of elements in arrays are always encoded in the same order as the elements or the corresponding SEQUENCE or SET in the DER encoding.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-3">In the encoding described below, the elements in arrays are always encoded in the same order as elements of the corresponding SEQUENCE or SET in the DER encoding.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="message-fields">
 <section id="section-3.1">
         <h3 id="name-message-fields">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-message-fields" class="section-name selfRef">Message Fields</a>
         </h3>
 <p id="section-3.1-1">The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item <span class="bcp14">MAY</span> represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g. <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item <span class="bcp14">MAY</span> represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g., <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificate"></span><div id="fig-CBORCertCDDL">
 <figure id="figure-1">
           <div class="lang-cddl sourcecode" id="section-3.1-3.1">
@@ -1474,22 +1474,22 @@ tag = #6
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
 <p id="section-3.1.4-1">In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress, domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>) and macAddress (see <span>[<a href="#RFC2307" class="cite xref">RFC2307</a>]</span>). In CBOR all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g. emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress, domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>) and macAddress (see <span>[<a href="#RFC2307" class="cite xref">RFC2307</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
               <p id="section-3.1.4-4.1.1">If the text string has an even length <span class="contact-name">≥</span> 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.<a href="#section-3.1.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.4-4.2">
-              <p id="section-3.1.4-4.2.1">If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'-'9' or 'A'-'F' it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see <span><a href="https://rfc-editor.org/rfc/rfc9542#section-2.4" class="relref">Section 2.4</a> of [<a href="#RFC9542" class="cite xref">RFC9542</a>]</span>. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1.4-4.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.4-4.2.1">If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'-'9' or 'A'-'F', it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see <span><a href="https://rfc-editor.org/rfc/rfc9542#section-2.4" class="relref">Section 2.4</a> of [<a href="#RFC9542" class="cite xref">RFC9542</a>]</span>. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1.4-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.4-4.3">
               <p id="section-3.1.4-4.3.1">Otherwise it is encoded as a CBOR text string.<a href="#section-3.1.4-4.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.4-5">The final encoding of the extension value may therefore be text, bytes, or tag, i.e. SpecialText. If Name contains a single 'common name' attribute with attributeType = +1 it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 does not correspond to any predefined text string encoding and may also be used for other attribute types such as macAddress.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g. in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as CBOR null.<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-5">The final encoding of the extension value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types such as macAddress.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="validity">
@@ -1497,7 +1497,7 @@ tag = #6
           <h4 id="name-validity">
 <a href="#section-3.1.5" class="section-number selfRef">3.1.5. </a><a href="#name-validity" class="section-name selfRef">validity</a>
           </h4>
-<p id="section-3.1.5-1">The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as CBOR null.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-1">The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="subject">
@@ -1505,7 +1505,7 @@ tag = #6
           <h4 id="name-subject">
 <a href="#section-3.1.6" class="section-number selfRef">3.1.6. </a><a href="#name-subject" class="section-name selfRef">subject</a>
           </h4>
-<p id="section-3.1.6-1">The 'subject' field is encoded exactly like issuer, except that CBOR null is not a valid value.<a href="#section-3.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.6-1">The 'subject' field is encoded exactly like issuer, except that the CBOR simple value is not a valid value.<a href="#section-3.1.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="subjectpublickeyinfo">
@@ -1514,7 +1514,7 @@ tag = #6
 <a href="#section-3.1.7" class="section-number selfRef">3.1.7. </a><a href="#name-subjectpublickeyinfo" class="section-name selfRef">subjectPublicKeyInfo</a>
           </h4>
 <p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 9.13</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.7-2">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except null. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.7-2">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except null. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="issueruniqueid">
@@ -1545,11 +1545,11 @@ tag = #6
               <p id="section-3.1.10-3.1.1">If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except null, and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.<a href="#section-3.1.10-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.10-3.2">
-              <p id="section-3.1.10-3.2.1">If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR true 'critical', and the DER-encoded value of the extnValue. The presence of the true value in the array indicates that the extension is critical; its absence means the extension is non-critical (see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.<a href="#section-3.1.10-3.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.10-3.2.1">If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR simple value true (0xf5) 'critical', and the DER-encoded value of the extnValue. The presence of the CBOR true value in the array indicates that the extension is critical; its absence means that the extension is non-critical (see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.<a href="#section-3.1.10-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-3.1.10-4">The processing of critical and non-critical extensions is specified in <span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-3.1.10-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.10-5">The currently defined extension values for which there is CBOR int encoded 'extensionID' is specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>. The extensions mandated to be supported by <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span> and <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> are given special treatment.<a href="#section-3.1.10-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.10-5">The currently defined extension values for which there is CBOR int encoded 'extensionID' are specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>. The extensions mandated to be supported by <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span> and <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span> are given special treatment.<a href="#section-3.1.10-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.10-6">More details about extensions in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>.<a href="#section-3.1.10-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1566,7 +1566,7 @@ tag = #6
           <h4 id="name-signaturevalue">
 <a href="#section-3.1.12" class="section-number selfRef">3.1.12. </a><a href="#name-signaturevalue" class="section-name selfRef">signatureValue</a>
           </h4>
-<p id="section-3.1.12-1">In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a><a href="#section-3.1.12-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.12-1">In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates, the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a><a href="#section-3.1.12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1581,7 +1581,7 @@ tag = #6
           <h4 id="name-encoding-of-subjectpublickey">
 <a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-encoding-of-subjectpublickey" class="section-name selfRef">Encoding of subjectPublicKey</a>
           </h4>
-<p id="section-3.2.1-1">For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted, and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e. [ modulus : ~biguint, exponent : ~biguint ]. If the exponent is 65537, the array and the exponent is omitted and subjectPublicKey consists of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-1">For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted, and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e., [ modulus : ~biguint, exponent : ~biguint ]. If the exponent is 65537, the array and the exponent are omitted and subjectPublicKey consists of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.2.1-2">For elliptic curve public keys in Weierstraß form (id-ecPublicKey), keys may be point compressed as defined in Section 2.3.3 of <span>[<a href="#SECG" class="cite xref">SECG</a>]</span>. Native C509 certificates with Weierstraß form keys use the octets 0x02, 0x03, and 0x04 as defined in <span>[<a href="#SECG" class="cite xref">SECG</a>]</span>. If a DER encoded certificate with an uncompressed public key of type id-ecPublicKey is CBOR encoded with point compression, the octets 0xfe and 0xfd are used instead of 0x02 and 0x03 in the CBOR encoding to represent even and odd y-coordinate, respectively.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1602,7 +1602,7 @@ tag = #6
         </h3>
 <p id="section-3.3-1">The 'extensions' field is encoded as specified in <a href="#ext-field" class="auto internal xref">Section 3.1.10</a> with further details provided in this section.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension <span class="bcp14">MUST</span> be encoded using the unwrapped CBOR OID tag encoded extensionID.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">A note on extensionID naming: in existing OID databases most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> and included them for extensions defined elsewhere.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">A note on extensionID naming: in existing OID databases, most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> and included them for extensions defined elsewhere.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">CBOR encoding of the following extension values is fully supported:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-5.1">
@@ -1821,7 +1821,7 @@ tag = #6
             <p id="section-3.3-42.1.1">AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-42.2">
-            <p id="section-3.3-42.2.1">IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to ones. With the exception of the first  Address, if the byte string has the same length as the previous Address, the Address is encoded as an uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.<a href="#section-3.3-42.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-42.2.1">IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.<a href="#section-3.3-42.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-43">
@@ -1856,10 +1856,10 @@ tag = #6
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-46.1">
-            <p id="section-3.3-46.1.1">OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL it can be CBOR encoded. The CBOR encoded extensionValue is the empty string h''.<a href="#section-3.3-46.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-46.1.1">OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL, it can be CBOR encoded. The CBOR encoded extensionValue is the empty byte string h''.<a href="#section-3.3-46.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-46.2">
-            <p id="section-3.3-46.2.1">Precertificate Signing Certificate. The CBOR encoded extensionValue is the empty string h''.<a href="#section-3.3-46.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-46.2.1">Precertificate Signing Certificate. The CBOR encoded extensionValue is the empty byte string h''.<a href="#section-3.3-46.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-46.3">
             <p id="section-3.3-46.3.1">TLS Features (id-pe-tlsfeature). The extensionValue is encoded as an array of integers, where each integer represents a TLS extension.<a href="#section-3.3-46.3.1" class="pilcrow">¶</a></p>
@@ -1900,7 +1900,7 @@ tag = #6
         <h3 id="name-cose-header-parameters">
 <a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-cose-header-parameters" class="section-name selfRef">COSE Header Parameters</a>
         </h3>
-<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> below, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and uses a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.20</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-1">The formatting and processing for c5b, c5c, c5t, and c5u, defined in <a href="#iana-header" class="auto internal xref">Table 1</a> below, are similar to x5bag, x5chain, x5t, x5u defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> except that the certificates are C509 instead of DER encoded X.509 and use a COSE_C509 structure instead of COSE_X509. c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 9.20</a>. A stored file format is defined in <span>[<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>, with "magic number" TBD8 composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.4-2">The COSE_C509 structure used in c5b, c5c, and c5u is defined as:<a href="#section-3.4-2" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
@@ -1963,7 +1963,7 @@ C509CertData = bytes .cborseq C509Certificate
         <h3 id="name-private-key-structures">
 <a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-private-key-structures" class="section-name selfRef">Private Key Structures</a>
         </h3>
-<p id="section-3.5-1">Certificate management also makes use of data structures including private keys, see e.g. <span>[<a href="#RFC7468" class="cite xref">RFC7468</a>]</span>. This section defines the following CBOR encoded structures:<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-1">Certificate management also makes use of data structures including private keys, see, e.g., <span>[<a href="#RFC7468" class="cite xref">RFC7468</a>]</span>. This section defines the following CBOR encoded structures:<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.5-2">
 <pre>
 C509PrivateKey = [
@@ -2207,8 +2207,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
       <h2 id="name-legacy-considerations">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-legacy-considerations" class="section-name selfRef">Legacy Considerations</a>
       </h2>
-<p id="section-6-1">C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER encoded RFC 2986 CertificationRequestInfo and use that with existing processes and code to produce an RFC 5280 DER encoded X.509 certificate. The DER encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">For protocols like TLS/DTLS 1.2, where the handshake is sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead, however, measured in energy this is likely to be negligible compared to the reduced communication overhead.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-1">C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER encoded RFC 2986 CertificationRequestInfo and uses that with existing processes and code to produce an RFC 5280 DER encoded X.509 certificate. The DER encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">For protocols like TLS/DTLS 1.2, where certificates are sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway, which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead. However, measured in energy, this is likely to be negligible compared to the reduced communication overhead.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">For the setting with constrained server and server-only authentication, the server only needs to be provisioned with the C509 certificate and does not perform the conversion to X.509. This option is viable when client authentication can be asserted by other means.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server.<a href="#section-6-4" class="pilcrow">¶</a></p>
 </section>
@@ -2344,10 +2344,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
       <h2 id="name-security-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-8-1">The CBOR profiling of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors. The security considerations of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> apply.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">The CBOR encoding of X.509 certificates does not change the security assumptions needed when deploying standard X.509 certificates but decreases the number of fields transmitted, which reduces the risk for implementation errors. The security considerations of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> apply.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <p id="section-8-2">The use of natively signed C509 certificates removes the need for ASN.1 encoding, which is a rich source of security vulnerabilities.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <p id="section-8-3">Conversion between the certificate formats can be made in constant time to reduce risk of information leakage through side channels.<a href="#section-8-3" class="pilcrow">¶</a></p>
-<p id="section-8-4">The mechanism in this draft does not reveal any additional information compared to X.509. Because of the difference in size, it will be possible to detect that this profile is used. The gateway solution described in <a href="#dep-set" class="auto internal xref">Section 6</a> requires unencrypted certificates and is not recommended.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-8-4">The mechanism in this document does not reveal any additional information compared to X.509. Because of the difference in size, it will be possible to detect that this profile is used. The gateway solution described in <a href="#dep-set" class="auto internal xref">Section 6</a> requires unencrypted certificates and is not recommended.<a href="#section-8-4" class="pilcrow">¶</a></p>
 <p id="section-8-5">Any issue to decode or parse a C509 certificate should be handled by the certificate using system as would the issue of parsing the corresponding X.509 certificate. For example, a non-critical extension <span class="bcp14">MAY</span> be ignored if it is not recognized, see <span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-8-5" class="pilcrow">¶</a></p>
 <p id="section-8-6">As stated in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>, the contents of the COSE Header Parameters c5b, c5c, c5t, c5u is untrusted input that potentially may be verified using existing trust anchors or other trust establishment mechanism out of scope of this document. Similar security considerations as x5bag, x5chain, x5t and x5u applies, see <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>. Security considerations of the COSE protected and unprotected headers is discussed in <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>.<a href="#section-8-6" class="pilcrow">¶</a></p>
 </section>
@@ -2358,13 +2358,14 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <a href="#section-9" class="section-number selfRef">9. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <p id="section-9-1">This document creates several new registries under the new heading "CBOR Encoded X.509 (C509) Parameters". For all items, the 'Reference' field points to this document.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate one that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval [-24, 23] have a 1-byte encodings, other values in the interval [-256, 255] have a 2-byte encodings, and the remaining values in the interval [-65536, 65535] have 3-byte encodings.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-2">The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate an entry that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval [-24, 23] have a 1-byte encoding, other values in the interval [-256, 255] have a 2-byte encoding, and the remaining values in the interval [-65536, 65535] have a 3-byte encoding.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-3">All assignments according to "IETF Review with Expert Review" are made on a "IETF Review" basis per Section 4.8 of <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> with "Expert Review" additionally required per Section 4.5 of <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The procedure for early IANA allocation of "standards track code points" defined in <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span> also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span>.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <div id="type">
 <section id="section-9.1">
         <h3 id="name-c509-certificate-types-regi">
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-c509-certificate-types-regi" class="section-name selfRef">C509 Certificate Types Registry</a>
         </h3>
-<p id="section-9.1-1">IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-1">IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval [-24, 23], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-types"></span><div id="fig-types">
 <figure id="figure-7">
           <div id="section-9.1-2.1">
@@ -2417,7 +2418,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-certificate-request-typ">
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-c509-certificate-request-typ" class="section-name selfRef">C509 Certificate Request Types Registry</a>
         </h3>
-<p id="section-9.2-1">IANA has created a new registry titled "C509 Certificate Request Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-1">IANA has created a new registry titled "C509 Certificate Request Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.2-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-request-type"></span><div id="fig-csr-types">
 <figure id="figure-8">
           <div id="section-9.2-2.1">
@@ -2503,7 +2504,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-private-key-types">
 <a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-c509-private-key-types" class="section-name selfRef">C509 Private Key Types</a>
         </h3>
-<p id="section-9.3-1">IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+<p id="section-9.3-1">IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 <span id="name-c509-private-key-types-2"></span><div id="fig-rivkeys">
 <figure id="figure-9">
           <div id="section-9.3-2.1">
@@ -2592,7 +2593,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-attributes-registry">
 <a href="#section-9.5" class="section-number selfRef">9.5. </a><a href="#name-c509-attributes-registry" class="section-name selfRef">C509 Attributes Registry</a>
         </h3>
-<p id="section-9.5-1">IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval [0, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
+<p id="section-9.5-1">IANA has created a new registry titled "C509 Attributes" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [0, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
 <p id="section-9.5-2">The initial contents of the registry are:<a href="#section-9.5-2" class="pilcrow">¶</a></p>
 <span id="name-c509-attributes"></span><div id="fig-attrtype">
 <figure id="figure-11">
@@ -3188,7 +3189,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-extensions-registry">
 <a href="#section-9.6" class="section-number selfRef">9.6. </a><a href="#name-c509-extensions-registry" class="section-name selfRef">C509 Extensions Registry</a>
         </h3>
-<p id="section-9.6-1">IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The columns Name, OID, DER, abd extensionValue are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>. For values in the interval [1, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.6-1" class="pilcrow">¶</a></p>
+<p id="section-9.6-1">IANA has created a new registry titled "C509 Extensions Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, abd extensionValue are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>. For values in the interval [1, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.6-1" class="pilcrow">¶</a></p>
 <span id="name-c509-extensions-and-certifi"></span><div id="fig-extype">
 <figure id="figure-12">
           <div id="section-9.6-2.1">
@@ -3767,7 +3768,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-certificate-policies-r">
 <a href="#section-9.7" class="section-number selfRef">9.7. </a><a href="#name-c509-certificate-policies-r" class="section-name selfRef">C509 Certificate Policies Registry</a>
         </h3>
-<p id="section-9.7-1">IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.7-1" class="pilcrow">¶</a></p>
+<p id="section-9.7-1">IANA has created a new registry titled "C509 Certificate Policies Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.7-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-policies"></span><div id="fig-cp">
 <figure id="figure-13">
           <div id="section-9.7-2.1">
@@ -4131,7 +4132,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-policies-qualifiers-re">
 <a href="#section-9.8" class="section-number selfRef">9.8. </a><a href="#name-c509-policies-qualifiers-re" class="section-name selfRef">C509 Policies Qualifiers Registry</a>
         </h3>
-<p id="section-9.8-1">IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.8-1" class="pilcrow">¶</a></p>
+<p id="section-9.8-1">IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.8-1" class="pilcrow">¶</a></p>
 <span id="name-c509-policies-qualifiers"></span><div id="fig-pq">
 <figure id="figure-14">
           <div id="section-9.8-2.1">
@@ -4207,7 +4208,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-information-access-reg">
 <a href="#section-9.9" class="section-number selfRef">9.9. </a><a href="#name-c509-information-access-reg" class="section-name selfRef">C509 Information Access Registry</a>
         </h3>
-<p id="section-9.9-1">IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.9-1" class="pilcrow">¶</a></p>
+<p id="section-9.9-1">IANA has created a new registry titled "C509 Information Access Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.9-1" class="pilcrow">¶</a></p>
 <span id="name-c509-information-accesses"></span><div id="fig-ia">
 <figure id="figure-15">
           <div id="section-9.9-2.1">
@@ -4393,7 +4394,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-extended-key-usages-re">
 <a href="#section-9.10" class="section-number selfRef">9.10. </a><a href="#name-c509-extended-key-usages-re" class="section-name selfRef">C509 Extended Key Usages Registry</a>
         </h3>
-<p id="section-9.10-1">IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.10-1" class="pilcrow">¶</a></p>
+<p id="section-9.10-1">IANA has created a new registry titled "C509 Extended Key Usages Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.10-1" class="pilcrow">¶</a></p>
 <span id="name-c509-extended-key-usages"></span><div id="fig-eku">
 <figure id="figure-16">
           <div id="section-9.10-2.1">
@@ -4823,7 +4824,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-general-names-registry">
 <a href="#section-9.11" class="section-number selfRef">9.11. </a><a href="#name-c509-general-names-registry" class="section-name selfRef">C509 General Names Registry</a>
         </h3>
-<p id="section-9.11-1">IANA has created a new registry titled "C509 General Names Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. The columns Name and Value are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.11-1" class="pilcrow">¶</a></p>
+<p id="section-9.11-1">IANA has created a new registry titled "C509 General Names Registry" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, General Name, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and Value are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.11-1" class="pilcrow">¶</a></p>
 <span id="name-c509-general-names"></span><div id="fig-gn">
 <figure id="figure-17">
           <div id="section-9.11-2.1">
@@ -4951,7 +4952,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-signature-algorithms-r">
 <a href="#section-9.12" class="section-number selfRef">9.12. </a><a href="#name-c509-signature-algorithms-r" class="section-name selfRef">C509 Signature Algorithms Registry</a>
         </h3>
-<p id="section-9.12-1">IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
+<p id="section-9.12-1">IANA has created a new registry titled "C509 Signature Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
 <figure id="figure-18">
           <div id="section-9.12-2.1">
@@ -5789,7 +5790,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-public-key-algorithms-">
 <a href="#section-9.13" class="section-number selfRef">9.13. </a><a href="#name-c509-public-key-algorithms-" class="section-name selfRef">C509 Public Key Algorithms Registry</a>
         </h3>
-<p id="section-9.13-1">IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The columns Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.13-1" class="pilcrow">¶</a></p>
+<p id="section-9.13-1">IANA has created a new registry titled "C509 Public Key Algorithms" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.13-1" class="pilcrow">¶</a></p>
 <span id="name-c509-public-key-algorithms"></span><div id="fig-pkalgs">
 <figure id="figure-19">
           <div id="section-9.13-2.1">
@@ -6379,7 +6380,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
           <h4 id="name-suitability-of-different-pu">
 <a href="#section-9.13.1" class="section-number selfRef">9.13.1. </a><a href="#name-suitability-of-different-pu" class="section-name selfRef">Suitability of different public key algorithms for use within IoT scenarios</a>
           </h4>
-<p id="section-9.13.1-1">The public key algorithms registry <a href="#pkalg" class="auto internal xref">Section 9.13</a> specify a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstraß curves), make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in <a href="#pkalg" class="auto internal xref">Section 9.13</a>.<a href="#section-9.13.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.13.1-1">The public key algorithms registry <a href="#pkalg" class="auto internal xref">Section 9.13</a> specifies a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstraß curves) make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in <a href="#pkalg" class="auto internal xref">Section 9.13</a>.<a href="#section-9.13.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -6436,7 +6437,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <p id="section-9.15-17">Intended usage: COMMON<a href="#section-9.15-17" class="pilcrow">¶</a></p>
 <p id="section-9.15-18">Restrictions on usage: N/A<a href="#section-9.15-18" class="pilcrow">¶</a></p>
 <p id="section-9.15-19">Author: COSE WG<a href="#section-9.15-19" class="pilcrow">¶</a></p>
-<p id="section-9.15-20">Change controller: IESG<a href="#section-9.15-20" class="pilcrow">¶</a></p>
+<p id="section-9.15-20">Change controller: IETF<a href="#section-9.15-20" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="c509-pkcs10">
@@ -6475,7 +6476,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <p id="section-9.16-16">Intended usage: COMMON<a href="#section-9.16-16" class="pilcrow">¶</a></p>
 <p id="section-9.16-17">Restrictions on usage: N/A<a href="#section-9.16-17" class="pilcrow">¶</a></p>
 <p id="section-9.16-18">Author: COSE WG<a href="#section-9.16-18" class="pilcrow">¶</a></p>
-<p id="section-9.16-19">Change controller: IESG<a href="#section-9.16-19" class="pilcrow">¶</a></p>
+<p id="section-9.16-19">Change controller: IETF<a href="#section-9.16-19" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="c509-privkey">
@@ -6514,7 +6515,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <p id="section-9.17-16">Intended usage: COMMON<a href="#section-9.17-16" class="pilcrow">¶</a></p>
 <p id="section-9.17-17">Restrictions on usage: N/A<a href="#section-9.17-17" class="pilcrow">¶</a></p>
 <p id="section-9.17-18">Author: COSE WG<a href="#section-9.17-18" class="pilcrow">¶</a></p>
-<p id="section-9.17-19">Change controller: IESG<a href="#section-9.17-19" class="pilcrow">¶</a></p>
+<p id="section-9.17-19">Change controller: IETF<a href="#section-9.17-19" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="c509-pem">
@@ -6553,7 +6554,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <p id="section-9.18-16">Intended usage: COMMON<a href="#section-9.18-16" class="pilcrow">¶</a></p>
 <p id="section-9.18-17">Restrictions on usage: N/A<a href="#section-9.18-17" class="pilcrow">¶</a></p>
 <p id="section-9.18-18">Author: COSE WG<a href="#section-9.18-18" class="pilcrow">¶</a></p>
-<p id="section-9.18-19">Change controller: IESG<a href="#section-9.18-19" class="pilcrow">¶</a></p>
+<p id="section-9.18-19">Change controller: IETF<a href="#section-9.18-19" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="cose-certhash">
@@ -6600,7 +6601,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <p id="section-9.19-17">Intended usage: COMMON<a href="#section-9.19-17" class="pilcrow">¶</a></p>
 <p id="section-9.19-18">Restrictions on usage: N/A<a href="#section-9.19-18" class="pilcrow">¶</a></p>
 <p id="section-9.19-19">Author: COSE WG<a href="#section-9.19-19" class="pilcrow">¶</a></p>
-<p id="section-9.19-20">Change controller: IESG<a href="#section-9.19-20" class="pilcrow">¶</a></p>
+<p id="section-9.19-20">Change controller: IETF<a href="#section-9.19-20" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="content-format">
@@ -6608,77 +6609,110 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-coap-content-formats-regist">
 <a href="#section-9.20" class="section-number selfRef">9.20. </a><a href="#name-coap-content-formats-regist" class="section-name selfRef">CoAP Content-Formats Registry</a>
         </h3>
-<p id="section-9.20-1">IANA is requested to add media types for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
+<p id="section-9.20-1">IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters".
 A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>.<a href="#section-9.20-1" class="pilcrow">¶</a></p>
-<p id="section-9.20-2">IANA is requested to add media types for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>.<a href="#section-9.20-2" class="pilcrow">¶</a></p>
-<p id="section-9.20-3">IANA is requested to add media types for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.<a href="#section-9.20-3" class="pilcrow">¶</a></p>
+<p id="section-9.20-2">IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see <a href="#c509-cert" class="auto internal xref">Section 9.15</a>.<a href="#section-9.20-2" class="pilcrow">¶</a></p>
+<p id="section-9.20-3">IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry under the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.<a href="#section-9.20-3" class="pilcrow">¶</a></p>
 <span id="name-coap-content-format-ids"></span><div id="fig-format-ids">
 <figure id="figure-20">
           <div id="section-9.20-4.1">
             <div class="alignLeft art-svg artwork" id="section-9.20-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="336" width="592" viewBox="0 0 592 336" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,320" fill="none" stroke="black"></path>
-                <path d="M 264,32 L 264,320" fill="none" stroke="black"></path>
-                <path d="M 360,32 L 360,320" fill="none" stroke="black"></path>
-                <path d="M 424,32 L 424,320" fill="none" stroke="black"></path>
-                <path d="M 584,32 L 584,320" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="464" width="592" viewBox="0 0 592 464" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,400" fill="none" stroke="black"></path>
+                <path d="M 8,432 L 8,448" fill="none" stroke="black"></path>
+                <path d="M 168,32 L 168,448" fill="none" stroke="black"></path>
+                <path d="M 248,32 L 248,448" fill="none" stroke="black"></path>
+                <path d="M 400,32 L 400,448" fill="none" stroke="black"></path>
+                <path d="M 464,32 L 464,448" fill="none" stroke="black"></path>
+                <path d="M 584,32 L 584,448" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 584,32" fill="none" stroke="black"></path>
-                <path d="M 8,62 L 584,62" fill="none" stroke="black"></path>
-                <path d="M 8,66 L 584,66" fill="none" stroke="black"></path>
-                <path d="M 8,96 L 584,96" fill="none" stroke="black"></path>
-                <path d="M 8,144 L 584,144" fill="none" stroke="black"></path>
-                <path d="M 8,176 L 584,176" fill="none" stroke="black"></path>
-                <path d="M 8,208 L 584,208" fill="none" stroke="black"></path>
+                <path d="M 8,78 L 584,78" fill="none" stroke="black"></path>
+                <path d="M 8,82 L 584,82" fill="none" stroke="black"></path>
+                <path d="M 8,128 L 584,128" fill="none" stroke="black"></path>
+                <path d="M 8,192 L 584,192" fill="none" stroke="black"></path>
                 <path d="M 8,240 L 584,240" fill="none" stroke="black"></path>
-                <path d="M 8,272 L 584,272" fill="none" stroke="black"></path>
-                <path d="M 8,320 L 584,320" fill="none" stroke="black"></path>
+                <path d="M 8,288 L 584,288" fill="none" stroke="black"></path>
+                <path d="M 8,336 L 584,336" fill="none" stroke="black"></path>
+                <path d="M 8,384 L 584,384" fill="none" stroke="black"></path>
+                <path d="M 8,448 L 584,448" fill="none" stroke="black"></path>
                 <g class="text">
-                  <text x="40" y="52">Media</text>
-                  <text x="84" y="52">Type</text>
-                  <text x="308" y="52">Encoding</text>
-                  <text x="380" y="52">ID</text>
-                  <text x="472" y="52">Reference</text>
-                  <text x="124" y="84">application/cose-c509-cert</text>
-                  <text x="280" y="84">-</text>
-                  <text x="396" y="84">TBD6</text>
-                  <text x="460" y="84">[[this</text>
-                  <text x="532" y="84">document]]</text>
-                  <text x="124" y="116">application/cose-c509-cert</text>
-                  <text x="48" y="132">"usage"</text>
-                  <text x="88" y="132">=</text>
-                  <text x="128" y="132">"chain"</text>
-                  <text x="280" y="132">-</text>
-                  <text x="392" y="132">TBD15</text>
-                  <text x="460" y="132">[[this</text>
-                  <text x="532" y="132">document]]</text>
-                  <text x="132" y="164">application/cose-c509-pkcs10</text>
-                  <text x="280" y="164">-</text>
-                  <text x="396" y="164">TBD7</text>
-                  <text x="460" y="164">[[this</text>
+                  <text x="48" y="52">Content</text>
+                  <text x="208" y="52">Content</text>
+                  <text x="280" y="52">Media</text>
+                  <text x="420" y="52">ID</text>
+                  <text x="512" y="52">Reference</text>
+                  <text x="44" y="68">Format</text>
+                  <text x="204" y="68">Coding</text>
+                  <text x="276" y="68">Type</text>
+                  <text x="68" y="100">application/</text>
+                  <text x="184" y="100">-</text>
+                  <text x="284" y="100">[[link</text>
+                  <text x="324" y="100">to</text>
+                  <text x="364" y="100">9.15]]</text>
+                  <text x="428" y="100">TBD6</text>
+                  <text x="500" y="100">[[this</text>
+                  <text x="76" y="116">cose-c509-cert</text>
+                  <text x="532" y="116">document]]</text>
+                  <text x="68" y="148">application/</text>
+                  <text x="500" y="148">[[this</text>
+                  <text x="80" y="164">cose-c509-cert;</text>
+                  <text x="184" y="164">-</text>
+                  <text x="284" y="164">[[link</text>
+                  <text x="324" y="164">to</text>
+                  <text x="364" y="164">9.15]]</text>
+                  <text x="432" y="164">TBD15</text>
                   <text x="532" y="164">document]]</text>
-                  <text x="136" y="196">application/cose-c509-privkey</text>
-                  <text x="280" y="196">-</text>
-                  <text x="392" y="196">TBD10</text>
-                  <text x="460" y="196">[[this</text>
-                  <text x="532" y="196">document]]</text>
-                  <text x="120" y="228">application/cose-c509-pem</text>
-                  <text x="280" y="228">-</text>
-                  <text x="392" y="228">TBD11</text>
-                  <text x="460" y="228">[[this</text>
+                  <text x="40" y="180">usage</text>
+                  <text x="72" y="180">=</text>
+                  <text x="104" y="180">chain</text>
+                  <text x="68" y="212">application/</text>
+                  <text x="184" y="212">-</text>
+                  <text x="284" y="212">[[link</text>
+                  <text x="324" y="212">to</text>
+                  <text x="364" y="212">9.16]]</text>
+                  <text x="428" y="212">TBD7</text>
+                  <text x="500" y="212">[[this</text>
+                  <text x="84" y="228">cose-c509-pkcs10</text>
                   <text x="532" y="228">document]]</text>
-                  <text x="120" y="260">application/cose-certhash</text>
-                  <text x="280" y="260">-</text>
-                  <text x="392" y="260">TBD16</text>
-                  <text x="460" y="260">[[this</text>
-                  <text x="532" y="260">document]]</text>
-                  <text x="120" y="292">application/cose-certhash</text>
-                  <text x="48" y="308">"usage"</text>
-                  <text x="88" y="308">=</text>
-                  <text x="124" y="308">"c509"</text>
-                  <text x="280" y="308">-</text>
-                  <text x="392" y="308">TBD17</text>
-                  <text x="460" y="308">[[this</text>
-                  <text x="532" y="308">document]]</text>
+                  <text x="68" y="260">application/</text>
+                  <text x="184" y="260">-</text>
+                  <text x="284" y="260">[[link</text>
+                  <text x="324" y="260">to</text>
+                  <text x="364" y="260">9.17]]</text>
+                  <text x="432" y="260">TBD10</text>
+                  <text x="500" y="260">[[this</text>
+                  <text x="88" y="276">cose-c509-privkey</text>
+                  <text x="532" y="276">document]]</text>
+                  <text x="68" y="308">application/</text>
+                  <text x="184" y="308">-</text>
+                  <text x="284" y="308">[[link</text>
+                  <text x="324" y="308">to</text>
+                  <text x="364" y="308">9.18]]</text>
+                  <text x="432" y="308">TBD11</text>
+                  <text x="500" y="308">[[this</text>
+                  <text x="72" y="324">cose-c509-pem</text>
+                  <text x="532" y="324">document]]</text>
+                  <text x="68" y="356">application/</text>
+                  <text x="184" y="356">-</text>
+                  <text x="284" y="356">[[link</text>
+                  <text x="324" y="356">to</text>
+                  <text x="364" y="356">9.19]]</text>
+                  <text x="432" y="356">TBD16</text>
+                  <text x="500" y="356">[[this</text>
+                  <text x="72" y="372">cose-certhash</text>
+                  <text x="532" y="372">document]]</text>
+                  <text x="68" y="404">application/</text>
+                  <text x="500" y="404">[[this</text>
+                  <text x="76" y="420">cose-certhash;</text>
+                  <text x="184" y="420">-</text>
+                  <text x="284" y="420">[[link</text>
+                  <text x="324" y="420">to</text>
+                  <text x="364" y="420">9.19]]</text>
+                  <text x="432" y="420">TBD17</text>
+                  <text x="532" y="420">document]]</text>
+                  <text x="40" y="436">usage</text>
+                  <text x="72" y="436">=</text>
+                  <text x="100" y="436">c509</text>
                 </g>
               </svg><a href="#section-9.20-4.1.1" class="pilcrow">¶</a>
 </div>
@@ -6740,10 +6774,8 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
               <path d="M 8,128 L 552,128" fill="none" stroke="black"></path>
               <g class="text">
                 <text x="40" y="52">Tag</text>
-                <text x="96" y="52">X.509</text>
-                <text x="148" y="52">Public</text>
-                <text x="192" y="52">Key</text>
-                <text x="252" y="52">Algorithms</text>
+                <text x="92" y="52">CBOR</text>
+                <text x="132" y="52">Tags</text>
                 <text x="36" y="84">TBD6</text>
                 <text x="92" y="84">Data</text>
                 <text x="136" y="84">Item:</text>
@@ -6891,6 +6923,14 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="RFC7030">[RFC7030]</dt>
         <dd>
 <span class="refAuthor">Pritikin, M., Ed.</span>, <span class="refAuthor">Yee, P., Ed.</span>, and <span class="refAuthor">D. Harkins, Ed.</span>, <span class="refTitle">"Enrollment over Secure Transport"</span>, <span class="seriesInfo">RFC 7030</span>, <span class="seriesInfo">DOI 10.17487/RFC7030</span>, <time datetime="2013-10" class="refDate">October 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7030">https://www.rfc-editor.org/rfc/rfc7030</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7120">[RFC7120]</dt>
+        <dd>
+<span class="refAuthor">Cotton, M.</span>, <span class="refTitle">"Early IANA Allocation of Standards Track Code Points"</span>, <span class="seriesInfo">BCP 100</span>, <span class="seriesInfo">RFC 7120</span>, <span class="seriesInfo">DOI 10.17487/RFC7120</span>, <time datetime="2014-01" class="refDate">January 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7120">https://www.rfc-editor.org/rfc/rfc7120</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8126">[RFC8126]</dt>
+        <dd>
+<span class="refAuthor">Cotton, M.</span>, <span class="refAuthor">Leiba, B.</span>, and <span class="refAuthor">T. Narten</span>, <span class="refTitle">"Guidelines for Writing an IANA Considerations Section in RFCs"</span>, <span class="seriesInfo">BCP 26</span>, <span class="seriesInfo">RFC 8126</span>, <span class="seriesInfo">DOI 10.17487/RFC8126</span>, <time datetime="2017-06" class="refDate">June 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8126">https://www.rfc-editor.org/rfc/rfc8126</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
@@ -7288,7 +7328,7 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 <a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-examples-c509certificate-an" class="section-name selfRef">Examples: C509Certificate and C509CertData</a>
           </h4>
 <p id="appendix-A.1.5-1">This section examplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a>.<a href="#appendix-A.1.5-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 25</a> shows the encoding of the corresponding C509Certificate, i.e. the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 25</a> shows the encoding of the corresponding C509Certificate, i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
 <span id="name-c509certificate-the-cbor-ar"></span><div id="fig-C509Certificate">
 <figure id="figure-25">
             <div class="alignLeft art-text artwork" id="appendix-A.1.5-3.1">
@@ -7315,7 +7355,7 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
             </figcaption></figure>
 </div>
 <p id="appendix-A.1.5-4">Note that C509Certificate is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).<a href="#appendix-A.1.5-4" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 26</a> shows the encoding of the corresponding C509CertData, i.e. the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 26</a> shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
 <span id="name-c509certdata-cbor-byte-stri"></span><div id="fig-C509CertData">
 <figure id="figure-26">
             <div class="alignLeft art-text artwork" id="appendix-A.1.5-6.1">
