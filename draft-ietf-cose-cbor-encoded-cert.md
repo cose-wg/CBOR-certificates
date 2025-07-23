@@ -766,6 +766,7 @@ C509CertificateRequestTemplate = [
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
+   subjectPublicKey: undefined
    extensionsRequest: ExtensionsTemplate,
 ]
 
@@ -785,11 +786,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. This makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. This makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Note that the subjectPublicKey field has the value undefined.
 
  Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
+The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
 # C509 Processing and Certificate Issuance
 
