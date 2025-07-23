@@ -591,9 +591,12 @@ The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-head
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ cddl
-COSE_C509 = C509Certificate / [ 2* C509Certificate ]
+COSE_C509 = C509CertData / [ 2* C509CertData ]
+C509CertData = bytes .cbor C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
+
+C509CertData thus includes the CBOR array wrapped as a CBOR byte string, see {{other-examples}} for an example.
 
 The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate.
 
@@ -2507,6 +2510,56 @@ subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 ~~~~~~~~~~~
 
+### Examples: C509Certificate and C509CertData {#other-examples}
+
+This section examplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in {{example-native}}.
+
+{{fig-C509Certificate}} shows the encoding of the corresponding C509Certificate, i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate, see {{message-fields}}.
+
+~~~~~~~~~~~
+8B
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+~~~~~~~~~~~
+{: #fig-C509Certificate title="C509Certificate: The CBOR array wrapping of ~C509Certificate"}
+
+Note that C509Certificate is identical to ~C509Certificate in {{example-native}} except for the prefix 8B (which indicates a CBOR array with 11 elements).
+
+{{fig-C509CertData}} shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR array C509Certificate, see {{cose-header-params}}.
+
+~~~~~~~~~~~
+58 8D
+8B
+02
+43 01 F5 0D
+00
+6B 52 46 43 20 74 65 73 74 20 43 41
+1A 63 B0 CD 00
+1A 69 55 B9 00
+D8 30 46 01 23 45 67 89 AB
+01
+58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
+5E D4 44 50 B1 01 9C 2D FD 38 38 AB
+01
+58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
+DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
+BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
+~~~~~~~~~~~
+{: #fig-C509CertData title="C509CertData: The CBOR byte string wrapping of C509Certificate."}
+
+Note that C509CertData is identical to C509Certificate in {{fig-C509Certificate}} except for the prefix 58 8D (which indicates CBOR byte string of 141 bytes).
 
 ## Example: IEEE 802.1AR profiled X.509 Certificate
 
