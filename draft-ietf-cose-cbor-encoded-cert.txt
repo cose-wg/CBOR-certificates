@@ -23,9 +23,10 @@ Abstract
    encoding supports a large subset of RFC 5280 and all certificates
    compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI,
    GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles.
-   C509 is deployed in, e.g., Unmanned Aircraft Systems (UAS) and Global
-   Navigation Satellite System (GNSS).  When used to re-encode DER
-   encoded X.509 certificates, the CBOR encoding can in many cases
+   C509 is deployed in different settings including, in-vehicle and
+   vehicle-to-cloud communication, Unmanned Aircraft Systems (UAS) and
+   Global Navigation Satellite System (GNSS).  When used to re-encode
+   DER encoded X.509 certificates, the CBOR encoding can in many cases
    reduce the size of RFC 7925 profiled certificates by over 50% while
    also significantly reducing memory and code size compared to ASN.1.
    The CBOR encoded structure can alternatively be signed directly
