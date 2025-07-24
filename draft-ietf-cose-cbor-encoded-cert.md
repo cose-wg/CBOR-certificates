@@ -551,7 +551,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~ cddl
    SignedCertificateTimestamp = (
      logID: bytes,
-     timestamp: uint,
+     timestamp: int,
      sigAlg: AlgorithmIdentifier,
      sigValue: any,
    )
