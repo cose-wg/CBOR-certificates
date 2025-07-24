@@ -2317,7 +2317,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 | cose-certhash        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
-  cose-certhash;       | -       | [[link to 9.20]] | TBD17 |   document]] |
+| cose-certhash;       | -       | [[link to 9.20]] | TBD17 |   document]] |
 | usage = c509         |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
 ~~~~~~~~~~~
