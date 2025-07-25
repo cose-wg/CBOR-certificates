@@ -1095,14 +1095,15 @@ Table of Contents
    specify what it expects the EST client to include in a subsequent
    Certificate Signing Request (CSR).  Alternatively to the unstructured
    mechanism specified in [RFC7030], Appendix B of [RFC8295] describes
-   an approach using a CSR template: In response to GET /csrattrs by the
-   EST client, the EST server returns an entire CSR object with various
-   fields filled out, and other fields waiting to be filled in by the
-   EST client.
+   an approach using a Certificate Request Template in response to a GET
+   /csrattrs request by the EST client.  The EST server thus returns an
+   Certificate Request-like object with various fields filled out, and
+   other fields waiting to be filled in and a signature to be added by
+   the EST client.
 
    For C509 we follow the approach of [RFC8295].  The
-   C509CertificateRequestTemplate is based on TBSCertificateRequest of
-   the C509CertificateRequest, see Figure 2, which excludes the
+   C509CertificateRequestTemplate is based on TBSCertificatdsveRequest
+   of the C509CertificateRequest, see Figure 2, but excludes the
    subjectSignatureValue field from the template since that needs no
    further specification.
 
@@ -1135,9 +1136,10 @@ Table of Contents
 
    Except as specified in this section, the fields have the same
    encoding as the corresponding fields of the TBSCertificateRequest,
-   see Figure 2.  This makes use of the CBOR simple value undefined
-   (0xf7) to indicate fields to fill in.  Note that the subjectPublicKey
-   field has the value undefined.
+   see Figure 2.  The specification of the template makes use of the
+   CBOR simple value undefined (0xf7) to indicate fields to fill in.
+   Consistent with this rule, note that the subjectPublicKey field
+   always has the value undefined in the template.
 
    Different types of Certificate Request Templates can be defined (see
    Section 9.4), distinguished by the c509CertificateRequestTemplateType
