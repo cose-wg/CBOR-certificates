@@ -592,13 +592,13 @@ The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ cddl
 COSE_C509 = C509CertData / [ 2* C509CertData ]
-C509CertData = bytes .cborseq C509Certificate
+C509CertData = bytes .cbor C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate, see {{other-examples}} for an example.
+C509CertData thus includes the CBOR array wrapped as a CBOR byte string, see {{other-examples}} for an example.
 
-The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus C509CertData contains all data necessary to calculate the thumbprint c5t.
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate.
 
 c5u provides an alternative way to identify an untrusted certificate bag/chain by reference with a URI.
 
@@ -609,7 +609,7 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | Name | Label | Value Type | Description |
 | c5b | 24 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t | 22 | COSE_CertHash | Hash of a ~C509Certificate |
+| c5t | 22 | COSE_CertHash | Hash of a C509Certificate |
 | c5u | 23 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
 {: #iana-header title="COSE Header Parameters" cols="r l l l"}
 
@@ -2325,7 +2325,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).
+This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> contains the CBOR array C509Certificate.
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
@@ -2582,12 +2582,13 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 ~~~~~~~~~~~
 {: #fig-C509Certificate title="C509Certificate: The CBOR array wrapping of ~C509Certificate"}
 
-Note that C509Certificate is identical to ~C509Certificate in {{example-native}} except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).
+Note that C509Certificate is identical to ~C509Certificate in {{example-native}} except for the prefix 8B (which indicates a CBOR array with 11 elements).
 
-{{fig-C509CertData}} shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see {{cose-header-params}}.
+{{fig-C509CertData}} shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR array C509Certificate, see {{cose-header-params}}.
 
 ~~~~~~~~~~~
-58 8C
+58 8D
+8B
 02
 43 01 F5 0D
 00
@@ -2603,10 +2604,9 @@ D8 30 46 01 23 45 67 89 AB
 DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 ~~~~~~~~~~~
-{: #fig-C509CertData title="C509CertData: CBOR byte string wrapping of ~C509Certificate."}
+{: #fig-C509CertData title="C509CertData: The CBOR byte string wrapping of C509Certificate."}
 
-Note that C509CertData is identical to ~C509Certificate in {{example-native}} except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).
-
+Note that C509CertData is identical to C509Certificate in {{fig-C509Certificate}} except for the prefix 58 8D (which indicates CBOR byte string of 141 bytes).
 
 ## Example: IEEE 802.1AR profiled X.509 Certificate
 
