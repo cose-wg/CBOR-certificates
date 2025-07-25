@@ -24,7 +24,7 @@ Abstract
    compatible with the RFC 7925, IEEE 802.1AR (DevID), CNSA 1.0, RPKI,
    GSMA eUICC, and CA/Browser Forum Baseline Requirements profiles.
    C509 is deployed in different settings including, in-vehicle and
-   vehicle-to-cloud communication, Unmanned Aircraft Systems (UAS) and
+   vehicle-to-cloud communication, Unmanned Aircraft Systems (UAS), and
    Global Navigation Satellite System (GNSS).  When used to re-encode
    DER encoded X.509 certificates, the CBOR encoding can in many cases
    reduce the size of RFC 7925 profiled certificates by over 50% while
@@ -199,13 +199,14 @@ Table of Contents
    (DevID), CAB Baseline [CAB-TLS], [CAB-Code], RPKI [RFC6487], eUICC
    [GSMA-eUICC] profiled X.509 certificates, and is designed to render a
    compact encoding of certificates used in constrained environments.
-   C509 is deployed in, e.g., Unmanned Aircraft Systems (UAS) and Global
-   Navigation Satellite System (GNSS).  When used to re-encode DER
-   encoded X.509 certificates, the CBOR encoding can in many cases
-   reduce the size of RFC 7925 profiled certificates by over 50% while
-   also significantly reducing memory and code size compared to ASN.1.
-   C509 is not a general CBOR ecoding for Abstract Syntax Notation One
-   (ASN.1) data structures.
+   C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud
+   communication, Unmanned Aircraft Systems (UAS), and Global Navigation
+   Satellite System (GNSS).  When used to re-encode DER encoded X.509
+   certificates, the CBOR encoding can in many cases reduce the size of
+   RFC 7925 profiled certificates by over 50% while also significantly
+   reducing memory and code size compared to ASN.1.  C509 is not a
+   general CBOR ecoding for Abstract Syntax Notation One (ASN.1) data
+   structures.
 
    C509 is designed to be extensible to additional features of X.509,
    for example support for new algorithms, including new post-quantum
