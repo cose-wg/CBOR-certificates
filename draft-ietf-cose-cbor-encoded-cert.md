@@ -559,9 +559,9 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL, it can be CBOR encoded. The CBOR encoded extensionValue is the empty byte string h''.
+* OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL, it can be CBOR encoded. The CBOR encoded extensionValue is the value null.
 
-* Precertificate Signing Certificate. The CBOR encoded extensionValue is the empty byte string h''.
+* Precertificate Signing Certificate. The CBOR encoded extensionValue is the value null.
 
 * TLS Features (id-pe-tlsfeature). The extensionValue is encoded as an array of integers, where each integer represents a TLS extension.
 
