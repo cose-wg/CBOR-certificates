@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 24 January 2026                                      J. Höglund
+Expires: 26 January 2026                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            23 July 2025
+                                                            25 July 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -65,7 +65,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 January 2026.
+   This Internet-Draft will expire on 26 January 2026.
 
 Copyright Notice
 
@@ -1102,9 +1102,9 @@ Table of Contents
 
    For C509 we follow the approach of [RFC8295].  The
    C509CertificateRequestTemplate is based on TBSCertificateRequest of
-   the C509CertificateRequest, see Figure 2, which excludes the
-   subjectSignatureValue field from the template since that needs no
-   further specification.
+   the C509CertificateRequest, see Figure 2, but excludes
+   subjectPublicKey field from the template since that needs no further
+   specification.
 
    The C509 Certificate Request Template is shown in Figure 4.
 
@@ -1114,7 +1114,6 @@ Table of Contents
       subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
       subject: NameTemplate,
       subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
-      subjectPublicKey: undefined
       extensionsRequest: ExtensionsTemplate,
    ]
 
@@ -1136,8 +1135,7 @@ Table of Contents
    Except as specified in this section, the fields have the same
    encoding as the corresponding fields of the TBSCertificateRequest,
    see Figure 2.  This makes use of the CBOR simple value undefined
-   (0xf7) to indicate fields to fill in.  Note that the subjectPublicKey
-   field has the value undefined.
+   (0xf7) to indicate fields to fill in.
 
    Different types of Certificate Request Templates can be defined (see
    Section 9.4), distinguished by the c509CertificateRequestTemplateType
