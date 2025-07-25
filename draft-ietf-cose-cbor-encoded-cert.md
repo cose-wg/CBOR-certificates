@@ -753,20 +753,20 @@ In natively signed requests (types 0 and 2), a positive extensionID is used. In 
 
 ## Certificate Request Template {#CRT}
 
-Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a CSR template: In response to GET /csrattrs by the EST client, the EST server returns an entire CSR object with various fields filled out, and other fields waiting to be filled in by the EST client.
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certificate Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns an Certificate Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
 
-For C509 we follow the approach of {{RFC8295}}. The C509CertificateRequestTemplate is based on TBSCertificateRequest of the C509CertificateRequest, see {{fig-C509CSRCDDL}}, which excludes the subjectSignatureValue field from the template since that needs no further specification.
+For C509 we follow the approach of {{RFC8295}}. The C509CertificateRequestTemplate is based on TBSCertificatdsveRequest of the C509CertificateRequest, see {{fig-C509CSRCDDL}}, but excludes the subjectSignatureValue field from the template since that needs no further specification.
 
 The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
 ~~~~~~~~~~~ cddl
 C509CertificateRequestTemplate = [
    c509CertificateRequestTemplateType: int,
-   c509CertificateRequestType: int / undefined,
-   subjectSignatureAlgorithm: AlgorithmIdentifier / undefined,
+   c509CertificateRequestType: [+ int] / undefined,
+   subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate,
-   subjectPublicKeyAlgorithm: AlgorithmIdentifier / undefined,
-   subjectPublicKey: any,
+   subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
+   subjectPublicKey: undefined
    extensionsRequest: ExtensionsTemplate,
 ]
 
@@ -786,11 +786,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. This makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. The specification of the template makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Consistent with this rule, note that the subjectPublicKey field always has the value undefined in the template.
 
  Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects this value to be used in the certificate request by the EST client. The presence of a undefined value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to replace it with a relevant value for that field, following the same procedure as in {{I-D.ietf-lamps-rfc7030-csrattrs}}. In case the EST server requires use of an RSA key and needs to specify its size, the field MUST be present and contain a placeholder public key value of the desired RSA modulus length. In case the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
+The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the EST server expects the EST client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the EST client is expected to provide an appropriate value for that field. For example, if the EST server includes a subjectAltName with a partially filled extensionValue, such as iPAddress with an empty byte string, this means that the client SHOULD fill in the corresponding GeneralName value.
 
 The media type of C509CertificateRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is composed of the reserved CBOR tag 55799 concatenated with the CBOR tag calculated from the CoAP Content-Format value, see {{RFC9277}}.
 
