@@ -1306,14 +1306,14 @@ IANA has created a new registry titled "C509 Extensions Registry" under the new 
 |       | OID:             1.3.6.1.5.5.7.48.1.5                     |
 |       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
 |       | Comments:                                                 |
-|       | extensionValue:  h''                                      |
+|       | extensionValue:  null                                     |
 +-------+-----------------------------------------------------------+
 |    37 | Name:            Precertificate Signing Certificate       |
 |       | Identifiers:                                              |
 |       | OID:             1.3.6.1.4.1.11129.2.4.3                  |
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 03      |
 |       | Comments:        RFC 6962                                 |
-|       | extensionValue:  h''                                      |
+|       | extensionValue:  null                                     |
 +-------+-----------------------------------------------------------+
 |    38 | Name:            TLS Features                             |
 |       | Identifiers:     id-pe-tlsfeature                         |
