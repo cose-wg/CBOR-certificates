@@ -2325,7 +2325,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> contains the byte string C509CertData.
+This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
