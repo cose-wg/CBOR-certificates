@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 26 January 2026                                      J. Höglund
+Expires: 27 January 2026                                      J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                              Nexus Group
-                                                            25 July 2025
+                                                            26 July 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 January 2026.
+   This Internet-Draft will expire on 27 January 2026.
 
 Copyright Notice
 
@@ -105,7 +105,7 @@ Table of Contents
    9.  IANA Considerations
      9.1.  C509 Certificate Types Registry
      9.2.  C509 Certificate Request Types Registry
-     9.3.  C509 Private Key Types
+     9.3.  C509 Private Key Types Registry
      9.4.  C509 Certificate Request Templates Types Registry
      9.5.  C509 Attributes Registry
      9.6.  C509 Extensions Registry
@@ -117,17 +117,12 @@ Table of Contents
      9.12. C509 Signature Algorithms Registry
      9.13. C509 Public Key Algorithms Registry
      9.14. COSE Header Parameters Registry
-     9.15. Media Type application/cose-c509-cert
-     9.16. Media Type application/cose-c509-pkcs10
-     9.17. Media Type application/cose-c509-crtemplate
-     9.18. Media Type application/cose-c509-privkey
-     9.19. Media Type application/cose-c509-pem
-     9.20. Media Type application/cose-certhash
-     9.21. CoAP Content-Formats Registry
-     9.22. TLS Certificate Types Registry
-     9.23. CBOR Tags Registry
-     9.24. TLSA Selectors Registry
-     9.25. EDHOC Authentication Credential Types Registry
+     9.15. Media Type Application Registry
+     9.16. CoAP Content-Formats Registry
+     9.17. TLS Certificate Types Registry
+     9.18. CBOR Tags Registry
+     9.19. TLSA Selectors Registry
+     9.20. EDHOC Authentication Credential Types Registry
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -238,7 +233,7 @@ Table of Contents
    Section 4; COSE headers for use of the C509 certificates with COSE,
    see Section 9.14; a TLS certificate type for use of the C509
    certificates with TLS and QUIC (with or without additional TLS
-   certificate compression), see Section 9.22; and a C509 file format.
+   certificate compression), see Section 9.17; and a C509 file format.
    The TLSA selectors registry is extended to include C509 certificates,
    thus this document updates [RFC6698].
 
@@ -821,9 +816,9 @@ Table of Contents
    chain by reference with a URI [RFC3986], encoded as a CBOR text
    string (media type application/cbor and CoAP Content-Format 60).  The
    referenced resource is a COSE_C509 item served with the application/
-   cose-c509-cert media type ("usage" = "chain"), see Section 9.15, with
-   corresponding CoAP Content-Format defined in Section 9.21.  A stored
-   file format is defined in [RFC9277], with "magic number" TBD8
+   cose-c509-cert media type ("usage" = "chain"), see Section 9.15.1,
+   with corresponding CoAP Content-Format defined in Section 9.16.  A
+   stored file format is defined in [RFC9277], with "magic number" TBD8
    composed of the reserved CBOR tag 55799 concatenated with the CBOR
    tag calculated from the CoAP Content-Format value.
 
@@ -844,8 +839,8 @@ Table of Contents
    bag/chain by reference with a URI.
 
    The COSE_C509 item has media type application/cose-c509-cert, see
-   Section 9.15, with corresponding CoAP Content-Format defined in
-   Section 9.21.  A stored file format is defined in [RFC9277], with
+   Section 9.15.1, with corresponding CoAP Content-Format defined in
+   Section 9.16.  A stored file format is defined in [RFC9277], with
    "magic number" TBD8 composed of the reserved CBOR tag 55799
    concatenated with the CBOR tag calculated from the CoAP Content-
    Format value.
@@ -902,8 +897,8 @@ Table of Contents
    that have a C509 AlgorithmIdentifier defined.
 
    The C509PrivateKey item is served with the application/cose-
-   c509-privkey media type, see Section 9.18, with corresponding CoAP
-   Content-Format defined in Section 9.21.  A stored file format is
+   c509-privkey media type, see Section 9.15.4, with corresponding CoAP
+   Content-Format defined in Section 9.16.  A stored file format is
    defined in [RFC9277], with "magic number" TBD12 composed of the
    reserved CBOR tag 55799 concatenated with the CBOR tag calculated
    from the CoAP Content-Format value.
@@ -914,8 +909,8 @@ Table of Contents
    ]
 
    The C509PEM item is served with the application/cose-c509-pem media
-   type, see Section 9.19, with corresponding CoAP Content-Format
-   defined in Section 9.21.  A stored file format is defined in
+   type, see Section 9.15.5, with corresponding CoAP Content-Format
+   defined in Section 9.16.  A stored file format is defined in
    [RFC9277], with "magic number" TBD13 composed of the reserved CBOR
    tag 55799 concatenated with the CBOR tag calculated from the CoAP
    Content-Format value.
@@ -981,10 +976,10 @@ Table of Contents
    compatibility with existing procedures and code.
 
    The media type of C509CertificateRequest is application/cose-
-   c509-pkcs10, see Section 9.16, with corresponding CoAP Content-Format
-   defined in Section 9.21.  The "magic number" TBD9 is composed of the
-   reserved CBOR tag 55799 concatenated with the CBOR tag calculated
-   from the CoAP Content-Format value, see [RFC9277].
+   c509-pkcs10, see Section 9.15.2, with corresponding CoAP Content-
+   Format defined in Section 9.16.  The "magic number" TBD9 is composed
+   of the reserved CBOR tag 55799 concatenated with the CBOR tag
+   calculated from the CoAP Content-Format value, see [RFC9277].
 
 4.1.  Certificate Request Types
 
@@ -1161,8 +1156,8 @@ Table of Contents
    client SHOULD fill in the corresponding GeneralName value.
 
    The media type of C509CertificateRequestTemplate is application/cose-
-   c509-crtemplate, see Section 9.17, with corresponding CoAP Content-
-   Format defined in Section 9.21.  The "magic number" TBD18 is composed
+   c509-crtemplate, see Section 9.15.3, with corresponding CoAP Content-
+   Format defined in Section 9.16.  The "magic number" TBD18 is composed
    of the reserved CBOR tag 55799 concatenated with the CBOR tag
    calculated from the CoAP Content-Format value, see [RFC9277].
 
@@ -1397,7 +1392,7 @@ Table of Contents
 
                   Figure 8: C509 Certificate Request Types
 
-9.3.  C509 Private Key Types
+9.3.  C509 Private Key Types Registry
 
    IANA has created a new registry titled "C509 Private Key Types" under
    the new heading "CBOR Encoded X.509 (C509) Parameters".  The fields
@@ -2581,13 +2576,17 @@ Table of Contents
    Header Parameters" registry under the "CBOR Object Signing and
    Encryption (COSE)" heading with this document as reference.
 
-9.15.  Media Type application/cose-c509-cert
+9.15.  Media Type Application Registry
+
+   IANA is requested to assign the following entries in to the
+   "application" registry under the "Media Types" heading with this
+   document as reference.
+
+9.15.1.  Media Type application/cose-c509-cert
 
    When the application/cose-c509-cert media type is used, the data is a
    COSE_C509 structure.  If the parameter "usage" is set to "chain",
    this sequence indicates a certificate chain.
-
-   IANA has registered the following media type [RFC6838]:
 
    Type name: application
 
@@ -2638,12 +2637,10 @@ Table of Contents
 
    Change controller: IETF
 
-9.16.  Media Type application/cose-c509-pkcs10
+9.15.2.  Media Type application/cose-c509-pkcs10
 
    When the application/cose-c509-pkcs10 media type is used, the data is
    a C509CertificateRequest structure.
-
-   IANA has registered the following media type [RFC6838]:
 
    Type name: application
 
@@ -2688,12 +2685,10 @@ Table of Contents
 
    Change controller: IETF
 
-9.17.  Media Type application/cose-c509-crtemplate
+9.15.3.  Media Type application/cose-c509-crtemplate
 
    When the application/cose-c509-crtemplate media type is used, the
    data is a C509CertificateRequestTemplate structure.
-
-   IANA has registered the following media type [RFC6838]:
 
    Type name: application
 
@@ -2738,12 +2733,10 @@ Table of Contents
 
    Change controller: IETF
 
-9.18.  Media Type application/cose-c509-privkey
+9.15.4.  Media Type application/cose-c509-privkey
 
    When the application/cose-c509-privkey media type is used, the data
    is a C509PrivateKey structure.
-
-   IANA has registered the following media type [RFC6838]:
 
    Type name: application
 
@@ -2788,12 +2781,10 @@ Table of Contents
 
    Change controller: IETF
 
-9.19.  Media Type application/cose-c509-pem
+9.15.5.  Media Type application/cose-c509-pem
 
    When the application/cose-c509-pem media type is used, the data is a
    C509PEM structure.
-
-   IANA has registered the following media type [RFC6838]:
 
    Type name: application
 
@@ -2838,12 +2829,10 @@ Table of Contents
 
    Change controller: IETF
 
-9.20.  Media Type application/cose-certhash
+9.15.6.  Media Type application/cose-certhash
 
    When the application/cose-certhash media type is used, the data is a
    COSE_CertHash structure, see [RFC9360].
-
-   IANA has registered the following media type [RFC6838]:
 
    Type name: application
 
@@ -2894,7 +2883,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.21.  CoAP Content-Formats Registry
+9.16.  CoAP Content-Formats Registry
 
    IANA is requested to add entries for "application/cose-c509-cert",
    "application/cose-c509-pkcs10", "application/cose-c509-crtemplate",
@@ -2903,13 +2892,13 @@ Table of Contents
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested for the "application/cose-c509-cert"
    media type in the case when the parameter "usage" is set to "chain",
-   see Section 9.15.
+   see Section 9.15.1.
 
    IANA is requested to add entries for "application/cose-certhash" to
    the "CoAP Content-Formats" registry under the registry group
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested in the case when the parameter "usage"
-   is set to "c509", see Section 9.15.
+   is set to "c509", see Section 9.15.1.
 
    IANA is requested to add entries for "application/cbor" to the "CoAP
    Content-Formats" registry under the registry group "Constrained
@@ -2949,7 +2938,7 @@ Table of Contents
 
                   Figure 20: CoAP Content-Format IDs
 
-9.22.  TLS Certificate Types Registry
+9.17.  TLS Certificate Types Registry
 
    This document registers the following entry in the "TLS Certificate
    Types" registry under the "Transport Layer Security (TLS) Extensions"
@@ -2965,7 +2954,7 @@ Table of Contents
    |  TBD5 | C509 Certificate |           Y |                          |
    +-------+------------------+-------------+--------------------------+
 
-9.23.  CBOR Tags Registry
+9.18.  CBOR Tags Registry
 
    This document registers the following entries in the "CBOR Tags"
    registry under the "Concise Binary Object Representation (CBOR) Tags"
@@ -2979,7 +2968,7 @@ Table of Contents
    |      | Reference: This document                                   |
    +------+------------------------------------------------------------+
 
-9.24.  TLSA Selectors Registry
+9.19.  TLSA Selectors Registry
 
    This document registers the following entries in the "TLSA Selectors"
    registry under the "DNS-Based Authentication of Named Entities (DANE)
@@ -2996,7 +2985,7 @@ Table of Contents
    specification updates [RFC6698] to accept the use of C509
    certificates, which are essentially CBOR encoded PKIX certificates.
 
-9.25.  EDHOC Authentication Credential Types Registry
+9.20.  EDHOC Authentication Credential Types Registry
 
    This document registers the following entry in the "EDHOC
    Authentication Credential Types" registry under the "Ephemeral
