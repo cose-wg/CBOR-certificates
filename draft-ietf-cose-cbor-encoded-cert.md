@@ -918,7 +918,7 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 {: #fig-csr-types title="C509 Certificate Request Types"}
 {: artwork-align="center"}
 
-## C509 Private Key Types {#privkeys}
+## C509 Private Key Types Registry {#privkeys}
 
 IANA has created a new registry titled "C509 Private Key Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
@@ -2018,10 +2018,12 @@ The public key algorithms registry {{pkalg}} specifies a number of algorithms, n
 
 IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry under the "CBOR Object Signing and Encryption (COSE)" heading with this document as reference.
 
-## Media Type application/cose-c509-cert {#c509-cert}
-When the application/cose-c509-cert media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+## Media Type Application Registry
 
-IANA has registered the following media type {{RFC6838}}:
+IANA is requested to assign the following entries in to the "application" registry under the "Media Types" heading with this document as reference.
+
+### Media Type application/cose-c509-cert {#c509-cert}
+When the application/cose-c509-cert media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
 
 Type name: application
 
@@ -2067,10 +2069,8 @@ Author: COSE WG
 Change controller: IETF
 
 
-## Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
+### Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
 When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificateRequest structure.
-
-IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
 
@@ -2109,10 +2109,8 @@ Author: COSE WG
 
 Change controller: IETF
 
-## Media Type application/cose-c509-crtemplate {#c509-crtemplate}
+### Media Type application/cose-c509-crtemplate {#c509-crtemplate}
 When the application/cose-c509-crtemplate media type is used, the data is a C509CertificateRequestTemplate structure.
-
-IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
 
@@ -2151,10 +2149,8 @@ Author: COSE WG
 
 Change controller: IETF
 
-## Media Type application/cose-c509-privkey {#c509-privkey}
+### Media Type application/cose-c509-privkey {#c509-privkey}
 When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.
-
-IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
 
@@ -2193,10 +2189,8 @@ Author: COSE WG
 
 Change controller: IETF
 
-## Media Type application/cose-c509-pem {#c509-pem}
+### Media Type application/cose-c509-pem {#c509-pem}
 When the application/cose-c509-pem media type is used, the data is a C509PEM structure.
-
-IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
 
@@ -2235,10 +2229,8 @@ Author: COSE WG
 
 Change controller: IETF
 
-## Media Type application/cose-certhash {#cose-certhash}
+### Media Type application/cose-certhash {#cose-certhash}
 When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see {{RFC9360}}.
-
-IANA has registered the following media type {{RFC6838}}:
 
 Type name: application
 
