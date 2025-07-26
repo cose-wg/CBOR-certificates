@@ -1276,10 +1276,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.9.2.16.1"><a href="#section-9.16" class="auto internal xref">9.16</a>. <a href="#name-coap-content-formats-regist" class="internal xref">CoAP Content-Formats Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.17">
-                <p id="section-toc.1-1.9.2.17.1"><a href="#section-9.17" class="auto internal xref">9.17</a>. <a href="#name-tls-certificate-types-regis" class="internal xref">TLS Certificate Types Registry</a></p>
+                <p id="section-toc.1-1.9.2.17.1"><a href="#section-9.17" class="auto internal xref">9.17</a>. <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.18">
-                <p id="section-toc.1-1.9.2.18.1"><a href="#section-9.18" class="auto internal xref">9.18</a>. <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
+                <p id="section-toc.1-1.9.2.18.1"><a href="#section-9.18" class="auto internal xref">9.18</a>. <a href="#name-tls-certificate-types-regis" class="internal xref">TLS Certificate Types Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.19">
                 <p id="section-toc.1-1.9.2.19.1"><a href="#section-9.19" class="auto internal xref">9.19</a>. <a href="#name-tlsa-selectors-registry" class="internal xref">TLSA Selectors Registry</a></p>
@@ -1351,7 +1351,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
       </ol>
 <p id="section-1-9">Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10">This document also specifies C509 Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.14</a>; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.17</a>; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-10">This document also specifies C509 Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.14</a>; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.18</a>; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -6741,47 +6741,14 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 </div>
 </section>
 </div>
-<div id="tls">
+<div id="tags">
 <section id="section-9.17">
-        <h3 id="name-tls-certificate-types-regis">
-<a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
+        <h3 id="name-cbor-tags-registry">
+<a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
         </h3>
-<p id="section-9.17-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.17-1" class="pilcrow">¶</a></p>
+<p id="section-9.17-1">This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.<a href="#section-9.17-1" class="pilcrow">¶</a></p>
 <div id="section-9.17-2">
           <div class="alignLeft art-svg artwork" id="section-9.17-2.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-              <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
-              <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
-              <path d="M 224,32 L 224,96" fill="none" stroke="black"></path>
-              <path d="M 336,32 L 336,96" fill="none" stroke="black"></path>
-              <path d="M 552,32 L 552,96" fill="none" stroke="black"></path>
-              <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
-              <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
-              <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
-              <path d="M 8,96 L 552,96" fill="none" stroke="black"></path>
-              <g class="text">
-                <text x="40" y="52">Value</text>
-                <text x="100" y="52">Name</text>
-                <text x="280" y="52">Recommended</text>
-                <text x="376" y="52">Comment</text>
-                <text x="44" y="84">TBD5</text>
-                <text x="100" y="84">C509</text>
-                <text x="168" y="84">Certificate</text>
-                <text x="320" y="84">Y</text>
-              </g>
-            </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
-</div>
-</div>
-</section>
-</div>
-<div id="tags">
-<section id="section-9.18">
-        <h3 id="name-cbor-tags-registry">
-<a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
-        </h3>
-<p id="section-9.18-1">This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.<a href="#section-9.18-1" class="pilcrow">¶</a></p>
-<div id="section-9.18-2">
-          <div class="alignLeft art-svg artwork" id="section-9.18-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="560" viewBox="0 0 560 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,128" fill="none" stroke="black"></path>
               <path d="M 64,32 L 64,128" fill="none" stroke="black"></path>
@@ -6808,6 +6775,39 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="116" y="116">Reference:</text>
                 <text x="180" y="116">This</text>
                 <text x="236" y="116">document</text>
+              </g>
+            </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
+</div>
+</div>
+</section>
+</div>
+<div id="tls">
+<section id="section-9.18">
+        <h3 id="name-tls-certificate-types-regis">
+<a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
+        </h3>
+<p id="section-9.18-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.18-1" class="pilcrow">¶</a></p>
+<div id="section-9.18-2">
+          <div class="alignLeft art-svg artwork" id="section-9.18-2.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+              <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
+              <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
+              <path d="M 224,32 L 224,96" fill="none" stroke="black"></path>
+              <path d="M 336,32 L 336,96" fill="none" stroke="black"></path>
+              <path d="M 552,32 L 552,96" fill="none" stroke="black"></path>
+              <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
+              <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
+              <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
+              <path d="M 8,96 L 552,96" fill="none" stroke="black"></path>
+              <g class="text">
+                <text x="40" y="52">Value</text>
+                <text x="100" y="52">Name</text>
+                <text x="280" y="52">Recommended</text>
+                <text x="376" y="52">Comment</text>
+                <text x="44" y="84">TBD5</text>
+                <text x="100" y="84">C509</text>
+                <text x="168" y="84">Certificate</text>
+                <text x="320" y="84">Y</text>
               </g>
             </svg><a href="#section-9.18-2.1" class="pilcrow">¶</a>
 </div>
