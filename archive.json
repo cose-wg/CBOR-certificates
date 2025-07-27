@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-24T02:18:14.491394+00:00",
+  "timestamp": "2025-07-27T02:27:57.327773+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -5628,12 +5628,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "waiting for input",
-        "low priority for core spec"
+        "needs PR"
       ],
       "body": "As specified in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00:\r\n\r\n```\r\npk-XMSS-HashSig PUBLIC-KEY ::= {\r\n   IDENTIFIER id-alg-xmss-hashsig\r\n   KEY XMSS-HashSig-PublicKey\r\n   PARAMS ARE absent\r\n   CERT-KEY-USAGE\r\n      { digitalSignature, nonRepudiation, keyCertSign, cRLSign } }\r\n\r\nXMSS-HashSig-PublicKey ::= OCTET STRING\r\n```\r\n\r\nAnd here the definition of SubjectPublicKeyInfo in RFC 5280\r\n```\r\n   SubjectPublicKeyInfo  ::=  SEQUENCE  {\r\n        algorithm            AlgorithmIdentifier,\r\n        subjectPublicKey     BIT STRING  }\r\n```\r\n\r\nShall the XMSS public key be an OCTET-STRING(public key bytes), or just the \"public key bytes\"?\r\n\r\nThis applies also to the XMSS-MT, HSS-LMS.\r\n\r\n",
       "createdAt": "2024-05-06T08:58:08Z",
-      "updatedAt": "2025-06-27T06:11:51Z",
+      "updatedAt": "2025-07-26T18:00:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -5663,6 +5662,20 @@
           "body": "A new Request for Comments is now available in online RFC libraries.\n\n       \n        RFC 9802\n\n        Title:      Use of the HSS and XMSS Hash-Based\n                    Signature Algorithms in Internet\n                    X.509 Public Key Infrastructure\n        Author:     D. Van Geest,\n                    K. Bashiri,\n                    S. Fluhrer,\n                    S. Gazdag,\n                    S. Kousidis\n        Status:     Standards Track\n        Stream:     IETF\n        Date:       June 2025\n        Mailbox:    [daniel.vangeest@cryptonext-security.com](mailto:daniel.vangeest@cryptonext-security.com),\n                    [kaveh.bashiri.ietf@gmail.com](mailto:kaveh.bashiri.ietf@gmail.com),\n                    [sfluhrer@cisco.com](mailto:sfluhrer@cisco.com),\n                    [ietf@gazdag.de](mailto:ietf@gazdag.de),\n                    [kousidis.ietf@gmail.com](mailto:kousidis.ietf@gmail.com)\n        Pages:      30\n        Updates/Obsoletes/SeeAlso:   None",
           "createdAt": "2025-06-27T06:11:50Z",
           "updatedAt": "2025-06-27T06:11:50Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "If these algorithms remain in the draft, then the format of public key needs to be documented. Otherwise they shall be removed from the draft.",
+          "createdAt": "2025-07-26T16:47:06Z",
+          "updatedAt": "2025-07-26T16:47:06Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, this should not have been closed. Needs PR was correct.",
+          "createdAt": "2025-07-26T18:00:09Z",
+          "updatedAt": "2025-07-26T18:00:09Z"
         }
       ]
     },
@@ -6205,7 +6218,7 @@
       "id": "I_kwDOCpt5cM6uKUxF",
       "title": "Media type for certificates by reference",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/226",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "malishav",
       "authorAssociation": "NONE",
       "assignees": [
@@ -6216,8 +6229,8 @@
       ],
       "body": "As just discussed during the IETF 122 Hackathon, we agreed on registering a new media type that indicates certificate by reference. This media type is to be used by `draft-ietf-ace-coap-est-oscore` draft during the negotiation in order to indicate support of the client for cert references. We discussed that it would make sense to have this media type indicate support for *any* kind of reference, i.e. irrespective whether it is `c5t` or `c5u`, as that would be equivalent from the point of view of a constrained device handling the certificate by reference (opaque binary blob of data without access to the actual certificate).\n\nSee https://github.com/ace-wg/est-oscore/issues/69",
       "createdAt": "2025-03-15T09:35:35Z",
-      "updatedAt": "2025-07-23T21:09:36Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-25T21:05:21Z",
+      "closedAt": "2025-07-25T21:05:21Z",
       "comments": [
         {
           "author": "gselander",
@@ -6267,6 +6280,13 @@
           "body": "Removed \"PR exists\", PR is needed ",
           "createdAt": "2025-07-20T06:52:23Z",
           "updatedAt": "2025-07-20T06:52:23Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "PR is merged.",
+          "createdAt": "2025-07-25T21:05:21Z",
+          "updatedAt": "2025-07-25T21:05:21Z"
         }
       ]
     },
@@ -6636,7 +6656,7 @@
       ],
       "body": "- In all document: do not mix-use `bstr`and `bytes`.\n- CDDL definition: ```*Type: int``` may be changed to ```*Type: uint``` if negative integer is not allowed.\n- Figure 17: C509 Signature Algorithms\n   For the algorithms 14, 15 and 16, `Requires recipient public key` --> `Requires recipient's public key`\n- Figure 18: Figure 18: C509 Public Key Algorithms\n   `compressed subjectPublicKey`: What is `compressed`here? For RSA public key, there is no `compressed`form, and for the Weierstra\u00df EC curve, both compressed form and uncompressed form are allowed.\n- Figure 15: C509 Extended Key Usages\n   The name for `19`: `Precertificate Signing Certificate` --> `Certificate Transparency`. As in RFC 6962:\n   ```\n   a special-purpose (CA:true, Extended Key Usage: Certificate\n   Transparency, OID 1.3.6.1.4.1.11129.2.4.4) Precertificate Signing\n   Certificate.\n   ```\n- Section \"3.6 Deterministic Encoding\"\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid,\n  extensionValue:bstr)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:any)-encoding.  One reason being\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```\n  to\n  ```\n  Native C509 certificates MUST only use specific CBOR encoded fields.\n  However, when decoding a non-native C509 certificates, the decoder\n  may need to support, for example, (extensionID:~oid, ***? critical: true,***\n  extensionValue:***bytes***)-encoding of an extension for which there is an\n  (extensionID:int, extensionValue:***NonNull***)-encoding.  One reason ***is***\n  that the certificate was issued before the specific CBOR extension\n  was registered.\n  ```",
       "createdAt": "2025-06-29T07:21:51Z",
-      "updatedAt": "2025-07-21T13:45:10Z",
+      "updatedAt": "2025-07-24T18:16:03Z",
       "closedAt": "2025-07-20T06:45:10Z",
       "comments": [
         {
@@ -6687,6 +6707,13 @@
           "body": "timestamp shall be changed from `uint` back to `int`, since the timestamp in the `SignedCertificateTimestamp`may be before certificate's notBefore due to time synchronization problem.",
           "createdAt": "2025-07-21T13:45:10Z",
           "updatedAt": "2025-07-21T13:45:10Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed in f49f7929",
+          "createdAt": "2025-07-24T18:16:03Z",
+          "updatedAt": "2025-07-24T18:16:03Z"
         }
       ]
     },
@@ -6801,12 +6828,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "PR exists",
         "low priority for core spec"
       ],
       "body": "When adding the support of a public key algorithm, we should make sure that the corresponding private key can also be stored in CBOR/COSE container `C509PrivateKey` defined in Section `3.5.  Private Key Structures`.\n\n```\n   C509PrivateKey = [\n      C509PrivateKeyType: int,\n      subjectPrivateKeyAlgorithm: AlgorithmIdentifier,\n      subjectPrivateKey: any,\n   ]\n```\n\nAs stated in https://www.iana.org/assignments/cose/cose.xhtml#key-type, there are still no `COSE Elliptic Curves` constants for the weierstra\u00df curve FRP256V1 and SM2P256V1.",
       "createdAt": "2025-06-29T18:22:42Z",
-      "updatedAt": "2025-07-20T06:58:52Z",
+      "updatedAt": "2025-07-24T07:22:31Z",
       "closedAt": null,
       "comments": [
         {
@@ -6827,13 +6853,11 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [
-        "PR exists"
-      ],
+      "labels": [],
       "body": "From draft -13 to -14, the syntax of extension value is changed from `any` to `NonNull`. And due to this change, the ASN.1 `NULL` is encoded now as `h''`. I am not sure this change is the best choice.\n\nI preferred to revert this change, since:\n- Converting ASN.1 `NULL` to CBOR `null`does not change the meaning, while to CBOR `h''`does.\n- Encoding as `h''` does not have less bytes compared to `null`.\n-  Encoding as `h''`does not cover the case where an extension may have both `NULL` and `OCTET STRING (0..MAX)`.",
       "createdAt": "2025-06-29T21:57:56Z",
-      "updatedAt": "2025-07-23T17:06:59Z",
-      "closedAt": "2025-07-23T17:06:59Z",
+      "updatedAt": "2025-07-25T16:48:18Z",
+      "closedAt": "2025-07-25T16:48:18Z",
       "comments": [
         {
           "author": "emanjon",
@@ -6876,6 +6900,20 @@
           "body": "PR merged",
           "createdAt": "2025-07-23T17:06:59Z",
           "updatedAt": "2025-07-23T17:06:59Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "In Figure for the extension IDs, the extension value for 36 (ocsp no check) and 37 (Precertificate Signing Certificate) shall also be changed from `h''` to `NULL`.\n\nAnd also in the following text block:\n```\n- OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL, it can be CBOR encoded.\n  The CBOR encoded extensionValue is the empty byte string h''.\n\n- Precertificate Signing Certificate. The CBOR encoded extensionValue is the empty byte string h''.\n```",
+          "createdAt": "2025-07-25T11:47:34Z",
+          "updatedAt": "2025-07-25T11:48:07Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good catch, fixed in main",
+          "createdAt": "2025-07-25T16:48:18Z",
+          "updatedAt": "2025-07-25T16:48:18Z"
         }
       ]
     },
@@ -6891,9 +6929,9 @@
       "labels": [
         "PR exists"
       ],
-      "body": "The corresponding data type for `X509Certificate` (or `Certificate` as in RFC 5280) is `C509Certificate`, but not the unwrapped one `~C509Certificate`, and the unwrapped one saves ONLY 1 byte. Please use `C509Certificate` instead the unwrapped one, especially in the following contexts:\n\n1. C509CertData\n   ```\n   The COSE_C509 structure used in c5b, c5c, and c5u is defined as:\n\n   COSE_C509 = C509CertData / [ 2* C509CertData ]\n   C509CertData = bstr .cborseq C509Certificate\n\n   C509CertData thus includes the unwrapped CBOR sequence,\n   ~C509Certificate, see Appendix A.1.5 for an example.\n   ```\n   The last block shall be changed to `C509CertData thus includes the CBOR sequence\n   C509Certificate, see Appendix A.1.5 for an example.`\n2. COSE_CertHash\n   ```\n   The value type of c5t is the COSE_CertHash structure defined in\n   [RFC9360], which contains the hash value of the C509 certificate\n   calculated over ~C509Certificate\n   ```\n   For the X.509 certificate, COSE_CertHash is calculated over the whole `Certificate` including the leading tag and length. We shall follow here the same mechanism, and calculated over the `C509Certificate` instead the unwrapped one `~C509Certificate`.\n3. 9.20 TLS Certificate Types Registry\n   ```\n   C509 is defined in the same way\n   as as X.509, but uses a different value and instead of DER-encoded\n   X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR\n   sequence ~C509Certificate (an unwrapped C509Certificate)\n   ```\n   And the last block shall be changed to `contains a CBOR\n   sequence C509Certificate`\n\nPlease note in C509CertData and TLS, using `C509Certificate` is a much cleaner solution compared to the unwrapped one.\n\nLast but not least, for the above reasons, and also for user friendliness, please use `C509Certificate` instead`C509Certificate` in the examples.",
+      "body": "The corresponding data type for `X509Certificate` (or `Certificate` as in RFC 5280) is `C509Certificate`, but not the unwrapped one `~C509Certificate`, and the unwrapped one saves ONLY 1 byte. Please use `C509Certificate` instead the unwrapped one, especially in the following contexts:\n\n1. C509CertData\n   ```\n   The COSE_C509 structure used in c5b, c5c, and c5u is defined as:\n\n   COSE_C509 = C509CertData / [ 2* C509CertData ]\n   C509CertData = bstr .cborseq C509Certificate\n\n   C509CertData thus includes the unwrapped CBOR sequence,\n   ~C509Certificate, see Appendix A.1.5 for an example.\n   ```\n   The last block shall be changed to `C509CertData thus includes the CBOR sequence\n   C509Certificate, see Appendix A.1.5 for an example.`\n2. COSE_CertHash\n   ```\n   The value type of c5t is the COSE_CertHash structure defined in\n   [RFC9360], which contains the hash value of the C509 certificate\n   calculated over ~C509Certificate\n   ```\n   For the X.509 certificate, COSE_CertHash is calculated over the whole `Certificate` including the leading tag and length. We shall follow here the same mechanism, and calculated over the `C509Certificate` instead the unwrapped one `~C509Certificate`.\n3. 9.20 TLS Certificate Types Registry\n   ```\n   C509 is defined in the same way\n   as as X.509, but uses a different value and instead of DER-encoded\n   X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR\n   sequence ~C509Certificate (an unwrapped C509Certificate)\n   ```\n   And the last block shall be changed to `contains a CBOR\n   sequence C509Certificate`\n\nPlease note in C509CertData and TLS, using `C509Certificate` is a much cleaner solution compared to the unwrapped one.\n\nLast but not least, for the above reasons, and also for user friendliness, please use `C509Certificate` instead`~C509Certificate` in the examples.",
       "createdAt": "2025-06-29T22:10:18Z",
-      "updatedAt": "2025-07-23T18:04:26Z",
+      "updatedAt": "2025-07-26T20:31:49Z",
       "closedAt": null,
       "comments": [
         {
@@ -6923,6 +6961,62 @@
           "body": "Nevertheless it may be worth considering the consequent change. I start a PR.\n\nEdit: I don't have time to start the PR. If someone else wants to start, please go ahead.",
           "createdAt": "2025-07-19T20:43:25Z",
           "updatedAt": "2025-07-19T21:28:20Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The whole motivation here seems to ignore the change to  bytes .cborseq C509Certificate that was added to an earlier version. The  bytes .cborseq C509Certificate was clearly forgotten in the TLS part, which need to be fixed.",
+          "createdAt": "2025-07-25T16:24:44Z",
+          "updatedAt": "2025-07-25T16:24:44Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I marged a correction to the TLS certificate part, which should be done inpependent of any future changes",
+          "createdAt": "2025-07-25T16:33:52Z",
+          "updatedAt": "2025-07-25T16:33:52Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The earlier change to byte string was well motivated. I don't see the technical reasons here.\n\nWith all the data on the wire being CBOR byte strings, we could even go back to C509Certificate being a sequence as it used to be. The reason to change it fo array was to times when it was send over the wire, which it is not anymore. Would going back to \n\nC509Certificate = (\n   TBSCertificate,\n   issuerSignatureValue : any,\n)\n\nsolve the ideological issues?",
+          "createdAt": "2025-07-25T16:34:55Z",
+          "updatedAt": "2025-07-25T16:34:55Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "After the last discussion, my suggestion would be:\n\nCOSE:\nC509CertData = bytes .cborseq C509Certificate\n\nc5t:\nHash of a C509Certificate\n\nTLS:\nC509Certificate \n\nThat aligns with the C509 principle of reducing overhead unless there are strong programming issues to do otherwise.",
+          "createdAt": "2025-07-25T21:16:19Z",
+          "updatedAt": "2025-07-25T21:16:19Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> After the last discussion, my suggestion would be:\n> \n> COSE:\n> C509CertData = bytes .cborseq C509Certificate\n> \n> c5t:\n> Hash of a C509Certificate\n\nIn this situation I cannot compute the hash without prepending the array head and I don't know what count to put in the array head without decoding the cert contents. So I am against this combination.",
+          "createdAt": "2025-07-25T21:21:39Z",
+          "updatedAt": "2025-07-25T21:21:39Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Before we go into details with C509 certificate, let me explain how it works in the X.509 Certificate. For better reading, I use the term  `X509Certificate`rather than the `Certificate`as used in the original specifications.\n\n# X509 Certificate\nAs in RFC 5280, X509Certificate is a `SEQUENCE` of tbsCertifcate, signatureAlgorithm and signatureValue.\n\n```\n   X509Certificate  ::=  SEQUENCE  {\n        tbsCertificate       TBSCertificate,\n        signatureAlgorithm   AlgorithmIdentifier,\n        signatureValue       BIT STRING  }\n```\n\nAlthough there is no unwrapped version, for the comparison with C509, we define `~X509Certificate` as follows:\n```\n~X509Certificate ::= (\n        tbsCertificate       TBSCertificate,\n        signatureAlgorithm   AlgorithmIdentifier,\n        signatureValue       BIT STRING\n)\n\nX509Certificate ::= SEQUENCE { ~X509Certificate }\n```\n\nFor an X509Certifiate, the DER-encoded value is `DER-encode(X509Certficate) = 30 || LEN(~X509Certificate) || ~X509Certificate` where `30` is for the outer `SEQUENCE`.\n\nNow we consider the usages in COSE_CertHash, COSE_X509 and TLS.\n\n## COSE_CertHash\nAs in RFC 9360,  the type `COSE_CertHash` contains the hash value *\"is a binary string containing the hash value computed over the DER-encoded certificate\"*, e.g. `DER-encode(X509Certficate)`.\n\n```\nCOSE_CertHash = [ hashAlg: (int / tstr), hashValue: bstr ]\n```\n\n## COSE_X509\nCOSE_X509 represents a sorted / unsorted list of X509Certificates.\n\n```\nCOSE_X509 = bstr / [ 2*certs: bstr ]\n```\nThe contents of \"bstr\" are the bytes of a DER-encoded X509Certificate.\n\n## TLS\nAs in RFC 5246\n```\nopaque ASN.1Cert<1..2^24-1>;\n\nstruct {\n     ASN.1Cert certificate_list<0..2^24-1>;\n} Certificate;\n\ncertificate_list\n      This is a sequence (chain) of certificates.  The sender's\n      certificate MUST come first in the list.  Each following\n      certificate MUST directly certify the one preceding it.  Because\n      certificate validation requires that root keys be distributed\n      independently, the self-signed certificate that specifies the root\n      certificate authority MAY be omitted from the chain, under the\n      assumption that the remote end must already possess it in order to\n      validate it in any case.\n```\n\nThe wired content is the concatenation of a list of (X509)certificates, and the wired content is as follows\n```\nDER-encode(X509Certficate-1) || ... || DER-encode(X509Certficate-n)\n```\n, namely \n```\n30 || LEN(~X509Certificate-1) || ~X509Certificate-1 || ... || 30 || LEN(~X509Certificate-n) || ~X509Certificate-n\n```\n\n# C509Certificate\n\n`C509Certificate` is equivalent to `X509Certificate`, and `~C509Certificate` is equivalent to `~X509Certificate`.\nFor a C509Certifiate, the CBOR-encoded value is CBOR-encode(C509Certficate) = 8B || ~C509Certificate where 8B is for the outer Array with 11 elements .\n\nIf we follow the design principle in X509Certificate, we just need to replace the `X509Certificate` with `C509Certificate`, and replace `DER-encode`with `CBOR-encode`, and get the following definitions.\n\n## COSE_CertHash\nThe type `COSE_CertHash` contains the hash value *\"is a binary string containing the hash value computed over the CBOR-encoded certificate\"*, e.g. `CBOR-encode(C509Certficate)`.\n\n## COSE_C509\nCOSE_C509 represents a sorted / unsorted list of C509Certificates.\n\n```\nCOSE_C509 = bstr / [ 2*certs: bstr ]\n```\n, or equivalently as in the PR:\n```\nCOSE_C509 = C509CertData / [ 2*C509CertData ]\nC509CertData = bytes .cbor C509Certificate\n```\n\nThe contents of \"bstr\" are the bytes of a CBOR-encoded C509Certificate.\n\n## TLS\n\n```\nopaque cert_data<1..2^24-1>;\n```\nThe wired content is the concatenation of a list of C509Certificates, and the wired content is as follows\n```\nCBOR-encode(C509Certficate-1) || ... || CBOR-encode(C509Certficate-n)\n```\n, namely \n```\n8B ~C509Certificate-1 || ... || 8B || ~C509Certificate-n\n```\n\n",
+          "createdAt": "2025-07-26T14:38:58Z",
+          "updatedAt": "2025-07-26T20:31:49Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@xipki that analogy is very helpful.\n\nOne other analogous aspect is that DER includes a byte length with each encoded item, so a single DER item is really equivalent in function to a bstr wrapped CBOR item. The user benefit in both cases is the ability to know the full length up front, can completely skip over each certificate and/or handle it as opaque encoded data rather than decode it's items (which for some of them are deeply nested structures).\n\nThe concatenated (CBOR sequence) array form for C509 does not have this property and I think makes it more difficult for users who benefit from things like thumbprinting without deep C509 decoding. So for that reason I recommend that if the TLS form contains multiple certs then it should use the same bstr wrapped form as COSE_C509.",
+          "createdAt": "2025-07-26T15:22:37Z",
+          "updatedAt": "2025-07-26T15:22:37Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@BrianSipos According to your comment, the TLS section shall then be as follows\n\n## TLS\n\n```\nopaque cert_data<1..2^24-1>;\n```\nThe wired content is the concatenation of a list of C509CertData, and is as follows\n```\nC509CertData-1 || ... || C509CertData-n\n```\n\n- Pro:\n   - The TLS application is able to split the certificates without parsing the single certificates\n\n- Contra:\n   - Additional 2-3 bytes / certificate are required.\n\nI am fine with this alternative.",
+          "createdAt": "2025-07-26T16:19:33Z",
+          "updatedAt": "2025-07-26T16:25:52Z"
         }
       ]
     },
@@ -6992,7 +7086,7 @@
       "id": "I_kwDOCpt5cM69-b6u",
       "title": "C509CertificateRequestTemplate: extend it to cover generic use cases",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/260",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -7001,8 +7095,8 @@
       ],
       "body": "In draft -14:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestType: int / null,\n      subjectSignatureAlgorithm: AlgorithmIdentifier / null,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: AlgorithmIdentifier / null,\n      subjectPublicKey: any,\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\nMy suggestion:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTypes: [ * int ], -- single type --> list of types\n      subjectSignatureAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithms\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithms: [ * AlgorithmIdentifier ], -- single algorithm --> list of algorithm\n                             -- remove field subjectPublicKey: how can CA specify the concrete public key value?\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```",
       "createdAt": "2025-06-30T06:03:50Z",
-      "updatedAt": "2025-07-23T17:40:29Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-25T21:05:49Z",
+      "closedAt": "2025-07-25T21:05:49Z",
       "comments": [
         {
           "author": "emanjon",
@@ -7052,6 +7146,13 @@
           "body": "Discussed this with John recently. We don't find the construction of dummy RSA public key matching the constrained setting and propose to remove the subjectPublicKey from the template.",
           "createdAt": "2025-07-23T17:23:17Z",
           "updatedAt": "2025-07-23T17:23:17Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "PR is merged",
+          "createdAt": "2025-07-25T21:05:49Z",
+          "updatedAt": "2025-07-25T21:05:49Z"
         }
       ]
     },
@@ -7168,7 +7269,7 @@
       ],
       "body": "The current language states that natively encoding SCTs with extensions is not supported. This is a reasonable choice for the current state of CT today, but the CT ecosystem will likely be moving to Sunlight/Static CT. The Static CT specification mandates the inclusion of the [`LeafIndex` SCT extension](https://github.com/C2SP/C2SP/blob/main/static-ct-api.md#sct-extension).\n\nIf the ability to CBOR encode SCTs is desired, then this extension should likely be accommodated in the specification.",
       "createdAt": "2025-07-21T08:24:18Z",
-      "updatedAt": "2025-07-23T16:38:00Z",
+      "updatedAt": "2025-07-24T17:53:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -7184,6 +7285,48 @@
           "body": "@gselander, no immediate need for this, so this can probably be postponed. The digitally-signed based SCT format is more space-efficient than ASN.1 anyway, so there's not a lot to be gained by CBOR-encoding it (the main source of the space savings is the use of relative timestamps).",
           "createdAt": "2025-07-23T16:31:27Z",
           "updatedAt": "2025-07-23T16:34:36Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander What about to add an additional field `extensions bytes`? This adds only 1 wired byte for empty extensions.",
+          "createdAt": "2025-07-24T13:48:49Z",
+          "updatedAt": "2025-07-24T13:48:58Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki If this is the only thing we need to change now in order to  support other version than v1 and extensions in the future, then it seems like a good update. Did you want the version field too?\n\nOLD\n> SignedCertificateTimestamp = (\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n\nNEW\n> SignedCertificateTimestamp = (\n        version: int\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        extensions: bytes\n        sigValue: any,\n      )\n\n",
+          "createdAt": "2025-07-24T14:09:51Z",
+          "updatedAt": "2025-07-24T14:09:51Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Yes, please add the field `version`if possible.",
+          "createdAt": "2025-07-24T16:45:44Z",
+          "updatedAt": "2025-07-24T16:45:44Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki  Would it be sufficient to just add `version`? Then we can define then new CDDL when needed.\n",
+          "createdAt": "2025-07-24T17:30:34Z",
+          "updatedAt": "2025-07-24T17:30:34Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "If we take the `version` value defined in CT (Certificate Transparency), only `version` is not sufficient, since under version `v1`, there may be zero or multiple extensions. But if we manage our own versions, only `version` is sufficient.",
+          "createdAt": "2025-07-24T17:39:12Z",
+          "updatedAt": "2025-07-24T17:39:12Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I've though this over. I'm hesitant to add anything that involves future versions of SCT at this stage, since we state that \"Other versions of SCT are out of scope for this document.\" \n\nAll new fields need to be accurately specified and reviewed in the context of this scope. I think this is beyond the changes we are supposed to do in the context of wrapping up WGLC.\n\nBut this is not the last review step. There will be an IETF Last Call soon coming up where such comments could be provided. But for the next submission of this document I propose we leave this out.\n",
+          "createdAt": "2025-07-24T17:53:33Z",
+          "updatedAt": "2025-07-24T17:53:33Z"
         }
       ]
     },
@@ -7215,6 +7358,32 @@
           "body": ">As an example, the \"class C\" subnet 192.0.2.0 can instead be encoded as C0 00 02 00 18 (192.0.2.0/24).\n\nThat seems like best option\n",
           "createdAt": "2025-07-22T21:37:57Z",
           "updatedAt": "2025-07-22T21:37:57Z"
+        }
+      ]
+    },
+    {
+      "number": 279,
+      "id": "I_kwDOCpt5cM7CpMb9",
+      "title": "Media formats, Content formats, tags, and magic numbers",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/279",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "needs PR"
+      ],
+      "body": "- The heading for media formats was on the wrong level. I fixed this\n\n- Based on a comment from Carsten there seems be be corrections/clarifications needed.\nhttps://github.com/cose-wg/CBOR-certificates/pull/278#pullrequestreview-3057957405\n\n- TBD6 is used for both for Content-Format application/cose-c509-cert and a CBOR tag. This seems wrong\n\n- TBD7 is used for a media format and for TLSA. This seems wrong\n\n- Is seems like we will register two CBOR tags (TBD15 and the TBD6 in Section 9.18) for a data COSE_C509 containing a chain. Is this intended and needed? If we really want to tags we should have a sentence discusssing this.",
+      "createdAt": "2025-07-26T12:58:57Z",
+      "updatedAt": "2025-07-26T13:02:04Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "b6e5f92\n",
+          "createdAt": "2025-07-26T13:02:04Z",
+          "updatedAt": "2025-07-26T13:02:04Z"
         }
       ]
     }
@@ -10604,26 +10773,117 @@
       "id": "PR_kwDOCpt5cM6gUB5Y",
       "title": "Update of template",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/276",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing #260",
       "createdAt": "2025-07-23T17:39:26Z",
-      "updatedAt": "2025-07-23T20:45:09Z",
+      "updatedAt": "2025-07-25T21:02:59Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "18d20ca6ed73d0e8cbcb1ca0e5afec6cae5c2294",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "generalize-template",
-      "headRefOid": "1659cc60d6da5769c3e5cd20ed4ceb110af769d8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "459669a5c19998e66a56cfedbb421889be42d82d",
+      "closedAt": "2025-07-25T21:02:59Z",
+      "mergedAt": "2025-07-25T21:02:59Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "4e431d286a77bee331b69b03c392a704530a0fa5"
+      },
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I removed subjectPublicKey completely\r\n\r\nNeed text on what an array means",
+          "createdAt": "2025-07-25T08:45:54Z",
+          "updatedAt": "2025-07-25T08:45:54Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "OK from John",
+          "createdAt": "2025-07-25T21:02:51Z",
+          "updatedAt": "2025-07-25T21:02:51Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM62EjV3",
+          "commit": {
+            "abbreviatedOid": "cbc0100"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-25T08:55:11Z",
+          "updatedAt": "2025-07-25T08:55:11Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOCpt5cM62KCGl",
+          "commit": {
+            "abbreviatedOid": "cbc0100"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-25T16:13:32Z",
+          "updatedAt": "2025-07-25T16:13:32Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "Why did you remove this text: \"which excludes the subjectSignatureValue field\".? That text explains the difference between the format of the Certificate Request and the format of the Template.",
+              "createdAt": "2025-07-25T16:13:32Z",
+              "updatedAt": "2025-07-25T16:13:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM62KCVL",
+          "commit": {
+            "abbreviatedOid": "cbc0100"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-25T16:13:49Z",
+          "updatedAt": "2025-07-25T16:13:49Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "It is correct that subjectPublicKey, containing undefined can be removed. But the idea with the template is that the client loops through fields, fills in the blank ones and signs. Why not follow that general principle for all fields? It is only one byte. I propose to put it back.",
+              "createdAt": "2025-07-25T16:13:49Z",
+              "updatedAt": "2025-07-25T16:13:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM62LK1e",
+          "commit": {
+            "abbreviatedOid": "7d4972d"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-25T18:07:01Z",
+          "updatedAt": "2025-07-25T18:07:01Z",
+          "comments": [
+            {
+              "originalPosition": 18,
+              "body": "Fixed, reverted a45c66a",
+              "createdAt": "2025-07-25T18:07:01Z",
+              "updatedAt": "2025-07-25T18:07:01Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 277,
@@ -10637,7 +10897,7 @@
       "labels": [],
       "body": "Addresses #258 ",
       "createdAt": "2025-07-23T18:03:30Z",
-      "updatedAt": "2025-07-23T20:37:43Z",
+      "updatedAt": "2025-07-25T21:04:38Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "18d20ca6ed73d0e8cbcb1ca0e5afec6cae5c2294",
@@ -10662,6 +10922,55 @@
           "body": "@BrianSipos Is this your preference?\r\n@xipki Does this work for you?",
           "createdAt": "2025-07-23T20:06:42Z",
           "updatedAt": "2025-07-23T20:06:42Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "```\r\nCOSE_C509 = C509CertData / [ 2* C509CertData ]\r\nC509CertData = bytes .cbor C509Certificate\r\n```\r\nDo we need to wrap C509Certificate to bytes? The following shall also work:\r\n```\r\nCOSE_C509 = C509Certificate / [ 2* C509Certificate ]\r\n```\r\nAnd if wee need the isolation, it is better to use the following definition\r\n```\r\nCOSE_C509 = bytes .cbor (C509Certificate / [ 2* C509Certificate ])\r\n```",
+          "createdAt": "2025-07-24T05:14:54Z",
+          "updatedAt": "2025-07-24T05:18:55Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@BrianSipos Please explain the issue (if any)",
+          "createdAt": "2025-07-24T10:12:23Z",
+          "updatedAt": "2025-07-24T10:12:23Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Do we need to wrap C509Certificate to bytes? The following shall also work:\r\n> \r\n> And if wee need the isolation, it is better to use the following definition\r\n\r\nAs discussed in #222 the reason for this per-certificate byte string separation is so that the COSE message decoder does not _also_ need to be a C509 decoder. It allows a C509 handler/user (treating each certificate as opaque data) to compute and compare thumbprints without decoding or caring about what is in each certificate.\r\n\r\nThe structure is also exactly the same form used by [RFC 9360](https://www.rfc-editor.org/rfc/rfc9360.html#section-2-11) so it is more consistent so COSE tools can treat them similarly. Using the bytes-concatenating-C509Certificate strategy still requires a handler to be able to fully decode each cert to be able to advance to the next cert.",
+          "createdAt": "2025-07-24T10:31:46Z",
+          "updatedAt": "2025-07-24T10:35:28Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> > Do we need to wrap C509Certificate to bytes? The following shall also work:\r\n> > And if wee need the isolation, it is better to use the following definition\r\n> \r\n> As discussed in #222 the reason for this per-certificate byte string separation is so that the COSE message decoder does not _also_ need to be a C509 decoder. It allows a C509 handler/user (treating each certificate as opaque data) to compute and compare thumbprints without decoding or caring about what is in each certificate.\r\n> \r\n> The structure is also exactly the same form used by [RFC 9360](https://www.rfc-editor.org/rfc/rfc9360.html#section-2-11) so it is more consistent so COSE tools can treat them similarly. Using the bytes-concatenating-C509Certificate strategy still requires a handler to be able to fully decode each cert to be able to advance to the next cert.\r\n\r\nSounds reasonable. Then keep the current changes in the PR:\r\n```\r\nCOSE_C509 = C509CertData / [ 2* C509CertData ]\r\nC509CertData = bytes .cbor C509Certificate\r\n```",
+          "createdAt": "2025-07-24T10:49:44Z",
+          "updatedAt": "2025-07-24T10:50:30Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki Thanks Lijun. Are you also happy with the rest of the PR, does it address all aspects of #258?",
+          "createdAt": "2025-07-24T10:57:13Z",
+          "updatedAt": "2025-07-24T10:57:13Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @xipki Thanks Lijun. Are you also happy with the rest of the PR, does it address all aspects of #258?\r\n\r\nYES. It covers all aspects.",
+          "createdAt": "2025-07-24T11:03:15Z",
+          "updatedAt": "2025-07-24T11:03:15Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Agreement with John and Lijun that this PR can be left open pending later reviews.",
+          "createdAt": "2025-07-25T21:04:38Z",
+          "updatedAt": "2025-07-25T21:04:38Z"
         }
       ],
       "reviews": [
@@ -10725,26 +11034,102 @@
       "id": "PR_kwDOCpt5cM6gVzUg",
       "title": "Media type and Content-Format for Certificate Request Template",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/278",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #226",
       "createdAt": "2025-07-23T21:09:12Z",
-      "updatedAt": "2025-07-23T21:21:03Z",
+      "updatedAt": "2025-07-26T12:57:20Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "18d20ca6ed73d0e8cbcb1ca0e5afec6cae5c2294",
+      "baseRefOid": "5e557667a01711231447a8baf1bf42eaae1c5a00",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "media-type-template",
-      "headRefOid": "434f0d767ddc7e26776583050cd4794f199494c7",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "04656e4b5cd57210007ce63bb546cfca083928c5",
+      "closedAt": "2025-07-25T16:17:17Z",
+      "mergedAt": "2025-07-25T16:17:17Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "99034a16d2323a6801bc36e9c29b22921ef6c0cc"
+      },
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM62EkeS",
+          "commit": {
+            "abbreviatedOid": "04656e4"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-07-25T08:56:54Z",
+          "updatedAt": "2025-07-25T08:56:54Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOCpt5cM62RLod",
+          "commit": {
+            "abbreviatedOid": "04656e4"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-26T08:03:40Z",
+          "updatedAt": "2025-07-26T08:03:41Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "I don't understand how TBD18 can be composed from the tag numbers.\r\nHow is that \"magic number\" used?",
+              "createdAt": "2025-07-26T08:03:40Z",
+              "updatedAt": "2025-07-26T08:03:41Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM62RhAF",
+          "commit": {
+            "abbreviatedOid": "04656e4"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-26T12:29:58Z",
+          "updatedAt": "2025-07-26T12:29:58Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "Seems like the text should reference TBD19, e.g., \"CoAP Content-Format value TBD19\".\r\nThe idea is that the \"magic number\" (RFC 9277) is used in the file format, but I don't remember the details. I assume the text should says concatenations of the encodings of the tags. The encoding of CBOR tag 55799 could be written out.\r\n\r\nThe media formats heading should be subsubsections instead of subsections. I will make a commit fixing this.\r\n",
+              "createdAt": "2025-07-26T12:29:58Z",
+              "updatedAt": "2025-07-26T12:29:58Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM62Rp51",
+          "commit": {
+            "abbreviatedOid": "04656e4"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-26T12:57:20Z",
+          "updatedAt": "2025-07-26T12:57:20Z",
+          "comments": [
+            {
+              "originalPosition": 4,
+              "body": "Nothing against showing the encoding somewhere, but this is about (data model level) representation.  If that is intended, Nesting two tags is not \"magic\" (pun intended), but should be clearly  described as such.",
+              "createdAt": "2025-07-26T12:57:20Z",
+              "updatedAt": "2025-07-26T12:57:20Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
