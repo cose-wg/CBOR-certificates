@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-27T02:27:57.327773+00:00",
+  "timestamp": "2025-08-05T02:23:54.554767+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7384,6 +7384,30 @@
           "body": "b6e5f92\n",
           "createdAt": "2025-07-26T13:02:04Z",
           "updatedAt": "2025-07-26T13:02:04Z"
+        }
+      ]
+    },
+    {
+      "number": 280,
+      "id": "I_kwDOCpt5cM7EHOuK",
+      "title": "Format of ECDSA signature",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/280",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As in draft -14, \n```\nFor ECDSA signatures, the SEQUENCE and INTEGER type and length fields\nas well as the any leading 0x00 byte (to indicate that the number is\nnot negative) are omitted.  If the two INTEGER value fields have\ndifferent lengths, the shorter INTEGER value field is padded with\nzeroes so that the two fields have the same length.  The resulting\nbyte string is encoded as a CBOR byte string.\n```\nFor an ECDSA signature (r, s), the signature is `I2OS(r, l) || I2OS (s, l)`, where `l` is the minimal length to represent `max(r, s)` without leading zero bytes. For the curve secp256r1, `l <= 32`. This is different than the format of a plain ECDSA signature specified in the BSI's TR-0311 [1], where `l` is a fixed value:\n\nIn plain format the signature (r, s) is encoded as octet string R \u2016 S, i.e. as concatenation of the\noctet strings `R = I2OS(r, l)` and `S = I2OS(s, l)` with `l` = ceil (log<sub>256</sub><sup>n</sup>). Thus, the signature has a\nfixed length of `2l` octets.\n\nShall we change it to the BSI TR-0311's definition?\n\n[1] Germany Federal Office for Information Security, Technical Guideline BSI TR-0311: Elliptic Curve Cryptography, available under https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TR03111/BSI-TR-03111_V-2-1_pdf.pdf?__blob=publicationFile&v=1\n",
+      "createdAt": "2025-08-04T17:20:12Z",
+      "updatedAt": "2025-08-04T17:37:20Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "And here the second reference where both `r`and `s` are encoded with fixed length (32 for secp256r1 (P-256)).\n\nIn the IEEE's 1609.2-2022 , Section 6.3.38 EcdsaP256Signature\n```\nEcdsaP256Signature ::= SEQUENCE {\n  rSig EccP256CurvePoint,\n  sSig OCTET STRING (SIZE (32))\n}\n\nEccP256CurvePoint::= CHOICE {\n    x-only OCTET STRING (SIZE (32)),\n    fill NULL,\n    compressed-y-0 OCTET STRING (SIZE (32)),\n    compressed-y-1 OCTET STRING (SIZE (32)),\n    uncompressedP256 SEQUENCE {\n        x OCTET STRING (SIZE (32)),\n        y OCTET STRING (SIZE (32))\n    }\n}\n```",
+          "createdAt": "2025-08-04T17:37:20Z",
+          "updatedAt": "2025-08-04T17:37:20Z"
         }
       ]
     }
