@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 27 January 2026                                      J. Höglund
+Expires: 12 February 2026                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
-                                                             Nexus Group
-                                                            26 July 2025
+                                                               IN Groupe
+                                                          11 August 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 January 2026.
+   This Internet-Draft will expire on 12 February 2026.
 
 Copyright Notice
 
@@ -3950,5 +3950,5 @@ Authors' Addresses
 
 
    Martin Furuhed
-   Nexus Group
-   Email: martin.furuhed@nexusgroup.com
+   IN Groupe
+   Email: martin.furuhed@ingroupe.com
