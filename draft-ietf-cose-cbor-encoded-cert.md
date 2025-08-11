@@ -38,8 +38,8 @@ author:
         org: RISE AB
         email: joel.hoglund@ri.se
       - name: Martin Furuhed
-        org: Nexus Group
-        email: martin.furuhed@nexusgroup.com
+        org: IN Groupe
+        email: martin.furuhed@ingroupe.com
 
 
 normative:
