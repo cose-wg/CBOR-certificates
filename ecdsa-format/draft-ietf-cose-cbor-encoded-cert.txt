@@ -531,11 +531,11 @@ Table of Contents
    For ECDSA signatures, the SEQUENCE and INTEGER type and length fields
    as well as any leading 0x00 byte (to indicate that the number is not
    negative) are omitted.  Each of the two INTEGER value fields are then
-   padded with zeroes to the same fixed length, given by the number of
-   bytes needed to represent the order n of the cyclic subgroup used
-   with the algorithm.  For example, for P-256, the number of bytes for
-   each integer is 32.  The resulting byte string is encoded as a CBOR
-   byte string.
+   padded with leading zeroes to the same fixed length, given by the
+   number of bytes needed to represent the order n of the cyclic
+   subgroup used with the algorithm.  For example, for P-256, the number
+   of bytes for each integer is 32.  The resulting byte string is
+   encoded as a CBOR byte string.
 
 3.3.  Encoding of Extensions
 
