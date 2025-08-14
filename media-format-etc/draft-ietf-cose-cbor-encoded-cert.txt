@@ -2915,23 +2915,23 @@ Table of Contents
 | cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
 | usage = chain        |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.16]] | TBD4  | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD4  | [[this       |
 | cose-c509-pkcs10     |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.17]] | TBD19 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD19 | [[this       |
 | cose-c509-crtemplate |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.18]] | TBD10 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD10 | [[this       |
 | cose-c509-privkey    |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.19]] | TBD11 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD11 | [[this       |
 | cose-c509-pem        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.20]] | TBD16 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD16 | [[this       |
 | cose-certhash        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
-| cose-certhash;       | -       | [[link to 9.20]] | TBD17 |   document]] |
+| cose-certhash;       | -       | [[link to 9.15]] | TBD17 |   document]] |
 | usage = c509         |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
 
