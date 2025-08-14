@@ -2286,14 +2286,14 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 | Content              | Content | Media            | ID    | Reference    |
 | Format               | Coding  | Type             |       |              |
 +======================+=========+==================+=======+==============+
-| application/         | -       | [[link to 9.15]] | TBD6  | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD3  | [[this       |
 | cose-c509-cert       |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
 | cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
 | usage = chain        |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.16]] | TBD7  | [[this       |
+| application/         | -       | [[link to 9.16]] | TBD4  | [[this       |
 | cose-c509-pkcs10     |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         | -       | [[link to 9.17]] | TBD19 | [[this       |
