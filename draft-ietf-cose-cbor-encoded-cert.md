@@ -2315,19 +2315,6 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
-## CBOR Tags Registry {#tags}
-
-This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.
-
-~~~~~~~~~~~ aasvg
-+------+------------------------------------------------------------+
-|  Tag | CBOR Tags                                                  |
-+======+============================================================+
-| TBD6 | Data Item: COSE_C509                                       |
-|      | Semantics: An ordered chain of C509 certificates           |
-|      | Reference: This document                                   |
-+------+------------------------------------------------------------+
-~~~~~~~~~~~
 
 ## TLS Certificate Types Registry {#tls}
 
