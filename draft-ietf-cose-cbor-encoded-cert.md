@@ -1935,27 +1935,6 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the ne
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    16 | Name:        HSS / LMS                                    |
-|       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |
-|       | OID:         1.2.840.113549.1.9.16.3.17                   |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    17 | Name:        XMSS                                         |
-|       | Identifiers: id_alg_xmss                                  |
-|       | OID:         0.4.0.127.0.15.1.1.13.0                      |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
-|    18 | Name:        XMSS^MT                                      |
-|       | Identifiers: id_alg_xmssmt                                |
-|       | OID:         0.4.0.127.0.15.1.1.14.0                      |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
-|       | Comments:                                                 |
-+-------+-----------------------------------------------------------+
 |    24 | Name:        EC Public Key (Weierstraß) with              |
 |       |              brainpoolP256r1                              |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
