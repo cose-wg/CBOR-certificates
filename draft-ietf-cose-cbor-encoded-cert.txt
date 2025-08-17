@@ -119,10 +119,9 @@ Table of Contents
      9.14. COSE Header Parameters Registry
      9.15. Media Type Application Registry
      9.16. CoAP Content-Formats Registry
-     9.17. CBOR Tags Registry
-     9.18. TLS Certificate Types Registry
-     9.19. TLSA Selectors Registry
-     9.20. EDHOC Authentication Credential Types Registry
+     9.17. TLS Certificate Types Registry
+     9.18. TLSA Selectors Registry
+     9.19. EDHOC Authentication Credential Types Registry
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -233,7 +232,7 @@ Table of Contents
    Section 4; COSE headers for use of the C509 certificates with COSE,
    see Section 9.14; a TLS certificate type for use of the C509
    certificates with TLS and QUIC (with or without additional TLS
-   certificate compression), see Section 9.18; and a C509 file format.
+   certificate compression), see Section 9.17; and a C509 file format.
    The TLSA selectors registry is extended to include C509 certificates,
    thus this document updates [RFC6698].
 
@@ -2890,50 +2889,36 @@ Table of Contents
 | Content              | Content | Media            | ID    | Reference    |
 | Format               | Coding  | Type             |       |              |
 +======================+=========+==================+=======+==============+
-| application/         | -       | [[link to 9.15]] | TBD6  | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD3  | [[this       |
 | cose-c509-cert       |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
 | cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
 | usage = chain        |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.16]] | TBD7  | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD4  | [[this       |
 | cose-c509-pkcs10     |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.17]] | TBD19 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD19 | [[this       |
 | cose-c509-crtemplate |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.18]] | TBD10 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD10 | [[this       |
 | cose-c509-privkey    |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.19]] | TBD11 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD11 | [[this       |
 | cose-c509-pem        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.20]] | TBD16 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD16 | [[this       |
 | cose-certhash        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
-| cose-certhash;       | -       | [[link to 9.20]] | TBD17 |   document]] |
+| cose-certhash;       | -       | [[link to 9.15]] | TBD17 |   document]] |
 | usage = c509         |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
 
                   Figure 20: CoAP Content-Format IDs
 
-9.17.  CBOR Tags Registry
-
-   This document registers the following entries in the "CBOR Tags"
-   registry under the "Concise Binary Object Representation (CBOR) Tags"
-   heading.
-
-   +------+------------------------------------------------------------+
-   |  Tag | CBOR Tags                                                  |
-   +======+============================================================+
-   | TBD6 | Data Item: COSE_C509                                       |
-   |      | Semantics: An ordered chain of C509 certificates           |
-   |      | Reference: This document                                   |
-   +------+------------------------------------------------------------+
-
-9.18.  TLS Certificate Types Registry
+9.17.  TLS Certificate Types Registry
 
    This document registers the following entry in the "TLS Certificate
    Types" registry under the "Transport Layer Security (TLS) Extensions"
@@ -2949,7 +2934,7 @@ Table of Contents
    |  TBD5 | C509 Certificate |           Y |                          |
    +-------+------------------+-------------+--------------------------+
 
-9.19.  TLSA Selectors Registry
+9.18.  TLSA Selectors Registry
 
    This document registers the following entries in the "TLSA Selectors"
    registry under the "DNS-Based Authentication of Named Entities (DANE)
@@ -2966,7 +2951,7 @@ Table of Contents
    specification updates [RFC6698] to accept the use of C509
    certificates, which are essentially CBOR encoded PKIX certificates.
 
-9.20.  EDHOC Authentication Credential Types Registry
+9.19.  EDHOC Authentication Credential Types Registry
 
    This document registers the following entry in the "EDHOC
    Authentication Credential Types" registry under the "Ephemeral

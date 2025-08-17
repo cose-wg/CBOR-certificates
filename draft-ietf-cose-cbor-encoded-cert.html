@@ -1276,16 +1276,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.9.2.16.1"><a href="#section-9.16" class="auto internal xref">9.16</a>. <a href="#name-coap-content-formats-regist" class="internal xref">CoAP Content-Formats Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.17">
-                <p id="section-toc.1-1.9.2.17.1"><a href="#section-9.17" class="auto internal xref">9.17</a>. <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
+                <p id="section-toc.1-1.9.2.17.1"><a href="#section-9.17" class="auto internal xref">9.17</a>. <a href="#name-tls-certificate-types-regis" class="internal xref">TLS Certificate Types Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.18">
-                <p id="section-toc.1-1.9.2.18.1"><a href="#section-9.18" class="auto internal xref">9.18</a>. <a href="#name-tls-certificate-types-regis" class="internal xref">TLS Certificate Types Registry</a></p>
+                <p id="section-toc.1-1.9.2.18.1"><a href="#section-9.18" class="auto internal xref">9.18</a>. <a href="#name-tlsa-selectors-registry" class="internal xref">TLSA Selectors Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.19">
-                <p id="section-toc.1-1.9.2.19.1"><a href="#section-9.19" class="auto internal xref">9.19</a>. <a href="#name-tlsa-selectors-registry" class="internal xref">TLSA Selectors Registry</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.20">
-                <p id="section-toc.1-1.9.2.20.1"><a href="#section-9.20" class="auto internal xref">9.20</a>. <a href="#name-edhoc-authentication-creden" class="internal xref">EDHOC Authentication Credential Types Registry</a></p>
+                <p id="section-toc.1-1.9.2.19.1"><a href="#section-9.19" class="auto internal xref">9.19</a>. <a href="#name-edhoc-authentication-creden" class="internal xref">EDHOC Authentication Credential Types Registry</a></p>
 </li>
             </ul>
 </li>
@@ -1351,7 +1348,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
       </ol>
 <p id="section-1-9">Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.<a href="#section-1-9" class="pilcrow">¶</a></p>
-<p id="section-1-10">This document also specifies C509 Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.14</a>; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.18</a>; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
+<p id="section-1-10">This document also specifies C509 Certificate Requests, see <a href="#CSR" class="auto internal xref">Section 4</a>; COSE headers for use of the C509 certificates with COSE, see <a href="#cose" class="auto internal xref">Section 9.14</a>; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see <a href="#tls" class="auto internal xref">Section 9.17</a>; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span>.<a href="#section-1-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="notation">
@@ -6578,7 +6575,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="308" y="100">[[link</text>
                   <text x="348" y="100">to</text>
                   <text x="388" y="100">9.15]]</text>
-                  <text x="452" y="100">TBD6</text>
+                  <text x="452" y="100">TBD3</text>
                   <text x="524" y="100">[[this</text>
                   <text x="76" y="116">cose-c509-cert</text>
                   <text x="556" y="116">document]]</text>
@@ -6598,8 +6595,8 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="208" y="212">-</text>
                   <text x="308" y="212">[[link</text>
                   <text x="348" y="212">to</text>
-                  <text x="388" y="212">9.16]]</text>
-                  <text x="452" y="212">TBD7</text>
+                  <text x="388" y="212">9.15]]</text>
+                  <text x="452" y="212">TBD4</text>
                   <text x="524" y="212">[[this</text>
                   <text x="84" y="228">cose-c509-pkcs10</text>
                   <text x="556" y="228">document]]</text>
@@ -6607,7 +6604,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="208" y="260">-</text>
                   <text x="308" y="260">[[link</text>
                   <text x="348" y="260">to</text>
-                  <text x="388" y="260">9.17]]</text>
+                  <text x="388" y="260">9.15]]</text>
                   <text x="456" y="260">TBD19</text>
                   <text x="524" y="260">[[this</text>
                   <text x="100" y="276">cose-c509-crtemplate</text>
@@ -6616,7 +6613,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="208" y="308">-</text>
                   <text x="308" y="308">[[link</text>
                   <text x="348" y="308">to</text>
-                  <text x="388" y="308">9.18]]</text>
+                  <text x="388" y="308">9.15]]</text>
                   <text x="456" y="308">TBD10</text>
                   <text x="524" y="308">[[this</text>
                   <text x="88" y="324">cose-c509-privkey</text>
@@ -6625,7 +6622,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="208" y="356">-</text>
                   <text x="308" y="356">[[link</text>
                   <text x="348" y="356">to</text>
-                  <text x="388" y="356">9.19]]</text>
+                  <text x="388" y="356">9.15]]</text>
                   <text x="456" y="356">TBD11</text>
                   <text x="524" y="356">[[this</text>
                   <text x="72" y="372">cose-c509-pem</text>
@@ -6634,7 +6631,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="208" y="404">-</text>
                   <text x="308" y="404">[[link</text>
                   <text x="348" y="404">to</text>
-                  <text x="388" y="404">9.20]]</text>
+                  <text x="388" y="404">9.15]]</text>
                   <text x="456" y="404">TBD16</text>
                   <text x="524" y="404">[[this</text>
                   <text x="72" y="420">cose-certhash</text>
@@ -6645,7 +6642,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                   <text x="208" y="468">-</text>
                   <text x="308" y="468">[[link</text>
                   <text x="348" y="468">to</text>
-                  <text x="388" y="468">9.20]]</text>
+                  <text x="388" y="468">9.15]]</text>
                   <text x="456" y="468">TBD17</text>
                   <text x="556" y="468">document]]</text>
                   <text x="40" y="484">usage</text>
@@ -6661,54 +6658,14 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 </div>
 </section>
 </div>
-<div id="tags">
+<div id="tls">
 <section id="section-9.17">
-        <h3 id="name-cbor-tags-registry">
-<a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
+        <h3 id="name-tls-certificate-types-regis">
+<a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
         </h3>
-<p id="section-9.17-1">This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.<a href="#section-9.17-1" class="pilcrow">¶</a></p>
+<p id="section-9.17-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.17-1" class="pilcrow">¶</a></p>
 <div id="section-9.17-2">
           <div class="alignLeft art-svg artwork" id="section-9.17-2.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="144" width="560" viewBox="0 0 560 144" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-              <path d="M 8,32 L 8,128" fill="none" stroke="black"></path>
-              <path d="M 64,32 L 64,128" fill="none" stroke="black"></path>
-              <path d="M 552,32 L 552,128" fill="none" stroke="black"></path>
-              <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
-              <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
-              <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
-              <path d="M 8,128 L 552,128" fill="none" stroke="black"></path>
-              <g class="text">
-                <text x="40" y="52">Tag</text>
-                <text x="92" y="52">CBOR</text>
-                <text x="132" y="52">Tags</text>
-                <text x="36" y="84">TBD6</text>
-                <text x="92" y="84">Data</text>
-                <text x="136" y="84">Item:</text>
-                <text x="200" y="84">COSE_C509</text>
-                <text x="116" y="100">Semantics:</text>
-                <text x="172" y="100">An</text>
-                <text x="216" y="100">ordered</text>
-                <text x="272" y="100">chain</text>
-                <text x="308" y="100">of</text>
-                <text x="340" y="100">C509</text>
-                <text x="412" y="100">certificates</text>
-                <text x="116" y="116">Reference:</text>
-                <text x="180" y="116">This</text>
-                <text x="236" y="116">document</text>
-              </g>
-            </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
-</div>
-</div>
-</section>
-</div>
-<div id="tls">
-<section id="section-9.18">
-        <h3 id="name-tls-certificate-types-regis">
-<a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
-        </h3>
-<p id="section-9.18-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.18-1" class="pilcrow">¶</a></p>
-<div id="section-9.18-2">
-          <div class="alignLeft art-svg artwork" id="section-9.18-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6729,19 +6686,19 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="168" y="84">Certificate</text>
                 <text x="320" y="84">Y</text>
               </g>
-            </svg><a href="#section-9.18-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
 </div>
 </div>
 </section>
 </div>
 <div id="tlsa">
-<section id="section-9.19">
+<section id="section-9.18">
         <h3 id="name-tlsa-selectors-registry">
-<a href="#section-9.19" class="section-number selfRef">9.19. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
+<a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
         </h3>
-<p id="section-9.19-1">This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.<a href="#section-9.19-1" class="pilcrow">¶</a></p>
-<div id="section-9.19-2">
-          <div class="alignLeft art-svg artwork" id="section-9.19-2.1">
+<p id="section-9.18-1">This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.<a href="#section-9.18-1" class="pilcrow">¶</a></p>
+<div id="section-9.18-2">
+          <div class="alignLeft art-svg artwork" id="section-9.18-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="584" viewBox="0 0 584 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6767,20 +6724,20 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="452" y="84">[[this</text>
                 <text x="524" y="84">document]]</text>
               </g>
-            </svg><a href="#section-9.19-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.18-2.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-9.19-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.<a href="#section-9.19-3" class="pilcrow">¶</a></p>
+<p id="section-9.18-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.<a href="#section-9.18-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="edhoc-authentication-credential-types-registry">
-<section id="section-9.20">
+<section id="section-9.19">
         <h3 id="name-edhoc-authentication-creden">
-<a href="#section-9.20" class="section-number selfRef">9.20. </a><a href="#name-edhoc-authentication-creden" class="section-name selfRef">EDHOC Authentication Credential Types Registry</a>
+<a href="#section-9.19" class="section-number selfRef">9.19. </a><a href="#name-edhoc-authentication-creden" class="section-name selfRef">EDHOC Authentication Credential Types Registry</a>
         </h3>
-<p id="section-9.20-1">This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is used to identify supported authentication credential type, for example, during discovery of EDHOC resources, see <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span>.<a href="#section-9.20-1" class="pilcrow">¶</a></p>
-<div id="section-9.20-2">
-          <div class="alignLeft art-svg artwork" id="section-9.20-2.1">
+<p id="section-9.19-1">This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is used to identify supported authentication credential type, for example, during discovery of EDHOC resources, see <span>[<a href="#RFC9668" class="cite xref">RFC9668</a>]</span>.<a href="#section-9.19-1" class="pilcrow">¶</a></p>
+<div id="section-9.19-2">
+          <div class="alignLeft art-svg artwork" id="section-9.19-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="424" viewBox="0 0 424 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6800,7 +6757,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="292" y="84">[[this</text>
                 <text x="364" y="84">document]]</text>
               </g>
-            </svg><a href="#section-9.20-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.19-2.1" class="pilcrow">¶</a>
 </div>
 </div>
 </section>
