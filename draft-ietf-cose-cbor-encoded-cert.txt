@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 12 February 2026                                     J. Höglund
+Expires: 18 February 2026                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                          11 August 2025
+                                                          17 August 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 February 2026.
+   This Internet-Draft will expire on 18 February 2026.
 
 Copyright Notice
 
@@ -2482,27 +2482,6 @@ Table of Contents
    |       | OID:         1.3.101.113                                  |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 05 06 03 2B 65 71                         |
-   |       | Comments:                                                 |
-   +-------+-----------------------------------------------------------+
-   |    16 | Name:        HSS / LMS                                    |
-   |       | Identifiers: id-alg-hss-lms-hashsig, id-alg-mts-hashsig   |
-   |       | OID:         1.2.840.113549.1.9.16.3.17                   |
-   |       | Parameters:  Absent                                       |
-   |       | DER:         30 0D 06 0B 2A 86 48 86 F7 0D 01 09 10 03 11 |
-   |       | Comments:                                                 |
-   +-------+-----------------------------------------------------------+
-   |    17 | Name:        XMSS                                         |
-   |       | Identifiers: id_alg_xmss                                  |
-   |       | OID:         0.4.0.127.0.15.1.1.13.0                      |
-   |       | Parameters:  Absent                                       |
-   |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0D 00       |
-   |       | Comments:                                                 |
-   +-------+-----------------------------------------------------------+
-   |    18 | Name:        XMSS^MT                                      |
-   |       | Identifiers: id_alg_xmssmt                                |
-   |       | OID:         0.4.0.127.0.15.1.1.14.0                      |
-   |       | Parameters:  Absent                                       |
-   |       | DER:         30 0B 06 09 04 00 7F 00 0F 01 01 0E 00       |
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
    |    24 | Name:        EC Public Key (Weierstraß) with              |
