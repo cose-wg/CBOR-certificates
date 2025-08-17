@@ -1039,9 +1039,10 @@ Table of Contents
    MAC and requires a public Diffie-Hellman key of the verifier
    distributed out-of-band.  Both signature algorithms and non-signature
    proof-of-possession algorithms are listed in the C509 Signature
-   Algorithms Registry, see Section 9.12.  The use of SHA with HMAC-SHA
-   algorithms (see values 14-16 in Section 9.12) requires a signature
-   value with syntax DhSigStatic defined as follows:
+   Algorithms Registry, see Section 9.12.  The non-signature roof-of-
+   possession algorithms with SHA-2 and HMAC-SHA2 (see values 14-16 in
+   Section 9.12) requires a signature value with syntax DhSigStatic
+   defined as follows:
 
    DhSigStatic = MessageDigest / DhSigStaticType
 
@@ -2303,7 +2304,7 @@ Table of Contents
    |       | DER:         30 05 06 03 2B 65 71                         |
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
-   |    14 | Name:        SHA-256 with HMAC-SHA256                     |
+   |    14 | Name:        PoP with SHA-256 and HMAC-SHA256             |
    |       | Identifiers: sa-ecdhPop-sha256-hmac-sha256                |
    |       | OID:         1.3.6.1.5.5.7.6.26                           |
    |       | Parameters:  Absent                                       |
@@ -2312,7 +2313,7 @@ Table of Contents
    |       |              KDF and MAC, see RFC 6955. Requires          |
    |       |              recipient's public static Diffie-Hellman key |
    +-------+-----------------------------------------------------------+
-   |    15 | Name:        SHA-384 with HMAC-SHA384                     |
+   |    15 | Name:        PoP with SHA-384 and HMAC-SHA384             |
    |       | Identifiers: sa-ecdhPop-sha384-hmac-sha384                |
    |       | OID:         1.3.6.1.5.5.7.6.27                           |
    |       | Parameters:  Absent                                       |
@@ -2321,7 +2322,7 @@ Table of Contents
    |       |              KDF and MAC, see RFC 6955. Requires          |
    |       |              recipient's public static Diffie-Hellman key |
    +-------+-----------------------------------------------------------+
-   |    16 | Name:        SHA-512 with HMAC-SHA512                     |
+   |    16 | Name:        PoP with SHA-512 and HMAC-SHA512             |
    |       | Identifiers: sa-ecdhPop-sha512-hmac-sha512                |
    |       | OID:         1.3.6.1.5.5.7.6.28                           |
    |       | Parameters:  Absent                                       |
