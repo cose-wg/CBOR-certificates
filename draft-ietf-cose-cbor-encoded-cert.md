@@ -2265,48 +2265,35 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 | Content              | Content | Media            | ID    | Reference    |
 | Format               | Coding  | Type             |       |              |
 +======================+=========+==================+=======+==============+
-| application/         | -       | [[link to 9.15]] | TBD6  | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD3  | [[this       |
 | cose-c509-cert       |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
 | cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
 | usage = chain        |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.16]] | TBD7  | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD4  | [[this       |
 | cose-c509-pkcs10     |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.17]] | TBD19 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD19 | [[this       |
 | cose-c509-crtemplate |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.18]] | TBD10 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD10 | [[this       |
 | cose-c509-privkey    |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.19]] | TBD11 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD11 | [[this       |
 | cose-c509-pem        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.20]] | TBD16 | [[this       |
+| application/         | -       | [[link to 9.15]] | TBD16 | [[this       |
 | cose-certhash        |         |                  |       |   document]] |
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
-| cose-certhash;       | -       | [[link to 9.20]] | TBD17 |   document]] |
+| cose-certhash;       | -       | [[link to 9.15]] | TBD17 |   document]] |
 | usage = c509         |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
-## CBOR Tags Registry {#tags}
-
-This document registers the following entries in the "CBOR Tags" registry under the "Concise Binary Object Representation (CBOR) Tags" heading.
-
-~~~~~~~~~~~ aasvg
-+------+------------------------------------------------------------+
-|  Tag | CBOR Tags                                                  |
-+======+============================================================+
-| TBD6 | Data Item: COSE_C509                                       |
-|      | Semantics: An ordered chain of C509 certificates           |
-|      | Reference: This document                                   |
-+------+------------------------------------------------------------+
-~~~~~~~~~~~
 
 ## TLS Certificate Types Registry {#tls}
 
