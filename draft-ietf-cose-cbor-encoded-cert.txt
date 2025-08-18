@@ -341,10 +341,12 @@ Table of Contents
 
    The 'version' field is encoded in the 'c509CertificateType' CBOR int.
    The field 'c509CertificateType' also indicates the type of the C509
-   certificate.  Currently, the type can be a natively signed C509
-   certificate following X.509 v3 (c509CertificateType = 2) or a CBOR
-   re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see
-   Section 9.1.
+   certificate.  Two types are defined in this document: natively signed
+   C509 certificates, following X.509 v3 (c509CertificateType = 2); and
+   CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3),
+   see Section 9.1.  The number of elements in TBSCertificate is fixed
+   and determined by the type.  Additional types may be added in the
+   future.
 
 3.1.2.  serialNumber
 
@@ -1349,19 +1351,19 @@ Table of Contents
    to specify content in all columns.  For values in the interval [-24,
    23], the registration procedure is "IETF Review with Expert Review".
    For all other values, the registration procedure is "Expert Review".
-   The initial contents of the registry are:
+   The initial contents of the registry are (see Section 3.1.1):
 
-   +-------+-----------------------------------------------------------+
-   | Value | Description                                               |
-   +=======+===========================================================+
-   |     0 | Reserved                                                  |
-   +-------+-----------------------------------------------------------+
-   |     1 | Reserved                                                  |
-   +-------+-----------------------------------------------------------+
-   |     2 | Natively Signed C509 Certificate following X.509 v3       |
-   +-------+-----------------------------------------------------------+
-   |     3 | CBOR re-encoding of X.509 v3 Certificate                  |
-   +-------+-----------------------------------------------------------+
+           +-------+-------------------------------------------+
+           | Value | Description                               |
+           +=======+===========================================+
+           |     0 | Reserved                                  |
+           +-------+-------------------------------------------+
+           |     1 | Reserved                                  |
+           +-------+-------------------------------------------+
+           |     2 | Natively Signed C509 Certificate          |
+           +-------+-------------------------------------------+
+           |     3 | CBOR Re-encoded X.509 v3 Certificate      |
+           +-------+-------------------------------------------+
 
                       Figure 7: C509 Certificate Types
 
