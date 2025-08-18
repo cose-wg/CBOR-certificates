@@ -6,11 +6,11 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 18 February 2026                                     J. Höglund
+Expires: 19 February 2026                                     J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                          17 August 2025
+                                                          18 August 2025
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -66,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 February 2026.
+   This Internet-Draft will expire on 19 February 2026.
 
 Copyright Notice
 
@@ -851,7 +851,7 @@ Table of Contents
    header bucket.  The trust mechanism MUST process any certificates in
    the c5b, c5c, and c5u parameters as untrusted input.  The presence of
    a self-signed certificate in the parameter MUST NOT cause the update
-   of the set of trust anchors without some out-of-band confirmation.
+   of the set of trust anchors without appropriate authorization.
 
       +======+=======+===============+=============================+
       | Name | Label | Value Type    | Description                 |
