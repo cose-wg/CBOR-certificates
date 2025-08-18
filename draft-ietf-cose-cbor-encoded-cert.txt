@@ -3008,11 +3008,6 @@ Table of Contents
               Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
               2012, <https://www.rfc-editor.org/rfc/rfc6698>.
 
-   [RFC6838]  Freed, N., Klensin, J., and T. Hansen, "Media Type
-              Specifications and Registration Procedures", BCP 13,
-              RFC 6838, DOI 10.17487/RFC6838, January 2013,
-              <https://www.rfc-editor.org/rfc/rfc6838>.
-
    [RFC6962]  Laurie, B., Langley, A., and E. Kasper, "Certificate
               Transparency", RFC 6962, DOI 10.17487/RFC6962, June 2013,
               <https://www.rfc-editor.org/rfc/rfc6962>.
