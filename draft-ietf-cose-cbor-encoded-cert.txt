@@ -822,7 +822,9 @@ Table of Contents
    C509CertData = bytes .cborseq C509Certificate
 
    C509CertData thus includes the unwrapped CBOR sequence,
-   ~C509Certificate, see Appendix A.1.5 for an example.
+   ~C509Certificate.  The byte string encoding includes the length of
+   each certificate which simplifies parsing.  See Appendix A.1.5 for an
+   example.
 
    The COSE_C509 item has media type application/cose-c509-cert, see
    Section 9.15.1.  Different CoAP Content-Formats are defined depending
