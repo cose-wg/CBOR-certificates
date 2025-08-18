@@ -6665,7 +6665,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <h3 id="name-tls-certificate-types-regis">
 <a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
         </h3>
-<p id="section-9.17-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate).<a href="#section-9.17-1" class="pilcrow">¶</a></p>
+<p id="section-9.17-1">This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; in TLS 1.3 and opaque ASN.1Cert&lt;1..2^24-1&gt; in TLS 1.2 contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-9.17-1" class="pilcrow">¶</a></p>
 <div id="section-9.17-2">
           <div class="alignLeft art-svg artwork" id="section-9.17-2.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -6820,6 +6820,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="RFC7120">[RFC7120]</dt>
         <dd>
 <span class="refAuthor">Cotton, M.</span>, <span class="refTitle">"Early IANA Allocation of Standards Track Code Points"</span>, <span class="seriesInfo">BCP 100</span>, <span class="seriesInfo">RFC 7120</span>, <span class="seriesInfo">DOI 10.17487/RFC7120</span>, <time datetime="2014-01" class="refDate">January 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7120">https://www.rfc-editor.org/rfc/rfc7120</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7250">[RFC7250]</dt>
+        <dd>
+<span class="refAuthor">Wouters, P., Ed.</span>, <span class="refAuthor">Tschofenig, H., Ed.</span>, <span class="refAuthor">Gilmore, J.</span>, <span class="refAuthor">Weiler, S.</span>, and <span class="refAuthor">T. Kivinen</span>, <span class="refTitle">"Using Raw Public Keys in Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)"</span>, <span class="seriesInfo">RFC 7250</span>, <span class="seriesInfo">DOI 10.17487/RFC7250</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7250">https://www.rfc-editor.org/rfc/rfc7250</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8126">[RFC8126]</dt>
         <dd>
