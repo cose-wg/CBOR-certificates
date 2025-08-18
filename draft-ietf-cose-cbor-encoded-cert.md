@@ -2298,7 +2298,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> in TLS 1.3 and opaque ASN.1Cert<1..2^24-1> in TLS 1.2 contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). Similar to COSE_509, the TLS provides a three byte length field for each certificate. Note that the TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are needed to negotiate the use of C509 in TLS 1.2. 
+This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as as X.509, but uses a different value and instead of DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> in TLS 1.3 and opaque ASN.1Cert<1..2^24-1> in TLS 1.2 contains a the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). Similar to COSE_C509, the TLS handshake contains the length of each certificate. Note that the TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are needed to negotiate the use of C509 in TLS 1.2. 
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
