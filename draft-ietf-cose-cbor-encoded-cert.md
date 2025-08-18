@@ -269,9 +269,9 @@ tag = #6
 
 C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates as detailed in the following subsections.
 
-### version
+### version {#version}
 
-The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Currently, the type can be a natively signed C509 certificate following X.509 v3 (c509CertificateType = 2) or a CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}.
+The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Two types are defined in this document: natively signed C509 certificates, following X.509 v3 (c509CertificateType = 2); and CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}. The number of elements in TBSCertificate is fixed and determined by the type. Additional types may be added in the future.
 
 ### serialNumber
 
@@ -876,20 +876,20 @@ All assignments according to "IETF Review with Expert Review" are made on a "IET
 
 ## C509 Certificate Types Registry {#type}
 
-IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval \[-24, 23\], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Types" under the new heading "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval \[-24, 23\], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are (see {{version}}):
 
 ~~~~~~~~~~~ aasvg
-+-------+-----------------------------------------------------------+
-| Value | Description                                               |
-+=======+===========================================================+
-|     0 | Reserved                                                  |
-+-------+-----------------------------------------------------------+
-|     1 | Reserved                                                  |
-+-------+-----------------------------------------------------------+
-|     2 | Natively Signed C509 Certificate following X.509 v3       |
-+-------+-----------------------------------------------------------+
-|     3 | CBOR re-encoding of X.509 v3 Certificate                  |
-+-------+-----------------------------------------------------------+
++-------+-------------------------------------------+
+| Value | Description                               |
++=======+===========================================+
+|     0 | Reserved                                  |
++-------+-------------------------------------------+
+|     1 | Reserved                                  |
++-------+-------------------------------------------+
+|     2 | Natively Signed C509 Certificate          |
++-------+-------------------------------------------+
+|     3 | CBOR Re-encoded X.509 v3 Certificate      |
++-------+-------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-types title="C509 Certificate Types"}
 {: artwork-align="center"}
