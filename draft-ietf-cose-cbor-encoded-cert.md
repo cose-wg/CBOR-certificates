@@ -50,7 +50,6 @@ normative:
   RFC5280:
   RFC5958:
   RFC6698:
-  RFC6838:
   RFC6962:
   RFC7030:
   RFC7120:
