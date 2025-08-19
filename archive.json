@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-17T02:18:14.499708+00:00",
+  "timestamp": "2025-08-19T01:59:53.828750+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -5628,11 +5628,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "PR exists"
+        "low priority for core spec"
       ],
       "body": "As specified in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00:\r\n\r\n```\r\npk-XMSS-HashSig PUBLIC-KEY ::= {\r\n   IDENTIFIER id-alg-xmss-hashsig\r\n   KEY XMSS-HashSig-PublicKey\r\n   PARAMS ARE absent\r\n   CERT-KEY-USAGE\r\n      { digitalSignature, nonRepudiation, keyCertSign, cRLSign } }\r\n\r\nXMSS-HashSig-PublicKey ::= OCTET STRING\r\n```\r\n\r\nAnd here the definition of SubjectPublicKeyInfo in RFC 5280\r\n```\r\n   SubjectPublicKeyInfo  ::=  SEQUENCE  {\r\n        algorithm            AlgorithmIdentifier,\r\n        subjectPublicKey     BIT STRING  }\r\n```\r\n\r\nShall the XMSS public key be an OCTET-STRING(public key bytes), or just the \"public key bytes\"?\r\n\r\nThis applies also to the XMSS-MT, HSS-LMS.\r\n\r\n",
       "createdAt": "2024-05-06T08:58:08Z",
-      "updatedAt": "2025-08-16T13:06:03Z",
+      "updatedAt": "2025-08-17T06:35:12Z",
       "closedAt": null,
       "comments": [
         {
@@ -5676,6 +5676,13 @@
           "body": "Yes, this should not have been closed. Needs PR was correct.",
           "createdAt": "2025-07-26T18:00:09Z",
           "updatedAt": "2025-07-26T18:00:09Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merged to main",
+          "createdAt": "2025-08-17T06:34:13Z",
+          "updatedAt": "2025-08-17T06:34:13Z"
         }
       ]
     },
@@ -6922,17 +6929,18 @@
       "id": "I_kwDOCpt5cM697-zt",
       "title": "C509Certificate vs ~C509Certificate",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/258",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
+        "invalid",
         "PR exists"
       ],
       "body": "The corresponding data type for `X509Certificate` (or `Certificate` as in RFC 5280) is `C509Certificate`, but not the unwrapped one `~C509Certificate`, and the unwrapped one saves ONLY 1 byte. Please use `C509Certificate` instead the unwrapped one, especially in the following contexts:\n\n1. C509CertData\n   ```\n   The COSE_C509 structure used in c5b, c5c, and c5u is defined as:\n\n   COSE_C509 = C509CertData / [ 2* C509CertData ]\n   C509CertData = bstr .cborseq C509Certificate\n\n   C509CertData thus includes the unwrapped CBOR sequence,\n   ~C509Certificate, see Appendix A.1.5 for an example.\n   ```\n   The last block shall be changed to `C509CertData thus includes the CBOR sequence\n   C509Certificate, see Appendix A.1.5 for an example.`\n2. COSE_CertHash\n   ```\n   The value type of c5t is the COSE_CertHash structure defined in\n   [RFC9360], which contains the hash value of the C509 certificate\n   calculated over ~C509Certificate\n   ```\n   For the X.509 certificate, COSE_CertHash is calculated over the whole `Certificate` including the leading tag and length. We shall follow here the same mechanism, and calculated over the `C509Certificate` instead the unwrapped one `~C509Certificate`.\n3. 9.20 TLS Certificate Types Registry\n   ```\n   C509 is defined in the same way\n   as as X.509, but uses a different value and instead of DER-encoded\n   X.509 certificate, opaque cert_data<1..2^24-1> contains a the CBOR\n   sequence ~C509Certificate (an unwrapped C509Certificate)\n   ```\n   And the last block shall be changed to `contains a CBOR\n   sequence C509Certificate`\n\nPlease note in C509CertData and TLS, using `C509Certificate` is a much cleaner solution compared to the unwrapped one.\n\nLast but not least, for the above reasons, and also for user friendliness, please use `C509Certificate` instead`~C509Certificate` in the examples.",
       "createdAt": "2025-06-29T22:10:18Z",
-      "updatedAt": "2025-08-16T13:28:40Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-18T14:49:08Z",
+      "closedAt": "2025-08-18T14:49:08Z",
       "comments": [
         {
           "author": "BrianSipos",
@@ -7066,6 +7074,13 @@
           "body": ">The 3 byte length field indicates the length of the certificate_list which contains usually 2+ certificates.\n\nTLS 1.2, TLS 1.3, DTLS 1.2, DTLS 1.3, and QUIC all work the same. There is a a 3 byte length field for the certificate_list and a 3 byte length field for each cert_data.\n\n> Each X509 certificate framed within an ASN.1\n\nNot so important, but this is not ASN.1, it is the TLS presentation language\n\n> TLS 1.2 only support X509 cert type, so there is no need for C509 to somehow fit into the TLS 1.2 structure.\n\nHow to use certificate types in TLS 1.2 is specified in RFC 7250. C509 works well in TLS 1.2, TLS 1.3, DTLS 1.2, DTLS 1.3, and QUIC.\n\n",
           "createdAt": "2025-08-16T13:28:09Z",
           "updatedAt": "2025-08-16T13:28:40Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Design team meeting today, agreed to keep current definitions with clarifications for TLS #285. Also some general clarifications directly in the master (including 894eedfc and fa3354a).",
+          "createdAt": "2025-08-18T14:11:05Z",
+          "updatedAt": "2025-08-18T14:23:22Z"
         }
       ]
     },
@@ -7415,17 +7430,17 @@
       "id": "I_kwDOCpt5cM7CpMb9",
       "title": "Media formats, Content formats, tags, and magic numbers",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/279",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "- The heading for media formats was on the wrong level. I fixed this\n\n- Based on a comment from Carsten there seems be be corrections/clarifications needed.\nhttps://github.com/cose-wg/CBOR-certificates/pull/278#pullrequestreview-3057957405\n\n- TBD6 is used for both for Content-Format application/cose-c509-cert and a CBOR tag. This seems wrong\n\n- TBD7 is used for a media format and for TLSA. This seems wrong\n\n- Is seems like we will register two CBOR tags (TBD15 and the TBD6 in Section 9.18) for a data COSE_C509 containing a chain. Is this intended and needed? If we really want to tags we should have a sentence discusssing this.",
       "createdAt": "2025-07-26T12:58:57Z",
-      "updatedAt": "2025-08-14T08:23:48Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-18T14:22:12Z",
+      "closedAt": "2025-08-18T14:22:11Z",
       "comments": [
         {
           "author": "emanjon",
@@ -7447,6 +7462,20 @@
           "body": "One tag is from the TBD15 content format. The other tag is bor-tags-registry in 9.17\n\nOne simple solution is to remove Section 9.17 CBOR Tags Registry. Otherwise text needs to be added to explain that we are defining two tags for the same thing and why.",
           "createdAt": "2025-08-14T08:23:48Z",
           "updatedAt": "2025-08-14T08:23:48Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The only remaining item is \"Based on a comment from Carsten there seems be be corrections/clarifications needed.\"\n\nLikely a small bug fix",
+          "createdAt": "2025-08-17T06:37:17Z",
+          "updatedAt": "2025-08-17T06:37:17Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "PR #284 addressing the remaining part of this issue (and #278) is merged, so we close this issue.",
+          "createdAt": "2025-08-18T14:22:12Z",
+          "updatedAt": "2025-08-18T14:22:12Z"
         }
       ]
     },
@@ -7455,7 +7484,7 @@
       "id": "I_kwDOCpt5cM7EHOuK",
       "title": "Format of ECDSA signature",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/280",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -7464,8 +7493,8 @@
       ],
       "body": "As in draft -14, \n```\nFor ECDSA signatures, the SEQUENCE and INTEGER type and length fields\nas well as the any leading 0x00 byte (to indicate that the number is\nnot negative) are omitted.  If the two INTEGER value fields have\ndifferent lengths, the shorter INTEGER value field is padded with\nzeroes so that the two fields have the same length.  The resulting\nbyte string is encoded as a CBOR byte string.\n```\nFor an ECDSA signature (r, s), the signature is `I2OS(r, l) || I2OS (s, l)`, where `l` is the minimal length to represent `max(r, s)` without leading zero bytes. For the curve secp256r1, `l <= 32`. This is different than the format of a plain ECDSA signature specified in the BSI's TR-0311 [1], where `l` is a fixed value:\n\nIn plain format the signature (r, s) is encoded as octet string R \u2016 S, i.e. as concatenation of the\noctet strings `R = I2OS(r, l)` and `S = I2OS(s, l)` with `l` = ceil (log<sub>256</sub><sup>n</sup>). Thus, the signature has a\nfixed length of `2l` octets.\n\nShall we change it to the BSI TR-0311's definition?\n\n[1] Germany Federal Office for Information Security, Technical Guideline BSI TR-0311: Elliptic Curve Cryptography, available under https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TR03111/BSI-TR-03111_V-2-1_pdf.pdf?__blob=publicationFile&v=1\n",
       "createdAt": "2025-08-04T17:20:12Z",
-      "updatedAt": "2025-08-14T11:35:24Z",
-      "closedAt": null,
+      "updatedAt": "2025-08-17T06:33:58Z",
+      "closedAt": "2025-08-17T06:33:58Z",
       "comments": [
         {
           "author": "xipki",
@@ -7508,6 +7537,13 @@
           "body": "@xipki please review the PR. Looks like we all agree to make this change. The only question is if the new text is good.",
           "createdAt": "2025-08-14T11:35:24Z",
           "updatedAt": "2025-08-14T11:35:24Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merged to main",
+          "createdAt": "2025-08-17T06:33:58Z",
+          "updatedAt": "2025-08-17T06:33:58Z"
         }
       ]
     }
@@ -11012,23 +11048,23 @@
     {
       "number": 277,
       "id": "PR_kwDOCpt5cM6gUOTq",
-      "title": "Array as common denominator",
+      "title": "Adding arrays to COSE_C509 and TLS cert_data",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/277",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #258 ",
       "createdAt": "2025-07-23T18:03:30Z",
-      "updatedAt": "2025-07-25T21:04:38Z",
+      "updatedAt": "2025-08-18T14:20:17Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "18d20ca6ed73d0e8cbcb1ca0e5afec6cae5c2294",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "align-types",
       "headRefOid": "da7958970837cc2f97de6b52eb332ae552af6f6f",
-      "closedAt": null,
+      "closedAt": "2025-08-18T14:20:16Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -11095,6 +11131,13 @@
           "body": "Agreement with John and Lijun that this PR can be left open pending later reviews.",
           "createdAt": "2025-07-25T21:04:38Z",
           "updatedAt": "2025-07-25T21:04:38Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Given the resolution of #258 that we will stick to the current format, this PR can be closed. ",
+          "createdAt": "2025-08-18T14:20:16Z",
+          "updatedAt": "2025-08-18T14:20:16Z"
         }
       ],
       "reviews": [
@@ -11165,7 +11208,7 @@
       "labels": [],
       "body": "Addresses #226",
       "createdAt": "2025-07-23T21:09:12Z",
-      "updatedAt": "2025-08-14T11:51:09Z",
+      "updatedAt": "2025-08-18T11:22:14Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "5e557667a01711231447a8baf1bf42eaae1c5a00",
@@ -11178,7 +11221,15 @@
       "mergeCommit": {
         "oid": "99034a16d2323a6801bc36e9c29b22921ef6c0cc"
       },
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I made PR #284 along these lines.",
+          "createdAt": "2025-08-18T11:22:14Z",
+          "updatedAt": "2025-08-18T11:22:14Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM62EkeS",
@@ -11278,26 +11329,28 @@
     {
       "number": 281,
       "id": "PR_kwDOCpt5cM6jpY7A",
-      "title": "Align definition of ECDSA format",
+      "title": "Fixed length ECDSA format",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/281",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing #280",
       "createdAt": "2025-08-14T09:27:15Z",
-      "updatedAt": "2025-08-14T13:07:41Z",
+      "updatedAt": "2025-08-17T06:30:32Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6b0211704bafe1ea913ae35e7a4a22ac41cac4fd",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "ecdsa-format",
       "headRefOid": "13fdc9e653b0fd0ccc5ce584714011343d6e00a6",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-17T06:30:32Z",
+      "mergedAt": "2025-08-17T06:30:32Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "fed13f04f4432e69b0e62117f0b40f25cfd97147"
+      },
       "comments": [
         {
           "author": "emanjon",
@@ -11348,24 +11401,26 @@
       "id": "PR_kwDOCpt5cM6jpffH",
       "title": "Comments on media formats etc.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/282",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing #279",
       "createdAt": "2025-08-14T09:34:53Z",
-      "updatedAt": "2025-08-15T06:56:37Z",
+      "updatedAt": "2025-08-17T06:33:21Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6b0211704bafe1ea913ae35e7a4a22ac41cac4fd",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "media-format-etc",
       "headRefOid": "71897e39ce42dd2b1599306a1f52693e23678572",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-17T06:33:21Z",
+      "mergedAt": "2025-08-17T06:33:21Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "7e63e351c20cc07aef75237eb2ddcecfaf8d8c0b"
+      },
       "comments": [
         {
           "author": "emanjon",
@@ -11387,6 +11442,13 @@
           "body": "This doesn't yet fully address #279, which references #278, where I continued the thread with @cabo.\r\nIf we want to close this I could implement my proposal from that thread.",
           "createdAt": "2025-08-15T06:56:37Z",
           "updatedAt": "2025-08-15T06:56:37Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "#279 has a lot of independent issues. No need for large PRs. I merge this. Commit the rest of the bug fixes to main or a new PR",
+          "createdAt": "2025-08-17T06:33:17Z",
+          "updatedAt": "2025-08-17T06:33:17Z"
         }
       ],
       "reviews": [
@@ -11410,24 +11472,26 @@
       "id": "PR_kwDOCpt5cM6jzcp6",
       "title": "Leave out stateful hash-based signatures from core spec",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/283",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-08-15T06:48:46Z",
-      "updatedAt": "2025-08-16T13:05:22Z",
+      "updatedAt": "2025-08-17T06:29:27Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "6b0211704bafe1ea913ae35e7a4a22ac41cac4fd",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "stateful-hash-sig",
       "headRefOid": "71d1cce21360df6fc764f92334ddd6a7aaf75ad7",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-08-17T06:29:27Z",
+      "mergedAt": "2025-08-17T06:29:27Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "a91e29adc3bbb625acc13b86d66d73e4b7d09016"
+      },
       "comments": [],
       "reviews": [
         {
@@ -11454,6 +11518,100 @@
           "body": "",
           "createdAt": "2025-08-16T13:05:22Z",
           "updatedAt": "2025-08-16T13:05:22Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 284,
+      "id": "PR_kwDOCpt5cM6kFiGr",
+      "title": "Updates on magic numbers and related clarifications",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/284",
+      "state": "MERGED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Tries to address @cabo's comment on #278 (see also #279).",
+      "createdAt": "2025-08-18T11:20:25Z",
+      "updatedAt": "2025-08-18T14:12:09Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "bbbb2e4f9088f74352f1fdb9a1eecb4f34f5e1a0",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "fixing-magic-number",
+      "headRefOid": "48bb4ff58f4e09350ec234632df419084c5ede09",
+      "closedAt": "2025-08-18T14:12:09Z",
+      "mergedAt": "2025-08-18T14:12:09Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "89d270f6b7569b788c2e3fa711f8f85f262555f4"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merging this now, further comments can come in later reviews. ",
+          "createdAt": "2025-08-18T14:12:02Z",
+          "updatedAt": "2025-08-18T14:12:02Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM66cbQ4",
+          "commit": {
+            "abbreviatedOid": "48bb4ff"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-08-18T11:36:46Z",
+          "updatedAt": "2025-08-18T11:36:46Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 285,
+      "id": "PR_kwDOCpt5cM6kHCKn",
+      "title": "TLS clarificaitons",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/285",
+      "state": "MERGED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "ready-to-merge"
+      ],
+      "body": "",
+      "createdAt": "2025-08-18T13:25:38Z",
+      "updatedAt": "2025-08-18T14:48:52Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "bbbb2e4f9088f74352f1fdb9a1eecb4f34f5e1a0",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "emanjon-patch-9",
+      "headRefOid": "d57dd5ee9a60f25a98d9d601861f366d89e17456",
+      "closedAt": "2025-08-18T14:48:52Z",
+      "mergedAt": "2025-08-18T14:48:52Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "cdda1d61c24577ca4f868de665580726faf66e2e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM66ecX5",
+          "commit": {
+            "abbreviatedOid": "d57dd5e"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-08-18T14:06:09Z",
+          "updatedAt": "2025-08-18T14:06:09Z",
           "comments": []
         }
       ]
