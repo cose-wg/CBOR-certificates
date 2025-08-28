@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-19T01:59:53.828750+00:00",
+  "timestamp": "2025-08-28T01:53:45.173667+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7546,6 +7546,22 @@
           "updatedAt": "2025-08-17T06:33:58Z"
         }
       ]
+    },
+    {
+      "number": 286,
+      "id": "I_kwDOCpt5cM7IGPQ_",
+      "title": "Futher optimization of SubjectKeyIdentifier and AuthorityKeyIdentifier if both have the same value",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/286",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In many self-signed certificates, the extensions AuthorityKeyIdentifier and SubjectKeyIdentifier are both present and have exactly the same content. Optimization is still possible here by changing the AuthorityKeyIdentifier to null, which in general saves 20 bytes.\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier\n```\n\nwill be changed to\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier / null\n```",
+      "createdAt": "2025-08-26T20:45:53Z",
+      "updatedAt": "2025-08-26T20:45:53Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
