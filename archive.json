@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-08-28T01:53:45.173667+00:00",
+  "timestamp": "2025-09-21T01:59:38.489842+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7560,6 +7560,22 @@
       "body": "In many self-signed certificates, the extensions AuthorityKeyIdentifier and SubjectKeyIdentifier are both present and have exactly the same content. Optimization is still possible here by changing the AuthorityKeyIdentifier to null, which in general saves 20 bytes.\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier\n```\n\nwill be changed to\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier / null\n```",
       "createdAt": "2025-08-26T20:45:53Z",
       "updatedAt": "2025-08-26T20:45:53Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 287,
+      "id": "I_kwDOCpt5cM7Mn7iR",
+      "title": "How to encode the C509 name in CertificateAuthorities in TLS",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/287",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Both TLS 1.2 (RFC 5246), TLS 1.3 (RFC 8446) and RFC 6066 requires the certificate authorities to be encoded as DER-encoded X.501 distinguished name.\n\n1. A straightforward idea is to convert the C509 name to the DER-encoded X.501 name, this however 1) requires complicated conversion between both formats, and 2) it is difficult to distinguish from the real X.501 name (it is possible to have both C.509 and X.509 certificate authorities if both certificate types are supported in one handshake).\n\n2. Another idea is to define a new Attribute Type (say id-c509-name) with the encoded C509-name binary as the content. This solves the problems above.\nFor this solution, a new OBJECT IDENTIFIER id-c509-name needs to be applied at IANA.\n\nFor better understanding, below are the snippets from the TLS specifications:\n\nSection 7.4.4 in RFC 5246:\n```\n      struct {\n          ClientCertificateType certificate_types<1..2^8-1>;\n          SignatureAndHashAlgorithm\n            supported_signature_algorithms<2^16-1>;\n          DistinguishedName certificate_authorities<0..2^16-1>;\n      } CertificateRequest;\n\ncertificate_authorities\n      A list of the distinguished names [X501] of acceptable\n      certificate_authorities, represented in DER-encoded format.  These\n      distinguished names may specify a desired distinguished name for a\n      root CA or for a subordinate CA; thus, this message can be used to\n      describe known roots as well as a desired authorization space.  If\n      the certificate_authorities list is empty, then the client MAY\n      send any certificate of the appropriate ClientCertificateType,\n      unless there is some external arrangement to the contrary.\n```\n\nSection 4.2.4 in RFC 8446:\n```\nstruct {\n          DistinguishedName authorities<3..2^16-1>;\n      } CertificateAuthoritiesExtension;\n\n   authorities:  A list of the distinguished names [X501] of acceptable\n      certificate authorities, represented in DER-encoded [X690] format.\n      These distinguished names specify a desired distinguished name for\n      a trust anchor or subordinate CA; thus, this message can be used\n      to describe known trust anchors as well as a desired authorization\n      space.\n\n   The client MAY send the \"certificate_authorities\" extension in the\n   ClientHello message.  The server MAY send it in the\n   CertificateRequest message.\n```\n\nSection 6 in RFC 6066:\n```\n   In order to indicate which CA root keys they possess, clients MAY\n   include an extension of type \"trusted_ca_keys\" in the (extended)\n   client hello.  The \"extension_data\" field of this extension SHALL\n   contain \"TrustedAuthorities\" where:\n\n      struct {\n          TrustedAuthority trusted_authorities_list<0..2^16-1>;\n      } TrustedAuthorities;\n\n      struct {\n          IdentifierType identifier_type;\n          select (identifier_type) {\n              case pre_agreed: struct {};\n              case key_sha1_hash: SHA1Hash;\n              case x509_name: DistinguishedName;\n              case cert_sha1_hash: SHA1Hash;\n          } identifier;\n      } TrustedAuthority;\n\n     ...\n-  \"x509_name\": contains the DER-encoded X.509 DistinguishedName of\n      the CA.\n```\n",
+      "createdAt": "2025-09-19T06:16:09Z",
+      "updatedAt": "2025-09-19T14:39:05Z",
       "closedAt": null,
       "comments": []
     }
