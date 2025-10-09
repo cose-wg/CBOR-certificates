@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-09-21T01:59:38.489842+00:00",
+  "timestamp": "2025-10-09T01:50:58.740754+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7575,7 +7575,31 @@
       "labels": [],
       "body": "Both TLS 1.2 (RFC 5246), TLS 1.3 (RFC 8446) and RFC 6066 requires the certificate authorities to be encoded as DER-encoded X.501 distinguished name.\n\n1. A straightforward idea is to convert the C509 name to the DER-encoded X.501 name, this however 1) requires complicated conversion between both formats, and 2) it is difficult to distinguish from the real X.501 name (it is possible to have both C.509 and X.509 certificate authorities if both certificate types are supported in one handshake).\n\n2. Another idea is to define a new Attribute Type (say id-c509-name) with the encoded C509-name binary as the content. This solves the problems above.\nFor this solution, a new OBJECT IDENTIFIER id-c509-name needs to be applied at IANA.\n\nFor better understanding, below are the snippets from the TLS specifications:\n\nSection 7.4.4 in RFC 5246:\n```\n      struct {\n          ClientCertificateType certificate_types<1..2^8-1>;\n          SignatureAndHashAlgorithm\n            supported_signature_algorithms<2^16-1>;\n          DistinguishedName certificate_authorities<0..2^16-1>;\n      } CertificateRequest;\n\ncertificate_authorities\n      A list of the distinguished names [X501] of acceptable\n      certificate_authorities, represented in DER-encoded format.  These\n      distinguished names may specify a desired distinguished name for a\n      root CA or for a subordinate CA; thus, this message can be used to\n      describe known roots as well as a desired authorization space.  If\n      the certificate_authorities list is empty, then the client MAY\n      send any certificate of the appropriate ClientCertificateType,\n      unless there is some external arrangement to the contrary.\n```\n\nSection 4.2.4 in RFC 8446:\n```\nstruct {\n          DistinguishedName authorities<3..2^16-1>;\n      } CertificateAuthoritiesExtension;\n\n   authorities:  A list of the distinguished names [X501] of acceptable\n      certificate authorities, represented in DER-encoded [X690] format.\n      These distinguished names specify a desired distinguished name for\n      a trust anchor or subordinate CA; thus, this message can be used\n      to describe known trust anchors as well as a desired authorization\n      space.\n\n   The client MAY send the \"certificate_authorities\" extension in the\n   ClientHello message.  The server MAY send it in the\n   CertificateRequest message.\n```\n\nSection 6 in RFC 6066:\n```\n   In order to indicate which CA root keys they possess, clients MAY\n   include an extension of type \"trusted_ca_keys\" in the (extended)\n   client hello.  The \"extension_data\" field of this extension SHALL\n   contain \"TrustedAuthorities\" where:\n\n      struct {\n          TrustedAuthority trusted_authorities_list<0..2^16-1>;\n      } TrustedAuthorities;\n\n      struct {\n          IdentifierType identifier_type;\n          select (identifier_type) {\n              case pre_agreed: struct {};\n              case key_sha1_hash: SHA1Hash;\n              case x509_name: DistinguishedName;\n              case cert_sha1_hash: SHA1Hash;\n          } identifier;\n      } TrustedAuthority;\n\n     ...\n-  \"x509_name\": contains the DER-encoded X.509 DistinguishedName of\n      the CA.\n```\n",
       "createdAt": "2025-09-19T06:16:09Z",
-      "updatedAt": "2025-09-19T14:39:05Z",
+      "updatedAt": "2025-10-08T11:21:32Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Following the second idea, let id-c509-name be \"1.3.6.1.4.1.45522.4.1\" (an OID under my private PEN number), and we have the C509 subject \"CN=rsa test CA\" which is CBOR encoded as follows:\n```\n6B                        # text(11)\n   6563632D63612074657374 # \"ecc-ca test\"\n```\nThen the corresponding X500 Name is as follows:\n```\n301E311C301A060A2B0601040182E3520401040C6B6563632D63612074657374\n```\nThe dumped output is:\n```\n0:d=0  hl=2 l=  30 cons: SEQUENCE\n  # 30 (SEQUENCE) 1E (length 30)       \n2:d=1  hl=2 l=  28 cons:  SET\n    # 31 (SET) 1C (length 28)\n4:d=2  hl=2 l=  26 cons:   SEQUENCE\n      # 30 (SEQUENCE) 1A (length 26)     \n6:d=3  hl=2 l=  10 prim:    OBJECT            :1.3.6.1.4.1.45522.4.1 \n        # 06 (OID) 0A (length 10)\n        #  2B0601040182E3520401 (1.3.6.1.4.1.45522.4.1) \n18:d=3  hl=2 l=  12 prim:    OCTET STRING      :kecc-ca test       \n        # 04 (OCTET STRING) 0C (length 12)\n        #   6B6563632D63612074657374 (the CBOR encoded C509 subject)\n```\n\nI tested this in the extensions trusted_ca_keys (TLS 1.2) and certificate_authorities (TLS 1.3), and in the CertificateRequest (TLS 1.2 & 1.3) using adapted (https://github.com/bcgit/bc-java/pull/2165) bouncycastle tls library.",
+          "createdAt": "2025-10-08T11:18:25Z",
+          "updatedAt": "2025-10-08T11:21:32Z"
+        }
+      ]
+    },
+    {
+      "number": 288,
+      "id": "I_kwDOCpt5cM7QWkgo",
+      "title": "ECDH-SS sender identity parameters",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/288",
+      "state": "OPEN",
+      "author": "BrianSipos",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In looking through C509-defined COSE header parameters, I notice that there is no C509 equivalent to the X509 sender identifiers defined in [RFC 9360](https://www.rfc-editor.org/rfc/rfc9360.html#section-3).\n\nIf parity is desired, there should be \"c5t-sender\" \"c5c-sender\" \"c5u-sender\" equivalents.\n",
+      "createdAt": "2025-10-08T14:00:45Z",
+      "updatedAt": "2025-10-08T14:00:45Z",
       "closedAt": null,
       "comments": []
     }
