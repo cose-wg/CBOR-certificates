@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-09T01:50:58.740754+00:00",
+  "timestamp": "2025-10-12T01:55:23.945135+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7333,7 +7333,7 @@
       ],
       "body": "The current language states that natively encoding SCTs with extensions is not supported. This is a reasonable choice for the current state of CT today, but the CT ecosystem will likely be moving to Sunlight/Static CT. The Static CT specification mandates the inclusion of the [`LeafIndex` SCT extension](https://github.com/C2SP/C2SP/blob/main/static-ct-api.md#sct-extension).\n\nIf the ability to CBOR encode SCTs is desired, then this extension should likely be accommodated in the specification.",
       "createdAt": "2025-07-21T08:24:18Z",
-      "updatedAt": "2025-07-24T17:53:34Z",
+      "updatedAt": "2025-10-09T21:27:53Z",
       "closedAt": null,
       "comments": [
         {
@@ -7391,6 +7391,20 @@
           "body": "I've though this over. I'm hesitant to add anything that involves future versions of SCT at this stage, since we state that \"Other versions of SCT are out of scope for this document.\" \n\nAll new fields need to be accurately specified and reviewed in the context of this scope. I think this is beyond the changes we are supposed to do in the context of wrapping up WGLC.\n\nBut this is not the last review step. There will be an IETF Last Call soon coming up where such comments could be provided. But for the next submission of this document I propose we leave this out.\n",
           "createdAt": "2025-07-24T17:53:33Z",
           "updatedAt": "2025-07-24T17:53:33Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As in https://letsencrypt.org/2025/08/14/rfc-6962-logs-eol: \"On February 28, 2026, we will entirely shut down our RFC 6962 logs.\"\n\nWe shall consider the inclusion of extensions.",
+          "createdAt": "2025-10-09T21:23:39Z",
+          "updatedAt": "2025-10-09T21:23:39Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "BTW, in the text description \"the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore)\": uint shall be changed to int. ",
+          "createdAt": "2025-10-09T21:27:52Z",
+          "updatedAt": "2025-10-09T21:27:52Z"
         }
       ]
     },
@@ -7575,7 +7589,7 @@
       "labels": [],
       "body": "Both TLS 1.2 (RFC 5246), TLS 1.3 (RFC 8446) and RFC 6066 requires the certificate authorities to be encoded as DER-encoded X.501 distinguished name.\n\n1. A straightforward idea is to convert the C509 name to the DER-encoded X.501 name, this however 1) requires complicated conversion between both formats, and 2) it is difficult to distinguish from the real X.501 name (it is possible to have both C.509 and X.509 certificate authorities if both certificate types are supported in one handshake).\n\n2. Another idea is to define a new Attribute Type (say id-c509-name) with the encoded C509-name binary as the content. This solves the problems above.\nFor this solution, a new OBJECT IDENTIFIER id-c509-name needs to be applied at IANA.\n\nFor better understanding, below are the snippets from the TLS specifications:\n\nSection 7.4.4 in RFC 5246:\n```\n      struct {\n          ClientCertificateType certificate_types<1..2^8-1>;\n          SignatureAndHashAlgorithm\n            supported_signature_algorithms<2^16-1>;\n          DistinguishedName certificate_authorities<0..2^16-1>;\n      } CertificateRequest;\n\ncertificate_authorities\n      A list of the distinguished names [X501] of acceptable\n      certificate_authorities, represented in DER-encoded format.  These\n      distinguished names may specify a desired distinguished name for a\n      root CA or for a subordinate CA; thus, this message can be used to\n      describe known roots as well as a desired authorization space.  If\n      the certificate_authorities list is empty, then the client MAY\n      send any certificate of the appropriate ClientCertificateType,\n      unless there is some external arrangement to the contrary.\n```\n\nSection 4.2.4 in RFC 8446:\n```\nstruct {\n          DistinguishedName authorities<3..2^16-1>;\n      } CertificateAuthoritiesExtension;\n\n   authorities:  A list of the distinguished names [X501] of acceptable\n      certificate authorities, represented in DER-encoded [X690] format.\n      These distinguished names specify a desired distinguished name for\n      a trust anchor or subordinate CA; thus, this message can be used\n      to describe known trust anchors as well as a desired authorization\n      space.\n\n   The client MAY send the \"certificate_authorities\" extension in the\n   ClientHello message.  The server MAY send it in the\n   CertificateRequest message.\n```\n\nSection 6 in RFC 6066:\n```\n   In order to indicate which CA root keys they possess, clients MAY\n   include an extension of type \"trusted_ca_keys\" in the (extended)\n   client hello.  The \"extension_data\" field of this extension SHALL\n   contain \"TrustedAuthorities\" where:\n\n      struct {\n          TrustedAuthority trusted_authorities_list<0..2^16-1>;\n      } TrustedAuthorities;\n\n      struct {\n          IdentifierType identifier_type;\n          select (identifier_type) {\n              case pre_agreed: struct {};\n              case key_sha1_hash: SHA1Hash;\n              case x509_name: DistinguishedName;\n              case cert_sha1_hash: SHA1Hash;\n          } identifier;\n      } TrustedAuthority;\n\n     ...\n-  \"x509_name\": contains the DER-encoded X.509 DistinguishedName of\n      the CA.\n```\n",
       "createdAt": "2025-09-19T06:16:09Z",
-      "updatedAt": "2025-10-08T11:21:32Z",
+      "updatedAt": "2025-10-09T09:17:10Z",
       "closedAt": null,
       "comments": [
         {
@@ -7584,6 +7598,13 @@
           "body": "Following the second idea, let id-c509-name be \"1.3.6.1.4.1.45522.4.1\" (an OID under my private PEN number), and we have the C509 subject \"CN=rsa test CA\" which is CBOR encoded as follows:\n```\n6B                        # text(11)\n   6563632D63612074657374 # \"ecc-ca test\"\n```\nThen the corresponding X500 Name is as follows:\n```\n301E311C301A060A2B0601040182E3520401040C6B6563632D63612074657374\n```\nThe dumped output is:\n```\n0:d=0  hl=2 l=  30 cons: SEQUENCE\n  # 30 (SEQUENCE) 1E (length 30)       \n2:d=1  hl=2 l=  28 cons:  SET\n    # 31 (SET) 1C (length 28)\n4:d=2  hl=2 l=  26 cons:   SEQUENCE\n      # 30 (SEQUENCE) 1A (length 26)     \n6:d=3  hl=2 l=  10 prim:    OBJECT            :1.3.6.1.4.1.45522.4.1 \n        # 06 (OID) 0A (length 10)\n        #  2B0601040182E3520401 (1.3.6.1.4.1.45522.4.1) \n18:d=3  hl=2 l=  12 prim:    OCTET STRING      :kecc-ca test       \n        # 04 (OCTET STRING) 0C (length 12)\n        #   6B6563632D63612074657374 (the CBOR encoded C509 subject)\n```\n\nI tested this in the extensions trusted_ca_keys (TLS 1.2) and certificate_authorities (TLS 1.3), and in the CertificateRequest (TLS 1.2 & 1.3) using adapted (https://github.com/bcgit/bc-java/pull/2165) bouncycastle tls library.",
           "createdAt": "2025-10-08T11:18:25Z",
           "updatedAt": "2025-10-08T11:21:32Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "[wireshark-localhost-tls.pcapng.zip](https://github.com/user-attachments/files/22793634/wireshark-localhost-tls.pcapng.zip)\n\nThis is the wireshark capture file for a complete TLS 1.2 handshake with client certificate authentication using C509 certificates.\n\n- Packet 1: Client Hello\n  - Extensions server_certificate_type and client_certificate_type: contains list of certificate types consisting of single value 3 (not registered anywhere, I use it just for test purpose) for the type C509 certificate\n  - Extension trusted_ca_keys: contains two entries for the CA's subject (CN=ecc-ca test and CN=rsa-ca test).\n- Packet 2: Server Hello\n  - Extensions server_certificate_type and client_certificate_type: contains the certificate type (value 3) selected by the server.\n- Packet 3: Certificate\n  - Payload is the server's C509 certificate\n- Packet 5: CertificateRequest\n  - Distinguished Names: Contains two entries for the CA's subject (CN=ecc-ca test and CN=rsa-ca test).\n- Packet 7:\n  - Payload is the client's C509 certificate",
+          "createdAt": "2025-10-09T09:09:06Z",
+          "updatedAt": "2025-10-09T09:17:10Z"
         }
       ]
     },
