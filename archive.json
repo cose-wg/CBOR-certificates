@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-10-12T01:55:23.945135+00:00",
+  "timestamp": "2025-11-04T01:58:31.857594+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7623,6 +7623,44 @@
       "updatedAt": "2025-10-08T14:00:45Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 289,
+      "id": "I_kwDOCpt5cM7Vc1nQ",
+      "title": "Wrong C509 to X509 encoding for otherName",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/289",
+      "state": "OPEN",
+      "author": "smhmeier",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
+      "createdAt": "2025-11-03T08:46:03Z",
+      "updatedAt": "2025-11-03T12:31:15Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for posting! F.y.i. - currently there is only low intensity maintenance of this code. We are looking for alternatives in terms of maintainers and other code basis. Any suggestions are welcome. ",
+          "createdAt": "2025-11-03T09:30:26Z",
+          "updatedAt": "2025-11-03T09:30:26Z"
+        },
+        {
+          "author": "smhmeier",
+          "authorAssociation": "NONE",
+          "body": "Thanks for the quick reply and report of the maintenance of the code! I would have created a PR but I'm unfamiliar with rust, but might look into it.",
+          "createdAt": "2025-11-03T10:08:33Z",
+          "updatedAt": "2025-11-03T10:08:33Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Contributions are welcome!",
+          "createdAt": "2025-11-03T12:31:14Z",
+          "updatedAt": "2025-11-03T12:31:14Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -11692,6 +11730,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 290,
+      "id": "PR_kwDOCpt5cM6xLZFX",
+      "title": "fix wrong otherName C509 to X509 encoding",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/290",
+      "state": "OPEN",
+      "author": "smhmeier",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix wrong encoding of the X509 extension of a `GeneralName` of type `otherName`.\r\n\r\nEdit: There does not seem to be a set of tests beside running it manually.\r\n\r\nFixes #289 ",
+      "createdAt": "2025-11-03T12:31:48Z",
+      "updatedAt": "2025-11-03T12:36:00Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "7d35c1dfb1fd43c3eaf6443e21d758abf2236292",
+      "headRepository": "smhmeier/CBOR-certificates",
+      "headRefName": "fix-othername-decoding",
+      "headRefOid": "d0e5a375c8337f88187f6c220e8c8209f2687b8d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
