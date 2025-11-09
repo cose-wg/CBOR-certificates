@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-06T01:59:51.928449+00:00",
+  "timestamp": "2025-11-09T02:03:10.387513+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7736,9 +7736,9 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "In draft-15:\n```\nIP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not\n      present, the extension value can be CBOR encoded. Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.  With the\n      exception of the first Address, if the byte string has the same\n      length as the previous Address, the Address is encoded as a uint\n      with the difference to the previous Address.  It should be noted\n      that using address differences for compactness prevents encoding\n      an address range larger than 2^64 - 1 corresponding to the CBOR\n      integer max value.\n```\n\n1. rdi is not related here, please remove it.\n2. Remove the text of excluding SAFI. SAFI represents the sub AFI, e.g. multi-case, uni-cast, and will be used in some cases.\n3. Remove the text of encoding the delta of address instead of the the address value.\n\nNew text:\n```\nIP Resources (id-pe-ipAddrBlocks).  Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.\n```",
+      "body": "In draft-15:\n```\nIP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not\n      present, the extension value can be CBOR encoded. Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.  With the\n      exception of the first Address, if the byte string has the same\n      length as the previous Address, the Address is encoded as a uint\n      with the difference to the previous Address.  It should be noted\n      that using address differences for compactness prevents encoding\n      an address range larger than 2^64 - 1 corresponding to the CBOR\n      integer max value.\n\n...\nIPAddressFamily = (AFI: uint, IPAddressChoice)\n...\n```\n\n1. rdi is not related here, please remove it.\n2. Add support of SAFI. SAFI represents the sub AFI, e.g. multi-case, uni-cast, and will be used in some cases.\n3. Remove the text of encoding the delta of address instead of the the address value.\n\nNew text:\n```\nIP Resources (id-pe-ipAddrBlocks).  Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.\n\n...\nIPAddressFamily = (AFI: uint, **SAFI: uint/null**, IPAddressChoice)\n...\n\n```\n",
       "createdAt": "2025-11-05T10:26:49Z",
-      "updatedAt": "2025-11-05T10:26:49Z",
+      "updatedAt": "2025-11-07T21:33:48Z",
       "closedAt": null,
       "comments": []
     },
