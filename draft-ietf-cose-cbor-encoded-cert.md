@@ -32,8 +32,8 @@ author:
         org: Ericsson AB
         email: goran.selander@ericsson.com
       - name: Shahid Raza
-        org: RISE AB
-        email: shahid.raza@ri.se
+        org: University of Glasgow
+        email: shahid.raza@glasgow.ac.uk
       - name: Joel Höglund
         org: RISE AB
         email: joel.hoglund@ri.se
