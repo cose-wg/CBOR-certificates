@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-09T02:03:10.387513+00:00",
+  "timestamp": "2025-11-23T02:19:26.156407+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7636,7 +7636,7 @@
       "labels": [],
       "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
       "createdAt": "2025-11-03T08:46:03Z",
-      "updatedAt": "2025-11-03T12:31:15Z",
+      "updatedAt": "2025-11-20T09:36:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -7659,6 +7659,13 @@
           "body": "Contributions are welcome!",
           "createdAt": "2025-11-03T12:31:14Z",
           "updatedAt": "2025-11-03T12:31:14Z"
+        },
+        {
+          "author": "smhmeier",
+          "authorAssociation": "NONE",
+          "body": "@gselander Quick ping for visibility. Seems that your comment arrived at the same time as my PR.",
+          "createdAt": "2025-11-20T09:36:39Z",
+          "updatedAt": "2025-11-20T09:36:39Z"
         }
       ]
     },
