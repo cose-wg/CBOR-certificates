@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-11-23T02:19:26.156407+00:00",
+  "timestamp": "2025-12-18T02:03:48.689581+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7820,6 +7820,38 @@
           "updatedAt": "2025-11-05T10:38:20Z"
         }
       ]
+    },
+    {
+      "number": 300,
+      "id": "I_kwDOCpt5cM7e6T94",
+      "title": "c509_demo_impl should write to file for later use",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/300",
+      "state": "OPEN",
+      "author": "dgtlrift",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "c509_demo_impl should include flag to write the converted file to new target file destination for future processing/testing.",
+      "createdAt": "2025-12-17T17:39:17Z",
+      "updatedAt": "2025-12-17T17:39:17Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 301,
+      "id": "I_kwDOCpt5cM7e6b4V",
+      "title": "Wi-SUN Certificates",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/301",
+      "state": "OPEN",
+      "author": "dgtlrift",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Wi-SUN certificate templates generate certificates that are not convertible to c509 with the c509_demo_impl implementation.\n\nSee [SiLabs KBA: Create your Own Wi-SUN Certificates](https://community.silabs.com/s/article/Create-your-Own-Wi-SUN-Certificates?language=en_US#:~:text=Generate%20a%20CSR%20for%20the%20intermediate%202%20CA%20openssl%20req,openssl%2Dwisun.conf%2011.) for openssl config details.",
+      "createdAt": "2025-12-17T17:49:06Z",
+      "updatedAt": "2025-12-17T17:49:06Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
