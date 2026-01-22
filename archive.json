@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-12-18T02:03:48.689581+00:00",
+  "timestamp": "2026-01-22T02:22:38.307862+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -11947,6 +11947,46 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 302,
+      "id": "PR_kwDOCpt5cM6-ZiDD",
+      "title": "AD review",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/302",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-01-21T08:59:45Z",
+      "updatedAt": "2026-01-21T09:03:03Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "682afbd05c3e41dbe641f50dedd9ab87c91e44d2",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "AD-review",
+      "headRefOid": "c0a12d7fbcd49d9749152193c9d16c47f1a8f3b3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7btQXR",
+          "commit": {
+            "abbreviatedOid": "c0a12d7"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-01-21T09:03:03Z",
+          "updatedAt": "2026-01-21T09:03:03Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
