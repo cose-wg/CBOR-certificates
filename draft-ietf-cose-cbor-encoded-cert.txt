@@ -3892,9 +3892,10 @@ Acknowledgments
    The authors want to thank Henk Birkholz, Corey Bonnell, Carsten
    Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari
    Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson,
-   Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Fraser
-   Tweedale, and Rene Struik for reviewing and commenting on
-   intermediate versions of the draft and help with GitHub.
+   Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene
+   Struik, Fraser Tweedale, and Paul Wouters for reviewing and
+   commenting on intermediate versions of the draft and help with
+   GitHub.
 
 Contributors
 
