@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-22T02:22:38.307862+00:00",
+  "timestamp": "2026-01-25T02:29:34.610211+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -11958,15 +11958,15 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
-      "body": "",
+      "body": "Adressing Paul's review\r\nhttps://mailarchive.ietf.org/arch/msg/cose/8k16G1BRqZ3oP6Jpog5HoEkVLq4/",
       "createdAt": "2026-01-21T08:59:45Z",
-      "updatedAt": "2026-01-21T09:03:03Z",
+      "updatedAt": "2026-01-22T18:53:07Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "682afbd05c3e41dbe641f50dedd9ab87c91e44d2",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "AD-review",
-      "headRefOid": "c0a12d7fbcd49d9749152193c9d16c47f1a8f3b3",
+      "headRefOid": "3a6c6c35f01f13229e9b45e7284beaeaa4592144",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
