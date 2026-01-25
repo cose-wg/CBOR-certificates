@@ -6,12 +6,12 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 26 July 2026                              University of Glasgow
+Expires: 29 July 2026                              University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                         22 January 2026
+                                                         25 January 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -21,16 +21,16 @@ Abstract
 
    This document specifies a CBOR encoding of X.509 certificates.  The
    resulting certificates are called C509 certificates.  The CBOR
-   encoding supports a large subset of RFC 5280, various certificate
+   encoding supports a large subset of RFC 5280, common certificate
    profiles and is extensible.
 
    Two types of C509 certificates are defined.  One type is an
    invertible CBOR re-encoding of DER encoded X.509 certificates with
    the signature field copied from the DER encoding.  The other type is
    identical except that the signature is over the CBOR encoding instead
-   of the DER encoding, removing the need for ASN.1 encoding.  Both
-   types of certificates have the same semantics as X.509 and the same
-   reduced size compared to X.509.
+   of the DER encoding, avoiding the use of ASN.1.  Both types of
+   certificates have the same semantics as X.509 and the same reduced
+   size compared to X.509.
 
    The document also specifies CBOR encoded data structures for
    certificate (signing) requests and certificate request templates, new
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 26 July 2026.
+   This Internet-Draft will expire on 29 July 2026.
 
 Copyright Notice
 
