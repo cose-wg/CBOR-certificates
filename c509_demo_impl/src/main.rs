@@ -2924,7 +2924,12 @@ fn parse_cbor_general_name(extension_val: &Value) -> Vec<u8> {
                                                     _ => panic!("Error parsing value: {:?}.", other_name_array[0]),
                                                 }
                                             };
-                                            lder_to_two_seq(oid, value)
+                                            // Add the [0] EXPLICIT ANY tag.
+                                            let value_wrapped = { lder_to_generic(value, ASN1_INDEX_ZERO) };
+
+                                            // for some reason, otherName uses A0 instead of 80 for
+                                            // the first element.
+                                            lder_to_two_gen(oid, value_wrapped, ASN1_INDEX_ZERO)
                                         }
                                         _ => panic!("Error parsing value: {:?}.", general_name[i + 1]),
                                     }
@@ -4078,6 +4083,13 @@ pub mod lder {
         result.push(first);
         result.push(second);
         lder_to_seq(result)
+    }
+
+    pub fn lder_to_two_gen(first: Vec<u8>, second: Vec<u8>, asn1_type: u8) -> Vec<u8> {
+        let mut result = Vec::new();
+        result.push(first);
+        result.push(second);
+        lder_to_gen_seq(result, asn1_type)
     }
 
     pub fn lder_to_time(input: String, time_type: u8) -> Vec<u8> {
