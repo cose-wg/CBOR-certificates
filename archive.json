@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-25T02:29:34.610211+00:00",
+  "timestamp": "2026-01-27T02:24:44.940661+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -11953,25 +11953,35 @@
       "id": "PR_kwDOCpt5cM6-ZiDD",
       "title": "AD review",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/302",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Adressing Paul's review\r\nhttps://mailarchive.ietf.org/arch/msg/cose/8k16G1BRqZ3oP6Jpog5HoEkVLq4/",
       "createdAt": "2026-01-21T08:59:45Z",
-      "updatedAt": "2026-01-22T18:53:07Z",
+      "updatedAt": "2026-01-25T19:46:12Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "682afbd05c3e41dbe641f50dedd9ab87c91e44d2",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "AD-review",
-      "headRefOid": "3a6c6c35f01f13229e9b45e7284beaeaa4592144",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "bae172211e00c4b1639e22eceebb64143e275e45",
+      "closedAt": "2026-01-25T19:46:12Z",
+      "mergedAt": "2026-01-25T19:46:12Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "d5f1ce76b830398deed5bd1b9d10d1deadecd639"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merging to submit -16",
+          "createdAt": "2026-01-25T19:45:59Z",
+          "updatedAt": "2026-01-25T19:45:59Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM7btQXR",
