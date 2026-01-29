@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-01-27T02:24:44.940661+00:00",
+  "timestamp": "2026-01-29T02:37:31.293703+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -3671,7 +3671,7 @@
       "id": "I_kwDOCpt5cM54PbvB",
       "title": "Adding Test vectors of native C509 certificates and CSRs",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/144",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -3682,8 +3682,8 @@
       ],
       "body": "In the current draft version (v7), most examples are converted from X.509 encoded certificates and CSRs are present. Please also add more native examples, especially for the special cases (e.g. with one extension key usage). Such examples help the developers to implement their own libraries, and also help normal users to understand the text.\r\n\r\nOr is it better to have a (github) repository containing the test vectors?",
       "createdAt": "2023-11-29T19:48:57Z",
-      "updatedAt": "2025-01-14T10:58:00Z",
-      "closedAt": null,
+      "updatedAt": "2026-01-28T17:00:50Z",
+      "closedAt": "2026-01-28T17:00:50Z",
       "comments": [
         {
           "author": "emanjon",
@@ -3698,6 +3698,13 @@
           "body": "This would preferably be a separate draft. Any volunteers to start drafting?",
           "createdAt": "2024-12-19T11:02:58Z",
           "updatedAt": "2024-12-19T11:02:58Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Available under https://datatracker.ietf.org/doc/draft-ietf-cose-c509-test-vectors/",
+          "createdAt": "2026-01-28T17:00:50Z",
+          "updatedAt": "2026-01-28T17:00:50Z"
         }
       ]
     },
@@ -7573,9 +7580,17 @@
       "labels": [],
       "body": "In many self-signed certificates, the extensions AuthorityKeyIdentifier and SubjectKeyIdentifier are both present and have exactly the same content. Optimization is still possible here by changing the AuthorityKeyIdentifier to null, which in general saves 20 bytes.\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier\n```\n\nwill be changed to\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier / null\n```",
       "createdAt": "2025-08-26T20:45:53Z",
-      "updatedAt": "2025-08-26T20:45:53Z",
+      "updatedAt": "2026-01-27T08:54:30Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "That is a good idea to consider. But does it lead to any processing problems? If AuthorityKeyIdentifier appears before SubjectKeyIdentifier in the certificate, it seems to make implementation more complex. Also the KeyIdentifier can be inside the array.\n\nMaybe just chaning to \n\n`KeyIdentifier = bytes / null\n`\n\nwhere null means it is identical to the previous KeyIdentifier?\n",
+          "createdAt": "2026-01-27T08:54:30Z",
+          "updatedAt": "2026-01-27T08:54:30Z"
+        }
+      ]
     },
     {
       "number": 287,
@@ -7589,7 +7604,7 @@
       "labels": [],
       "body": "Both TLS 1.2 (RFC 5246), TLS 1.3 (RFC 8446) and RFC 6066 requires the certificate authorities to be encoded as DER-encoded X.501 distinguished name.\n\n1. A straightforward idea is to convert the C509 name to the DER-encoded X.501 name, this however 1) requires complicated conversion between both formats, and 2) it is difficult to distinguish from the real X.501 name (it is possible to have both C.509 and X.509 certificate authorities if both certificate types are supported in one handshake).\n\n2. Another idea is to define a new Attribute Type (say id-c509-name) with the encoded C509-name binary as the content. This solves the problems above.\nFor this solution, a new OBJECT IDENTIFIER id-c509-name needs to be applied at IANA.\n\nFor better understanding, below are the snippets from the TLS specifications:\n\nSection 7.4.4 in RFC 5246:\n```\n      struct {\n          ClientCertificateType certificate_types<1..2^8-1>;\n          SignatureAndHashAlgorithm\n            supported_signature_algorithms<2^16-1>;\n          DistinguishedName certificate_authorities<0..2^16-1>;\n      } CertificateRequest;\n\ncertificate_authorities\n      A list of the distinguished names [X501] of acceptable\n      certificate_authorities, represented in DER-encoded format.  These\n      distinguished names may specify a desired distinguished name for a\n      root CA or for a subordinate CA; thus, this message can be used to\n      describe known roots as well as a desired authorization space.  If\n      the certificate_authorities list is empty, then the client MAY\n      send any certificate of the appropriate ClientCertificateType,\n      unless there is some external arrangement to the contrary.\n```\n\nSection 4.2.4 in RFC 8446:\n```\nstruct {\n          DistinguishedName authorities<3..2^16-1>;\n      } CertificateAuthoritiesExtension;\n\n   authorities:  A list of the distinguished names [X501] of acceptable\n      certificate authorities, represented in DER-encoded [X690] format.\n      These distinguished names specify a desired distinguished name for\n      a trust anchor or subordinate CA; thus, this message can be used\n      to describe known trust anchors as well as a desired authorization\n      space.\n\n   The client MAY send the \"certificate_authorities\" extension in the\n   ClientHello message.  The server MAY send it in the\n   CertificateRequest message.\n```\n\nSection 6 in RFC 6066:\n```\n   In order to indicate which CA root keys they possess, clients MAY\n   include an extension of type \"trusted_ca_keys\" in the (extended)\n   client hello.  The \"extension_data\" field of this extension SHALL\n   contain \"TrustedAuthorities\" where:\n\n      struct {\n          TrustedAuthority trusted_authorities_list<0..2^16-1>;\n      } TrustedAuthorities;\n\n      struct {\n          IdentifierType identifier_type;\n          select (identifier_type) {\n              case pre_agreed: struct {};\n              case key_sha1_hash: SHA1Hash;\n              case x509_name: DistinguishedName;\n              case cert_sha1_hash: SHA1Hash;\n          } identifier;\n      } TrustedAuthority;\n\n     ...\n-  \"x509_name\": contains the DER-encoded X.509 DistinguishedName of\n      the CA.\n```\n",
       "createdAt": "2025-09-19T06:16:09Z",
-      "updatedAt": "2025-10-09T09:17:10Z",
+      "updatedAt": "2026-01-28T15:02:56Z",
       "closedAt": null,
       "comments": [
         {
@@ -7605,6 +7620,48 @@
           "body": "[wireshark-localhost-tls.pcapng.zip](https://github.com/user-attachments/files/22793634/wireshark-localhost-tls.pcapng.zip)\n\nThis is the wireshark capture file for a complete TLS 1.2 handshake with client certificate authentication using C509 certificates.\n\n- Packet 1: Client Hello\n  - Extensions server_certificate_type and client_certificate_type: contains list of certificate types consisting of single value 3 (not registered anywhere, I use it just for test purpose) for the type C509 certificate\n  - Extension trusted_ca_keys: contains two entries for the CA's subject (CN=ecc-ca test and CN=rsa-ca test).\n- Packet 2: Server Hello\n  - Extensions server_certificate_type and client_certificate_type: contains the certificate type (value 3) selected by the server.\n- Packet 3: Certificate\n  - Payload is the server's C509 certificate\n- Packet 5: CertificateRequest\n  - Distinguished Names: Contains two entries for the CA's subject (CN=ecc-ca test and CN=rsa-ca test).\n- Packet 7:\n  - Payload is the client's C509 certificate",
           "createdAt": "2025-10-09T09:09:06Z",
           "updatedAt": "2025-10-09T09:17:10Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good catch.\n\nFrom a TLS perspective this is just an opaque byte string\n\n`opaque DistinguishedName<1..2^16-1>;`\n\nSo another suggestion would be\n\n3. Just put the C509 field Name in the TLS DistinguishedName and specify this as part of the new TLS CertificateType that we are registering.\n\nIf 3. is causing problems, then I agree that 2. is the way to go.",
+          "createdAt": "2026-01-27T10:31:27Z",
+          "updatedAt": "2026-01-27T10:31:27Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am not sure that option 3 will work. The text below the definition requires the \"certificate_authorities\" (RFC 5246) and \"authorities\" (RFC 8446) to be DER-encoded X.501 name.",
+          "createdAt": "2026-01-28T11:12:42Z",
+          "updatedAt": "2026-01-28T11:12:42Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The text we can easily update. The problem is how current TLS implementations would handle something that is not a DER-encoded X.501 name. 3. would require testing this\n\n2. is an easy and safe option. The TLS handshake has a huge amount of overhead anyway, so maybe we don't even need to consider optimisations.\n\nI do not think we should do 1.\n ",
+          "createdAt": "2026-01-28T11:49:22Z",
+          "updatedAt": "2026-01-28T11:49:22Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "With option 2 I have tested with BouncyCastle TLS. The change is small (10-20 code lines), and can be implemented as plugin-in. With option 3 we need to change the main code. ",
+          "createdAt": "2026-01-28T11:53:33Z",
+          "updatedAt": "2026-01-28T11:53:33Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Let's go for 2.",
+          "createdAt": "2026-01-28T12:50:34Z",
+          "updatedAt": "2026-01-28T12:50:34Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Let's go for 2.\n\nSounds good to me!",
+          "createdAt": "2026-01-28T15:02:56Z",
+          "updatedAt": "2026-01-28T15:02:56Z"
         }
       ]
     },
@@ -7620,9 +7677,17 @@
       "labels": [],
       "body": "In looking through C509-defined COSE header parameters, I notice that there is no C509 equivalent to the X509 sender identifiers defined in [RFC 9360](https://www.rfc-editor.org/rfc/rfc9360.html#section-3).\n\nIf parity is desired, there should be \"c5t-sender\" \"c5c-sender\" \"c5u-sender\" equivalents.\n",
       "createdAt": "2025-10-08T14:00:45Z",
-      "updatedAt": "2025-10-08T14:00:45Z",
+      "updatedAt": "2026-01-27T10:33:29Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good point. That should likely be added.",
+          "createdAt": "2026-01-27T10:33:29Z",
+          "updatedAt": "2026-01-27T10:33:29Z"
+        }
+      ]
     },
     {
       "number": 289,
@@ -7636,7 +7701,7 @@
       "labels": [],
       "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
       "createdAt": "2025-11-03T08:46:03Z",
-      "updatedAt": "2025-11-20T09:36:40Z",
+      "updatedAt": "2026-01-27T10:36:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -7666,6 +7731,13 @@
           "body": "@gselander Quick ping for visibility. Seems that your comment arrived at the same time as my PR.",
           "createdAt": "2025-11-20T09:36:39Z",
           "updatedAt": "2025-11-20T09:36:39Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Would be good to make sure that this is an problem with the code and not with the specification.",
+          "createdAt": "2026-01-27T10:36:30Z",
+          "updatedAt": "2026-01-27T10:36:30Z"
         }
       ]
     },
@@ -7681,14 +7753,22 @@
       "labels": [],
       "body": "In the X.509 world, many key types have the algorithm identifier to identify the key and the corresponding signature algorithm, examples are Ed25519, Ed448, ML-DSA-{44 | 65 | 87}, and the composite keys (see https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-sigs/).\n\nWhile registering new keys and signatures algorithms, we should use the same number for such cases.\n\nIn draft-15, Ed25519 has different numbers (10 in key, 12 in signature), and also Ed448(11 in key, and 13 in signature). If still possible, please change them to use the same value.",
       "createdAt": "2025-11-05T10:18:53Z",
-      "updatedAt": "2025-11-05T10:18:53Z",
+      "updatedAt": "2026-01-27T10:38:16Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Agree. That should still be possible.\n\nWe should also add text in the IANA considerations that when registering algorithms they should have the same number.",
+          "createdAt": "2026-01-27T10:38:15Z",
+          "updatedAt": "2026-01-27T10:38:15Z"
+        }
+      ]
     },
     {
       "number": 292,
       "id": "I_kwDOCpt5cM7V_6MN",
-      "title": "Extension CRLDistributionPoints: extend the definition to upport cRLIssuer and reasons",
+      "title": "Extension CRLDistributionPoints: extend the definition to support cRLIssuer and reasons",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/292",
       "state": "OPEN",
       "author": "xipki",
@@ -7697,7 +7777,7 @@
       "labels": [],
       "body": "RFC 5280 defines CRLDistributionPoints as follows:\n```\n  CRLDistributionPoints ::= SEQUENCE SIZE (1..MAX) OF DistributionPoint\n\n   DistributionPoint ::= SEQUENCE {\n        distributionPoint       [0]     DistributionPointName OPTIONAL,\n        reasons                 [1]     ReasonFlags OPTIONAL,\n        cRLIssuer               [2]     GeneralNames OPTIONAL }\n\n  DistributionPointName ::= CHOICE {\n        fullName                [0]     GeneralNames,\n        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }\n\n   ReasonFlags ::= BIT STRING {\n        unused                  (0),\n        keyCompromise           (1),\n        cACompromise            (2),\n        affiliationChanged      (3),\n        superseded              (4),\n        cessationOfOperation    (5),\n        certificateHold         (6),\n        privilegeWithdrawn      (7),\n        aACompromise            (8) }\n\n GeneralNames ::= SEQUENCE SIZE (1..MAX) OF GeneralName\n```\n\nIn draft-15, only a small subset is allowed:\n```\nCRL Distribution Points (cRLDistributionPoints).  If the CRL\n      Distribution Points is a sequence of DistributionPointName, where\n      each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as follows:\n\n      DistributionPointName = [ 2* text ] / text\n      CRLDistributionPoints = [ + DistributionPointName ]\n```\n\nThe reasons and cRLIssuer of a single DistributionPoint are not permitted. \n- field cRLIssuer\nIn some PKI environments, e.g. in the gemany ehealth network gematik, the CRLs will not be issued by the CA which issues certificates, but by some dedicated so called CRL signer. In this case, the cRLIssuer field is needed to specify the Subject of the CRL signer. \n- field reasons\nI have not see any real scenarios which use this field, but if an extra byte is needed to support this, I am for it.\n\nFinally, we have the new syntax to support cRLIssuer and reasons, and :\n\n```\nCRL Distribution Points (cRLDistributionPoints).  If each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as CRLDistributionPoints, the choice 'text' shall be used\n      if the reasons and cRLIssuer are null, and the fullName contains only one text.\n\n      DistributionPointName = [\n         fullName  [2* text] / text\n         reasons   int / null,\n         cRLIssuer Name / null,\n      ]\n\n      CRLDistributionPoints = [ + DistributionPointName ] / text\n```",
       "createdAt": "2025-11-05T10:21:30Z",
-      "updatedAt": "2025-11-05T10:21:30Z",
+      "updatedAt": "2026-01-28T11:58:03Z",
       "closedAt": null,
       "comments": []
     },
@@ -7743,9 +7823,9 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "In draft-15:\n```\nIP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not\n      present, the extension value can be CBOR encoded. Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.  With the\n      exception of the first Address, if the byte string has the same\n      length as the previous Address, the Address is encoded as a uint\n      with the difference to the previous Address.  It should be noted\n      that using address differences for compactness prevents encoding\n      an address range larger than 2^64 - 1 corresponding to the CBOR\n      integer max value.\n\n...\nIPAddressFamily = (AFI: uint, IPAddressChoice)\n...\n```\n\n1. rdi is not related here, please remove it.\n2. Add support of SAFI. SAFI represents the sub AFI, e.g. multi-case, uni-cast, and will be used in some cases.\n3. Remove the text of encoding the delta of address instead of the the address value.\n\nNew text:\n```\nIP Resources (id-pe-ipAddrBlocks).  Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.\n\n...\nIPAddressFamily = (AFI: uint, **SAFI: uint/null**, IPAddressChoice)\n...\n\n```\n",
+      "body": "In draft-15:\n```\nIP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not\n      present, the extension value can be CBOR encoded. Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.  With the\n      exception of the first Address, if the byte string has the same\n      length as the previous Address, the Address is encoded as a uint\n      with the difference to the previous Address.  It should be noted\n      that using address differences for compactness prevents encoding\n      an address range larger than 2^64 - 1 corresponding to the CBOR\n      integer max value.\n\n...\nIPAddressFamily = (AFI: uint, IPAddressChoice)\n...\n```\n\n1. rdi is not related here, please remove it.\n2. Add support of SAFI. SAFI represents the sub AFI, e.g. multi-case, uni-cast, and will be used in some cases.\n3. Remove the text of encoding the delta of address instead of the address value.\n\nNew text:\n```\nIP Resources (id-pe-ipAddrBlocks).  Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.\n\n...\nIPAddressFamily = (AFI: uint, **SAFI: uint/null**, IPAddressChoice)\n...\n\n```\n",
       "createdAt": "2025-11-05T10:26:49Z",
-      "updatedAt": "2025-11-07T21:33:48Z",
+      "updatedAt": "2026-01-28T12:50:40Z",
       "closedAt": null,
       "comments": []
     },
@@ -7793,9 +7873,17 @@
       "labels": [],
       "body": "In the draft-15, there are 4 types for the certificate request, and the following two seem to be redundant.\n- Type 1: CBOR re-encoded request to apply for C509 type 2 certificate.\n- Type 2: CBOR-encoded request to apply for X.509 certificate\n\nThese two types are not necessary and make it difficult to understand and implement. They can be implemented in other way, e.g. via different interface, here some examples:\n- https://example.org/enroll-c509-cert/via-c509type3req to replace type 1.\n- https://example.org/enroll-x509-cert/via-c509type0req to replace type 2.",
       "createdAt": "2025-11-05T10:31:54Z",
-      "updatedAt": "2025-11-05T10:31:54Z",
+      "updatedAt": "2026-01-27T10:40:18Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I think @gselander should know best what was said in previous discussions. If possible, I agree that less is better\n ",
+          "createdAt": "2026-01-27T10:40:18Z",
+          "updatedAt": "2026-01-27T10:40:18Z"
+        }
+      ]
     },
     {
       "number": 299,
@@ -7849,9 +7937,41 @@
       "labels": [],
       "body": "Wi-SUN certificate templates generate certificates that are not convertible to c509 with the c509_demo_impl implementation.\n\nSee [SiLabs KBA: Create your Own Wi-SUN Certificates](https://community.silabs.com/s/article/Create-your-Own-Wi-SUN-Certificates?language=en_US#:~:text=Generate%20a%20CSR%20for%20the%20intermediate%202%20CA%20openssl%20req,openssl%2Dwisun.conf%2011.) for openssl config details.",
       "createdAt": "2025-12-17T17:49:06Z",
-      "updatedAt": "2025-12-17T17:49:06Z",
+      "updatedAt": "2026-01-27T11:34:36Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Please upload certificates for deep analysis.",
+          "createdAt": "2026-01-27T11:34:36Z",
+          "updatedAt": "2026-01-27T11:34:36Z"
+        }
+      ]
+    },
+    {
+      "number": 303,
+      "id": "I_kwDOCpt5cM7mFbzB",
+      "title": "Add signature algorithm id-alg-unsigned",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/303",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "A certificate with alg-unsigned contains zero-length signature value, and reduces the certificate size dramatically. Such certificates are useful for trust-anchor certificates where signature value will not be validated.\n\nIn the C509-context, the signature can be either empty bstr or null, both with 1 wired byte.\n\nDetails: https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-alg-none/10/",
+      "createdAt": "2026-01-27T11:43:54Z",
+      "updatedAt": "2026-01-28T11:54:25Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Agree. This is very suitable for C509. As draft-ietf-lamps-x509-alg-none is in the editor's queue there is no reason to wait.",
+          "createdAt": "2026-01-28T11:54:25Z",
+          "updatedAt": "2026-01-28T11:54:25Z"
+        }
+      ]
     }
   ],
   "pulls": [
