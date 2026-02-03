@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-01T03:14:39.124474+00:00",
+  "timestamp": "2026-02-03T02:44:19.113768+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7600,11 +7600,15 @@
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "xipki"
+      ],
+      "labels": [
+        "needs PR"
+      ],
       "body": "Both TLS 1.2 (RFC 5246), TLS 1.3 (RFC 8446) and RFC 6066 requires the certificate authorities to be encoded as DER-encoded X.501 distinguished name.\n\n1. A straightforward idea is to convert the C509 name to the DER-encoded X.501 name, this however 1) requires complicated conversion between both formats, and 2) it is difficult to distinguish from the real X.501 name (it is possible to have both C.509 and X.509 certificate authorities if both certificate types are supported in one handshake).\n\n2. Another idea is to define a new Attribute Type (say id-c509-name) with the encoded C509-name binary as the content. This solves the problems above.\nFor this solution, a new OBJECT IDENTIFIER id-c509-name needs to be applied at IANA.\n\nFor better understanding, below are the snippets from the TLS specifications:\n\nSection 7.4.4 in RFC 5246:\n```\n      struct {\n          ClientCertificateType certificate_types<1..2^8-1>;\n          SignatureAndHashAlgorithm\n            supported_signature_algorithms<2^16-1>;\n          DistinguishedName certificate_authorities<0..2^16-1>;\n      } CertificateRequest;\n\ncertificate_authorities\n      A list of the distinguished names [X501] of acceptable\n      certificate_authorities, represented in DER-encoded format.  These\n      distinguished names may specify a desired distinguished name for a\n      root CA or for a subordinate CA; thus, this message can be used to\n      describe known roots as well as a desired authorization space.  If\n      the certificate_authorities list is empty, then the client MAY\n      send any certificate of the appropriate ClientCertificateType,\n      unless there is some external arrangement to the contrary.\n```\n\nSection 4.2.4 in RFC 8446:\n```\nstruct {\n          DistinguishedName authorities<3..2^16-1>;\n      } CertificateAuthoritiesExtension;\n\n   authorities:  A list of the distinguished names [X501] of acceptable\n      certificate authorities, represented in DER-encoded [X690] format.\n      These distinguished names specify a desired distinguished name for\n      a trust anchor or subordinate CA; thus, this message can be used\n      to describe known trust anchors as well as a desired authorization\n      space.\n\n   The client MAY send the \"certificate_authorities\" extension in the\n   ClientHello message.  The server MAY send it in the\n   CertificateRequest message.\n```\n\nSection 6 in RFC 6066:\n```\n   In order to indicate which CA root keys they possess, clients MAY\n   include an extension of type \"trusted_ca_keys\" in the (extended)\n   client hello.  The \"extension_data\" field of this extension SHALL\n   contain \"TrustedAuthorities\" where:\n\n      struct {\n          TrustedAuthority trusted_authorities_list<0..2^16-1>;\n      } TrustedAuthorities;\n\n      struct {\n          IdentifierType identifier_type;\n          select (identifier_type) {\n              case pre_agreed: struct {};\n              case key_sha1_hash: SHA1Hash;\n              case x509_name: DistinguishedName;\n              case cert_sha1_hash: SHA1Hash;\n          } identifier;\n      } TrustedAuthority;\n\n     ...\n-  \"x509_name\": contains the DER-encoded X.509 DistinguishedName of\n      the CA.\n```\n",
       "createdAt": "2025-09-19T06:16:09Z",
-      "updatedAt": "2026-01-28T15:02:56Z",
+      "updatedAt": "2026-02-02T09:34:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -7662,6 +7666,13 @@
           "body": "> Let's go for 2.\n\nSounds good to me!",
           "createdAt": "2026-01-28T15:02:56Z",
           "updatedAt": "2026-01-28T15:02:56Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Register a new OID under PKIX. New IANA section 9.18.",
+          "createdAt": "2026-02-02T09:34:26Z",
+          "updatedAt": "2026-02-02T09:34:26Z"
         }
       ]
     },
@@ -7749,11 +7760,15 @@
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "gselander"
+      ],
+      "labels": [
+        "needs PR"
+      ],
       "body": "In the X.509 world, many key types have the algorithm identifier to identify the key and the corresponding signature algorithm, examples are Ed25519, Ed448, ML-DSA-{44 | 65 | 87}, and the composite keys (see https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-sigs/).\n\nWhile registering new keys and signatures algorithms, we should use the same number for such cases.\n\nIn draft-15, Ed25519 has different numbers (10 in key, 12 in signature), and also Ed448(11 in key, and 13 in signature). If still possible, please change them to use the same value.",
       "createdAt": "2025-11-05T10:18:53Z",
-      "updatedAt": "2026-01-27T10:38:16Z",
+      "updatedAt": "2026-02-02T09:23:36Z",
       "closedAt": null,
       "comments": [
         {
@@ -7773,11 +7788,13 @@
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
+      "assignees": [
+        "xipki"
+      ],
       "labels": [],
       "body": "RFC 5280 defines CRLDistributionPoints as follows:\n```\n  CRLDistributionPoints ::= SEQUENCE SIZE (1..MAX) OF DistributionPoint\n\n   DistributionPoint ::= SEQUENCE {\n        distributionPoint       [0]     DistributionPointName OPTIONAL,\n        reasons                 [1]     ReasonFlags OPTIONAL,\n        cRLIssuer               [2]     GeneralNames OPTIONAL }\n\n  DistributionPointName ::= CHOICE {\n        fullName                [0]     GeneralNames,\n        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }\n\n   ReasonFlags ::= BIT STRING {\n        unused                  (0),\n        keyCompromise           (1),\n        cACompromise            (2),\n        affiliationChanged      (3),\n        superseded              (4),\n        cessationOfOperation    (5),\n        certificateHold         (6),\n        privilegeWithdrawn      (7),\n        aACompromise            (8) }\n\n GeneralNames ::= SEQUENCE SIZE (1..MAX) OF GeneralName\n```\n\nIn draft-15, only a small subset is allowed:\n```\nCRL Distribution Points (cRLDistributionPoints).  If the CRL\n      Distribution Points is a sequence of DistributionPointName, where\n      each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as follows:\n\n      DistributionPointName = [ 2* text ] / text\n      CRLDistributionPoints = [ + DistributionPointName ]\n```\n\nThe reasons and cRLIssuer of a single DistributionPoint are not permitted. \n- field cRLIssuer\nIn some PKI environments, e.g. in the gemany ehealth network gematik, the CRLs will not be issued by the CA which issues certificates, but by some dedicated so called CRL signer. In this case, the cRLIssuer field is needed to specify the Subject of the CRL signer. \n- field reasons\nI have not see any real scenarios which use this field, but if an extra byte is needed to support this, I am for it.\n\nFinally, we have the new syntax to support cRLIssuer and reasons, and :\n\n```\nCRL Distribution Points (cRLDistributionPoints).  If each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as CRLDistributionPoints, the choice 'text' shall be used\n      if the reasons and cRLIssuer are null, and the fullName contains only one text.\n\n      DistributionPointName = [\n         fullName  [2* text] / text\n         reasons   int / null,\n         cRLIssuer Name / null,\n      ]\n\n      CRLDistributionPoints = [ + DistributionPointName ] / text\n```",
       "createdAt": "2025-11-05T10:21:30Z",
-      "updatedAt": "2026-01-28T11:58:03Z",
+      "updatedAt": "2026-02-02T09:52:32Z",
       "closedAt": null,
       "comments": []
     },
@@ -7793,9 +7810,24 @@
       "labels": [],
       "body": "In draft-15:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTemplateType: int,\n      c509CertificateRequestType: [+ int] / undefined,\n      subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subjectPublicKey: undefined\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\n\nThe subject and extensionsRequest shall be extended to allow the \"undefined\" value. Then we have the new text:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTemplateType: int,\n      c509CertificateRequestType: [+ int] / undefined,\n      subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subject: NameTemplate *** / undefined ***,\n      subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subjectPublicKey: undefined\n      extensionsRequest: ExtensionsTemplate *** / undefined ***,\n   ]\n```\n",
       "createdAt": "2025-11-05T10:22:52Z",
-      "updatedAt": "2025-11-05T10:22:52Z",
+      "updatedAt": "2026-02-02T22:21:50Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The AttributeTemplate shall also be extended to specify the occurrences of each single attribute:\n\nIn draft-16:\n```\n   AttributeTemplate = (( attributeType: int,\n                          attributeValue: SpecialText / undefined ) //\n                        ( attributeType: ~oid,\n                          attributeValue: bytes / undefined ))\n```\nNew proposal:\n```\n   AttributeTemplate = (( attributeType: **int, min:int, max:int**,\n                          attributeValue: SpecialText / undefined ) //\n                        ( attributeType: ~oid, **int, min:int, max:int**,\n                          attributeValue: bytes / undefined ))\n```\n\nBTW: do we need the attributeValue field here, for which purpose?\n",
+          "createdAt": "2026-02-02T22:17:59Z",
+          "updatedAt": "2026-02-02T22:17:59Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "And the AttributeTemplate shall also be extended to specify the occurrences of each single extension:\n\nIn draft -16\n```\nExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid, ? critical: true,\n                          extensionValue: bytes / undefined ))\n```\nNew proposal:\n```\nExtensionTemplate = (( extensionID: int, **required:bool,** extensionValue: any ) //\n                        ( extensionID: ~oid, **required:bool,** ? critical: true,\n                          extensionValue: bytes / undefined ))\n```\nBTW: do we need the extensionValue field here, for which purpose?",
+          "createdAt": "2026-02-02T22:21:50Z",
+          "updatedAt": "2026-02-02T22:21:50Z"
+        }
+      ]
     },
     {
       "number": 294,
@@ -7805,13 +7837,25 @@
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "gselander"
+      ],
+      "labels": [
+        "needs PR"
+      ],
       "body": "In draft-15:\n```\n   *  Policy Mappings (policyMappings). extensionValue is encoded as\n      follows:\n\n      PolicyMappings = [\n        + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)\n      ]\n```\n\nshall be changed to\n```\n   *  Policy Mappings (policyMappings). extensionValue is encoded as\n      follows:\n\n      PolicyMappings = [\n        + (issuerDomainPolicy: int/~oid, subjectDomainPolicy: int/~oid)\n      ]\n```\n\nThis change is needed to support the certificate policies defined in \"Figure 13: C509 Certificate Policies\".",
       "createdAt": "2025-11-05T10:24:57Z",
-      "updatedAt": "2025-11-05T10:24:57Z",
+      "updatedAt": "2026-02-02T09:27:27Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This is a bugfix.",
+          "createdAt": "2026-02-02T09:27:02Z",
+          "updatedAt": "2026-02-02T09:27:02Z"
+        }
+      ]
     },
     {
       "number": 295,
@@ -7869,11 +7913,15 @@
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "gselander"
+      ],
+      "labels": [
+        "needs PR"
+      ],
       "body": "In the draft-15, there are 4 types for the certificate request, and the following two seem to be redundant.\n- Type 1: CBOR re-encoded request to apply for C509 type 2 certificate.\n- Type 2: CBOR-encoded request to apply for X.509 certificate\n\nThese two types are not necessary and make it difficult to understand and implement. They can be implemented in other way, e.g. via different interface, here some examples:\n- https://example.org/enroll-c509-cert/via-c509type3req to replace type 1.\n- https://example.org/enroll-x509-cert/via-c509type0req to replace type 2.",
       "createdAt": "2025-11-05T10:31:54Z",
-      "updatedAt": "2026-01-27T10:40:18Z",
+      "updatedAt": "2026-02-02T09:46:27Z",
       "closedAt": null,
       "comments": [
         {
@@ -7882,6 +7930,13 @@
           "body": "I think @gselander should know best what was said in previous discussions. If possible, I agree that less is better\n ",
           "createdAt": "2026-01-27T10:40:18Z",
           "updatedAt": "2026-01-27T10:40:18Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Remove mixed options, keep numbers 2 and 3, resp.",
+          "createdAt": "2026-02-02T09:46:07Z",
+          "updatedAt": "2026-02-02T09:46:07Z"
         }
       ]
     },
@@ -7934,10 +7989,12 @@
       "author": "dgtlrift",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "waiting for input"
+      ],
       "body": "Wi-SUN certificate templates generate certificates that are not convertible to c509 with the c509_demo_impl implementation.\n\nSee [SiLabs KBA: Create your Own Wi-SUN Certificates](https://community.silabs.com/s/article/Create-your-Own-Wi-SUN-Certificates?language=en_US#:~:text=Generate%20a%20CSR%20for%20the%20intermediate%202%20CA%20openssl%20req,openssl%2Dwisun.conf%2011.) for openssl config details.",
       "createdAt": "2025-12-17T17:49:06Z",
-      "updatedAt": "2026-01-27T11:34:36Z",
+      "updatedAt": "2026-02-02T11:41:51Z",
       "closedAt": null,
       "comments": [
         {
@@ -7946,6 +8003,20 @@
           "body": "Please upload certificates for deep analysis.",
           "createdAt": "2026-01-27T11:34:36Z",
           "updatedAt": "2026-01-27T11:34:36Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I have generated 2 Wi-SUN certificates. For simplicity, the certificates are self-signed.\n- device\n- border router (br)\n\nBoth certificates can be converted from X.509 to C509. Since there is no registry for the KeyPurposeId 1.3.6.1.4.1.45605.1, it is represented in C509 as ~oid rather than int.\n\nExample certificates:\n- Device\n[wisun-device-c509cert-t3.hex.txt](https://github.com/user-attachments/files/25009824/wisun-device-c509cert-t3.hex.txt)\n[wisun-device-x509cert.pem.txt](https://github.com/user-attachments/files/25009825/wisun-device-x509cert.pem.txt)\n\n- border rounter\n[wisun-br-x509cert.pem.txt](https://github.com/user-attachments/files/25009852/wisun-br-x509cert.pem.txt)\n[wisun-br-c509cert-t3.hex.txt](https://github.com/user-attachments/files/25009851/wisun-br-c509cert-t3.hex.txt)",
+          "createdAt": "2026-02-02T11:39:43Z",
+          "updatedAt": "2026-02-02T11:39:43Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@emanjon I am not familiar with the c509_demo_impl code, can you use it to covert the X509 certificates to C509?",
+          "createdAt": "2026-02-02T11:41:51Z",
+          "updatedAt": "2026-02-02T11:41:51Z"
         }
       ]
     },
@@ -7957,11 +8028,15 @@
       "state": "OPEN",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "xipki"
+      ],
+      "labels": [
+        "needs PR"
+      ],
       "body": "A certificate with alg-unsigned contains zero-length signature value, and reduces the certificate size dramatically. Such certificates are useful for trust-anchor certificates where signature value will not be validated.\n\nIn the C509-context, the signature can be either empty bstr or null, both with 1 wired byte.\n\nDetails: https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-alg-none/10/",
       "createdAt": "2026-01-27T11:43:54Z",
-      "updatedAt": "2026-01-28T11:54:25Z",
+      "updatedAt": "2026-02-02T09:21:15Z",
       "closedAt": null,
       "comments": [
         {
@@ -7972,6 +8047,22 @@
           "updatedAt": "2026-01-28T11:54:25Z"
         }
       ]
+    },
+    {
+      "number": 306,
+      "id": "I_kwDOCpt5cM7nkeYZ",
+      "title": "Syntax definition text optimization in draft-16",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/306",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Please check the ending \",\" in the syntax definition. Some seem to be redundant.",
+      "createdAt": "2026-02-02T10:14:10Z",
+      "updatedAt": "2026-02-02T22:11:56Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -12190,6 +12281,32 @@
           "updatedAt": "2026-01-30T14:59:34Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 307,
+      "id": "PR_kwDOCpt5cM7A641i",
+      "title": "PQC algs in table",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/307",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "For FN-DSA-512 the difference per certificate compared to ECDSA with P-256 is (897+666-32-64)\r\n\r\nFor ML-DSA-44 the difference per certificate compared to ECDSA with P-256 is (1312+2420-32-64)\r\n\r\nThe absolute savings stay the same but the relative savings in percentage decreases.\r\n\r\nIn the future NIST may standardize isogeny-based signatures (SQISign) with 64 bytes PK and 177 byte SIG.\r\n\r\nThe numbers in the table only considers the raw numbers in the algorithms. Encoding might change the numbers with a few bytes..",
+      "createdAt": "2026-02-02T13:51:27Z",
+      "updatedAt": "2026-02-02T13:51:28Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "PQC-algs-in-table",
+      "headRefOid": "f476232393cb4c4a97aa29b03b380f411a1a5127",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
