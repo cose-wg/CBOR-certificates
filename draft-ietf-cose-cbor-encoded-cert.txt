@@ -578,7 +578,7 @@ Table of Contents
       follows:
 
       PolicyMappings = [
-        + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)
+        + (issuerDomainPolicy: int/~oid, subjectDomainPolicy: int/~oid)
       ]
 
    *  Basic Constraints (basicConstraints).  If 'cA' = false then
