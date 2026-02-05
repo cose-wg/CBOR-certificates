@@ -2027,13 +2027,13 @@ TBSCertificateRequest = (
         <h3 id="name-certificate-request-types">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-certificate-request-types" class="section-name selfRef">Certificate Request Types</a>
         </h3>
-<p id="section-4.1-1">Two types of C509 Certificate Requests are defined, see <a href="#csr-type" class="auto internal xref">Section 9.2</a>, both using the same CBOR encoding and differ only in what is being signed and what type of C509 certificate is being requested, see <a href="#type" class="auto internal xref">Section 9.1</a>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">Two types of C509 Certificate Requests are defined, see <a href="#csr-type" class="auto internal xref">Section 9.2</a>, both using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested, see <a href="#type" class="auto internal xref">Section 9.1</a>:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-2.1">
             <p id="section-4.1-2.1.1">c509CertificateRequestType = 2. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format has c509CertificateType = 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-2.2">
-            <p id="section-4.1-2.2.1">c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.2.1">c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificate and enables a reduced transport overhead.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-4.1-3">The options for c509CertificateRequestType are defined in <a href="#csr-type" class="auto internal xref">Section 9.2</a> and illustrated in <a href="#fig-csr-types2" class="auto internal xref">Figure 3</a>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
@@ -2430,72 +2430,50 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <figure id="figure-8">
           <div id="section-9.2-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.2-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="272" width="560" viewBox="0 0 560 272" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,256" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,256" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,256" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="560" viewBox="0 0 560 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,224" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,224" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,224" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
-                <path d="M 8,112 L 552,112" fill="none" stroke="black"></path>
-                <path d="M 8,160 L 552,160" fill="none" stroke="black"></path>
-                <path d="M 8,208 L 552,208" fill="none" stroke="black"></path>
-                <path d="M 8,256 L 552,256" fill="none" stroke="black"></path>
+                <path d="M 8,96 L 552,96" fill="none" stroke="black"></path>
+                <path d="M 8,128 L 552,128" fill="none" stroke="black"></path>
+                <path d="M 8,176 L 552,176" fill="none" stroke="black"></path>
+                <path d="M 8,224 L 552,224" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
                   <text x="128" y="52">Description</text>
                   <text x="56" y="84">0</text>
-                  <text x="120" y="84">Requested</text>
-                  <text x="208" y="84">certificate</text>
-                  <text x="268" y="84">is</text>
-                  <text x="300" y="84">C509</text>
-                  <text x="340" y="84">Type</text>
-                  <text x="372" y="84">2.</text>
-                  <text x="116" y="100">Natively</text>
-                  <text x="180" y="100">Signed</text>
-                  <text x="228" y="100">C509</text>
-                  <text x="296" y="100">Certificate</text>
-                  <text x="380" y="100">Request.</text>
-                  <text x="56" y="132">1</text>
-                  <text x="120" y="132">Requested</text>
-                  <text x="208" y="132">certificate</text>
-                  <text x="268" y="132">is</text>
-                  <text x="300" y="132">C509</text>
-                  <text x="340" y="132">Type</text>
-                  <text x="372" y="132">2.</text>
-                  <text x="100" y="148">CBOR</text>
-                  <text x="168" y="148">re-encoding</text>
-                  <text x="228" y="148">of</text>
-                  <text x="256" y="148">RFC</text>
-                  <text x="292" y="148">2986</text>
-                  <text x="368" y="148">certification</text>
-                  <text x="460" y="148">request.</text>
-                  <text x="56" y="180">2</text>
-                  <text x="120" y="180">Requested</text>
-                  <text x="208" y="180">certificate</text>
-                  <text x="268" y="180">is</text>
-                  <text x="300" y="180">C509</text>
-                  <text x="340" y="180">Type</text>
-                  <text x="372" y="180">3.</text>
-                  <text x="116" y="196">Natively</text>
-                  <text x="180" y="196">Signed</text>
-                  <text x="228" y="196">C509</text>
-                  <text x="296" y="196">Certificate</text>
-                  <text x="380" y="196">Request.</text>
-                  <text x="56" y="228">3</text>
-                  <text x="120" y="228">Requested</text>
-                  <text x="208" y="228">certificate</text>
-                  <text x="268" y="228">is</text>
-                  <text x="300" y="228">C509</text>
-                  <text x="340" y="228">Type</text>
-                  <text x="372" y="228">3.</text>
-                  <text x="100" y="244">CBOR</text>
-                  <text x="168" y="244">re-encoding</text>
-                  <text x="228" y="244">of</text>
-                  <text x="256" y="244">RFC</text>
-                  <text x="292" y="244">2986</text>
-                  <text x="368" y="244">certification</text>
-                  <text x="460" y="244">request.</text>
+                  <text x="116" y="84">Reserved</text>
+                  <text x="56" y="116">1</text>
+                  <text x="116" y="116">Reserved</text>
+                  <text x="56" y="148">2</text>
+                  <text x="120" y="148">Requested</text>
+                  <text x="208" y="148">certificate</text>
+                  <text x="268" y="148">is</text>
+                  <text x="300" y="148">C509</text>
+                  <text x="340" y="148">Type</text>
+                  <text x="372" y="148">2.</text>
+                  <text x="116" y="164">Natively</text>
+                  <text x="180" y="164">Signed</text>
+                  <text x="228" y="164">C509</text>
+                  <text x="296" y="164">Certificate</text>
+                  <text x="380" y="164">Request.</text>
+                  <text x="56" y="196">3</text>
+                  <text x="120" y="196">Requested</text>
+                  <text x="208" y="196">certificate</text>
+                  <text x="268" y="196">is</text>
+                  <text x="300" y="196">C509</text>
+                  <text x="340" y="196">Type</text>
+                  <text x="372" y="196">3.</text>
+                  <text x="100" y="212">CBOR</text>
+                  <text x="168" y="212">re-encoding</text>
+                  <text x="228" y="212">of</text>
+                  <text x="256" y="212">RFC</text>
+                  <text x="292" y="212">2986</text>
+                  <text x="368" y="212">certification</text>
+                  <text x="460" y="212">request.</text>
                 </g>
               </svg><a href="#section-9.2-2.1.1" class="pilcrow">¶</a>
 </div>
