@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-03T02:44:19.113768+00:00",
+  "timestamp": "2026-02-05T02:41:02.754596+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7573,15 +7573,15 @@
       "id": "I_kwDOCpt5cM7IGPQ_",
       "title": "Futher optimization of SubjectKeyIdentifier and AuthorityKeyIdentifier if both have the same value",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/286",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "In many self-signed certificates, the extensions AuthorityKeyIdentifier and SubjectKeyIdentifier are both present and have exactly the same content. Optimization is still possible here by changing the AuthorityKeyIdentifier to null, which in general saves 20 bytes.\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier\n```\n\nwill be changed to\n\n```\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier / null\n```",
       "createdAt": "2025-08-26T20:45:53Z",
-      "updatedAt": "2026-01-27T08:54:30Z",
-      "closedAt": null,
+      "updatedAt": "2026-02-03T12:50:31Z",
+      "closedAt": "2026-02-03T12:50:31Z",
       "comments": [
         {
           "author": "emanjon",
@@ -7589,6 +7589,20 @@
           "body": "That is a good idea to consider. But does it lead to any processing problems? If AuthorityKeyIdentifier appears before SubjectKeyIdentifier in the certificate, it seems to make implementation more complex. Also the KeyIdentifier can be inside the array.\n\nMaybe just chaning to \n\n`KeyIdentifier = bytes / null\n`\n\nwhere null means it is identical to the previous KeyIdentifier?\n",
           "createdAt": "2026-01-27T08:54:30Z",
           "updatedAt": "2026-01-27T08:54:30Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I tried to implement the suggestion above, but had to give up. The complexity introduced does not compensate the benefit. So for me, this issue can be resolved as \"Won't fix\".",
+          "createdAt": "2026-02-03T11:47:15Z",
+          "updatedAt": "2026-02-03T11:47:15Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I agree",
+          "createdAt": "2026-02-03T12:50:31Z",
+          "updatedAt": "2026-02-03T12:50:31Z"
         }
       ]
     },
@@ -7952,7 +7966,7 @@
       "labels": [],
       "body": "In draft-15:\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If all\n      the SCTs are version v1 [RFC6962], and there are no SCT\n      extensions, the extension value can be CBOR encoded.  Other\n      versions of SCT are out of scope for this document.  LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      uint (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```\n\n1. typo in the text: \"the timestamp is encoded as a CBOR uint\" -> \"... a CBOR int\".\n2. Add support of extensions, and to allow the support of new timestamp versions, a new field is added. Finally we have the new text below:\n\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If\n      the SCTs have version v1 (value 0) [RFC6962], the syntax is as follows. LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      int (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        version: uint,\n        logID: bytes,\n        timestamp: int,\n        extensions: bytes\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```",
       "createdAt": "2025-11-05T10:37:16Z",
-      "updatedAt": "2025-11-05T10:38:20Z",
+      "updatedAt": "2026-02-03T10:05:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -7961,6 +7975,13 @@
           "body": "Related to https://github.com/cose-wg/CBOR-certificates/issues/272",
           "createdAt": "2025-11-05T10:38:20Z",
           "updatedAt": "2025-11-05T10:38:20Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "For the verification of SignedCertificateTimestamp, we have to convert it back the DER-encoded SignedCertificateTimestampList. Thus the core question: do we need to define a C509 type for this extension? For me, it is better to have the DER-encoded extension in `bytes`.",
+          "createdAt": "2026-02-03T09:59:13Z",
+          "updatedAt": "2026-02-03T10:05:50Z"
         }
       ]
     },
@@ -8060,7 +8081,31 @@
       "labels": [],
       "body": "Please check the ending \",\" in the syntax definition. Some seem to be redundant.",
       "createdAt": "2026-02-02T10:14:10Z",
-      "updatedAt": "2026-02-02T22:11:56Z",
+      "updatedAt": "2026-02-03T12:51:53Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I does not really matter. We decided on comma as the default. If any commas are missing, lets add them\n",
+          "createdAt": "2026-02-03T12:51:53Z",
+          "updatedAt": "2026-02-03T12:51:53Z"
+        }
+      ]
+    },
+    {
+      "number": 308,
+      "id": "I_kwDOCpt5cM7n06lw",
+      "title": "Change syntax of data type with variable number of fields",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/308",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I'm- Extensions\n\n  In draft -16:\n  ```\n  Extension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, ? critical: true,\n                 extensionValue: bytes ))\n\n  Extensions = [ * Extension ] / int\n  ```\n  To encode an `Extensions`, the application needs to iterate all fields to compute the total size of the cbor-array. This is complex, but is OK. But for the decoding, this is much more complex. The application cannot know the number of fields before parsing all of them. Thus it cannot use array (with fixed size) / allocate the exact size of memory in prior.\n\n  To avoid this, we could change the definition of `Extension` to follows:\n  ```\n  Extension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, extensionValue: **bytes/[critical: true, bytes]**))\n\n  Extensions = [ * Extension ] / int\n  ```\n  Critical `extensionValue` with extensionID of type `~oid` will be represented as a cbor-array.\n\n- CertificatePolicies\n  In draft-16:\n  ```\n  CertificatePolicies = [\n     + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )\n  ]\n  ```\n  shall be changed to\n  ```\n  CertificatePolicies = [\n     + ( PolicyIdentifier, [ * PolicyQualifierInfo ] )\n  ]\n  ```\n Zero occurrence of PolicyQualifierInfo is also represented as an array.\n \n- IPAddressChoice\n  In draft-16:\n  ```\n  Address = bytes\n  AddressPrefix = (Address, unusedBits: uint)\n  AddressRange = [min: Address, max: Address]\n  IPAddressOrRange = AddressPrefix / AddressRange.\n  IPAddressChoice = [ + IPAddressOrRange ] / null\n  ```\n  The `IPAddressOrRange` may contains 1 field (choice `AddressRange`) or 2 fields (choice `AddressPrefix`).\n\n  It shall be changed to\n  ```\n  Address = bytes\n  AddressPrefix = **[ unusedBits:unit, Address ]** -- changed to use array here\n  AddressRange = [min: Address, max: Address]\n  IPAddressOrRange = AddressPrefix / AddressRange\n  IPAddressChoice = [ + IPAddressOrRange ] / null\n  ``` \n \n- ExtensionsTemplate\n  In draft-16:\n  ```\n  ExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid, ? critical: true,\n                          extensionValue: bytes / undefined ))\n\n  ExtensionsTemplate = [ * ExtensionTemplate ] / int\n  ```\n  may be changed to\n  ```\n  ExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid,  extensionValue: bytes / undefined / [critical:true, bytes]))\n\n  ExtensionsTemplate = [ * ExtensionTemplate ] / int\n  ``` \n  Please refer to #293 for the discussion whether we should remove the `extensionValue` field.\n",
+      "createdAt": "2026-02-03T06:22:07Z",
+      "updatedAt": "2026-02-03T07:00:07Z",
       "closedAt": null,
       "comments": []
     }
@@ -12219,9 +12264,9 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
-      "body": "",
+      "body": "Ted's dnsdir review resulted in a mail thread that ended here:\r\nhttps://www.mail-archive.com/cose@ietf.org/msg05162.html",
       "createdAt": "2026-01-30T08:00:38Z",
-      "updatedAt": "2026-01-30T14:18:49Z",
+      "updatedAt": "2026-02-03T13:42:28Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
@@ -12259,9 +12304,9 @@
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
-      "body": "initial commit, more to follow.",
+      "body": "Russ' Genart review posted here:\r\nhttps://www.mail-archive.com/cose@ietf.org/msg05154.html\r\n\r\nHere is initial commit, more to follow.",
       "createdAt": "2026-01-30T14:53:34Z",
-      "updatedAt": "2026-01-30T14:59:34Z",
+      "updatedAt": "2026-02-03T13:47:34Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
@@ -12279,6 +12324,13 @@
           "body": "Multiple review comments referred to the introduction. One comment was about merging content in the beginning and end. This lead to other changes in the text to maintain logic and also move of text to address this comment applied to other parts of the introduction where the same topic was appearing in different places.",
           "createdAt": "2026-01-30T14:58:50Z",
           "updatedAt": "2026-01-30T14:59:34Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Main thing missing are the two \"Additional Thoughts\" at the end of the review. ",
+          "createdAt": "2026-02-03T13:47:34Z",
+          "updatedAt": "2026-02-03T13:47:34Z"
         }
       ],
       "reviews": []
@@ -12295,7 +12347,7 @@
       "labels": [],
       "body": "For FN-DSA-512 the difference per certificate compared to ECDSA with P-256 is (897+666-32-64)\r\n\r\nFor ML-DSA-44 the difference per certificate compared to ECDSA with P-256 is (1312+2420-32-64)\r\n\r\nThe absolute savings stay the same but the relative savings in percentage decreases.\r\n\r\nIn the future NIST may standardize isogeny-based signatures (SQISign) with 64 bytes PK and 177 byte SIG.\r\n\r\nThe numbers in the table only considers the raw numbers in the algorithms. Encoding might change the numbers with a few bytes..",
       "createdAt": "2026-02-02T13:51:27Z",
-      "updatedAt": "2026-02-02T13:51:28Z",
+      "updatedAt": "2026-02-04T23:22:01Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
@@ -12306,8 +12358,30 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good. This addresses one of the comments in the Genart review #305.",
+          "createdAt": "2026-02-03T13:46:29Z",
+          "updatedAt": "2026-02-03T13:46:29Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7fvfoC",
+          "commit": {
+            "abbreviatedOid": "f476232"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Agree with GS, looks good",
+          "createdAt": "2026-02-04T23:22:01Z",
+          "updatedAt": "2026-02-04T23:22:01Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
