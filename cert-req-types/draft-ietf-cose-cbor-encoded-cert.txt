@@ -999,7 +999,7 @@ Table of Contents
       Certificate Request is a CBOR re-encoded RFC 2986 certification
       request, and that the requested certificate format has
       c509CertificateType = 3.  This encoding is backwards compatible
-      with legacy RFC 2986 certification requests and X.509 certificate
+      with legacy RFC 2986 certification requests and X.509 certificate,
       and enables a reduced transport overhead.
 
    The options for c509CertificateRequestType are defined in Section 9.2
