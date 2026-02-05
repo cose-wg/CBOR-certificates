@@ -693,7 +693,7 @@ Two types of C509 Certificate Requests are defined, see {{csr-type}}, both using
 
 * c509CertificateRequestType = 2. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format has c509CertificateType = 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificate and enables a reduced transport overhead.
+* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is a CBOR re-encoded RFC 2986 certification request, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificate and enables a reduced transport overhead.
 
 The options for c509CertificateRequestType are defined in {{csr-type}} and illustrated in {{fig-csr-types2}}.
 
