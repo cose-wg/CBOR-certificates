@@ -689,11 +689,11 @@ The media type of C509CertificateRequest is application/cose-c509-pkcs10, see {{
 
 ## Certificate Request Types
 
-Two types of C509 Certificate Requests are defined, see {{csr-type}}, both using the same CBOR encoding and differ only in what is being signed and what type of C509 certificate is being requested, see {{type}}.
+Two types of C509 Certificate Requests are defined, see {{csr-type}}, both using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested, see {{type}}:
 
 * c509CertificateRequestType = 2. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format has c509CertificateType = 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.
+* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificate and enables a reduced transport overhead.
 
 The options for c509CertificateRequestType are defined in {{csr-type}} and illustrated in {{fig-csr-types2}}.
 
@@ -908,13 +908,11 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Requested certificate is C509 Type 2.                     |
-|       | Natively Signed C509 Certificate Request.                 |
+|     0 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     1 | Requested certificate is C509 Type 2.                     |
-|       | CBOR re-encoding of RFC 2986 certification request.       |
+|     1 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     2 | Requested certificate is C509 Type 3.                     |
+|     2 | Requested certificate is C509 Type 2.                     |
 |       | Natively Signed C509 Certificate Request.                 |
 +-------+-----------------------------------------------------------+
 |     3 | Requested certificate is C509 Type 3.                     |
