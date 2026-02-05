@@ -996,8 +996,8 @@ Table of Contents
       requesting party.
 
    *  c509CertificateRequestType = 3.  This type indicates that the C509
-      Certificate Request is CBOR re-encoded RFC 2986 certification
-      requests, and that the requested certificate format has
+      Certificate Request is a CBOR re-encoded RFC 2986 certification
+      request, and that the requested certificate format has
       c509CertificateType = 3.  This encoding is backwards compatible
       with legacy RFC 2986 certification requests and X.509 certificate
       and enables a reduced transport overhead.
