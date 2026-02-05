@@ -392,7 +392,7 @@ CBOR encoding of the following extension values is fully supported:
 
 ~~~~~~~~~~~ cddl
    PolicyMappings = [
-     + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)
+     + (issuerDomainPolicy: int/~oid, subjectDomainPolicy: int/~oid)
    ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
