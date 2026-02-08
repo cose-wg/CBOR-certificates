@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-05T02:41:02.754596+00:00",
+  "timestamp": "2026-02-08T03:20:04.852554+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7778,11 +7778,11 @@
         "gselander"
       ],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "In the X.509 world, many key types have the algorithm identifier to identify the key and the corresponding signature algorithm, examples are Ed25519, Ed448, ML-DSA-{44 | 65 | 87}, and the composite keys (see https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-sigs/).\n\nWhile registering new keys and signatures algorithms, we should use the same number for such cases.\n\nIn draft-15, Ed25519 has different numbers (10 in key, 12 in signature), and also Ed448(11 in key, and 13 in signature). If still possible, please change them to use the same value.",
       "createdAt": "2025-11-05T10:18:53Z",
-      "updatedAt": "2026-02-02T09:23:36Z",
+      "updatedAt": "2026-02-05T16:29:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -7848,7 +7848,7 @@
       "id": "I_kwDOCpt5cM7V_9xb",
       "title": "Extension PolicyMappings: extend the syntax to support policy with number id",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/294",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -7859,8 +7859,8 @@
       ],
       "body": "In draft-15:\n```\n   *  Policy Mappings (policyMappings). extensionValue is encoded as\n      follows:\n\n      PolicyMappings = [\n        + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)\n      ]\n```\n\nshall be changed to\n```\n   *  Policy Mappings (policyMappings). extensionValue is encoded as\n      follows:\n\n      PolicyMappings = [\n        + (issuerDomainPolicy: int/~oid, subjectDomainPolicy: int/~oid)\n      ]\n```\n\nThis change is needed to support the certificate policies defined in \"Figure 13: C509 Certificate Policies\".",
       "createdAt": "2025-11-05T10:24:57Z",
-      "updatedAt": "2026-02-02T09:27:27Z",
-      "closedAt": null,
+      "updatedAt": "2026-02-05T11:11:54Z",
+      "closedAt": "2026-02-05T11:11:54Z",
       "comments": [
         {
           "author": "gselander",
@@ -7931,11 +7931,11 @@
         "gselander"
       ],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "In the draft-15, there are 4 types for the certificate request, and the following two seem to be redundant.\n- Type 1: CBOR re-encoded request to apply for C509 type 2 certificate.\n- Type 2: CBOR-encoded request to apply for X.509 certificate\n\nThese two types are not necessary and make it difficult to understand and implement. They can be implemented in other way, e.g. via different interface, here some examples:\n- https://example.org/enroll-c509-cert/via-c509type3req to replace type 1.\n- https://example.org/enroll-x509-cert/via-c509type0req to replace type 2.",
       "createdAt": "2025-11-05T10:31:54Z",
-      "updatedAt": "2026-02-02T09:46:27Z",
+      "updatedAt": "2026-02-05T16:03:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -12340,24 +12340,26 @@
       "id": "PR_kwDOCpt5cM7A641i",
       "title": "PQC algs in table",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/307",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "For FN-DSA-512 the difference per certificate compared to ECDSA with P-256 is (897+666-32-64)\r\n\r\nFor ML-DSA-44 the difference per certificate compared to ECDSA with P-256 is (1312+2420-32-64)\r\n\r\nThe absolute savings stay the same but the relative savings in percentage decreases.\r\n\r\nIn the future NIST may standardize isogeny-based signatures (SQISign) with 64 bytes PK and 177 byte SIG.\r\n\r\nThe numbers in the table only considers the raw numbers in the algorithms. Encoding might change the numbers with a few bytes..",
       "createdAt": "2026-02-02T13:51:27Z",
-      "updatedAt": "2026-02-04T23:22:01Z",
+      "updatedAt": "2026-02-05T06:52:42Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "PQC-algs-in-table",
       "headRefOid": "f476232393cb4c4a97aa29b03b380f411a1a5127",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-02-05T06:52:41Z",
+      "mergedAt": "2026-02-05T06:52:41Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "4762bd35d9da3dd5b79fbf71810563518fcec940"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -12382,6 +12384,58 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 309,
+      "id": "PR_kwDOCpt5cM7BwuFG",
+      "title": "Reduce number of certificate request types",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/309",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses #298",
+      "createdAt": "2026-02-05T15:40:00Z",
+      "updatedAt": "2026-02-05T16:14:14Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "cert-req-types",
+      "headRefOid": "bc71d1fc1005eb2c12a92ed21552d6320857ca11",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 310,
+      "id": "PR_kwDOCpt5cM7BxiYS",
+      "title": "Align id between signature and public key algorithm",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/310",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addresses #291 ",
+      "createdAt": "2026-02-05T16:29:27Z",
+      "updatedAt": "2026-02-05T16:29:28Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "align-id",
+      "headRefOid": "2c02cb908533947020b13ea991e93b9db1dee4e3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
