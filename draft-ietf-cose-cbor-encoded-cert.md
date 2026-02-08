@@ -47,8 +47,10 @@ normative:
   RFC2986:
   RFC3986:
   RFC4108:
+  RFC5246:
   RFC5280:
   RFC5958:
+  RFC6066:
   RFC6698:
   RFC6962:
   RFC7030:
@@ -2315,6 +2317,18 @@ This document registers the following entry in the "TLS Certificate Types" regis
 |  TBD5 | C509 Certificate |           N |                          |
 +-------+------------------+-------------+--------------------------+
 ~~~~~~~~~~~
+
+## Object Identifiers Registry {#oid}
+
+In TLS and DTLS, the subject of trusted authory needs to be sent to the peer to help it selecting the certificate chain, as in the CertificateAuthoritiesExtension in {{RFC8446}}, in the certificate_authorities field of CertificateRequest in {{RFC5246}}, or in the TrustedAuthorities in {{RFC6066}}. For such usage in the TLS and DTLS, the C509 name is wrapped in an X.509 name with exactly one RelativeDistinguishedName, which in turn contains exactly one AttributeTypeAndValue with id-at-c509name as type and the CBOR-encoded C509 name (see {{issuer}}) in OCTET STRING as value.
+
+~~~~~~~~~~~
+     id-at-c509name OBJECT IDENTIFIER ::= { TBD1 }
+
+     C509Name ::= OCTET STRING
+~~~~~~~~~~~
+
+RDNSequence ::= SEQUENCE OF RelativeDistinguishedName
 
 ## TLSA Selectors Registry {#tlsa}
 
