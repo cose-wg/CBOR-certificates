@@ -1754,6 +1754,13 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the new
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          |
 |       | Comments:    Compressed signature value                   |
 +-------+-----------------------------------------------------------+
+|     5 | Name:        Unsigned                                     |
+|       | Identifiers: id-alg-unsigned                              |
+|       | OID:         1.3.6.1.5.5.7.6.36                           |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 24          |
+|       | Comments:    bytes of size 0                              |
++-------+-----------------------------------------------------------+
 |    12 | Name:        Ed25519                                      |
 |       | Identifiers: id-Ed25519, id-EdDSA25519                    |
 |       | OID:         1.3.101.112                                  |
