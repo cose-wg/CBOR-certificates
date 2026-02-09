@@ -2328,8 +2328,6 @@ In TLS and DTLS, the subject of trusted authory needs to be sent to the peer to 
      C509Name ::= OCTET STRING
 ~~~~~~~~~~~
 
-RDNSequence ::= SEQUENCE OF RelativeDistinguishedName
-
 ## TLSA Selectors Registry {#tlsa}
 
 This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.
