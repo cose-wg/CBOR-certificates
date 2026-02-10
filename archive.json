@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-08T03:20:04.852554+00:00",
+  "timestamp": "2026-02-10T02:57:07.986924+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8046,7 +8046,7 @@
       "id": "I_kwDOCpt5cM7mFbzB",
       "title": "Add signature algorithm id-alg-unsigned",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/303",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -8057,8 +8057,8 @@
       ],
       "body": "A certificate with alg-unsigned contains zero-length signature value, and reduces the certificate size dramatically. Such certificates are useful for trust-anchor certificates where signature value will not be validated.\n\nIn the C509-context, the signature can be either empty bstr or null, both with 1 wired byte.\n\nDetails: https://datatracker.ietf.org/doc/draft-ietf-lamps-x509-alg-none/10/",
       "createdAt": "2026-01-27T11:43:54Z",
-      "updatedAt": "2026-02-02T09:21:15Z",
-      "closedAt": null,
+      "updatedAt": "2026-02-09T09:57:37Z",
+      "closedAt": "2026-02-09T09:57:37Z",
       "comments": [
         {
           "author": "emanjon",
@@ -10014,11 +10014,11 @@
       "labels": [],
       "body": "As in https://github.com/cose-wg/CBOR-certificates/issues/198",
       "createdAt": "2024-07-06T06:18:11Z",
-      "updatedAt": "2024-07-08T17:22:50Z",
+      "updatedAt": "2026-02-08T19:40:31Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "2c8b09df12c7df585c5a98bda1cfc3fc3c1cc283",
-      "headRepository": "xipki/CBOR-certificates",
+      "headRepository": null,
       "headRefName": "PR-198",
       "headRefOid": "a52a7ea63676df31c434ac7414c0be7d2768f308",
       "closedAt": "2024-07-08T17:22:50Z",
@@ -10042,11 +10042,11 @@
       "labels": [],
       "body": "(https://github.com/cose-wg/CBOR-certificates/issues/186)\r\n1. allow printableString in re-encoded CSR\r\n2. more accurate condition to encode it as bstr.",
       "createdAt": "2024-07-06T06:21:41Z",
-      "updatedAt": "2024-07-08T17:30:21Z",
+      "updatedAt": "2026-02-08T19:40:34Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "2c8b09df12c7df585c5a98bda1cfc3fc3c1cc283",
-      "headRepository": "xipki/CBOR-certificates",
+      "headRepository": null,
       "headRefName": "PR-186",
       "headRefOid": "c7ba32588e186532ad3d7cd9de3ee077c099cfee",
       "closedAt": "2024-07-08T17:30:21Z",
@@ -10070,11 +10070,11 @@
       "labels": [],
       "body": "\u2026ficates/issues/191",
       "createdAt": "2024-07-06T06:22:13Z",
-      "updatedAt": "2024-07-08T17:47:22Z",
+      "updatedAt": "2026-02-08T19:40:30Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "2c8b09df12c7df585c5a98bda1cfc3fc3c1cc283",
-      "headRepository": "xipki/CBOR-certificates",
+      "headRepository": null,
       "headRefName": "PR-191",
       "headRefOid": "ece08f86efd957142ee7014536bdaf99fd5cf7d0",
       "closedAt": "2024-07-08T17:47:21Z",
@@ -10104,11 +10104,11 @@
       "labels": [],
       "body": "https://github.com/cose-wg/CBOR-certificates/issues/195",
       "createdAt": "2024-07-06T06:23:10Z",
-      "updatedAt": "2024-07-08T17:52:44Z",
+      "updatedAt": "2026-02-08T19:40:39Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "2c8b09df12c7df585c5a98bda1cfc3fc3c1cc283",
-      "headRepository": "xipki/CBOR-certificates",
+      "headRepository": null,
       "headRefName": "PR-195",
       "headRefOid": "4266b3b0d5343cdf764928d6a830c3099bf68fb5",
       "closedAt": "2024-07-08T17:52:44Z",
@@ -10132,11 +10132,11 @@
       "labels": [],
       "body": "",
       "createdAt": "2024-07-06T06:26:58Z",
-      "updatedAt": "2024-07-08T17:56:36Z",
+      "updatedAt": "2026-02-08T19:40:31Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "2c8b09df12c7df585c5a98bda1cfc3fc3c1cc283",
-      "headRepository": "xipki/CBOR-certificates",
+      "headRepository": null,
       "headRefName": "PR-196",
       "headRefOid": "9d7c4d0ab0d1358f312ac45c2d4e48f36734b8de",
       "closedAt": "2024-07-08T17:56:36Z",
@@ -12266,7 +12266,7 @@
       "labels": [],
       "body": "Ted's dnsdir review resulted in a mail thread that ended here:\r\nhttps://www.mail-archive.com/cose@ietf.org/msg05162.html",
       "createdAt": "2026-01-30T08:00:38Z",
-      "updatedAt": "2026-02-03T13:42:28Z",
+      "updatedAt": "2026-02-09T10:24:28Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
@@ -12277,7 +12277,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "1. Please remove \"full-qualified\", since the dNSName may also have some entries like \"*.example.org\" which is not a FQDN.\r\n2. Could we use reference to [Section 7.2 Internationalized Domain Names in GeneralName](https://datatracker.ietf.org/doc/html/rfc5280#section-7.2) instead describing the detailed format here in C509?",
+          "createdAt": "2026-02-09T10:24:28Z",
+          "updatedAt": "2026-02-09T10:24:28Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM7ePnkC",
@@ -12397,7 +12405,7 @@
       "labels": [],
       "body": "Addresses #298",
       "createdAt": "2026-02-05T15:40:00Z",
-      "updatedAt": "2026-02-05T16:14:14Z",
+      "updatedAt": "2026-02-09T10:41:00Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
@@ -12408,8 +12416,37 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki to review",
+          "createdAt": "2026-02-09T09:47:24Z",
+          "updatedAt": "2026-02-09T09:47:24Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7g3Gbx",
+          "commit": {
+            "abbreviatedOid": "bc71d1f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-02-09T10:41:00Z",
+          "updatedAt": "2026-02-09T10:41:00Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Change to \nTwo types of C509 Certificate Requests are defined, see {{csr-type}}, both using the same CBOR encoding and differing only in what is being signed.",
+              "createdAt": "2026-02-09T10:41:00Z",
+              "updatedAt": "2026-02-09T10:41:00Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 310,
@@ -12423,13 +12460,75 @@
       "labels": [],
       "body": "Addresses #291 ",
       "createdAt": "2026-02-05T16:29:27Z",
-      "updatedAt": "2026-02-05T16:29:28Z",
+      "updatedAt": "2026-02-09T09:46:58Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "align-id",
       "headRefOid": "2c02cb908533947020b13ea991e93b9db1dee4e3",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@emanjon to review\r\nAdd same OID same number.",
+          "createdAt": "2026-02-09T09:46:29Z",
+          "updatedAt": "2026-02-09T09:46:58Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 311,
+      "id": "PR_kwDOCpt5cM7CVh5T",
+      "title": "added signature algorithm alg-unsigned. fixed #303.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/311",
+      "state": "MERGED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #303 ",
+      "createdAt": "2026-02-08T20:53:19Z",
+      "updatedAt": "2026-02-09T09:57:36Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "alg-unsigned",
+      "headRefOid": "124905af839e43880f5b742a7f95b4428f670de9",
+      "closedAt": "2026-02-09T09:57:35Z",
+      "mergedAt": "2026-02-09T09:57:35Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "07affb8e52d28b228afe6de0d120a1947f23d2a2"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 312,
+      "id": "PR_kwDOCpt5cM7CViJY",
+      "title": "added method to wrap C509 name in TLS. fixed #287",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/312",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixed #287 ",
+      "createdAt": "2026-02-08T20:53:57Z",
+      "updatedAt": "2026-02-09T10:05:24Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "c509name-in-tls",
+      "headRefOid": "4e04ccac81094e3589139b5f90ca2e347d8b4d07",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
