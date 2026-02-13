@@ -48,6 +48,7 @@ normative:
   RFC3986:
   RFC4108:
   RFC5280:
+  RFC5246:
   RFC5958:
   RFC6698:
   RFC6962:
@@ -2302,7 +2303,13 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as X.509, but uses a different value and instead of the DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> in TLS 1.3 and opaque ASN.1Cert<1..2^24-1> in TLS 1.2, contains the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
+This document registers the following entry in the "TLS Certificate Types" registry under the "Transport Layer Security (TLS) Extensions" heading. The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in {{Section 4.4.2 of RFC8446}}:
+
+~~~~~~~~~~~ aasvg
+case C509:
+  opaque c509_data<1..2^24-1>;
+~~~~~~~~~~~
+where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in {{Section 7.4.2 of RFC5246}}. Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
