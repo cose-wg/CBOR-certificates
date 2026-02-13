@@ -2342,7 +2342,7 @@ The TLSA selectors registry defined in {{RFC6698}} originally only applied to PK
 
 ## EDHOC Authentication Credential Types Registry
 
-This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is used to identify supported authentication credential type, for example, during discovery of EDHOC resources, see {{RFC9668}}.
+This document registers the following entry in the "EDHOC Authentication Credential Types" registry under the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" heading. This is useful to identify C509 certificates as a supported authentication credential type to use with EDHOC {{RFC9528}}, for example, during discovery of EDHOC resources, see {{RFC9668}}.
 
 ~~~~~~~~~~~ aasvg
 
