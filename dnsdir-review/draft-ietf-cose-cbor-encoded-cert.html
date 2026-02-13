@@ -6683,7 +6683,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
             </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-9.17-3">where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in <span><a href="https://rfc-editor.org/rfc/rfc5246#section-7.4.2" class="relref">Section 7.4.2</a> of [<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>. Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-9.17-3" class="pilcrow">¶</a></p>
+<p id="section-9.17-3">where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in <span><a href="https://rfc-editor.org/rfc/rfc5246#section-7.4.2" class="relref">Section 7.4.2</a> of [<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-9.17-3" class="pilcrow">¶</a></p>
 <div id="section-9.17-4">
           <div class="alignLeft art-svg artwork" id="section-9.17-4.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -6716,19 +6716,19 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <h3 id="name-tlsa-selectors-registry">
 <a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
         </h3>
-<p id="section-9.18-1">This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.<a href="#section-9.18-1" class="pilcrow">¶</a></p>
+<p id="section-9.18-1">This document registers the following entry in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading. The C509 certificate data, C509CertData, is defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-9.18-1" class="pilcrow">¶</a></p>
 <div id="section-9.18-2">
           <div class="alignLeft art-svg artwork" id="section-9.18-2.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="128" width="520" viewBox="0 0 520 128" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-              <path d="M 8,32 L 8,112" fill="none" stroke="black"></path>
-              <path d="M 72,32 L 72,112" fill="none" stroke="black"></path>
-              <path d="M 152,32 L 152,112" fill="none" stroke="black"></path>
-              <path d="M 352,32 L 352,112" fill="none" stroke="black"></path>
-              <path d="M 512,32 L 512,112" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="520" viewBox="0 0 520 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+              <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
+              <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
+              <path d="M 152,32 L 152,96" fill="none" stroke="black"></path>
+              <path d="M 352,32 L 352,96" fill="none" stroke="black"></path>
+              <path d="M 512,32 L 512,96" fill="none" stroke="black"></path>
               <path d="M 8,32 L 512,32" fill="none" stroke="black"></path>
               <path d="M 8,62 L 512,62" fill="none" stroke="black"></path>
               <path d="M 8,66 L 512,66" fill="none" stroke="black"></path>
-              <path d="M 8,112 L 512,112" fill="none" stroke="black"></path>
+              <path d="M 8,96 L 512,96" fill="none" stroke="black"></path>
               <g class="text">
                 <text x="40" y="52">Value</text>
                 <text x="112" y="52">Acronym</text>
@@ -6737,18 +6737,16 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="432" y="52">Reference</text>
                 <text x="44" y="84">TBD7</text>
                 <text x="124" y="84">C509</text>
-                <text x="180" y="84">CBOR</text>
-                <text x="232" y="84">encoded</text>
+                <text x="180" y="84">C509</text>
+                <text x="248" y="84">certificate</text>
+                <text x="316" y="84">data</text>
                 <text x="388" y="84">[[this</text>
                 <text x="460" y="84">document]]</text>
-                <text x="180" y="100">full</text>
-                <text x="220" y="100">PKIX</text>
-                <text x="288" y="100">certificate</text>
               </g>
             </svg><a href="#section-9.18-2.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-9.18-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates, which are essentially CBOR encoded full PKIX certificates.<a href="#section-9.18-3" class="pilcrow">¶</a></p>
+<p id="section-9.18-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates.<a href="#section-9.18-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="edhoc-authentication-credential-types-registry">
