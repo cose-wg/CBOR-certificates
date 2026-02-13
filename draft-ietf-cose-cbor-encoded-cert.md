@@ -2349,7 +2349,7 @@ This document registers the following entry in the "EDHOC Authentication Credent
 +-------+----------------------+-------------------+
 | Value | Description          |     Reference     |
 +=======+======================+===================+
-| TBD14 | C509 certificate     | [[this document]] |
+|   3   | C509 certificate     | [[this document]] |
 +-------+----------------------+-------------------+
 ~~~~~~~~~~~
 
