@@ -2925,15 +2925,20 @@ Table of Contents
    This document registers the following entry in the "TLS Certificate
    Types" registry under the "Transport Layer Security (TLS) Extensions"
    heading.  The new certificate type can be used with additional TLS
-   certificate compression [RFC8879].  C509 is defined in the same way
-   as X.509, but uses a different value and instead of the DER-encoded
-   X.509 certificate, opaque cert_data<1..2^24-1> in TLS 1.3 and opaque
-   ASN.1Cert<1..2^24-1> in TLS 1.2, contains the CBOR sequence
-   ~C509Certificate (an unwrapped C509Certificate).  Similar to
-   COSE_C509, the TLS handshake contains the length of each certificate.
-   The TLS extensions client_certificate_type and
-   server_certificate_type [RFC7250] are used to negotiate the use of
-   C509.
+   certificate compression [RFC8879].  For TLS 1.3, the C509 certificate
+   type is defined as a new case in the CertificateEntry struct
+   specified in Section 4.4.2 of [RFC8446]:
+
+   case C509:
+     opaque c509_data<1..2^24-1>;
+
+   where c509_data is the CBOR sequence ~C509Certificate (an unwrapped
+   C509Certificate).  For TLS 1.2 the same construction is applied with
+   a similar union type defined for the Certificate struct in
+   Section 7.4.2 of [RFC5246].  Similar to COSE_C509, the TLS handshake
+   contains the length of each certificate.  The TLS extensions
+   client_certificate_type and server_certificate_type [RFC7250] are
+   used to negotiate the use of C509.
 
    +-------+------------------+-------------+--------------------------+
    | Value | Name             | Recommended | Comment                  |
@@ -3002,6 +3007,11 @@ Table of Contents
               Protect Firmware Packages", RFC 4108,
               DOI 10.17487/RFC4108, August 2005,
               <https://www.rfc-editor.org/rfc/rfc4108>.
+
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008,
+              <https://www.rfc-editor.org/rfc/rfc5246>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
