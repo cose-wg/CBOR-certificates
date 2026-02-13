@@ -2309,7 +2309,7 @@ This document registers the following entry in the "TLS Certificate Types" regis
 case C509:
   opaque c509_data<1..2^24-1>;
 ~~~~~~~~~~~
-where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in {{Section 7.4.2 of RFC5246}}. Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
+where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in {{Section 7.4.2 of RFC5246}}. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
@@ -2321,20 +2321,18 @@ where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certific
 
 ## TLSA Selectors Registry {#tlsa}
 
-This document registers the following entries in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading.
+This document registers the following entry in the "TLSA Selectors" registry under the "DNS-Based Authentication of Named Entities (DANE) Parameters" heading. The C509 certificate data, C509CertData, is defined in {{cose-header-params}}.
 
 ~~~~~~~~~~~ aasvg
 
 +-------+---------+------------------------+-------------------+
 | Value | Acronym |   Short Description    |     Reference     |
 +=======+=========+========================+===================+
-|  TBD7 |    C509 | CBOR encoded           | [[this document]] |
-|       |         | full PKIX certificate  |                   |
+|  TBD7 |    C509 | C509 certificate data  | [[this document]] |
 +-------+---------+------------------------+-------------------+
 ~~~~~~~~~~~
 
-The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept the use of C509 certificates, which are essentially CBOR encoded full PKIX certificates.
-
+The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept the use of C509 certificates.
 
 
 ## EDHOC Authentication Credential Types Registry
