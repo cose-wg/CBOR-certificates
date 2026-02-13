@@ -48,7 +48,6 @@ normative:
   RFC3986:
   RFC4108:
   RFC5280:
-  RFC5890:
   RFC5958:
   RFC6698:
   RFC6962:
@@ -432,7 +431,7 @@ CBOR encoding of the following extension values is fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string that contains a fully-qualified domain name with no trailing dot, where each label is an A-label as defined in {{RFC5890}}. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
 
 ~~~~~~~~~~~ cddl
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
