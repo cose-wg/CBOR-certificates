@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-10T02:57:07.986924+00:00",
+  "timestamp": "2026-02-15T02:51:59.832849+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -12266,13 +12266,13 @@
       "labels": [],
       "body": "Ted's dnsdir review resulted in a mail thread that ended here:\r\nhttps://www.mail-archive.com/cose@ietf.org/msg05162.html",
       "createdAt": "2026-01-30T08:00:38Z",
-      "updatedAt": "2026-02-09T10:24:28Z",
+      "updatedAt": "2026-02-14T01:56:59Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "dnsdir-review",
-      "headRefOid": "265d977019dec928f4efc9534bddaf535004a878",
+      "headRefOid": "6b92d242a9dc9db4e314e21e92a4bff9c2b92472",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -12298,6 +12298,19 @@
           "body": "Looks like good clarifications to me (haven't checked RFC5890), approve from my side",
           "createdAt": "2026-01-30T14:18:49Z",
           "updatedAt": "2026-01-30T14:18:49Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7ihi5I",
+          "commit": {
+            "abbreviatedOid": "6b92d24"
+          },
+          "author": "vdukhovni",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "LGTM.",
+          "createdAt": "2026-02-14T01:56:59Z",
+          "updatedAt": "2026-02-14T01:56:59Z",
           "comments": []
         }
       ]
