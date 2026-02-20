@@ -4935,11 +4935,10 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <a href="#section-9.12" class="section-number selfRef">9.12. </a><a href="#name-c509-signature-algorithms-r" class="section-name selfRef">C509 Signature Algorithms Registry</a>
         </h3>
 <p id="section-9.12-1">IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
-<p id="section-9.12-2">NOTE: Check referenced Section number of ECDSA signatures, since hardcoded in the table.<a href="#section-9.12-2" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
 <figure id="figure-18">
-          <div id="section-9.12-3.1">
-            <div class="alignCenter art-svg artwork" id="section-9.12-3.1.1">
+          <div id="section-9.12-2.1">
+            <div class="alignCenter art-svg artwork" id="section-9.12-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2864" width="560" viewBox="0 0 560 2864" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,32 L 8,2848" fill="none" stroke="black"></path>
                 <path d="M 72,32 L 72,2848" fill="none" stroke="black"></path>
@@ -5033,7 +5032,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="208" y="308">Don't</text>
                   <text x="252" y="308">use.</text>
                   <text x="288" y="308">See</text>
-                  <text x="332" y="308">3.2.2.</text>
+                  <text x="336" y="308">Section</text>
+                  <text x="396" y="308">3.2.2.</text>
                   <text x="56" y="340">0</text>
                   <text x="104" y="340">Name:</text>
                   <text x="208" y="340">ECDSA</text>
@@ -5060,7 +5060,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="460" y="404">02</text>
                   <text x="120" y="420">Comments:</text>
                   <text x="200" y="420">See</text>
-                  <text x="244" y="420">3.2.2.</text>
+                  <text x="248" y="420">Section</text>
+                  <text x="308" y="420">3.2.2.</text>
                   <text x="56" y="452">1</text>
                   <text x="104" y="452">Name:</text>
                   <text x="208" y="452">ECDSA</text>
@@ -5087,7 +5088,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="460" y="516">03</text>
                   <text x="120" y="532">Comments:</text>
                   <text x="200" y="532">See</text>
-                  <text x="244" y="532">3.2.2.</text>
+                  <text x="248" y="532">Section</text>
+                  <text x="308" y="532">3.2.2.</text>
                   <text x="56" y="564">2</text>
                   <text x="104" y="564">Name:</text>
                   <text x="208" y="564">ECDSA</text>
@@ -5114,7 +5116,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="460" y="628">04</text>
                   <text x="120" y="644">Comments:</text>
                   <text x="200" y="644">See</text>
-                  <text x="244" y="644">3.2.2.</text>
+                  <text x="248" y="644">Section</text>
+                  <text x="308" y="644">3.2.2.</text>
                   <text x="56" y="676">3</text>
                   <text x="104" y="676">Name:</text>
                   <text x="208" y="676">ECDSA</text>
@@ -5141,7 +5144,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="460" y="740">20</text>
                   <text x="120" y="756">Comments:</text>
                   <text x="200" y="756">See</text>
-                  <text x="244" y="756">3.2.2.</text>
+                  <text x="248" y="756">Section</text>
+                  <text x="308" y="756">3.2.2.</text>
                   <text x="56" y="788">4</text>
                   <text x="104" y="788">Name:</text>
                   <text x="208" y="788">ECDSA</text>
@@ -5168,7 +5172,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="460" y="852">21</text>
                   <text x="120" y="868">Comments:</text>
                   <text x="200" y="868">See</text>
-                  <text x="244" y="868">3.2.2.</text>
+                  <text x="248" y="868">Section</text>
+                  <text x="308" y="868">3.2.2.</text>
                   <text x="56" y="900">5</text>
                   <text x="104" y="900">Name:</text>
                   <text x="220" y="900">Unsigned</text>
@@ -5783,8 +5788,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="2820">83</text>
                   <text x="460" y="2820">75</text>
                   <text x="120" y="2836">Comments:</text>
+                  <text x="200" y="2836">See</text>
+                  <text x="248" y="2836">Section</text>
+                  <text x="308" y="2836">3.2.2.</text>
                 </g>
-              </svg><a href="#section-9.12-3.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-9.12-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-18" class="selfRef">Figure 18</a>:
@@ -6957,7 +6965,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dd class="break"></dd>
 <dt id="I-D.ietf-uta-tls13-iot-profile">[I-D.ietf-uta-tls13-iot-profile]</dt>
         <dd>
-<span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Fossati, T.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"TLS/DTLS 1.3 Profiles for the Internet of Things"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-uta-tls13-iot-profile-18</span>, <time datetime="2026-02-03" class="refDate">3 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile-18">https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Tschofenig, H.</span>, <span class="refAuthor">Fossati, T.</span>, <span class="refAuthor">Richardson, M.</span>, and <span class="refAuthor">D. Migault</span>, <span class="refTitle">"TLS/DTLS 1.3 Profiles for the Internet of Things"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-uta-tls13-iot-profile-19</span>, <time datetime="2026-02-20" class="refDate">20 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile-19">https://datatracker.ietf.org/doc/html/draft-ietf-uta-tls13-iot-profile-19</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IEEE-802.1AR">[IEEE-802.1AR]</dt>
         <dd>
