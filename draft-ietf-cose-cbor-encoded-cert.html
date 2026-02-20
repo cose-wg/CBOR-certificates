@@ -1054,7 +1054,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 17 August 2026</td>
+<td class="center">Expires 24 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-13" class="published">13 February 2026</time>
+<time datetime="2026-02-20" class="published">20 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-17">17 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-24">24 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -4935,10 +4935,11 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
 <a href="#section-9.12" class="section-number selfRef">9.12. </a><a href="#name-c509-signature-algorithms-r" class="section-name selfRef">C509 Signature Algorithms Registry</a>
         </h3>
 <p id="section-9.12-1">IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
+<p id="section-9.12-2">NOTE: Check referenced Section number of ECDSA signatures, since hardcoded in the table.<a href="#section-9.12-2" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
 <figure id="figure-18">
-          <div id="section-9.12-2.1">
-            <div class="alignCenter art-svg artwork" id="section-9.12-2.1.1">
+          <div id="section-9.12-3.1">
+            <div class="alignCenter art-svg artwork" id="section-9.12-3.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2864" width="560" viewBox="0 0 560 2864" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
                 <path d="M 8,32 L 8,2848" fill="none" stroke="black"></path>
                 <path d="M 72,32 L 72,2848" fill="none" stroke="black"></path>
@@ -5031,9 +5032,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="120" y="308">Comments:</text>
                   <text x="208" y="308">Don't</text>
                   <text x="252" y="308">use.</text>
-                  <text x="316" y="308">Compressed</text>
-                  <text x="400" y="308">signature</text>
-                  <text x="464" y="308">value</text>
+                  <text x="288" y="308">See</text>
+                  <text x="332" y="308">3.2.2.</text>
                   <text x="56" y="340">0</text>
                   <text x="104" y="340">Name:</text>
                   <text x="208" y="340">ECDSA</text>
@@ -5059,9 +5059,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="404">03</text>
                   <text x="460" y="404">02</text>
                   <text x="120" y="420">Comments:</text>
-                  <text x="228" y="420">Compressed</text>
-                  <text x="312" y="420">signature</text>
-                  <text x="376" y="420">value</text>
+                  <text x="200" y="420">See</text>
+                  <text x="244" y="420">3.2.2.</text>
                   <text x="56" y="452">1</text>
                   <text x="104" y="452">Name:</text>
                   <text x="208" y="452">ECDSA</text>
@@ -5087,9 +5086,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="516">03</text>
                   <text x="460" y="516">03</text>
                   <text x="120" y="532">Comments:</text>
-                  <text x="228" y="532">Compressed</text>
-                  <text x="312" y="532">signature</text>
-                  <text x="376" y="532">value</text>
+                  <text x="200" y="532">See</text>
+                  <text x="244" y="532">3.2.2.</text>
                   <text x="56" y="564">2</text>
                   <text x="104" y="564">Name:</text>
                   <text x="208" y="564">ECDSA</text>
@@ -5115,9 +5113,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="628">03</text>
                   <text x="460" y="628">04</text>
                   <text x="120" y="644">Comments:</text>
-                  <text x="228" y="644">Compressed</text>
-                  <text x="312" y="644">signature</text>
-                  <text x="376" y="644">value</text>
+                  <text x="200" y="644">See</text>
+                  <text x="244" y="644">3.2.2.</text>
                   <text x="56" y="676">3</text>
                   <text x="104" y="676">Name:</text>
                   <text x="208" y="676">ECDSA</text>
@@ -5143,9 +5140,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="740">06</text>
                   <text x="460" y="740">20</text>
                   <text x="120" y="756">Comments:</text>
-                  <text x="228" y="756">Compressed</text>
-                  <text x="312" y="756">signature</text>
-                  <text x="376" y="756">value</text>
+                  <text x="200" y="756">See</text>
+                  <text x="244" y="756">3.2.2.</text>
                   <text x="56" y="788">4</text>
                   <text x="104" y="788">Name:</text>
                   <text x="208" y="788">ECDSA</text>
@@ -5171,9 +5167,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="852">06</text>
                   <text x="460" y="852">21</text>
                   <text x="120" y="868">Comments:</text>
-                  <text x="228" y="868">Compressed</text>
-                  <text x="312" y="868">signature</text>
-                  <text x="376" y="868">value</text>
+                  <text x="200" y="868">See</text>
+                  <text x="244" y="868">3.2.2.</text>
                   <text x="56" y="900">5</text>
                   <text x="104" y="900">Name:</text>
                   <text x="220" y="900">Unsigned</text>
@@ -5788,11 +5783,8 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="436" y="2820">83</text>
                   <text x="460" y="2820">75</text>
                   <text x="120" y="2836">Comments:</text>
-                  <text x="228" y="2836">Compressed</text>
-                  <text x="312" y="2836">signature</text>
-                  <text x="376" y="2836">value</text>
                 </g>
-              </svg><a href="#section-9.12-2.1.1" class="pilcrow">¶</a>
+              </svg><a href="#section-9.12-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
 <figcaption><a href="#figure-18" class="selfRef">Figure 18</a>:
