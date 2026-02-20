@@ -1699,7 +1699,7 @@ IANA has created a new registry titled "C509 General Names Registry" in the new 
 
 IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
-NOTE: Check referenced Section number of ECDSA signatures, since hardcoded in the table.
+<!-- NOTE: Check referenced section number hardcoded in the table. -->
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1719,42 +1719,42 @@ NOTE: Check referenced Section number of ECDSA signatures, since hardcoded in th
 |       | OID:         1.2.840.10045.4.1                            |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
-|       | Comments:    Don't use. See 3.2.2.                        |
+|       | Comments:    Don't use. See Section 3.2.2.                |
 +-------+-----------------------------------------------------------+
 |     0 | Name:        ECDSA with SHA-256                           |
 |       | Identifiers: ecdsa-with-SHA256                            |
 |       | OID:         1.2.840.10045.4.3.2                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          |
-|       | Comments:    See 3.2.2.                                   |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 |     1 | Name:        ECDSA with SHA-384                           |
 |       | Identifiers: ecdsa-with-SHA384                            |
 |       | OID:         1.2.840.10045.4.3.3                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          |
-|       | Comments:    See 3.2.2.                                   |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 |     2 | Name:        ECDSA with SHA-512                           |
 |       | Identifiers: ecdsa-with-SHA512                            |
 |       | OID:         1.2.840.10045.4.3.4                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          |
-|       | Comments:    See 3.2.2.                                   |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 |     3 | Name:        ECDSA with SHAKE128                          |
 |       | Identifiers: id-ecdsa-with-shake128                       |
 |       | OID:         1.3.6.1.5.5.7.6.32                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          |
-|       | Comments:    See 3.2.2.                                   |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 |     4 | Name:        ECDSA with SHAKE256                          |
 |       | Identifiers: id-ecdsa-with-shake256                       |
 |       | OID:         1.3.6.1.5.5.7.6.33                           |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          |
-|       | Comments:    See 3.2.2.                                   |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 |     5 | Name:        Unsigned                                     |
 |       | Identifiers: id-alg-unsigned                              |
@@ -1877,7 +1877,7 @@ NOTE: Check referenced Section number of ECDSA signatures, since hardcoded in th
 |       | OID:         1.2.156.10197.1.501                          |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
-|       | Comments:                                                 |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="C509 Signature Algorithms"}
