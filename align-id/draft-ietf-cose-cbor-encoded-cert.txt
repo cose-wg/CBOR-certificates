@@ -6,12 +6,12 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 9 August 2026                             University of Glasgow
+Expires: 24 August 2026                            University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                         5 February 2026
+                                                        20 February 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 August 2026.
+   This Internet-Draft will expire on 24 August 2026.
 
 Copyright Notice
 
@@ -2424,11 +2424,12 @@ Table of Contents
    DER, Comments, and Reference, where Value is an integer, and the
    other columns are text strings.  The fields Name, OID, Parameters,
    and DER are mandatory.  If the public key can only be used with one
-   signature algorithm, then the value SHOULD be chosen equal to the
-   value of signature algorithm, see Section 9.12.  For values in the
-   interval [-24, 23] the registration procedure is "IETF Review with
-   Expert Review".  For all other values the registration procedure is
-   "Expert Review".  The initial contents of the registry are:
+   signature algorithm and the OID of the public key algorithm is the
+   same as the signature algorithm, then the value MUST be chosen equal
+   to the value of signature algorithm, see Section 9.12.  For values in
+   the interval [-24, 23] the registration procedure is "IETF Review
+   with Expert Review".  For all other values the registration procedure
+   is "Expert Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Public Key Algorithms                               |
@@ -3151,12 +3152,12 @@ Table of Contents
               ctls-10>.
 
    [I-D.ietf-uta-tls13-iot-profile]
-              Tschofenig, H., Fossati, T., and M. Richardson, "TLS/DTLS
-              1.3 Profiles for the Internet of Things", Work in
-              Progress, Internet-Draft, draft-ietf-uta-tls13-iot-
-              profile-18, 3 February 2026,
+              Tschofenig, H., Fossati, T., Richardson, M., and D.
+              Migault, "TLS/DTLS 1.3 Profiles for the Internet of
+              Things", Work in Progress, Internet-Draft, draft-ietf-uta-
+              tls13-iot-profile-19, 20 February 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-uta-
-              tls13-iot-profile-18>.
+              tls13-iot-profile-19>.
 
    [IEEE-802.1AR]
               Institute of Electrical and Electronics Engineers, "IEEE
