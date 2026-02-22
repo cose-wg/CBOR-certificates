@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-15T02:51:59.832849+00:00",
+  "timestamp": "2026-02-22T02:47:16.641922+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7726,7 +7726,7 @@
       "labels": [],
       "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
       "createdAt": "2025-11-03T08:46:03Z",
-      "updatedAt": "2026-01-27T10:36:30Z",
+      "updatedAt": "2026-02-20T15:15:33Z",
       "closedAt": null,
       "comments": [
         {
@@ -7763,6 +7763,13 @@
           "body": "Would be good to make sure that this is an problem with the code and not with the specification.",
           "createdAt": "2026-01-27T10:36:30Z",
           "updatedAt": "2026-01-27T10:36:30Z"
+        },
+        {
+          "author": "smhmeier",
+          "authorAssociation": "NONE",
+          "body": "@emanjon Good point. I didn't think of that. I'll have a look at it once I get around it and will post my findings. ",
+          "createdAt": "2026-02-20T15:15:33Z",
+          "updatedAt": "2026-02-20T15:15:33Z"
         }
       ]
     },
@@ -7805,10 +7812,12 @@
       "assignees": [
         "xipki"
       ],
-      "labels": [],
+      "labels": [
+        "needs PR"
+      ],
       "body": "RFC 5280 defines CRLDistributionPoints as follows:\n```\n  CRLDistributionPoints ::= SEQUENCE SIZE (1..MAX) OF DistributionPoint\n\n   DistributionPoint ::= SEQUENCE {\n        distributionPoint       [0]     DistributionPointName OPTIONAL,\n        reasons                 [1]     ReasonFlags OPTIONAL,\n        cRLIssuer               [2]     GeneralNames OPTIONAL }\n\n  DistributionPointName ::= CHOICE {\n        fullName                [0]     GeneralNames,\n        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }\n\n   ReasonFlags ::= BIT STRING {\n        unused                  (0),\n        keyCompromise           (1),\n        cACompromise            (2),\n        affiliationChanged      (3),\n        superseded              (4),\n        cessationOfOperation    (5),\n        certificateHold         (6),\n        privilegeWithdrawn      (7),\n        aACompromise            (8) }\n\n GeneralNames ::= SEQUENCE SIZE (1..MAX) OF GeneralName\n```\n\nIn draft-15, only a small subset is allowed:\n```\nCRL Distribution Points (cRLDistributionPoints).  If the CRL\n      Distribution Points is a sequence of DistributionPointName, where\n      each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as follows:\n\n      DistributionPointName = [ 2* text ] / text\n      CRLDistributionPoints = [ + DistributionPointName ]\n```\n\nThe reasons and cRLIssuer of a single DistributionPoint are not permitted. \n- field cRLIssuer\nIn some PKI environments, e.g. in the gemany ehealth network gematik, the CRLs will not be issued by the CA which issues certificates, but by some dedicated so called CRL signer. In this case, the cRLIssuer field is needed to specify the Subject of the CRL signer. \n- field reasons\nI have not see any real scenarios which use this field, but if an extra byte is needed to support this, I am for it.\n\nFinally, we have the new syntax to support cRLIssuer and reasons, and :\n\n```\nCRL Distribution Points (cRLDistributionPoints).  If each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as CRLDistributionPoints, the choice 'text' shall be used\n      if the reasons and cRLIssuer are null, and the fullName contains only one text.\n\n      DistributionPointName = [\n         fullName  [2* text] / text\n         reasons   int / null,\n         cRLIssuer Name / null,\n      ]\n\n      CRLDistributionPoints = [ + DistributionPointName ] / text\n```",
       "createdAt": "2025-11-05T10:21:30Z",
-      "updatedAt": "2026-02-02T09:52:32Z",
+      "updatedAt": "2026-02-20T10:50:30Z",
       "closedAt": null,
       "comments": []
     },
@@ -7821,10 +7830,12 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "needs PR"
+      ],
       "body": "In draft-15:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTemplateType: int,\n      c509CertificateRequestType: [+ int] / undefined,\n      subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subjectPublicKey: undefined\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\n\nThe subject and extensionsRequest shall be extended to allow the \"undefined\" value. Then we have the new text:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTemplateType: int,\n      c509CertificateRequestType: [+ int] / undefined,\n      subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subject: NameTemplate *** / undefined ***,\n      subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subjectPublicKey: undefined\n      extensionsRequest: ExtensionsTemplate *** / undefined ***,\n   ]\n```\n",
       "createdAt": "2025-11-05T10:22:52Z",
-      "updatedAt": "2026-02-02T22:21:50Z",
+      "updatedAt": "2026-02-20T10:50:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -7840,6 +7851,13 @@
           "body": "And the AttributeTemplate shall also be extended to specify the occurrences of each single extension:\n\nIn draft -16\n```\nExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid, ? critical: true,\n                          extensionValue: bytes / undefined ))\n```\nNew proposal:\n```\nExtensionTemplate = (( extensionID: int, **required:bool,** extensionValue: any ) //\n                        ( extensionID: ~oid, **required:bool,** ? critical: true,\n                          extensionValue: bytes / undefined ))\n```\nBTW: do we need the extensionValue field here, for which purpose?",
           "createdAt": "2026-02-02T22:21:50Z",
           "updatedAt": "2026-02-02T22:21:50Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki to propose",
+          "createdAt": "2026-02-20T10:38:15Z",
+          "updatedAt": "2026-02-20T10:38:15Z"
         }
       ]
     },
@@ -8102,10 +8120,95 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "needs PR"
+      ],
       "body": "I'm- Extensions\n\n  In draft -16:\n  ```\n  Extension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, ? critical: true,\n                 extensionValue: bytes ))\n\n  Extensions = [ * Extension ] / int\n  ```\n  To encode an `Extensions`, the application needs to iterate all fields to compute the total size of the cbor-array. This is complex, but is OK. But for the decoding, this is much more complex. The application cannot know the number of fields before parsing all of them. Thus it cannot use array (with fixed size) / allocate the exact size of memory in prior.\n\n  To avoid this, we could change the definition of `Extension` to follows:\n  ```\n  Extension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, extensionValue: **bytes/[critical: true, bytes]**))\n\n  Extensions = [ * Extension ] / int\n  ```\n  Critical `extensionValue` with extensionID of type `~oid` will be represented as a cbor-array.\n\n- CertificatePolicies\n  In draft-16:\n  ```\n  CertificatePolicies = [\n     + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )\n  ]\n  ```\n  shall be changed to\n  ```\n  CertificatePolicies = [\n     + ( PolicyIdentifier, [ * PolicyQualifierInfo ] )\n  ]\n  ```\n Zero occurrence of PolicyQualifierInfo is also represented as an array.\n \n- IPAddressChoice\n  In draft-16:\n  ```\n  Address = bytes\n  AddressPrefix = (Address, unusedBits: uint)\n  AddressRange = [min: Address, max: Address]\n  IPAddressOrRange = AddressPrefix / AddressRange.\n  IPAddressChoice = [ + IPAddressOrRange ] / null\n  ```\n  The `IPAddressOrRange` may contains 1 field (choice `AddressRange`) or 2 fields (choice `AddressPrefix`).\n\n  It shall be changed to\n  ```\n  Address = bytes\n  AddressPrefix = **[ unusedBits:unit, Address ]** -- changed to use array here\n  AddressRange = [min: Address, max: Address]\n  IPAddressOrRange = AddressPrefix / AddressRange\n  IPAddressChoice = [ + IPAddressOrRange ] / null\n  ``` \n \n- ExtensionsTemplate\n  In draft-16:\n  ```\n  ExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid, ? critical: true,\n                          extensionValue: bytes / undefined ))\n\n  ExtensionsTemplate = [ * ExtensionTemplate ] / int\n  ```\n  may be changed to\n  ```\n  ExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid,  extensionValue: bytes / undefined / [critical:true, bytes]))\n\n  ExtensionsTemplate = [ * ExtensionTemplate ] / int\n  ``` \n  Please refer to #293 for the discussion whether we should remove the `extensionValue` field.\n",
       "createdAt": "2026-02-03T06:22:07Z",
-      "updatedAt": "2026-02-03T07:00:07Z",
+      "updatedAt": "2026-02-20T10:50:31Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki to propose",
+          "createdAt": "2026-02-20T10:49:07Z",
+          "updatedAt": "2026-02-20T10:49:07Z"
+        }
+      ]
+    },
+    {
+      "number": 313,
+      "id": "I_kwDOCpt5cM7seOXu",
+      "title": "Support for the attribute specified in RFC 9883",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/313",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "needs PR"
+      ],
+      "body": "From Genart review\nhttps://www.mail-archive.com/cose@ietf.org/msg05154.html\n\n\nSection 4: It would be easy to add support for the attribute\nspecified in RFC 9883.  If ML-DSA and ML-KEM achieve wide deployment\noutside the Web PKI, support for this CSR attribute will be needed.  I do\nnot want to delay approval of this document, bit is looks like this would\nbe a straightforward addition.",
+      "createdAt": "2026-02-20T08:46:29Z",
+      "updatedAt": "2026-02-20T10:50:31Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Propose to redefine the attribute handling of CSR.\nNew registry including this and challengePassword.\n",
+          "createdAt": "2026-02-20T10:13:27Z",
+          "updatedAt": "2026-02-20T10:13:27Z"
+        }
+      ]
+    },
+    {
+      "number": 314,
+      "id": "I_kwDOCpt5cM7sePbd",
+      "title": "otherName that contains a MAC address",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/314",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "needs PR"
+      ],
+      "body": "From\nhttps://www.mail-archive.com/cose@ietf.org/msg05154.html\n\nThere is an Internet-Draft for otherName that contains a MAC address\ngoing through the LAMPS WG.  Based on Section 3.1.4 that has special logic\nfor EUI-64, this may be of value to some implementers.  We can get an early\nassignment of the OID is there is interest in adding support for this new\notherName form to this document.  If so, it may deserve some language in\nSection 3.3.",
+      "createdAt": "2026-02-20T08:47:46Z",
+      "updatedAt": "2026-02-20T10:50:31Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "https://datatracker.ietf.org/doc/draft-ietf-lamps-macaddress-on/\n",
+          "createdAt": "2026-02-20T09:55:19Z",
+          "updatedAt": "2026-02-20T09:55:19Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Register like the other otherName, how should the byte string be encoded?\nUse a negative number, register \"otherName with MACaddress\".\n@xipki  to propose",
+          "createdAt": "2026-02-20T09:58:17Z",
+          "updatedAt": "2026-02-20T09:58:17Z"
+        }
+      ]
+    },
+    {
+      "number": 315,
+      "id": "I_kwDOCpt5cM7sgeBF",
+      "title": "Update C509 implementation page",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/315",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "State that it is not maintained",
+      "createdAt": "2026-02-20T10:58:59Z",
+      "updatedAt": "2026-02-20T10:58:59Z",
       "closedAt": null,
       "comments": []
     }
@@ -12418,7 +12521,7 @@
       "labels": [],
       "body": "Addresses #298",
       "createdAt": "2026-02-05T15:40:00Z",
-      "updatedAt": "2026-02-09T10:41:00Z",
+      "updatedAt": "2026-02-20T09:45:03Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
@@ -12436,6 +12539,13 @@
           "body": "@xipki to review",
           "createdAt": "2026-02-09T09:47:24Z",
           "updatedAt": "2026-02-09T09:47:24Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@gselander to fix",
+          "createdAt": "2026-02-20T09:45:03Z",
+          "updatedAt": "2026-02-20T09:45:03Z"
         }
       ],
       "reviews": [
@@ -12473,13 +12583,13 @@
       "labels": [],
       "body": "Addresses #291 ",
       "createdAt": "2026-02-05T16:29:27Z",
-      "updatedAt": "2026-02-09T09:46:58Z",
+      "updatedAt": "2026-02-20T14:40:22Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "align-id",
-      "headRefOid": "2c02cb908533947020b13ea991e93b9db1dee4e3",
+      "headRefOid": "8870e09860b3a3545a2735ca7a11fd472d174a4f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -12491,6 +12601,13 @@
           "body": "@emanjon to review\r\nAdd same OID same number.",
           "createdAt": "2026-02-09T09:46:29Z",
           "updatedAt": "2026-02-09T09:46:58Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@gselander to fix",
+          "createdAt": "2026-02-20T09:40:01Z",
+          "updatedAt": "2026-02-20T09:40:01Z"
         }
       ],
       "reviews": []
@@ -12535,7 +12652,7 @@
       "labels": [],
       "body": "Fixed #287 ",
       "createdAt": "2026-02-08T20:53:57Z",
-      "updatedAt": "2026-02-09T10:05:24Z",
+      "updatedAt": "2026-02-20T09:39:38Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
@@ -12546,7 +12663,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@emanjon to ask Russ for registry",
+          "createdAt": "2026-02-20T09:39:38Z",
+          "updatedAt": "2026-02-20T09:39:38Z"
+        }
+      ],
       "reviews": []
     }
   ]
