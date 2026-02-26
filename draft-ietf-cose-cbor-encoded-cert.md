@@ -433,9 +433,9 @@ CBOR encoding of the following extension values is fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress has been given its own int; for such otherName, it shall be encoded as below. 
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress has been given its own int; for such otherName, it shall be encoded as below.
   - For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in {{RFC4108}}.
-  - For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in {{RFC8398}}
+  - For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in {{RFC8398}}.
   - For id-on-MACAddress, the value is a CBOR bytes containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in {{I-D.ietf-lamps-macaddress-on}}.
 
 ~~~~~~~~~~~ cddl
