@@ -769,24 +769,23 @@ C509CertificateRequestTemplate = [
    c509CertificateRequestTemplateType: int,
    c509CertificateRequestType: [+ int] / undefined,
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
-   subject: NameTemplate,
+   subject: NameTemplate / undefined,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subjectPublicKey: undefined
-   extensionsRequest: ExtensionsTemplate,
+   extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
 NameTemplate = [ * AttributeTemplate ] / SpecialText
 
-AttributeTemplate = (( attributeType: int,
+AttributeTemplate = (( attributeType: int, minOccurs: uint, maxOccurs: uint,
                        attributeValue: SpecialText / undefined ) //
-                     ( attributeType: ~oid,
+                     ( attributeType: ~oid, minOccurs: uint, maxOccurs: uint,
                        attributeValue: bytes / undefined ))
 
 ExtensionsTemplate = [ * ExtensionTemplate ] / int
 
-ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
-                     ( extensionID: ~oid, ? critical: true,
-                       extensionValue: bytes / undefined ))
+ExtensionTemplate = (( extensionID: int,  optional: bool, extensionValue: any ) //
+                     ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
@@ -795,7 +794,11 @@ Except as specified in this section, the fields have the same encoding as the co
 
  Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the EST server expects the EST client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the EST client is expected to provide an appropriate value for that field. For example, if the EST server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
+The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the server expects the client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the server expects the client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
+
+The minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType. maximal shall not be less than minimal, and maximal shall be positive.
+
+The optional field in ExtensionTemplate specify whether an extension of the given extensionID is optional.
 
 The media type of C509CertificateRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
 
