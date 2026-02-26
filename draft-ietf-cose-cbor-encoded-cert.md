@@ -65,6 +65,7 @@ normative:
   RFC9360:
   RFC9542:
   RFC9668:
+  RFC9883:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -772,6 +773,18 @@ ChallengePassword = text
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
+### Private Key Possession Statement
+
+The X.509 attribute "Statement of Possession of a Private Key" is defined in {{RFC9883}}. The 'attributeValue' field has type PrivateKeyPossessionStatement.
+
+~~~~~~~~~~~ cddl
+PrivateKeyPossessionStatement = [
+  issuer: Name,
+  serialNumber: CertificateSerialNumber
+  cert: C509Certificate / null
+]
+~~~~~~~~~~~
+
 ## Certificate Request Template {#CRT}
 
 Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certificate Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns an Certificate Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
@@ -1195,6 +1208,13 @@ The initial contents of the registry are:
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
 |       | Comments:                                                 |
 |       | extensionValue:  Extensions                               |
++-------+-----------------------------------------------------------+
+|     4 | Name:            Private Key Possession Statement         |
+|       | Identifiers:     privateKeyPossessionStatement            |
+|       | OID:             1.3.6.1.4.1.22112.2.1                    |
+|       | DER:             06 0A 2B 06 01 04 01 81 AC 60 02 01      |
+|       | Comments:                                                 |
+|       | extensionValue:  PrivateKeyPossessionStatement            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="C509 Attributes"}
