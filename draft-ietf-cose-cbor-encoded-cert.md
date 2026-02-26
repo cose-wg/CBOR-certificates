@@ -550,16 +550,10 @@ CBOR encoding of the following extension values are partly supported:
 
 * IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
 
-* Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
+* Signed Certificate Timestamp List (Certificate Transparency). The extension value is the SignedCertificateTimestampList {{RFC6962}} in a CBOR bytes.
 
 ~~~~~~~~~~~ cddl
-   SignedCertificateTimestamp = (
-     logID: bytes,
-     timestamp: int,
-     sigAlg: AlgorithmIdentifier,
-     sigValue: any,
-   )
-   SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
+   SignedCertificateTimestampList = bytes
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
