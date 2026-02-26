@@ -56,6 +56,7 @@ normative:
   RFC7250:
   RFC8126:
   RFC8295:
+  RFC8398:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -94,6 +95,7 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
+  I-D.ietf-lamps-macaddress-on:
 
 
   CAB-TLS:
@@ -431,7 +433,10 @@ CBOR encoding of the following extension values is fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress has been given its own int; for such otherName, it shall be encoded as below. 
+  - For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in {{RFC4108}}.
+  - For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in {{RFC8398}}
+  - For id-on-MACAddress, the value is a CBOR bytes containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in {{I-D.ietf-lamps-macaddress-on}}.
 
 ~~~~~~~~~~~ cddl
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -1651,6 +1656,12 @@ IANA has created a new registry titled "C509 General Names Registry" in the new 
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
+|    -3 | Name:            otherName with MACAddress                |
+|       | Comments:        id-on-MACAddress                         |
+|       |                  (TBD90)                                  |
+|       |                  TBD91                                    |
+|       | Value:           bytes                                    |
++-------+-----------------------------------------------------------+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
 |       | Comments:        id-on-SmtpUTF8Mailbox                    |
 |       |                  (1.3.6.1.5.5.7.8.9)                      |
