@@ -248,10 +248,10 @@ TBSCertificate = (
 
 CertificateSerialNumber = ~biguint
 
-Name = [ * Attribute ] / SpecialText
+Name = [ * RDNAttribute ] / SpecialText
 
-Attribute = (( attributeType: int, attributeValue: SpecialText ) //
-             ( attributeType: ~oid, attributeValue: bytes ))
+RDNAttribute = (( attributeType: int, attributeValue: SpecialText ) //
+                ( attributeType: ~oid, attributeValue: bytes ))
 
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
@@ -287,7 +287,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 ### issuer {#issuer}
 
-In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.
+In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.
 
 In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
@@ -517,10 +517,10 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
 ~~~~~~~~~~~ cddl
-      Attributes = (( attributeType: int,
-                      attributeValue: [+ SpecialText] ) //
+   RDNAttributes = (( attributeType: int,
+                      attributeValue: [ + SpecialText] ) //
                     ( attributeType: ~oid, attributeValue: [+ bytes] ))
-      SubjectDirectoryAttributes = [+Attributes]
+   SubjectDirectoryAttributes = [ + RDNAttributes ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
@@ -775,9 +775,9 @@ C509CertificateRequestTemplate = [
    extensionsRequest: ExtensionsTemplate,
 ]
 
-NameTemplate = [ * AttributeTemplate ] / SpecialText
+NameTemplate = [ * RDNAttributeTemplate ] / SpecialText
 
-AttributeTemplate = (( attributeType: int,
+RDNAttributeTemplate = (( attributeType: int,
                        attributeValue: SpecialText / undefined ) //
                      ( attributeType: ~oid,
                        attributeValue: bytes / undefined ))
@@ -959,15 +959,15 @@ IANA has created a new registry titled "C509 Certificate Request Templates Types
 {: #fig-temp-types title="C509 Certificate Request Templates Types"}
 {: artwork-align="center"}
 
-## C509 Attributes Registry {#atttype}
+## C509 RDN Attributes Registry {#rdnatttype}
 
-IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[0, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 RDN Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[0, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. The OID is given in dotted decimal representation. The DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
-| Value | Attribute                                                 |
+| Value | RDN Attribute                                             |
 +=======+===========================================================+
 |     0 | Name:            Email Address                            |
 |       | Identifiers:     emailAddress, e-mailAddress              |
@@ -1145,7 +1145,7 @@ The initial contents of the registry are:
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-attrtype title="C509 Attributes"}
+{: #fig-rdnattrtype title="C509 RDN Attributes"}
 {: artwork-align="center"}
 
 ## C509 Extensions Registry {#extype}
