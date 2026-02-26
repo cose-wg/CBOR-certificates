@@ -675,8 +675,13 @@ TBSCertificateRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: Defined,
-   extensionsRequest: Extensions,
+   attributes: Attributes,
 )
+
+Attributes = [ * Attribute ]
+
+Attribute = (( attributeType: int, attributeValue: Defined ) //
+             ( attributeType: ~oid, attributeValue: bytes ))
 
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -739,22 +744,33 @@ Note that a key agreement key pair may be used with a signature algorithm in a c
 
 ## Certificate Request Attributes
 
-{{Section 5.4 of RFC2985}} specifies two attribute types that may be included in the certificate request: extension request and challenge password.
+The 'attributes' field specifies the attributes contained in a certificate request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
 
-### Extensions Request
+Only positive value of attributeType is registered. In the certificate request of type 2, the 'attributeType' field SHALL contain only positive value. In the certificate request of type 3, the 'attributeType' field MAY have negative value. If negative value is allowed, the meaning of the sign of attributeType SHALL been explicitly specified.
 
-The extensionRequest field is used to carry information about certificate extensions the entity requesting certification wishes to be included in the certificate, encoded as Extensions in {{message-fields}}. An empty CBOR array indicates no extensions.
+This documents specifies the following attributes.
 
-### Challenge Password
+### RDN Attribute
 
-Other certificate request attributes are included using the Extensions structure and the extensionRequest field. The only other certificate request attribute specified in this document is challengePassword, listed in the C509 Extensions Registry, see {{fig-extype}}. The extensionValue is encoded as follows:
+The 'attributeValue' field has type RDNAttributeWrapper.
 
 ~~~~~~~~~~~ cddl
-challengePassword = SpecialText
+RDNAttributeWrapper = [rdnAttributeType: int, rdnAttributeValue: SpecialText]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-In natively signed requests (types 0 and 2), a positive extensionID is used. In CBOR re-encoding of a DER encoded request (types 1 and 3), the sign of extensionID of challengePassword indicates the string type in the DER encoded challengePassword (instead of the criticalness in extensions): positive for utf8String and negative for printableString. The same text string encoding optimizations applies as in {{issuer}}.
+### Extension Request
+
+The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attributeValue' field has type Extensions as in {{message-fields}}. An empty CBOR array indicates no extensions.
+
+### Challenge Password
+
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. The sign of attributeType is used to represent the character string type: positive for UTF8 string, and negative for Printable String.
+
+~~~~~~~~~~~ cddl
+ChallengePassword = text
+~~~~~~~~~~~
+{: sourcecode-name="c509.cddl"}
 
 ## Certificate Request Template {#CRT}
 
@@ -1148,9 +1164,45 @@ The initial contents of the registry are:
 {: #fig-rdnattrtype title="C509 RDN Attributes"}
 {: artwork-align="center"}
 
+## C509 Attributes Registry {#atttype}
+
+IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and attributeValue, where Value is a positive integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
+
+The initial contents of the registry are:
+
+~~~~~~~~~~~ aasvg
++-------+-----------------------------------------------------------+
+| Value | Attribute                                                 |
++=======+===========================================================+
+|     1 | Name:            RDN Attribute                            |
+|       | Identifiers:     rdnAttribute                             |
+|       | OID:             N/A                                      |
+|       | DER:             N/A                                      |
+|       | Comments:                                                 |
+|       | attributeValue:  RDNAttributeWrapper                      |
++-------+-----------------------------------------------------------+
+|     2 | Name:            Challenge Password                       |
+|       | Identifiers:     challengePassword                        |
+|       | OID:             1.2.840.113549.1.9.7                     |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
+|       | Comments:        Negative value for Printable String,     |
+|       |                  and positive value for UTF8 String       |
+|       | extensionValue:  ChallengePassword                        |
++-------+-----------------------------------------------------------+
+|     3 | Name:            Extension Request                        |
+|       | Identifiers:     extensionRequest                         |
+|       | OID:             1.2.840.113549.1.9.14                    |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
+|       | Comments:                                                 |
+|       | extensionValue:  Extensions                               |
++-------+-----------------------------------------------------------+
+~~~~~~~~~~~
+{: #fig-attrtype title="C509 Attributes"}
+{: artwork-align="center"}
+
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, abd extensionValue are mandatory. The registry also contains certificate request attributes for use in Certificate Requests, see {{CSR}}. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, abd extensionValue are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1331,15 +1383,8 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 |       | Comments:        RFC 7633                                 |
 |       | extensionValue:  TLSFeatures                              |
 +-------+-----------------------------------------------------------+
-|   255 | Name:            Challenge Password                       |
-|       | Identifiers:     challengePassword                        |
-|       | OID:             1.2.840.113549.1.9.7                     |
-|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
-|       | Comments:        Certificate Request Attributes           |
-|       | extensionValue:  ChallengePassword                        |
-+-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-extype title="C509 Extensions and Certificate Request Attributes"}
+{: #fig-extype title="C509 Extensions"}
 {: artwork-align="center"}
 
 ## C509 Certificate Policies Registry {#CP}
