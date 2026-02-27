@@ -674,8 +674,9 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
      { TBD30 }
 
    c509Name ATTRIBUTE ::= {
-     TYPE C509Name
-     IDENTIFIED BY id-at-c509Name }
+     WITH SYNTAX C509Name
+     SINGLE VALUE TRUE
+     ID id-at-c509Name }
 
    C509Name ::= OCTET STRING
 ~~~~~~~~~~~
