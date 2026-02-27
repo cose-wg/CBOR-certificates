@@ -45,6 +45,7 @@ author:
 normative:
   RFC2985:
   RFC2986:
+  RFC3779:
   RFC3986:
   RFC4108:
   RFC5280:
@@ -56,6 +57,7 @@ normative:
   RFC7250:
   RFC8126:
   RFC8295:
+  RFC8360:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -524,7 +526,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
+* AS Identifiers (id-pe-autonomousSysIds). The X.509 extension ASIdentifiers is specified in {{RFC3779}}. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint.
 
 ~~~~~~~~~~~ cddl
    ASIdOrRange = uint / [min:uint, max:uint]
@@ -532,9 +534,9 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
+* AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension ASIdentifiers is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
 
-* IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.
+* IPAddrBlocks (id-pe-ipAddrBlocks).  The X.509 extension ASIdentifiers is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one.
 
 ~~~~~~~~~~~ cddl
 
@@ -543,12 +545,12 @@ CBOR encoding of the following extension values are partly supported:
    AddressRange = [min: Address, max: Address]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
-   IPAddressFamily = (AFI: uint, IPAddressChoice)
+   IPAddressFamily = (AFI: uint, SAFI: uint / null, IPAddressChoice)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
+* IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The extension value is encoded exactly like in the extension "IPAddrBlocks".
 
 * Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
@@ -1282,32 +1284,32 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 |       | Comments:                                                 |
 |       | extensionValue:  SubjectInfoAccessSyntax                  |
 +-------+-----------------------------------------------------------+
-|    32 | Name:            IP Resources                             |
+|    32 | Name:            IPAddrBlocks                             |
 |       | Identifiers:     id-pe-ipAddrBlocks                       |
 |       | OID:             1.3.6.1.5.5.7.1.7                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 07            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3779                                 |
 |       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
-|    33 | Name:            AS Resources                             |
+|    33 | Name:            AS Identifiers                           |
 |       | Identifiers:     id-pe-autonomousSysIds                   |
 |       | OID:             1.3.6.1.5.5.7.1.8                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 08            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3779                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
-|    34 | Name:            IP Resources v2                          |
+|    34 | Name:            IPAddrBlocks v2                          |
 |       | Identifiers:     id-pe-ipAddrBlocks-v2                    |
 |       | OID:             1.3.6.1.5.5.7.1.28                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1C            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8360                                 |
 |       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
-|    35 | Name:            AS Resources v2                          |
+|    35 | Name:            AS Identifiers v2                        |
 |       | Identifiers:     id-pe-autonomousSysIds-v2                |
 |       | OID:             1.3.6.1.5.5.7.1.29                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8360                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
 |    36 | Name:            OCSP No Check                            |
@@ -1384,13 +1386,13 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" in t
 |       | Identifiers:     id-cp-ipAddr-asNumber                    |
 |       | OID:             1.3.6.1.5.5.7.14.2                       |
 |       | DER:             06 08 2B 06 01 05 05 07 0E 02            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3779                                 |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Resource PKI (RPKI) (Alternative)        |
 |       | Identifiers:     id-cp-ipAddr-asNumber-v2                 |
 |       | OID:             1.3.6.1.5.5.7.14.3                       |
 |       | DER:             06 08 2B 06 01 05 05 07 0E 03            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8360                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Remote SIM Provisioning Role             |
 |       |                  Certificate Issuer                       |
