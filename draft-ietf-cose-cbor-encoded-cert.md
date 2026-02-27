@@ -1198,7 +1198,8 @@ The initial contents of the registry are:
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
-|       | Comments:        Negative value for Printable String,     |
+|       | Comments:        RFC 2985                                 |
+|       |                  Negative value for Printable String,     |
 |       |                  and positive value for UTF8 String       |
 |       | extensionValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
@@ -1206,14 +1207,14 @@ The initial contents of the registry are:
 |       | Identifiers:     extensionRequest                         |
 |       | OID:             1.2.840.113549.1.9.14                    |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
-|       | Comments:                                                 |
+|       | Comments:        RFC 2985                                 |
 |       | extensionValue:  Extensions                               |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Private Key Possession Statement         |
 |       | Identifiers:     privateKeyPossessionStatement            |
 |       | OID:             1.3.6.1.4.1.22112.2.1                    |
 |       | DER:             06 0A 2B 06 01 04 01 81 AC 60 02 01      |
-|       | Comments:                                                 |
+|       | Comments:        RFC 9883                                 |
 |       | extensionValue:  PrivateKeyPossessionStatement            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
