@@ -526,7 +526,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Identifiers (id-pe-autonomousSysIds). The X.509 extension ASIdentifiers is specified in {{RFC3779}}. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint.
+* AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in {{RFC3779}}. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint.
 
 ~~~~~~~~~~~ cddl
    ASIdOrRange = uint / [min:uint, max:uint]
@@ -534,9 +534,9 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension ASIdentifiers is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
+* AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
 
-* IPAddrBlocks (id-pe-ipAddrBlocks).  The X.509 extension ASIdentifiers is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one.
+* IPAddrBlocks (id-pe-ipAddrBlocks).  The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one.
 
 ~~~~~~~~~~~ cddl
 
@@ -550,7 +550,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The extension value is encoded exactly like in the extension "IPAddrBlocks".
+* IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The X.509 extension IPAddrBlocks v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "IPAddrBlocks".
 
 * Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
