@@ -259,7 +259,7 @@ AlgorithmIdentifier = int / ~oid /
 Extensions = [ * Extension ] / int
 
 Extension = (( extensionID: int, extensionValue: Defined ) //
-             ( extensionID: ~oid, extensionValue: bytes / [critical: true, bytes] ))
+             ( extensionID: ~oid, extensionValue: bytes / [bytes] ))
 
 SpecialText = text / bytes / tag
 
@@ -333,7 +333,7 @@ Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see {{exty
 
 * If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except undefined (see {{CRT}}), and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see {{ext-encoding}}), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.
 
-* If extensionID is encoded as an unwrapped CBOR OID tag, it is followed by DER-encoded value of the extnValue if the extension is non-critical, or by a CBOR array consists of a CBOR simple value true (0xf5) 'critical' and the DER-encoded value of the extnValue (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string.
+* If extensionID is encoded as an unwrapped CBOR OID tag, it is followed by DER-encoded value of the extnValue if the extension is non-critical, or by a CBOR array consisting of 1 element with the DER-encoded value of the extnValue (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string.
 
 The processing of critical and non-critical extensions is specified in {{Section 4.2 of RFC5280}}.
 
@@ -653,7 +653,7 @@ While this specification requires the use of Deterministically Encoded CBOR (see
 
 Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
 
-Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID: ~oid, extensionValue: bytes / [critical: true, bytes])-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
+Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID: ~oid, extensionValue: bytes / [bytes])-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
 
 # C509 Certificate (Signing) Request {#CSR}
 
