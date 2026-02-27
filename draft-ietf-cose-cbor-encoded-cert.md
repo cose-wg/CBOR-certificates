@@ -447,11 +447,16 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
+* CRL Distribution Points (cRLDistributionPoints). If all DistributionPoint elements contains the distributionPoint with fullName choice of uniformResourceIdentifier, optional reasons, and optional cRLIssuer with one directoryName, the extension value can be CBOR encoded. The 'reasons' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. If the CRLDistributionPoints consists of only one DistributionPointName, which in turn has only the fullName field of type CBOR text, it shall be encoded as CBOR text, otherwise as CBOR array.
 
 ~~~~~~~~~~~ cddl
-   DistributionPointName = [ 2* text ] / text
-   CRLDistributionPoints = [ + DistributionPointName ]
+   DistributionPointName = [
+     fullName  [2* text] / text
+     reasons   uint / null,
+     cRLIssuer Name / null,
+   ]
+
+   CRLDistributionPoints = [ + DistributionPointName ] / text
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
