@@ -47,8 +47,10 @@ normative:
   RFC2986:
   RFC3986:
   RFC4108:
+  RFC5246:
   RFC5280:
   RFC5958:
+  RFC6066:
   RFC6698:
   RFC6962:
   RFC7030:
@@ -70,6 +72,11 @@ normative:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
     target: https://secg.org/sec1-v2.pdf
     date: 2009
+
+  X.501:
+    title: "Information Technology - Open Systems Interconnection - The Directory: Models, ITU-T X.501"
+    target: https://www.itu.int/rec/T-REC-X.501/en
+    date: December 2019
 
   X.690:
     title: ASN.1 encoding rules. Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)
@@ -308,7 +315,7 @@ If the 'issuer' field is identical to the 'subject' field, e.g., in case of self
 
 The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.
 
-### subject
+### subject {#subject}
 
 The 'subject' field is encoded exactly like issuer, except that the CBOR simple value is not a valid value.
 
@@ -655,6 +662,24 @@ While this specification requires the use of Deterministically Encoded CBOR (see
 Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
 
 Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
+
+## C509 Name in TLS and DTLS
+
+In TLS and DTLS, the subject of trusted authory may be sent to the peer to help it selecting the certificate chain, as in the CertificateAuthoritiesExtension in {{RFC8446}}, in the certificate_authorities field of CertificateRequest in {{RFC5246}}, or in the TrustedAuthorities in {{RFC6066}}. For such usage in the TLS and DTLS, the C509 name is wrapped in a distinguished name {{X.501}} with exactly one RelativeDistinguishedName, which in turn contains exactly one AttributeTypeAndValue with the attribute C509Name. The attribute value is the raw byte string of the encoded C509 Name as in {{subject}}.
+
+   The attribute for C509 Name has the following structure:
+
+~~~~~~~~~~~
+   id-at-c509Name OBJECT IDENTIFIER ::=
+     { TBD30 }
+
+   c509Name ATTRIBUTE ::= {
+     WITH SYNTAX C509Name
+     SINGLE VALUE TRUE
+     ID id-at-c509Name }
+
+   C509Name ::= OCTET STRING
+~~~~~~~~~~~
 
 # C509 Certificate (Signing) Request {#CSR}
 
