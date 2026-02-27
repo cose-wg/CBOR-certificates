@@ -747,7 +747,7 @@ Note that a key agreement key pair may be used with a signature algorithm in a c
 
 The 'attributes' field specifies the attributes contained in a certificate request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
 
-Only positive value of attributeType is registered. In the certificate request of type 2, the 'attributeType' field SHALL contain only positive value. In the certificate request of type 3, the 'attributeType' field MAY have negative value. If negative value is allowed, the meaning of the sign of attributeType SHALL been explicitly specified.
+Only non-negative value of attributeType is registered. In the certificate request of type 2, the 'attributeType' field SHALL contain only positive value. In the certificate request of type 3, the 'attributeType' field MAY have negative value. If negative value is allowed, the meaning of the sign of attributeType SHALL been explicitly specified.
 
 This documents specifies the following attributes.
 
@@ -1179,7 +1179,7 @@ The initial contents of the registry are:
 
 ## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and attributeValue, where Value is a positive integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and attributeValue, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[0, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
@@ -1187,14 +1187,14 @@ The initial contents of the registry are:
 +-------+-----------------------------------------------------------+
 | Value | Attribute                                                 |
 +=======+===========================================================+
-|     1 | Name:            RDN Attribute                            |
+|     0 | Name:            RDN Attribute                            |
 |       | Identifiers:     rdnAttribute                             |
 |       | OID:             N/A                                      |
 |       | DER:             N/A                                      |
 |       | Comments:                                                 |
 |       | attributeValue:  RDNAttributeWrapper                      |
 +-------+-----------------------------------------------------------+
-|     2 | Name:            Challenge Password                       |
+|     1 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
@@ -1203,14 +1203,14 @@ The initial contents of the registry are:
 |       |                  and positive value for UTF8 String       |
 |       | extensionValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
-|     3 | Name:            Extension Request                        |
+|     2 | Name:            Extension Request                        |
 |       | Identifiers:     extensionRequest                         |
 |       | OID:             1.2.840.113549.1.9.14                    |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
 |       | Comments:        RFC 2985                                 |
 |       | extensionValue:  Extensions                               |
 +-------+-----------------------------------------------------------+
-|     4 | Name:            Private Key Possession Statement         |
+|     3 | Name:            Private Key Possession Statement         |
 |       | Identifiers:     privateKeyPossessionStatement            |
 |       | OID:             1.3.6.1.4.1.22112.2.1                    |
 |       | DER:             06 0A 2B 06 01 04 01 81 AC 60 02 01      |
