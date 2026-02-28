@@ -751,25 +751,16 @@ Only non-negative value of attributeType is registered. In the certificate reque
 
 This documents specifies the following attributes.
 
-### RDN Attribute
-
-The 'attributeValue' field has type RDNAttributeWrapper.
-
-~~~~~~~~~~~ cddl
-RDNAttributeWrapper = [rdnAttributeType: int, rdnAttributeValue: SpecialText]
-~~~~~~~~~~~
-{: sourcecode-name="c509.cddl"}
-
 ### Extension Request
 
 The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attributeValue' field has type Extensions as in {{message-fields}}. An empty CBOR array indicates no extensions.
 
 ### Challenge Password
 
-The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. The sign of attributeType is used to represent the character string type: positive for UTF8 string, and negative for Printable String.
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
 
 ~~~~~~~~~~~ cddl
-ChallengePassword = text
+ChallengePassword = text / #6.121(text)
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
@@ -1179,7 +1170,7 @@ The initial contents of the registry are:
 
 ## C509 Attributes Registry {#atttype}
 
-IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and attributeValue, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[0, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and attributeValue, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
@@ -1187,13 +1178,12 @@ The initial contents of the registry are:
 +-------+-----------------------------------------------------------+
 | Value | Attribute                                                 |
 +=======+===========================================================+
-|     0 | Name:            RDN Attribute                            |
-|       | Identifiers:     rdnAttribute                             |
-|       | OID:             N/A                                      |
-|       | DER:             N/A                                      |
-|       | Comments:                                                 |
-|       | attributeValue:  RDNAttributeWrapper                      |
-+-------+-----------------------------------------------------------+
+|     0 | Name:            Extension Request                        |
+|       | Identifiers:     extensionRequest                         |
+|       | OID:             1.2.840.113549.1.9.14                    |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
+|       | Comments:        RFC 2985                                 |
+|       | extensionValue:  Extensions                               |
 |     1 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
@@ -1203,14 +1193,8 @@ The initial contents of the registry are:
 |       |                  and positive value for UTF8 String       |
 |       | extensionValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
-|     2 | Name:            Extension Request                        |
-|       | Identifiers:     extensionRequest                         |
-|       | OID:             1.2.840.113549.1.9.14                    |
-|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
-|       | Comments:        RFC 2985                                 |
-|       | extensionValue:  Extensions                               |
 +-------+-----------------------------------------------------------+
-|     3 | Name:            Private Key Possession Statement         |
+|     2 | Name:            Private Key Possession Statement         |
 |       | Identifiers:     privateKeyPossessionStatement            |
 |       | OID:             1.3.6.1.4.1.22112.2.1                    |
 |       | DER:             06 0A 2B 06 01 04 01 81 AC 60 02 01      |
