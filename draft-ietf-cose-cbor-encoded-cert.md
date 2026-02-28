@@ -775,14 +775,14 @@ C509CertificateRequestTemplate = [
    extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
-NameTemplate = [ * AttributeTemplate ] / SpecialText
+NameTemplate = [ * AttributeTemplate ]
 
-AttributeTemplate = (( attributeType: int, minOccurs: uint, maxOccurs: uint,
+AttributeTemplate = (( attributeType: uint, minOccurs: uint, maxOccurs: uint,
                        attributeValue: SpecialText / undefined ) //
                      ( attributeType: ~oid, minOccurs: uint, maxOccurs: uint,
                        attributeValue: bytes / undefined ))
 
-ExtensionsTemplate = [ * ExtensionTemplate ] / int
+ExtensionsTemplate = [ * ExtensionTemplate ]
 
 ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) //
                      ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
@@ -796,7 +796,7 @@ Except as specified in this section, the fields have the same encoding as the co
 
 The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the server expects the client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the server expects the client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
 
-The minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive.
+For AttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.
 
 For ExtensionTemplate, the optional field in ExtensionTemplate specify whether an extension of the given extensionID is optional. Negative extensionID is not allowed.
 
