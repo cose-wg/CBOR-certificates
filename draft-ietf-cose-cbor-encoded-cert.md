@@ -749,7 +749,7 @@ The 'attributes' field specifies the attributes contained in a certificate reque
 
 Only non-negative value of attributeType is registered. In the certificate request of type 2, the 'attributeType' field SHALL contain only positive value. In the certificate request of type 3, the 'attributeType' field MAY have negative value. If negative value is allowed, the meaning of the sign of attributeType SHALL been explicitly specified.
 
-This documents specifies the following attributes.
+The remainder of this section specifies CBOR encoded attributes for Certificate Requests.
 
 ### Extension Request
 
