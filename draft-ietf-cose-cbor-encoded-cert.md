@@ -757,7 +757,7 @@ The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attribut
 
 ### Challenge Password
 
-The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in Section 9.1 in {{I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{Section 9.1 of I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
 
 ~~~~~~~~~~~ cddl
 ChallengePassword = text / #6.121(text)
