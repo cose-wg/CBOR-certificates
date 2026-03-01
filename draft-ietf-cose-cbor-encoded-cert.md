@@ -451,7 +451,7 @@ CBOR encoding of the following extension values are partly supported:
 
 ~~~~~~~~~~~ cddl
    DistributionPointName = [
-     fullName  [2* text] / text
+     fullName  [2* text] / text,
      reasons   uint / null,
      cRLIssuer Name / null,
    ]
