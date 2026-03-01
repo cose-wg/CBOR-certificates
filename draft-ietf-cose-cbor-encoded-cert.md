@@ -95,7 +95,7 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
-
+  I-D.bormann-cbor-notable-tags:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
@@ -757,7 +757,7 @@ The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attribut
 
 ### Challenge Password
 
-The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in Section 9.1. in {{ I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
 
 ~~~~~~~~~~~ cddl
 ChallengePassword = text / #6.121(text)
@@ -1183,7 +1183,8 @@ The initial contents of the registry are:
 |       | OID:             1.2.840.113549.1.9.14                    |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 0E         |
 |       | Comments:        RFC 2985                                 |
-|       | extensionValue:  Extensions                               |
+|       | attributeValue:  Extensions                               |
++-------+-----------------------------------------------------------+
 |     1 | Name:            Challenge Password                       |
 |       | Identifiers:     challengePassword                        |
 |       | OID:             1.2.840.113549.1.9.7                     |
@@ -1191,15 +1192,14 @@ The initial contents of the registry are:
 |       | Comments:        RFC 2985                                 |
 |       |                  Negative value for Printable String,     |
 |       |                  and positive value for UTF8 String       |
-|       | extensionValue:  ChallengePassword                        |
-+-------+-----------------------------------------------------------+
+|       | attributeValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Private Key Possession Statement         |
 |       | Identifiers:     privateKeyPossessionStatement            |
 |       | OID:             1.3.6.1.4.1.22112.2.1                    |
 |       | DER:             06 0A 2B 06 01 04 01 81 AC 60 02 01      |
 |       | Comments:        RFC 9883                                 |
-|       | extensionValue:  PrivateKeyPossessionStatement            |
+|       | attributeValue:  PrivateKeyPossessionStatement            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-attrtype title="C509 Attributes"}
