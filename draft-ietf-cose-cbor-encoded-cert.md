@@ -835,7 +835,7 @@ C509CertificateRequestTemplate = [
    extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
-NameTemplate = [ * RDNAttributeTemplate ] 
+NameTemplate = [ * RDNAttributeTemplate ]
 
 RDNAttributeTemplate = (( attributeType: uint, minOccurs: uint, maxOccurs: uint,
                           attributeValue: SpecialText / undefined ) //
