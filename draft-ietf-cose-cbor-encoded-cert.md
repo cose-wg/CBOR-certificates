@@ -526,7 +526,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in {{RFC3779}}. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint.
+* AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in {{RFC3779}}. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ cddl
    ASIdOrRange = uint / [min:uint, max:uint]
@@ -536,7 +536,7 @@ CBOR encoding of the following extension values are partly supported:
 
 * AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
 
-* IPAddrBlocks (id-pe-ipAddrBlocks).  The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one.
+* IPAddrBlocks (id-pe-ipAddrBlocks).  The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one.  With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.
 
 ~~~~~~~~~~~ cddl
 
