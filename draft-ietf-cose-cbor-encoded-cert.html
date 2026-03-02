@@ -1239,7 +1239,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-c509-certificate-types-regi" class="internal xref">C509 Certificate Types Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-c509-certificate-request-typ" class="internal xref">C509 Certificate Request Types Registry</a></p>
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-c509-certificate-request-ty" class="internal xref">C509 Certificate Request Types Registry</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
                 <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-c509-private-key-types-regi" class="internal xref">C509 Private Key Types Registry</a></p>
@@ -1380,7 +1380,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
       <h2 id="name-c509-certificate">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-c509-certificate" class="section-name selfRef">C509 Certificate</a>
       </h2>
-<p id="section-3-1">This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, and everything in <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, GSMA eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span>, and CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span> <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see <a href="#fig-size-TLS" class="auto internal xref">Figure 6</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, and everything in <span>[<a href="#RFC7925" class="cite xref">RFC7925</a>]</span>, <span>[<a href="#IEEE-802.1AR" class="cite xref">IEEE-802.1AR</a>]</span>, RPKI <span>[<a href="#RFC6487" class="cite xref">RFC6487</a>]</span>, GSMA eUICC <span>[<a href="#GSMA-eUICC" class="cite xref">GSMA-eUICC</a>]</span>, and CAB Baseline <span>[<a href="#CAB-TLS" class="cite xref">CAB-TLS</a>]</span> <span>[<a href="#CAB-Code" class="cite xref">CAB-Code</a>]</span>. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see <a href="#fig-size-TLS" class="auto internal xref">Figure 5</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <p id="section-3-2">The C509 certificate can be either a CBOR re-encoding of a DER-encoded X.509 certificate, in which case the signature is calculated on the DER-encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>. The re-encoding is known to work with DER-encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.<a href="#section-3-2" class="pilcrow">¶</a></p>
 <p id="section-3-3">In the encoding described below, the elements in arrays are always encoded in the same order as elements of the corresponding SEQUENCE or SET in the DER encoding.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="message-fields">
@@ -1470,7 +1470,7 @@ tag = #6
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
 <p id="section-3.1.4-1">In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 12</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
@@ -2085,72 +2085,19 @@ CRAttribute = (( attributeType: int, attributeValue: Defined ) //
         <h3 id="name-certificate-request-types">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-certificate-request-types" class="section-name selfRef">Certificate Request Types</a>
         </h3>
-<p id="section-4.1-1">Different types of C509 Certificate Requests are defined, see <a href="#csr-type" class="auto internal xref">Section 9.2</a>, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-1">Two types of C509 Certificate Requests are defined, both using the same CBOR encoding and differing only in what is being signed, see <a href="#csr-type" class="auto internal xref">Section 9.2</a>.
+The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER-encoded certification request <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-2.1">
-            <p id="section-4.1-2.1.1">The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER-encoded certification request <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.1.1">c509CertificateRequestType = 2. This type indicates that the C509 Certificate Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence
+TBSCertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. This encoding removes the need for ASN.1 and DER parsing, and re-encoding in the requesting party.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-2.2">
-            <p id="section-4.1-2.2.1">The requested C509 certificate in the C509 Certificate Request can either be of type 2 or of type 3, see <a href="#type" class="auto internal xref">Section 9.1</a>.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.2.1">c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is a CBOR re-encoded RFC 2986 certification request, as defined in <a href="#CSR" class="auto internal xref">Section 4</a>. This encoding is backwards compatible with legacy RFC 2986 certification requests, and enables a reduced transport overhead.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-4.1-3">Combining these options enables the four instances of c509CertificateRequestType defined in <a href="#csr-type" class="auto internal xref">Section 9.2</a> and illustrated in <a href="#fig-csr-types2" class="auto internal xref">Figure 3</a>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<span id="name-c509-certificate-request-ty"></span><div id="fig-csr-types2">
-<figure id="figure-3">
-          <div id="section-4.1-4.1">
-            <div class="alignCenter art-svg artwork" id="section-4.1-4.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="544" viewBox="0 0 544 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,192" fill="none" stroke="black"></path>
-                <path d="M 216,32 L 216,192" fill="none" stroke="black"></path>
-                <path d="M 376,72 L 376,192" fill="none" stroke="black"></path>
-                <path d="M 536,32 L 536,192" fill="none" stroke="black"></path>
-                <path d="M 8,32 L 536,32" fill="none" stroke="black"></path>
-                <path d="M 8,64 L 536,64" fill="none" stroke="black"></path>
-                <path d="M 8,126 L 536,126" fill="none" stroke="black"></path>
-                <path d="M 8,130 L 536,130" fill="none" stroke="black"></path>
-                <path d="M 8,160 L 536,160" fill="none" stroke="black"></path>
-                <path d="M 8,192 L 536,192" fill="none" stroke="black"></path>
-                <g class="text">
-                  <text x="348" y="52">Signed</text>
-                  <text x="404" y="52">object</text>
-                  <text x="244" y="84">CBOR</text>
-                  <text x="296" y="84">encoded</text>
-                  <text x="348" y="84">C509</text>
-                  <text x="432" y="84">DER-encoded</text>
-                  <text x="500" y="84">C509</text>
-                  <text x="296" y="100">Certificate</text>
-                  <text x="456" y="100">Certificate</text>
-                  <text x="56" y="116">Requested</text>
-                  <text x="144" y="116">certificate</text>
-                  <text x="296" y="116">Request</text>
-                  <text x="456" y="116">Request</text>
-                  <text x="96" y="148">c509CertificateType</text>
-                  <text x="184" y="148">=</text>
-                  <text x="200" y="148">2</text>
-                  <text x="296" y="148">0</text>
-                  <text x="472" y="148">1</text>
-                  <text x="96" y="180">c509CertificateType</text>
-                  <text x="184" y="180">=</text>
-                  <text x="200" y="180">3</text>
-                  <text x="296" y="180">2</text>
-                  <text x="472" y="180">3</text>
-                </g>
-              </svg><a href="#section-4.1-4.1.1" class="pilcrow">¶</a>
-</div>
-</div>
-<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-c509-certificate-request-ty" class="selfRef">C509 Certificate Request Types 0, 1, 2 and 3.</a>
-          </figcaption></figure>
-</div>
-<p id="section-4.1-5">An implementation <span class="bcp14">MAY</span> only support certain values of c509CertificateRequestType. The most common values are expected to be:<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.1-6.1">
-            <p id="section-4.1-6.1.1">c509CertificateRequestType = 0. This type indicates that the C509 Certificate Request is natively signed, and that the requested certificate format has c509CertificateType = 2. This encoding removes the need for ASN.1 and DER parsing and re-encoding in the requesting party.<a href="#section-4.1-6.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-4.1-6.2">
-            <p id="section-4.1-6.2.1">c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is CBOR re-encoded RFC 2986 certification requests, and that the requested certificate format has c509CertificateType = 3. This encoding is backwards compatible with legacy RFC 2986 certification requests and X.509 certificates, but enables a reduced transport overhead.<a href="#section-4.1-6.2.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+<p id="section-4.1-3">The type of certificate issued after the request is decided by the application. The default type of issued certificate in case of C509 is that c509CertificateType = c509CertificateRequestType.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">An implementation <span class="bcp14">MAY</span> only support certain values of c509CertificateRequestType.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="subject-signature-algorithm">
@@ -2229,9 +2176,9 @@ PrivateKeyPossessionStatement = [
         </h3>
 <p id="section-4.4-1">Enrollment over Secure Transport (EST, <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>) defines, and <span>[<a href="#I-D.ietf-lamps-rfc7030-csrattrs" class="cite xref">I-D.ietf-lamps-rfc7030-csrattrs</a>]</span> clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in <span>[<a href="#RFC7030" class="cite xref">RFC7030</a>]</span>, <span><a href="https://rfc-editor.org/rfc/rfc8295#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC8295" class="cite xref">RFC8295</a>]</span> describes an approach using a Certificate Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns an Certificate Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 <p id="section-4.4-2">For C509 we follow the approach of <span>[<a href="#RFC8295" class="cite xref">RFC8295</a>]</span>. The C509CertificateRequestTemplate is based on TBSCertificateRequest of the C509CertificateRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>, but excludes the subjectSignatureValue field from the template since that needs no further specification.<a href="#section-4.4-2" class="pilcrow">¶</a></p>
-<p id="section-4.4-3">The C509 Certificate Request Template is shown in <a href="#fig-C509CSRTemplateCDDL" class="auto internal xref">Figure 4</a>.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
+<p id="section-4.4-3">The C509 Certificate Request Template is shown in <a href="#fig-C509CSRTemplateCDDL" class="auto internal xref">Figure 3</a>.<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificaterequ"></span><div id="fig-C509CSRTemplateCDDL">
-<figure id="figure-4">
+<figure id="figure-3">
           <div class="lang-cddl sourcecode" id="section-4.4-4.1">
 <pre>
 C509CertificateRequestTemplate = [
@@ -2257,7 +2204,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                      ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
 </pre>
 </div>
-<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
 <a href="#name-cddl-for-c509certificaterequ" class="selfRef">CDDL for C509CertificateRequestTemplate.</a>
           </figcaption></figure>
 </div>
@@ -2298,9 +2245,9 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
       <h2 id="name-expected-certificate-sizes">
 <a href="#section-7" class="section-number selfRef">7. </a><a href="#name-expected-certificate-sizes" class="section-name selfRef">Expected Certificate Sizes</a>
       </h2>
-<p id="section-7-1">The CBOR encoding of the sample certificate chains given in <a href="#appA" class="auto internal xref">Appendix A</a> results in the numbers shown in Figures <a href="#fig-size-COSE" class="auto internal xref">5</a> and <a href="#fig-size-TLS" class="auto internal xref">6</a>. COSE_X509 is defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> and COSE_C509 is defined in <a href="#cose" class="auto internal xref">Section 9.15</a>. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli <span>[<a href="#RFC7932" class="cite xref">RFC7932</a>]</span> will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. In the examples with HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 uses dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-1">The CBOR encoding of the sample certificate chains given in <a href="#appA" class="auto internal xref">Appendix A</a> results in the numbers shown in Figures <a href="#fig-size-COSE" class="auto internal xref">4</a> and <a href="#fig-size-TLS" class="auto internal xref">5</a>. COSE_X509 is defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> and COSE_C509 is defined in <a href="#cose" class="auto internal xref">Section 9.15</a>. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli <span>[<a href="#RFC7932" class="cite xref">RFC7932</a>]</span> will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. In the examples with HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 uses dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <span id="name-comparing-sizes-of-certific"></span><div id="fig-size-COSE">
-<figure id="figure-5">
+<figure id="figure-4">
         <div id="section-7-2.1">
           <div class="alignCenter art-svg artwork" id="section-7-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="528" viewBox="0 0 528 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2358,12 +2305,12 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
             </svg><a href="#section-7-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
 <a href="#name-comparing-sizes-of-certific" class="selfRef">Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain).</a>
         </figcaption></figure>
 </div>
 <span id="name-comparing-sizes-of-certifica"></span><div id="fig-size-TLS">
-<figure id="figure-6">
+<figure id="figure-5">
         <div id="section-7-3.1">
           <div class="alignCenter art-svg artwork" id="section-7-3.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="240" width="560" viewBox="0 0 560 240" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2429,7 +2376,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
             </svg><a href="#section-7-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
 <a href="#name-comparing-sizes-of-certifica" class="selfRef">Comparing Sizes of Certificate Chains with TLS. Number of bytes (length of certificate chain). X.509 and C509 are Certificate messages. X.509 + Brotli and C509 + Brotli are CompressedCertificate messages.</a>
         </figcaption></figure>
 </div>
@@ -2463,7 +2410,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.1-1">IANA has created a new registry titled "C509 Certificate Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval [-24, 23], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are (see <a href="#version" class="auto internal xref">Section 3.1.1</a>):<a href="#section-9.1-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-types"></span><div id="fig-types">
-<figure id="figure-7">
+<figure id="figure-6">
           <div id="section-9.1-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.1-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="432" viewBox="0 0 432 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2499,7 +2446,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.1-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
 <a href="#name-c509-certificate-types" class="selfRef">C509 Certificate Types</a>
           </figcaption></figure>
 </div>
@@ -2507,86 +2454,52 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
 </div>
 <div id="csr-type">
 <section id="section-9.2">
-        <h3 id="name-c509-certificate-request-typ">
-<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-c509-certificate-request-typ" class="section-name selfRef">C509 Certificate Request Types Registry</a>
+        <h3 id="name-c509-certificate-request-ty">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-c509-certificate-request-ty" class="section-name selfRef">C509 Certificate Request Types Registry</a>
         </h3>
 <p id="section-9.2-1">IANA has created a new registry titled "C509 Certificate Request Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.2-1" class="pilcrow">¶</a></p>
-<span id="name-c509-certificate-request-type"></span><div id="fig-csr-types">
-<figure id="figure-8">
+<span id="name-c509-certificate-request-typ"></span><div id="fig-csr-types">
+<figure id="figure-7">
           <div id="section-9.2-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.2-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="272" width="560" viewBox="0 0 560 272" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,256" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,256" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,256" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="208" width="560" viewBox="0 0 560 208" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,192" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,192" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,192" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
-                <path d="M 8,112 L 552,112" fill="none" stroke="black"></path>
+                <path d="M 8,96 L 552,96" fill="none" stroke="black"></path>
+                <path d="M 8,128 L 552,128" fill="none" stroke="black"></path>
                 <path d="M 8,160 L 552,160" fill="none" stroke="black"></path>
-                <path d="M 8,208 L 552,208" fill="none" stroke="black"></path>
-                <path d="M 8,256 L 552,256" fill="none" stroke="black"></path>
+                <path d="M 8,192 L 552,192" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
                   <text x="128" y="52">Description</text>
                   <text x="56" y="84">0</text>
-                  <text x="120" y="84">Requested</text>
-                  <text x="208" y="84">certificate</text>
-                  <text x="268" y="84">is</text>
-                  <text x="300" y="84">C509</text>
-                  <text x="340" y="84">Type</text>
-                  <text x="372" y="84">2.</text>
-                  <text x="116" y="100">Natively</text>
-                  <text x="180" y="100">Signed</text>
-                  <text x="228" y="100">C509</text>
-                  <text x="296" y="100">Certificate</text>
-                  <text x="380" y="100">Request.</text>
-                  <text x="56" y="132">1</text>
-                  <text x="120" y="132">Requested</text>
-                  <text x="208" y="132">certificate</text>
-                  <text x="268" y="132">is</text>
-                  <text x="300" y="132">C509</text>
-                  <text x="340" y="132">Type</text>
-                  <text x="372" y="132">2.</text>
-                  <text x="100" y="148">CBOR</text>
-                  <text x="168" y="148">re-encoding</text>
-                  <text x="228" y="148">of</text>
-                  <text x="256" y="148">RFC</text>
-                  <text x="292" y="148">2986</text>
-                  <text x="368" y="148">certification</text>
-                  <text x="460" y="148">request.</text>
-                  <text x="56" y="180">2</text>
-                  <text x="120" y="180">Requested</text>
-                  <text x="208" y="180">certificate</text>
-                  <text x="268" y="180">is</text>
-                  <text x="300" y="180">C509</text>
-                  <text x="340" y="180">Type</text>
-                  <text x="372" y="180">3.</text>
-                  <text x="116" y="196">Natively</text>
-                  <text x="180" y="196">Signed</text>
-                  <text x="228" y="196">C509</text>
-                  <text x="296" y="196">Certificate</text>
-                  <text x="380" y="196">Request.</text>
-                  <text x="56" y="228">3</text>
-                  <text x="120" y="228">Requested</text>
-                  <text x="208" y="228">certificate</text>
-                  <text x="268" y="228">is</text>
-                  <text x="300" y="228">C509</text>
-                  <text x="340" y="228">Type</text>
-                  <text x="372" y="228">3.</text>
-                  <text x="100" y="244">CBOR</text>
-                  <text x="168" y="244">re-encoding</text>
-                  <text x="228" y="244">of</text>
-                  <text x="256" y="244">RFC</text>
-                  <text x="292" y="244">2986</text>
-                  <text x="368" y="244">certification</text>
-                  <text x="460" y="244">request.</text>
+                  <text x="116" y="84">Reserved</text>
+                  <text x="56" y="116">1</text>
+                  <text x="116" y="116">Reserved</text>
+                  <text x="56" y="148">2</text>
+                  <text x="116" y="148">Natively</text>
+                  <text x="180" y="148">Signed</text>
+                  <text x="228" y="148">C509</text>
+                  <text x="296" y="148">Certificate</text>
+                  <text x="380" y="148">Request.</text>
+                  <text x="56" y="180">3</text>
+                  <text x="100" y="180">CBOR</text>
+                  <text x="168" y="180">re-encoding</text>
+                  <text x="228" y="180">of</text>
+                  <text x="256" y="180">RFC</text>
+                  <text x="292" y="180">2986</text>
+                  <text x="368" y="180">certification</text>
+                  <text x="460" y="180">request.</text>
                 </g>
               </svg><a href="#section-9.2-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
-<a href="#name-c509-certificate-request-type" class="selfRef">C509 Certificate Request Types</a>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-c509-certificate-request-typ" class="selfRef">C509 Certificate Request Types</a>
           </figcaption></figure>
 </div>
 </section>
@@ -2598,7 +2511,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.3-1">IANA has created a new registry titled "C509 Private Key Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Comments, and subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-9.3-1" class="pilcrow">¶</a></p>
 <span id="name-c509-private-key-types"></span><div id="fig-rivkeys">
-<figure id="figure-9">
+<figure id="figure-8">
           <div id="section-9.3-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.3-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="176" width="560" viewBox="0 0 560 176" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2637,7 +2550,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.3-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
 <a href="#name-c509-private-key-types" class="selfRef">C509 Private Key Types</a>
           </figcaption></figure>
 </div>
@@ -2650,7 +2563,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.4-1">IANA has created a new registry titled "C509 Certificate Request Templates Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.4-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-request-tem"></span><div id="fig-temp-types">
-<figure id="figure-10">
+<figure id="figure-9">
           <div id="section-9.4-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.4-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -2674,7 +2587,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.4-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
 <a href="#name-c509-certificate-request-tem" class="selfRef">C509 Certificate Request Templates Types</a>
           </figcaption></figure>
 </div>
@@ -2688,7 +2601,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
 <p id="section-9.5-1">IANA has created a new registry titled "C509 RDN Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and Reference, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval [0, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
 <p id="section-9.5-2">The initial contents of the registry are:<a href="#section-9.5-2" class="pilcrow">¶</a></p>
 <span id="name-c509-rdn-attributes"></span><div id="fig-rdnattrtype">
-<figure id="figure-11">
+<figure id="figure-10">
           <div id="section-9.5-3.1">
             <div class="alignCenter art-svg artwork" id="section-9.5-3.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2880" width="560" viewBox="0 0 560 2880" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -3235,7 +3148,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.5-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
 <a href="#name-c509-rdn-attributes" class="selfRef">C509 RDN Attributes</a>
           </figcaption></figure>
 </div>
@@ -3249,7 +3162,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
 <p id="section-9.6-1">IANA has created a new registry titled "C509 CR Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-9.6-1" class="pilcrow">¶</a></p>
 <p id="section-9.6-2">The initial contents of the registry are:<a href="#section-9.6-2" class="pilcrow">¶</a></p>
 <span id="name-c509-crattributes"></span><div id="fig-attrtype">
-<figure id="figure-12">
+<figure id="figure-11">
           <div id="section-9.6-3.1">
             <div class="alignCenter art-svg artwork" id="section-9.6-3.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="448" width="584" viewBox="0 0 584 448" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -3360,7 +3273,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.6-3.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-c509-crattributes" class="selfRef">C509 CRAttributes</a>
           </figcaption></figure>
 </div>
@@ -3373,7 +3286,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.7-1">IANA has created a new registry titled "C509 Extensions Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, abd extensionValue are mandatory. For values in the interval [1, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.7-1" class="pilcrow">¶</a></p>
 <span id="name-c509-extensions"></span><div id="fig-extype">
-<figure id="figure-13">
+<figure id="figure-12">
           <div id="section-9.7-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.7-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2880" width="560" viewBox="0 0 560 2880" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -3918,7 +3831,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.7-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
 <a href="#name-c509-extensions" class="selfRef">C509 Extensions</a>
           </figcaption></figure>
 </div>
@@ -3931,7 +3844,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.8-1">IANA has created a new registry titled "C509 Certificate Policies Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.8-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-policies"></span><div id="fig-cp">
-<figure id="figure-14">
+<figure id="figure-13">
           <div id="section-9.8-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.8-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1648" width="560" viewBox="0 0 560 1648" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -4286,7 +4199,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.8-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-14" class="selfRef">Figure 14</a>:
+<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
 <a href="#name-c509-certificate-policies" class="selfRef">C509 Certificate Policies</a>
           </figcaption></figure>
 </div>
@@ -4299,7 +4212,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.9-1">IANA has created a new registry titled "C509 Policies Qualifiers Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.9-1" class="pilcrow">¶</a></p>
 <span id="name-c509-policies-qualifiers"></span><div id="fig-pq">
-<figure id="figure-15">
+<figure id="figure-14">
           <div id="section-9.9-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.9-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="272" width="560" viewBox="0 0 560 272" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -4362,7 +4275,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.9-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-15" class="selfRef">Figure 15</a>:
+<figcaption><a href="#figure-14" class="selfRef">Figure 14</a>:
 <a href="#name-c509-policies-qualifiers" class="selfRef">C509 Policies Qualifiers</a>
           </figcaption></figure>
 </div>
@@ -4375,7 +4288,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.10-1">IANA has created a new registry titled "C509 Information Access Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.10-1" class="pilcrow">¶</a></p>
 <span id="name-c509-information-accesses"></span><div id="fig-ia">
-<figure id="figure-16">
+<figure id="figure-15">
           <div id="section-9.10-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.10-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="752" width="560" viewBox="0 0 560 752" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -4548,7 +4461,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.10-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-16" class="selfRef">Figure 16</a>:
+<figcaption><a href="#figure-15" class="selfRef">Figure 15</a>:
 <a href="#name-c509-information-accesses" class="selfRef">C509 Information Accesses</a>
           </figcaption></figure>
 </div>
@@ -4561,7 +4474,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.11-1">IANA has created a new registry titled "C509 Extended Key Usages Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.11-1" class="pilcrow">¶</a></p>
 <span id="name-c509-extended-key-usages"></span><div id="fig-eku">
-<figure id="figure-17">
+<figure id="figure-16">
           <div id="section-9.11-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.11-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1712" width="544" viewBox="0 0 544 1712" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -4978,7 +4891,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.11-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-17" class="selfRef">Figure 17</a>:
+<figcaption><a href="#figure-16" class="selfRef">Figure 16</a>:
 <a href="#name-c509-extended-key-usages" class="selfRef">C509 Extended Key Usages</a>
           </figcaption></figure>
 </div>
@@ -4991,7 +4904,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.12-1">IANA has created a new registry titled "C509 General Names Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
 <span id="name-c509-general-names"></span><div id="fig-gn">
-<figure id="figure-18">
+<figure id="figure-17">
           <div id="section-9.12-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.12-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="816" width="560" viewBox="0 0 560 816" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -5118,7 +5031,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.12-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-18" class="selfRef">Figure 18</a>:
+<figcaption><a href="#figure-17" class="selfRef">Figure 17</a>:
 <a href="#name-c509-general-names" class="selfRef">C509 General Names</a>
           </figcaption></figure>
 </div>
@@ -5131,7 +5044,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.13-1">IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm <span class="bcp14">MUST</span> be considered, see instruction in <a href="#pkalg" class="auto internal xref">Section 9.14</a>. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.13-1" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
-<figure id="figure-19">
+<figure id="figure-18">
           <div id="section-9.13-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.13-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="2864" width="560" viewBox="0 0 560 2864" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -5990,7 +5903,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.13-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-19" class="selfRef">Figure 19</a>:
+<figcaption><a href="#figure-18" class="selfRef">Figure 18</a>:
 <a href="#name-c509-signature-algorithms" class="selfRef">C509 Signature Algorithms</a>
           </figcaption></figure>
 </div>
@@ -6003,7 +5916,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
         </h3>
 <p id="section-9.14-1">IANA has created a new registry titled "C509 Public Key Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value <span class="bcp14">MUST</span> be chosen equal to the value of signature algorithm, see <a href="#sigalg" class="auto internal xref">Section 9.13</a>. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.14-1" class="pilcrow">¶</a></p>
 <span id="name-c509-public-key-algorithms"></span><div id="fig-pkalgs">
-<figure id="figure-20">
+<figure id="figure-19">
           <div id="section-9.14-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.14-2.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="1872" width="560" viewBox="0 0 560 1872" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -6502,7 +6415,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
               </svg><a href="#section-9.14-2.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-20" class="selfRef">Figure 20</a>:
+<figcaption><a href="#figure-19" class="selfRef">Figure 19</a>:
 <a href="#name-c509-public-key-algorithms" class="selfRef">C509 Public Key Algorithms</a>
           </figcaption></figure>
 </div>
@@ -6786,7 +6699,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <p id="section-9.17-2">IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see <a href="#c509-cert" class="auto internal xref">Section 9.16.1</a>.<a href="#section-9.17-2" class="pilcrow">¶</a></p>
 <p id="section-9.17-3">IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.<a href="#section-9.17-3" class="pilcrow">¶</a></p>
 <span id="name-coap-content-format-ids"></span><div id="fig-format-ids">
-<figure id="figure-21">
+<figure id="figure-20">
           <div id="section-9.17-4.1">
             <div class="alignLeft art-svg artwork" id="section-9.17-4.1.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="512" width="616" viewBox="0 0 616 512" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
@@ -6898,7 +6811,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
               </svg><a href="#section-9.17-4.1.1" class="pilcrow">¶</a>
 </div>
 </div>
-<figcaption><a href="#figure-21" class="selfRef">Figure 21</a>:
+<figcaption><a href="#figure-20" class="selfRef">Figure 20</a>:
 <a href="#name-coap-content-format-ids" class="selfRef">CoAP Content-Format IDs</a>
           </figcaption></figure>
 </div>
@@ -7356,9 +7269,9 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 <a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-example-c509-certificate-en" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
 <p id="appendix-A.1.1-1">This section shows the C509 encoding of the X.509 certificate in the previous section. The point compressed public key is represented as described in <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.1-2"><a href="#fig-CBOR-diagnostic-7925" class="auto internal xref">Figure 22</a> shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.1-2"><a href="#fig-CBOR-diagnostic-7925" class="auto internal xref">Figure 21</a> shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
 <span id="name-cbor-diagnostic-notation-of"></span><div id="fig-CBOR-diagnostic-7925">
-<figure id="figure-22">
+<figure id="figure-21">
             <div class="alignLeft art-text artwork" id="appendix-A.1.1-3.1">
 <pre>
 /This defines a CBOR Sequence (RFC 8742):/
@@ -7382,13 +7295,13 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 
 </pre>
 </div>
-<figcaption><a href="#figure-22" class="selfRef">Figure 22</a>:
+<figcaption><a href="#figure-21" class="selfRef">Figure 21</a>:
 <a href="#name-cbor-diagnostic-notation-of" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
             </figcaption></figure>
 </div>
-<p id="appendix-A.1.1-4"><a href="#fig-CBOR-plain-hex-7925" class="auto internal xref">Figure 23</a> shows the plain hex format of the unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.1-4"><a href="#fig-CBOR-plain-hex-7925" class="auto internal xref">Figure 22</a> shows the plain hex format of the unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.1-4" class="pilcrow">¶</a></p>
 <span id="name-cbor-plain-hex-format-of-c5"></span><div id="fig-CBOR-plain-hex-7925">
-<figure id="figure-23">
+<figure id="figure-22">
             <div class="alignLeft art-text artwork" id="appendix-A.1.1-5.1">
 <pre>
 03
@@ -7407,7 +7320,7 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
 </pre>
 </div>
-<figcaption><a href="#figure-23" class="selfRef">Figure 23</a>:
+<figcaption><a href="#figure-22" class="selfRef">Figure 22</a>:
 <a href="#name-cbor-plain-hex-format-of-c5" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
             </figcaption></figure>
 </div>
@@ -7419,9 +7332,9 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 <a href="#appendix-A.1.2" class="section-number selfRef">A.1.2. </a><a href="#name-example-natively-signed-c50" class="section-name selfRef">Example: Natively Signed C509 Certificate</a>
           </h4>
 <p id="appendix-A.1.2-1">This section shows the natively signed C509 certificate corresponding to that of the previous section, which is identical except for c509CertificateType, encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 24</a> shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 23</a> shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
 <span id="name-cbor-diagnostic-notation-of-"></span><div id="fig-CBOR-diagnostic-native">
-<figure id="figure-24">
+<figure id="figure-23">
             <div class="alignLeft art-text artwork" id="appendix-A.1.2-3.1">
 <pre>
 /This defines a CBOR Sequence (RFC 8742):/
@@ -7442,13 +7355,13 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
     50AB9FA9A65D9BA2B3B82E668CC6'
 </pre>
 </div>
-<figcaption><a href="#figure-24" class="selfRef">Figure 24</a>:
+<figcaption><a href="#figure-23" class="selfRef">Figure 23</a>:
 <a href="#name-cbor-diagnostic-notation-of-" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
             </figcaption></figure>
 </div>
-<p id="appendix-A.1.2-4"><a href="#fig-CBOR-plain-hex-native" class="auto internal xref">Figure 25</a> shows the plain hex format of the natively signed unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.2-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-4"><a href="#fig-CBOR-plain-hex-native" class="auto internal xref">Figure 24</a> shows the plain hex format of the natively signed unwrapped CBOR sequence, the size is 140 bytes.<a href="#appendix-A.1.2-4" class="pilcrow">¶</a></p>
 <span id="name-cbor-plain-hex-format-of-c50"></span><div id="fig-CBOR-plain-hex-native">
-<figure id="figure-25">
+<figure id="figure-24">
             <div class="alignLeft art-text artwork" id="appendix-A.1.2-5.1">
 <pre>
 02
@@ -7467,7 +7380,7 @@ DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 </pre>
 </div>
-<figcaption><a href="#figure-25" class="selfRef">Figure 25</a>:
+<figcaption><a href="#figure-24" class="selfRef">Figure 24</a>:
 <a href="#name-cbor-plain-hex-format-of-c50" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
             </figcaption></figure>
 </div>
@@ -7513,9 +7426,9 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 <a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-examples-c509certificate-an" class="section-name selfRef">Examples: C509Certificate and C509CertData</a>
           </h4>
 <p id="appendix-A.1.5-1">This section examplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a>.<a href="#appendix-A.1.5-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 26</a> shows the encoding of the corresponding C509Certificate, i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 25</a> shows the encoding of the corresponding C509Certificate, i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
 <span id="name-c509certificate-the-cbor-ar"></span><div id="fig-C509Certificate">
-<figure id="figure-26">
+<figure id="figure-25">
             <div class="alignLeft art-text artwork" id="appendix-A.1.5-3.1">
 <pre>
 8B
@@ -7535,14 +7448,14 @@ DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 </pre>
 </div>
-<figcaption><a href="#figure-26" class="selfRef">Figure 26</a>:
+<figcaption><a href="#figure-25" class="selfRef">Figure 25</a>:
 <a href="#name-c509certificate-the-cbor-ar" class="selfRef">C509Certificate: The CBOR array wrapping of ~C509Certificate</a>
             </figcaption></figure>
 </div>
 <p id="appendix-A.1.5-4">Note that C509Certificate is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).<a href="#appendix-A.1.5-4" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 27</a> shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 26</a> shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
 <span id="name-c509certdata-cbor-byte-stri"></span><div id="fig-C509CertData">
-<figure id="figure-27">
+<figure id="figure-26">
             <div class="alignLeft art-text artwork" id="appendix-A.1.5-6.1">
 <pre>
 58 8C
@@ -7562,7 +7475,7 @@ DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 </pre>
 </div>
-<figcaption><a href="#figure-27" class="selfRef">Figure 27</a>:
+<figcaption><a href="#figure-26" class="selfRef">Figure 26</a>:
 <a href="#name-c509certdata-cbor-byte-stri" class="selfRef">C509CertData: CBOR byte string wrapping of ~C509Certificate.</a>
             </figcaption></figure>
 </div>
