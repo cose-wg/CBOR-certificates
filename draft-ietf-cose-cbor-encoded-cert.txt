@@ -95,6 +95,7 @@ Table of Contents
      3.4.  COSE Header Parameters
      3.5.  Private Key Structures
      3.6.  Deterministic Encoding
+     3.7.  C509 Name in TLS and DTLS
    4.  C509 Certificate (Signing) Request
      4.1.  Certificate Request Types
      4.2.  Subject Signature Algorithm
@@ -962,6 +963,31 @@ Table of Contents
    (extensionID:int, extensionValue:Defined)-encoding.  One reason is
    that the certificate was issued before the specific CBOR extension
    was registered.
+
+3.7.  C509 Name in TLS and DTLS
+
+   In TLS and DTLS, the subject of trusted authory may be sent to the
+   peer to help it selecting the certificate chain, as in the
+   CertificateAuthoritiesExtension in [RFC8446], in the
+   certificate_authorities field of CertificateRequest in [RFC5246], or
+   in the TrustedAuthorities in [RFC6066].  For such usage in the TLS
+   and DTLS, the C509 name is wrapped in a distinguished name [X.501]
+   with exactly one RelativeDistinguishedName, which in turn contains
+   exactly one AttributeTypeAndValue with the attribute C509Name.  The
+   attribute value is the raw byte string of the encoded C509 Name as in
+   Section 3.1.6.
+
+   The attribute for C509 Name has the following structure:
+
+      id-at-c509Name OBJECT IDENTIFIER ::=
+        { TBD30 }
+
+      c509Name ATTRIBUTE ::= {
+        WITH SYNTAX C509Name
+        SINGLE VALUE TRUE
+        ID id-at-c509Name }
+
+      C509Name ::= OCTET STRING
 
 4.  C509 Certificate (Signing) Request
 
@@ -3074,6 +3100,11 @@ Table of Contents
               DOI 10.17487/RFC5958, August 2010,
               <https://www.rfc-editor.org/rfc/rfc5958>.
 
+   [RFC6066]  Eastlake 3rd, D., "Transport Layer Security (TLS)
+              Extensions: Extension Definitions", RFC 6066,
+              DOI 10.17487/RFC6066, January 2011,
+              <https://www.rfc-editor.org/rfc/rfc6066>.
+
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
@@ -3167,6 +3198,10 @@ Table of Contents
    [SECG]     "Elliptic Curve Cryptography, Standards for Efficient
               Cryptography Group, ver. 2", 2009,
               <https://secg.org/sec1-v2.pdf>.
+
+   [X.501]    "Information Technology - Open Systems Interconnection -
+              The Directory: Models, ITU-T X.501", December 2019,
+              <https://www.itu.int/rec/T-REC-X.501/en>.
 
    [X.690]    "ASN.1 encoding rules. Specification of Basic Encoding
               Rules (BER), Canonical Encoding Rules (CER) and

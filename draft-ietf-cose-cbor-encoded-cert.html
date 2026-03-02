@@ -1198,6 +1198,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
                 <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-deterministic-encoding" class="internal xref">Deterministic Encoding</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-c509-name-in-tls-and-dtls" class="internal xref">C509 Name in TLS and DTLS</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
@@ -2008,6 +2011,28 @@ C509PEM = [
 <p id="section-3.6-2">While this specification requires the use of Deterministically Encoded CBOR (see <a href="#notation" class="auto internal xref">Section 2</a>), it is still possible to represent certain X.509 certificate fields in different ways. This is a consequence of the extensibility of the C509 format where new encodings can be defined, for example to optimize extensions for which no special CBOR encoding have been previously defined.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
 <p id="section-3.6-3">Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding <span class="bcp14">MUST</span> be used. For example, when there is support for specific CBOR encoding of an extension, as specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a> and the C509 Extensions Registry, it <span class="bcp14">MUST</span> be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it <span class="bcp14">MUST</span> be used.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
 <p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID: ~oid, extensionValue: bytes / [bytes])-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="c509-name-in-tls-and-dtls">
+<section id="section-3.7">
+        <h3 id="name-c509-name-in-tls-and-dtls">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-c509-name-in-tls-and-dtls" class="section-name selfRef">C509 Name in TLS and DTLS</a>
+        </h3>
+<p id="section-3.7-1">In TLS and DTLS, the subject of trusted authory may be sent to the peer to help it selecting the certificate chain, as in the CertificateAuthoritiesExtension in <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, in the certificate_authorities field of CertificateRequest in <span>[<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>, or in the TrustedAuthorities in <span>[<a href="#RFC6066" class="cite xref">RFC6066</a>]</span>. For such usage in the TLS and DTLS, the C509 name is wrapped in a distinguished name <span>[<a href="#X.501" class="cite xref">X.501</a>]</span> with exactly one RelativeDistinguishedName, which in turn contains exactly one AttributeTypeAndValue with the attribute C509Name. The attribute value is the raw byte string of the encoded C509 Name as in <a href="#subject" class="auto internal xref">Section 3.1.6</a>.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2">The attribute for C509 Name has the following structure:<a href="#section-3.7-2" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.7-3">
+<pre>
+   id-at-c509Name OBJECT IDENTIFIER ::=
+     { TBD30 }
+
+   c509Name ATTRIBUTE ::= {
+     WITH SYNTAX C509Name
+     SINGLE VALUE TRUE
+     ID id-at-c509Name }
+
+   C509Name ::= OCTET STRING
+</pre><a href="#section-3.7-3" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>
@@ -6906,6 +6931,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <dd>
 <span class="refAuthor">Turner, S.</span>, <span class="refTitle">"Asymmetric Key Packages"</span>, <span class="seriesInfo">RFC 5958</span>, <span class="seriesInfo">DOI 10.17487/RFC5958</span>, <time datetime="2010-08" class="refDate">August 2010</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5958">https://www.rfc-editor.org/rfc/rfc5958</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC6066">[RFC6066]</dt>
+        <dd>
+<span class="refAuthor">Eastlake 3rd, D.</span>, <span class="refTitle">"Transport Layer Security (TLS) Extensions: Extension Definitions"</span>, <span class="seriesInfo">RFC 6066</span>, <span class="seriesInfo">DOI 10.17487/RFC6066</span>, <time datetime="2011-01" class="refDate">January 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6066">https://www.rfc-editor.org/rfc/rfc6066</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6698">[RFC6698]</dt>
         <dd>
 <span class="refAuthor">Hoffman, P.</span> and <span class="refAuthor">J. Schlyter</span>, <span class="refTitle">"The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA"</span>, <span class="seriesInfo">RFC 6698</span>, <span class="seriesInfo">DOI 10.17487/RFC6698</span>, <time datetime="2012-08" class="refDate">August 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6698">https://www.rfc-editor.org/rfc/rfc6698</a>&gt;</span>. </dd>
@@ -6981,6 +7010,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="SECG">[SECG]</dt>
         <dd>
 <span class="refTitle">"Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2"</span>, <time datetime="2009" class="refDate">2009</time>, <span>&lt;<a href="https://secg.org/sec1-v2.pdf">https://secg.org/sec1-v2.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="X.501">[X.501]</dt>
+        <dd>
+<span class="refTitle">"Information Technology - Open Systems Interconnection - The Directory: Models, ITU-T X.501"</span>, <time datetime="2019-12" class="refDate">December 2019</time>, <span>&lt;<a href="https://www.itu.int/rec/T-REC-X.501/en">https://www.itu.int/rec/T-REC-X.501/en</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="X.690">[X.690]</dt>
       <dd>
