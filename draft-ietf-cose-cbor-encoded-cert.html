@@ -1721,7 +1721,7 @@ tag = #6
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-24.1">
-            <p id="section-3.3-24.1.1">CRL Distribution Points (cRLDistributionPoints). If all DistributionPoint elements contains the distributionPoint with fullName choice of uniformResourceIdentifier, optional reasons, and optional cRLIssuer with one directoryName, the extension value can be CBOR encoded. The 'reasons' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. If the CRLDistributionPoints consists of only one DistributionPointName, which in turn has only the fullName field of type CBOR text, it shall be encoded as CBOR text, otherwise as CBOR array.<a href="#section-3.3-24.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-24.1.1">CRL Distribution Points (cRLDistributionPoints). If all DistributionPoint elements contain the distributionPoint with fullName choice of uniformResourceIdentifier, optional reasons, and optional cRLIssuer with one directoryName, the extension value can be CBOR encoded. The 'reasons' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR uint. If the CRLDistributionPoints consists of only one DistributionPointName, which in turn has only the fullName field of type CBOR text, it shall be encoded as CBOR text, otherwise as CBOR array.<a href="#section-3.3-24.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-25">
