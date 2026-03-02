@@ -6,12 +6,12 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 3 August 2026                             University of Glasgow
+Expires: 3 September 2026                          University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                         30 January 2026
+                                                            2 March 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -25,7 +25,7 @@ Abstract
    profiles and is extensible.
 
    Two types of C509 certificates are defined.  One type is an
-   invertible CBOR re-encoding of DER encoded X.509 certificates with
+   invertible CBOR re-encoding of DER-encoded X.509 certificates with
    the signature field copied from the DER encoding.  The other type is
    identical except that the signature is over the CBOR encoding instead
    of the DER encoding, avoiding the use of ASN.1.  Both types of
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -194,7 +194,7 @@ Table of Contents
 
    C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud
    communication, Unmanned Aircraft Systems (UAS), and Global Navigation
-   Satellite System (GNSS).  When used to re-encode DER encoded X.509
+   Satellite System (GNSS).  When used to re-encode DER-encoded X.509
    certificates, the CBOR encoding can in many cases reduce the size of
    RFC 7925 profiled certificates by over 50%.
 
@@ -206,8 +206,8 @@ Table of Contents
    Two types of C509 are defined using the same CBOR encoding and
    differing only in what is being signed:
 
-   1.  An invertible CBOR re-encoding of DER encoded X.509 certificates
-       [RFC5280], which can be reversed to obtain the original DER
+   1.  An invertible CBOR re-encoding of DER-encoded X.509 certificates
+       [RFC5280], which can be reversed to obtain the original DER-
        encoded X.509 certificate.  Due to the widespread deployment of
        X.509 it is necessary to allow backward compatibility.
 
@@ -215,7 +215,7 @@ Table of Contents
        calculated over the CBOR encoding instead of over the DER
        encoding.  This removes the need for ASN.1 and DER parsing and
        the associated complexity but they are not backwards compatible
-       with implementations requiring DER encoded X.509.
+       with implementations requiring DER-encoded X.509.
 
    Natively signed C509 certificates can be applied in devices that are
    only required to authenticate to natively signed C509 certificate
@@ -258,13 +258,13 @@ Table of Contents
    significantly, which is not possible with general purpose compression
    algorithms, see Figure 6.
 
-   The C509 certificate can be either a CBOR re-encoding of a DER
+   The C509 certificate can be either a CBOR re-encoding of a DER-
    encoded X.509 certificate, in which case the signature is calculated
-   on the DER encoded ASN.1 data in the X.509 certificate, or a natively
+   on the DER-encoded ASN.1 data in the X.509 certificate, or a natively
    signed C509 certificate, in which case the signature is calculated
    directly on the CBOR encoded data.  In both cases the certificate
    content is adhering to the restrictions given by [RFC5280].  The re-
-   encoding is known to work with DER encoded certificates but might
+   encoding is known to work with DER-encoded certificates but might
    work with other canonical encodings.  The re-encoding does not work
    for BER encoded certificates.
 
@@ -329,8 +329,8 @@ Table of Contents
 
                     Figure 1: CDDL for C509Certificate.
 
-   C509 certificates are defined in terms of DER encoded [RFC5280] X.509
-   certificates as detailed in the following subsections.
+   C509 certificates are defined in terms of DER-encoded X.509
+   certificates [RFC5280] as detailed in the following subsections.
 
 3.1.1.  version
 
@@ -513,10 +513,10 @@ Table of Contents
    omitted and subjectPublicKey consists of only the modulus encoded as
    an unwrapped CBOR unsigned bignum (~biguint).
 
-   For elliptic curve public keys in Weierstraß form (id-ecPublicKey),
+   For elliptic curve public keys in Weierstrass form (id-ecPublicKey),
    keys may be point compressed as defined in Section 2.3.3 of [SECG].
-   Native C509 certificates with Weierstraß form keys use the octets
-   0x02, 0x03, and 0x04 as defined in [SECG].  If a DER encoded
+   Native C509 certificates with Weierstrass form keys use the octets
+   0x02, 0x03, and 0x04 as defined in [SECG].  If a DER-encoded
    certificate with an uncompressed public key of type id-ecPublicKey is
    CBOR encoded with point compression, then the octet 0xfe is used
    instead of 0x02 to represent an even y-coordinate, and the octet 0xfd
@@ -808,7 +808,7 @@ Table of Contents
 
    The formatting and processing for c5b, c5c, c5t, and c5u, defined in
    Table 1 below, are similar to x5bag, x5chain, x5t, x5u defined in
-   [RFC9360] except that the certificates are C509 instead of DER
+   [RFC9360] except that the certificates are C509 instead of DER-
    encoded X.509 and use a COSE_C509 structure instead of COSE_X509.
 
    The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
@@ -941,8 +941,8 @@ Table of Contents
 
    This section defines the format of a C509 Certificate Request, also
    known as a C509 Certificate Signing Request (CSR), based on and
-   compatible with RFC 2986 [RFC2986], and reusing the formatting of
-   C509 certificates defined in Section 3.
+   compatible with [RFC2986], and reusing the formatting of C509
+   certificates defined in Section 3.
 
    The CDDL for the C509 Certificate Request is shown in Figure 2.  The
    fields have the same encoding as the corresponding fields of the C509
@@ -983,7 +983,7 @@ Table of Contents
    requested:
 
    *  The C509 Certificate Request can either be an invertible CBOR re-
-      encoding of a DER encoded RFC 2986 certification request, or it
+      encoding of a DER-encoded certification request [RFC2986], or it
       can be natively signed where the signature is calculated over the
       CBOR encoding instead of the DER encoding.
 
@@ -997,7 +997,7 @@ Table of Contents
     +-------------------------+---------------------------------------+
     |                         |             Signed object             |
     +-------------------------+---------------------------------------+
-    |                         | CBOR encoded C509 | DER encoded C509  |
+    |                         | CBOR encoded C509 | DER-encoded C509  |
     |                         |    Certificate    |    Certificate    |
     | Requested certificate   |      Request      |      Request      |
     +=========================+===================+===================+
@@ -1075,9 +1075,9 @@ Table of Contents
    challengePassword = SpecialText
 
    In natively signed requests (types 0 and 2), a positive extensionID
-   is used.  In CBOR re-encoding of a DER encoded request (types 1 and
+   is used.  In CBOR re-encoding of a DER-encoded request (types 1 and
    3), the sign of extensionID of challengePassword indicates the string
-   type in the DER encoded challengePassword (instead of the
+   type in the DER-encoded challengePassword (instead of the
    criticalness in extensions): positive for utf8String and negative for
    printableString.  The same text string encoding optimizations applies
    as in Section 3.1.4.
@@ -1186,14 +1186,15 @@ Table of Contents
 
    C509 certificates can be deployed with legacy X.509 certificates and
    CA infrastructure.  An existing CA can continue to use its existing
-   procedures and code for PKCS#10, and DER encoded X.509 and only
+   procedures and code for PKCS#10, and DER-encoded X.509 and only
    implement C509 as a thin processing layer on top.  When receiving a
-   C509 CSR, the CA transforms it into a DER encoded RFC 2986
-   CertificationRequestInfo and uses that with existing processes and
-   code to produce an RFC 5280 DER encoded X.509 certificate.  The DER
-   encoded X.509 is then transformed into a C509 certificate.  At any
-   later point, the C509 certificate can be used to recreate the
-   original X.509 data structure needed to verify the signature.
+   C509 CSR, the CA transforms it into a DER-encoded
+   CertificationRequestInfo [RFC2986] and uses that with existing
+   processes and code to produce an RFC 5280 DER-encoded X.509
+   certificate.  The DER-encoded X.509 is then transformed into a C509
+   certificate.  At any later point, the C509 certificate can be used to
+   recreate the original X.509 data structure needed to verify the
+   signature.
 
    For protocols like TLS/DTLS 1.2, where certificates are sent
    unencrypted, the actual encoding and compression can be done at
@@ -2425,7 +2426,7 @@ Table of Contents
    |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
    |       | Comments:    Compressed subjectPublicKey                  |
    +-------+-----------------------------------------------------------+
-   |     1 | Name:        EC Public Key (Weierstraß) with secp256r1    |
+   |     1 | Name:        EC Public Key (Weierstrass) with secp256r1   |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
    |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
@@ -2434,7 +2435,7 @@ Table of Contents
    |       | Comments:    Compressed subjectPublicKey                  |
    |       |              Also known as P-256, ansip256r1, prime256v1  |
    +-------+-----------------------------------------------------------+
-   |     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
+   |     2 | Name:        EC Public Key (Weierstrass) with secp384r1   |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
    |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
@@ -2443,7 +2444,7 @@ Table of Contents
    |       | Comments:    Compressed subjectPublicKey                  |
    |       |              Also known as P-384, ansip384r1              |
    +-------+-----------------------------------------------------------+
-   |     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
+   |     3 | Name:        EC Public Key (Weierstrass) with secp521r1   |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
    |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
@@ -2480,7 +2481,7 @@ Table of Contents
    |       | DER:         30 05 06 03 2B 65 71                         |
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
-   |    24 | Name:        EC Public Key (Weierstraß) with              |
+   |    24 | Name:        EC Public Key (Weierstrass) with             |
    |       |              brainpoolP256r1                              |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
@@ -2490,7 +2491,7 @@ Table of Contents
    |       |              03 03 02 08 01 01 07                         |
    |       | Comments:    Compressed subjectPublicKey                  |
    +-------+-----------------------------------------------------------+
-   |    25 | Name:        EC Public Key (Weierstraß) with              |
+   |    25 | Name:        EC Public Key (Weierstrass) with             |
    |       |              brainpoolP384r1                              |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
@@ -2500,7 +2501,7 @@ Table of Contents
    |       |              03 03 02 08 01 01 0B                         |
    |       | Comments:    Compressed subjectPublicKey                  |
    +-------+-----------------------------------------------------------+
-   |    26 | Name:        EC Public Key (Weierstraß) with              |
+   |    26 | Name:        EC Public Key (Weierstrass) with             |
    |       |              brainpoolP512r1                              |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
@@ -2510,7 +2511,7 @@ Table of Contents
    |       |              03 03 02 08 01 01 0D                         |
    |       | Comments:    Compressed subjectPublicKey                  |
    +-------+-----------------------------------------------------------+
-   |    27 | Name:        EC Public Key (Weierstraß) with              |
+   |    27 | Name:        EC Public Key (Weierstrass) with             |
    |       |              FRP256v1                                     |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
@@ -2520,7 +2521,7 @@ Table of Contents
    |       |              7A 01 81 5F 65 82 00 01                      |
    |       | Comments:    Compressed subjectPublicKey                  |
    +-------+-----------------------------------------------------------+
-   |    28 | Name:        EC Public Key (Weierstraß) with              |
+   |    28 | Name:        EC Public Key (Weierstrass) with             |
    |       |              sm2p256v1                                    |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
    |       | OID:         1.2.840.10045.2.1                            |
@@ -2541,7 +2542,7 @@ Table of Contents
    devices.  RSA requires large keys and large signature sizes compared
    to elliptic curve cryptography (ECC), which together with resource-
    efficient implementations of named elliptic curves (Montgomery,
-   Edwards and Weierstraß curves) make them suitable candidates for IoT
+   Edwards and Weierstrass curves) make them suitable candidates for IoT
    public key usage.  These curves are represented by ids 1–11 and 24–28
    in Section 9.13.
 
@@ -3136,12 +3137,12 @@ Table of Contents
               ctls-10>.
 
    [I-D.ietf-uta-tls13-iot-profile]
-              Tschofenig, H., Fossati, T., and M. Richardson, "TLS/DTLS
-              1.3 Profiles for the Internet of Things", Work in
-              Progress, Internet-Draft, draft-ietf-uta-tls13-iot-
-              profile-17, 18 October 2025,
+              Tschofenig, H., Fossati, T., Richardson, M., and D.
+              Migault, "TLS/DTLS 1.3 Profiles for the Internet of
+              Things", Work in Progress, Internet-Draft, draft-ietf-uta-
+              tls13-iot-profile-19, 20 February 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-uta-
-              tls13-iot-profile-17>.
+              tls13-iot-profile-19>.
 
    [IEEE-802.1AR]
               Institute of Electrical and Electronics Engineers, "IEEE
@@ -3410,7 +3411,7 @@ A.1.4.  Example: Additional Keys for the Example Certificates
    protocols like EDHOC.
 
    issuerPublicKeyAlgorithm :
-   1 (EC Public Key (Weierstraß) with secp256r1)
+   1 (EC Public Key (Weierstrass) with secp256r1)
 
    issuerPublicKey :
    h'02AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845E'
