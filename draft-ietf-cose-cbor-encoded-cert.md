@@ -676,13 +676,13 @@ TBSCertificateRequest = (
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: Defined,
-   attributes: Attributes,
+   attributes: CRAttributes,
 )
 
-Attributes = [ * Attribute ]
+CRAttributes = [ * CRAttribute ]
 
-Attribute = (( attributeType: int, attributeValue: Defined ) //
-             ( attributeType: ~oid, attributeValue: bytes ))
+CRAttribute = (( attributeType: int, attributeValue: Defined ) //
+               ( attributeType: ~oid, attributeValue: bytes ))
 
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -1166,15 +1166,15 @@ The initial contents of the registry are:
 {: #fig-rdnattrtype title="C509 RDN Attributes"}
 {: artwork-align="center"}
 
-## C509 Attributes Registry {#atttype}
+## C509 CR Attributes Registry {#cratttype}
 
-IANA has created a new registry titled "C509 Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 CR Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
-| Value | Attribute                                                 |
+| Value | CR Attribute                                                 |
 +=======+===========================================================+
 |     0 | Name:            Extension Request                        |
 |       | Identifiers:     extensionRequest                         |
@@ -1200,7 +1200,7 @@ The initial contents of the registry are:
 |       | attributeValue:  PrivateKeyPossessionStatement            |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-attrtype title="C509 Attributes"}
+{: #fig-attrtype title="C509 CRAttributes"}
 {: artwork-align="center"}
 
 ## C509 Extensions Registry {#extype}
