@@ -1199,7 +1199,7 @@ The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
-| Value | CR Attribute                                                 |
+| Value | CR Attribute                                              |
 +=======+===========================================================+
 |     0 | Name:            Extension Request                        |
 |       | Identifiers:     extensionRequest                         |
