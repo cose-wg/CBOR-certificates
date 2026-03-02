@@ -4934,7 +4934,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-signature-algorithms-r">
 <a href="#section-9.12" class="section-number selfRef">9.12. </a><a href="#name-c509-signature-algorithms-r" class="section-name selfRef">C509 Signature Algorithms Registry</a>
         </h3>
-<p id="section-9.12-1">IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
+<p id="section-9.12-1">IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm <span class="bcp14">MUST</span> be considered, see instruction in <a href="#pkalg" class="auto internal xref">Section 9.13</a>. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.12-1" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
 <figure id="figure-18">
           <div id="section-9.12-2.1">
@@ -5806,7 +5806,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
         <h3 id="name-c509-public-key-algorithms-">
 <a href="#section-9.13" class="section-number selfRef">9.13. </a><a href="#name-c509-public-key-algorithms-" class="section-name selfRef">C509 Public Key Algorithms Registry</a>
         </h3>
-<p id="section-9.13-1">IANA has created a new registry titled "C509 Public Key Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.13-1" class="pilcrow">¶</a></p>
+<p id="section-9.13-1">IANA has created a new registry titled "C509 Public Key Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value <span class="bcp14">MUST</span> be chosen equal to the value of signature algorithm, see <a href="#sigalg" class="auto internal xref">Section 9.12</a>. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-9.13-1" class="pilcrow">¶</a></p>
 <span id="name-c509-public-key-algorithms"></span><div id="fig-pkalgs">
 <figure id="figure-19">
           <div id="section-9.13-2.1">
@@ -6042,7 +6042,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="316" y="804">65</text>
                   <text x="340" y="804">6F</text>
                   <text x="120" y="820">Comments:</text>
-                  <text x="52" y="852">10</text>
+                  <text x="52" y="852">12</text>
                   <text x="104" y="852">Name:</text>
                   <text x="216" y="852">Ed25519</text>
                   <text x="284" y="852">(Twisted</text>
@@ -6063,7 +6063,7 @@ ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
                   <text x="316" y="916">65</text>
                   <text x="340" y="916">70</text>
                   <text x="120" y="932">Comments:</text>
-                  <text x="52" y="964">11</text>
+                  <text x="52" y="964">13</text>
                   <text x="104" y="964">Name:</text>
                   <text x="208" y="964">Ed448</text>
                   <text x="272" y="964">(Edwards)</text>

@@ -2237,10 +2237,12 @@ Table of Contents
    of-possession algorithms.  The fields of the registry are Value,
    Name, Identifiers, OID, Parameters, DER, Comments, and Reference,
    where Value is an integer, and the other columns are text strings.
-   The fields Name, OID, Parameters, and DER are mandatory.  For values
-   in the interval [-24, 23] the registration procedure is "IETF Review
-   with Expert Review".  For all other values the registration procedure
-   is "Expert Review".  The initial contents of the registry are:
+   The fields Name, OID, Parameters, and DER are mandatory.  Alignment
+   with the value of public key algorithm MUST be considered, see
+   instruction in Section 9.13.  For values in the interval [-24, 23]
+   the registration procedure is "IETF Review with Expert Review".  For
+   all other values the registration procedure is "Expert Review".  The
+   initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Signature Algorithms                                |
@@ -2429,10 +2431,14 @@ Table of Contents
    The fields of the registry are Value, Name, Identifiers, OID,
    Parameters, DER, Comments, and Reference, where Value is an integer,
    and the other columns are text strings.  The fields Name, OID,
-   Parameters, and DER are mandatory.  For values in the interval [-24,
-   23] the registration procedure is "IETF Review with Expert Review".
-   For all other values the registration procedure is "Expert Review".
-   The initial contents of the registry are:
+   Parameters, and DER are mandatory.  If the public key can only be
+   used with one signature algorithm and the OID of the public key
+   algorithm is the same as the signature algorithm, then the value MUST
+   be chosen equal to the value of signature algorithm, see
+   Section 9.12.  For values in the interval [-24, 23] the registration
+   procedure is "IETF Review with Expert Review".  For all other values
+   the registration procedure is "Expert Review".  The initial contents
+   of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Public Key Algorithms                               |
@@ -2485,14 +2491,14 @@ Table of Contents
    |       | DER:         30 05 06 03 2B 65 6F                         |
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
-   |    10 | Name:        Ed25519 (Twisted Edwards)                    |
+   |    12 | Name:        Ed25519 (Twisted Edwards)                    |
    |       | Identifiers: id-Ed25519, id-EdDSA25519                    |
    |       | OID:         1.3.101.112                                  |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 05 06 03 2B 65 70                         |
    |       | Comments:                                                 |
    +-------+-----------------------------------------------------------+
-   |    11 | Name:        Ed448 (Edwards)                              |
+   |    13 | Name:        Ed448 (Edwards)                              |
    |       | Identifiers: id-Ed448, id-EdDSA448                        |
    |       | OID:         1.3.101.113                                  |
    |       | Parameters:  Absent                                       |
