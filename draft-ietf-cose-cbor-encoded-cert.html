@@ -1419,8 +1419,7 @@ AlgorithmIdentifier = int / ~oid /
 Extensions = [ * Extension ] / int
 
 Extension = (( extensionID: int, extensionValue: Defined ) //
-             ( extensionID: ~oid, ? critical: true,
-              extensionValue: bytes ))
+             ( extensionID: ~oid, extensionValue: bytes / [ bytes ] ))
 
 SpecialText = text / bytes / tag
 
@@ -1535,7 +1534,15 @@ tag = #6
               <p id="section-3.1.10-3.1.1">If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except undefined (see <a href="#CRT" class="auto internal xref">Section 4.4</a>), and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see <a href="#ext-encoding" class="auto internal xref">Section 3.3</a>), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.<a href="#section-3.1.10-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.10-3.2">
-              <p id="section-3.1.10-3.2.1">If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR simple value true (0xf5) 'critical', and the DER-encoded value of the extnValue. The presence of the CBOR true value in the array indicates that the extension is critical; its absence means that the extension is non-critical (see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.<a href="#section-3.1.10-3.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.10-3.2.1">If extensionID is encoded as an unwrapped CBOR OID tag, it is followed by the DER-encoded extnValue encoded in the following way:<a href="#section-3.1.10-3.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.10-3.2.2.1">
+                  <p id="section-3.1.10-3.2.2.1.1">if the extension is non-critical, the extnValue OCTET STRING value field is encoded as a CBOR byte string;<a href="#section-3.1.10-3.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-3.1.10-3.2.2.2">
+                  <p id="section-3.1.10-3.2.2.2.1">if the extension is critical, the extnValue OCTET STRING value field is encoded as a CBOR byte string and further wrapped in a CBOR array consisting of only this element.<a href="#section-3.1.10-3.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
 </li>
           </ul>
 <p id="section-3.1.10-4">The processing of critical and non-critical extensions is specified in <span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-3.1.10-4" class="pilcrow">¶</a></p>
@@ -1769,7 +1776,7 @@ tag = #6
      qualifier: text,
    )
    CertificatePolicies = [
-     + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )
+     + ( PolicyIdentifier, [ * PolicyQualifierInfo ] )
    ]
 </pre><a href="#section-3.3-35" class="pilcrow">¶</a>
 </div>
@@ -1816,14 +1823,14 @@ tag = #6
             <p id="section-3.3-42.1.1">AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-42.2">
-            <p id="section-3.3-42.2.1">IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.<a href="#section-3.3-42.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-42.2.1">IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR array with a CBOR uint (number of the unusedBits) and a CBOR byte string (address prefix without the unusedBits octet). Each AddressRange is encoded as a CBOR array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.<a href="#section-3.3-42.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-43">
 <pre>
    Address = bytes
-   AddressPrefix = (Address, unusedBits: uint)
-   AddressRange = [min: Address, max: Address]
+   AddressPrefix = [ unusedBits: uint, Address ]
+   AddressRange = [ min: Address, max: Address ]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
    IPAddressFamily = (AFI: uint, IPAddressChoice)
@@ -1989,7 +1996,7 @@ C509PEM = [
 <p id="section-3.6-1">In some use cases it is desirable to be able to specify a unique C509 representation of a given X.509 certificate.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <p id="section-3.6-2">While this specification requires the use of Deterministically Encoded CBOR (see <a href="#notation" class="auto internal xref">Section 2</a>), it is still possible to represent certain X.509 certificate fields in different ways. This is a consequence of the extensibility of the C509 format where new encodings can be defined, for example to optimize extensions for which no special CBOR encoding have been previously defined.<a href="#section-3.6-2" class="pilcrow">¶</a></p>
 <p id="section-3.6-3">Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding <span class="bcp14">MUST</span> be used. For example, when there is support for specific CBOR encoding of an extension, as specified in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a> and the C509 Extensions Registry, it <span class="bcp14">MUST</span> be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it <span class="bcp14">MUST</span> be used.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">Native C509 certificates <span class="bcp14">MUST</span> only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID: ~oid, extensionValue: bytes / [bytes])-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
