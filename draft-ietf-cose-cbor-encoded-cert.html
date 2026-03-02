@@ -1823,7 +1823,7 @@ tag = #6
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-40.1">
-            <p id="section-3.3-40.1.1">AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.<a href="#section-3.3-40.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-40.1.1">AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.<a href="#section-3.3-40.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-41">
@@ -1834,10 +1834,10 @@ tag = #6
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-42.1">
-            <p id="section-3.3-42.1.1">AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-42.1.1">AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in <span>[<a href="#RFC8360" class="cite xref">RFC8360</a>]</span>. The extension value is encoded exactly like in the extension "AS Identifiers".<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-42.2">
-            <p id="section-3.3-42.2.1">IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR array with a CBOR uint (number of the unusedBits) and a CBOR byte string (address prefix without the unusedBits octet). Each AddressRange is encoded as a CBOR array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.<a href="#section-3.3-42.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-42.2.1">IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.<a href="#section-3.3-42.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-43">
@@ -1847,13 +1847,13 @@ tag = #6
    AddressRange = [ min: Address, max: Address ]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
-   IPAddressFamily = (AFI: uint, IPAddressChoice)
+   IPAddressFamily = (AFI: uint, SAFI: uint / null, IPAddressChoice)
    IPAddrBlocks = [ + IPAddressFamily ]
 </pre><a href="#section-3.3-43" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-44.1">
-            <p id="section-3.3-44.1.1">IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-44.1.1">IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The X.509 extension IPAddrBlocks v2 is specified in <span>[<a href="#RFC8360" class="cite xref">RFC8360</a>]</span>. The extension value is encoded exactly like in the extension "IPAddrBlocks".<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-44.2">
             <p id="section-3.3-44.2.1">Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 <span>[<a href="#RFC6962" class="cite xref">RFC6962</a>]</span>, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.<a href="#section-3.3-44.2.1" class="pilcrow">¶</a></p>
@@ -3596,8 +3596,7 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="312" y="2068">SubjectInfoAccessSyntax</text>
                   <text x="52" y="2100">32</text>
                   <text x="104" y="2100">Name:</text>
-                  <text x="228" y="2100">IP</text>
-                  <text x="280" y="2100">Resources</text>
+                  <text x="268" y="2100">IPAddrBlocks</text>
                   <text x="132" y="2116">Identifiers:</text>
                   <text x="292" y="2116">id-pe-ipAddrBlocks</text>
                   <text x="100" y="2132">OID:</text>
@@ -3614,12 +3613,14 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="420" y="2148">01</text>
                   <text x="444" y="2148">07</text>
                   <text x="120" y="2164">Comments:</text>
+                  <text x="232" y="2164">RFC</text>
+                  <text x="268" y="2164">3779</text>
                   <text x="144" y="2180">extensionValue:</text>
                   <text x="268" y="2180">IPAddrBlocks</text>
                   <text x="52" y="2212">33</text>
                   <text x="104" y="2212">Name:</text>
                   <text x="228" y="2212">AS</text>
-                  <text x="280" y="2212">Resources</text>
+                  <text x="288" y="2212">Identifiers</text>
                   <text x="132" y="2228">Identifiers:</text>
                   <text x="308" y="2228">id-pe-autonomousSysIds</text>
                   <text x="100" y="2244">OID:</text>
@@ -3636,12 +3637,13 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="420" y="2260">01</text>
                   <text x="444" y="2260">08</text>
                   <text x="120" y="2276">Comments:</text>
+                  <text x="232" y="2276">RFC</text>
+                  <text x="268" y="2276">3779</text>
                   <text x="144" y="2292">extensionValue:</text>
                   <text x="272" y="2292">ASIdentifiers</text>
                   <text x="52" y="2324">34</text>
                   <text x="104" y="2324">Name:</text>
-                  <text x="228" y="2324">IP</text>
-                  <text x="280" y="2324">Resources</text>
+                  <text x="268" y="2324">IPAddrBlocks</text>
                   <text x="332" y="2324">v2</text>
                   <text x="132" y="2340">Identifiers:</text>
                   <text x="304" y="2340">id-pe-ipAddrBlocks-v2</text>
@@ -3659,13 +3661,15 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="420" y="2372">01</text>
                   <text x="444" y="2372">1C</text>
                   <text x="120" y="2388">Comments:</text>
+                  <text x="232" y="2388">RFC</text>
+                  <text x="268" y="2388">8360</text>
                   <text x="144" y="2404">extensionValue:</text>
                   <text x="268" y="2404">IPAddrBlocks</text>
                   <text x="52" y="2436">35</text>
                   <text x="104" y="2436">Name:</text>
                   <text x="228" y="2436">AS</text>
-                  <text x="280" y="2436">Resources</text>
-                  <text x="332" y="2436">v2</text>
+                  <text x="288" y="2436">Identifiers</text>
+                  <text x="348" y="2436">v2</text>
                   <text x="132" y="2452">Identifiers:</text>
                   <text x="320" y="2452">id-pe-autonomousSysIds-v2</text>
                   <text x="100" y="2468">OID:</text>
@@ -3682,6 +3686,8 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="420" y="2484">01</text>
                   <text x="444" y="2484">1D</text>
                   <text x="120" y="2500">Comments:</text>
+                  <text x="232" y="2500">RFC</text>
+                  <text x="268" y="2500">8360</text>
                   <text x="144" y="2516">extensionValue:</text>
                   <text x="272" y="2516">ASIdentifiers</text>
                   <text x="52" y="2548">36</text>
@@ -3942,6 +3948,8 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="420" y="612">0E</text>
                   <text x="444" y="612">02</text>
                   <text x="120" y="628">Comments:</text>
+                  <text x="232" y="628">RFC</text>
+                  <text x="268" y="628">3779</text>
                   <text x="56" y="660">8</text>
                   <text x="104" y="660">Name:</text>
                   <text x="252" y="660">Resource</text>
@@ -3964,6 +3972,8 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="420" y="708">0E</text>
                   <text x="444" y="708">03</text>
                   <text x="120" y="724">Comments:</text>
+                  <text x="232" y="724">RFC</text>
+                  <text x="268" y="724">8360</text>
                   <text x="52" y="756">10</text>
                   <text x="104" y="756">Name:</text>
                   <text x="244" y="756">Remote</text>
@@ -6911,6 +6921,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <dd>
 <span class="refAuthor">Nystrom, M.</span> and <span class="refAuthor">B. Kaliski</span>, <span class="refTitle">"PKCS #10: Certification Request Syntax Specification Version 1.7"</span>, <span class="seriesInfo">RFC 2986</span>, <span class="seriesInfo">DOI 10.17487/RFC2986</span>, <time datetime="2000-11" class="refDate">November 2000</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2986">https://www.rfc-editor.org/rfc/rfc2986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC3779">[RFC3779]</dt>
+        <dd>
+<span class="refAuthor">Lynn, C.</span>, <span class="refAuthor">Kent, S.</span>, and <span class="refAuthor">K. Seo</span>, <span class="refTitle">"X.509 Extensions for IP Addresses and AS Identifiers"</span>, <span class="seriesInfo">RFC 3779</span>, <span class="seriesInfo">DOI 10.17487/RFC3779</span>, <time datetime="2004-06" class="refDate">June 2004</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3779">https://www.rfc-editor.org/rfc/rfc3779</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC3986">[RFC3986]</dt>
         <dd>
 <span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
@@ -6966,6 +6980,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="RFC8295">[RFC8295]</dt>
         <dd>
 <span class="refAuthor">Turner, S.</span>, <span class="refTitle">"EST (Enrollment over Secure Transport) Extensions"</span>, <span class="seriesInfo">RFC 8295</span>, <span class="seriesInfo">DOI 10.17487/RFC8295</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8295">https://www.rfc-editor.org/rfc/rfc8295</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8360">[RFC8360]</dt>
+        <dd>
+<span class="refAuthor">Huston, G.</span>, <span class="refAuthor">Michaelson, G.</span>, <span class="refAuthor">Martinez, C.</span>, <span class="refAuthor">Bruijnzeels, T.</span>, <span class="refAuthor">Newton, A.</span>, and <span class="refAuthor">D. Shaw</span>, <span class="refTitle">"Resource Public Key Infrastructure (RPKI) Validation Reconsidered"</span>, <span class="seriesInfo">RFC 8360</span>, <span class="seriesInfo">DOI 10.17487/RFC8360</span>, <time datetime="2018-04" class="refDate">April 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8360">https://www.rfc-editor.org/rfc/rfc8360</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8398">[RFC8398]</dt>
         <dd>
