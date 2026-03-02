@@ -45,10 +45,14 @@ author:
 normative:
   RFC2985:
   RFC2986:
+  RFC3779:
   RFC3986:
   RFC4108:
+  RFC5246:
   RFC5280:
+  RFC5246:
   RFC5958:
+  RFC6066:
   RFC6698:
   RFC6962:
   RFC7030:
@@ -56,6 +60,8 @@ normative:
   RFC7250:
   RFC8126:
   RFC8295:
+  RFC8360:
+  RFC8398:
   RFC8610:
   RFC8742:
   RFC8949:
@@ -71,6 +77,11 @@ normative:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
     target: https://secg.org/sec1-v2.pdf
     date: 2009
+
+  X.501:
+    title: "Information Technology - Open Systems Interconnection - The Directory: Models, ITU-T X.501"
+    target: https://www.itu.int/rec/T-REC-X.501/en
+    date: December 2019
 
   X.690:
     title: ASN.1 encoding rules. Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)
@@ -96,6 +107,7 @@ informative:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
   I-D.bormann-cbor-notable-tags:
+  I-D.ietf-lamps-macaddress-on:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
@@ -177,7 +189,7 @@ informative:
 
 This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 certificates. The CBOR encoding supports a large subset of RFC 5280, common certificate profiles and is extensible.
 
-Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is over the CBOR encoding instead of the DER encoding, avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 and the same reduced size compared to X.509.
+Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER-encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is over the CBOR encoding instead of the DER encoding, avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 and the same reduced size compared to X.509.
 
 The document also specifies CBOR encoded data structures for certificate (signing) requests and certificate request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698; the TLSA selectors registry is extended to include C509 certificates.
 
@@ -185,23 +197,25 @@ The document also specifies CBOR encoded data structures for certificate (signin
 
 # Introduction {#intro}
 
-One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS {{RFC9190}} {{RFC9191}} where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC {{RFC9000}} where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI {{RFC6487}} where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases. Due to the current PKI usage of DER encoded X.509 certificates, keeping compatibility with DER encoded X.509 is necessary at least for a transition period. However, the use of a more compact encoding with the Concise Binary Object Representation (CBOR) {{RFC8949}} reduces the certificate size significantly, which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The use of CBOR also reduces code complexity, code size, memory usage, and CPU usage.
+One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS {{RFC9190}} {{RFC9191}} where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC {{RFC9000}} where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI {{RFC6487}} where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases.
 
-CBOR is a data format designed for small code size and small message size. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation.
+X.509 certificates are defined with Abstract Syntax Notation One (ASN.1) and encoded using the Distinguished Encoding Rules (DER). This document specifies an alternative encoding of X.509 certificates, using the Concise Binary Object Representation (CBOR) {{RFC8949}}, initially proposed in {{X.509-IoT}}. The use of a more compact encoding  reduces the certificate size, which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The re-encoding of X.509 is called C509 and the resulting certificates are termed C509 certificates. C509 is not a general CBOR encoding for ASN.1 data structures.
 
-CBOR data items are encoded to or decoded from byte strings using a type-length-value encoding scheme, where the three highest order bits of the initial byte contain information about the major type. CBOR supports several different types of data items, in addition to integers (int, uint), simple values (e.g. null, undefined), byte strings (bytes), and text strings (text), CBOR also supports arrays \[\] of data items, maps \{\} of pairs of data items, and sequences of data items. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. We recommend implementors to get used to CBOR by using the CBOR playground {{CborMe}}.
+CBOR is a data format designed for small code size and small message size to support systems with very limited memory, processor power, and instruction sets. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans, simplifying development and debugging. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. Implementors can get familiar with CBOR by using the CBOR playground {{CborMe}}.
+
+The C509 encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline {{CAB-TLS}},  {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.  This document does not specify a certificate profile.
 
 CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments.
 
-This document specifies a CBOR encoding of X.509 certificates based on {{X.509-IoT}}. The resulting certificates are called C509 certificates. The CBOR encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline {{CAB-TLS}},  {{CAB-Code}}, RPKI {{RFC6487}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments. C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Unmanned Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS). When used to re-encode DER encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50% while also significantly reducing memory and code size compared to ASN.1. C509 is not a general CBOR ecoding for Abstract Syntax Notation One (ASN.1) data structures.
+C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Unmanned Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS). When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50%.
 
 C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see {{sigalg}}.
 
-This document does not specify a certificate profile. Two variants are defined using the same CBOR encoding and differing only in what is being signed:
+Two types of C509 are defined using the same CBOR encoding and differing only in what is being signed:
 
-1. An invertible CBOR re-encoding of DER encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER encoded X.509 certificate.
+1. An invertible CBOR re-encoding of DER-encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER-encoded X.509 certificate. Due to the widespread deployment of X.509 it is necessary to allow backward compatibility.
 
-2. Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding as in the first variant. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER encoded X.509.
+2. Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER-encoded X.509.
 
 Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
@@ -217,7 +231,7 @@ This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{R
 
 This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
-The C509 certificate can be either a CBOR re-encoding of a DER encoded X.509 certificate, in which case the signature is calculated on the DER encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
+The C509 certificate can be either a CBOR re-encoding of a DER-encoded X.509 certificate, in which case the signature is calculated on the DER-encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER-encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
 In the encoding described below, the elements in arrays are always encoded in the same order as elements of the corresponding SEQUENCE or SET in the DER encoding.
 
@@ -260,8 +274,7 @@ AlgorithmIdentifier = int / ~oid /
 Extensions = [ * Extension ] / int
 
 Extension = (( extensionID: int, extensionValue: Defined ) //
-             ( extensionID: ~oid, ? critical: true,
-              extensionValue: bytes ))
+             ( extensionID: ~oid, extensionValue: bytes / [ bytes ] ))
 
 SpecialText = text / bytes / tag
 
@@ -272,7 +285,7 @@ tag = #6
 {: sourcecode-name="c509.cddl"}
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
 
-C509 certificates are defined in terms of DER encoded {{RFC5280}} X.509 certificates as detailed in the following subsections.
+C509 certificates are defined in terms of DER-encoded X.509 certificates {{RFC5280}} as detailed in the following subsections.
 
 ### version {#version}
 
@@ -290,7 +303,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.
 
-In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any X.509 restrictions, i.e., serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
+In the former case, the absolute value of the int encodes the attribute type (see {{fig-attrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
 
 The text strings are further optimized as follows:
@@ -309,7 +322,7 @@ If the 'issuer' field is identical to the 'subject' field, e.g., in case of self
 
 The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.
 
-### subject
+### subject {#subject}
 
 The 'subject' field is encoded exactly like issuer, except that the CBOR simple value is not a valid value.
 
@@ -335,7 +348,9 @@ Each 'extensionID' in the CBOR array is encoded either as a CBOR int (see {{exty
 
 * If 'extensionID' is encoded as a CBOR int, it is followed by a CBOR item of any type except undefined (see {{CRT}}), and the sign of the int is used to encode if the extension is critical: Critical extensions are encoded with a negative sign and non-critical extensions are encoded with a positive sign. If the CBOR array contains exactly two ints and the absolute value of the first int is 2 (corresponding to keyUsage, see {{ext-encoding}}), the CBOR array is omitted and the extensions is encoded as a single CBOR int with the absolute value of the second int and the sign of the first int.
 
-* If extensionID is encoded as an unwrapped CBOR OID tag, then it is followed by an optional CBOR simple value true (0xf5) 'critical', and the DER-encoded value of the extnValue. The presence of the CBOR true value in the array indicates that the extension is critical; its absence means that the extension is non-critical (see {{fig-CBORCertCDDL}}). The extnValue OCTET STRING value field is encoded as the CBOR byte string 'extensionValue'.
+* If extensionID is encoded as an unwrapped CBOR OID tag, it is followed by the DER-encoded extnValue encoded in the following way:
+  - if the extension is non-critical, the extnValue OCTET STRING value field is encoded as a CBOR byte string;
+  - if the extension is critical, the extnValue OCTET STRING value field is encoded as a CBOR byte string and further wrapped in a CBOR array consisting of only this element.
 
 The processing of critical and non-critical extensions is specified in {{Section 4.2 of RFC5280}}.
 
@@ -358,7 +373,7 @@ In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR b
 
 For RSA public keys (rsaEncryption), the SEQUENCE and INTEGER type and length fields are omitted, and the two INTEGER value fields (modulus, exponent) are encoded as an array of two unwrapped CBOR unsigned bignum (~biguint), i.e., \[ modulus : ~biguint, exponent : ~biguint \]. If the exponent is 65537, the array and the exponent are omitted and subjectPublicKey consists of only the modulus encoded as an unwrapped CBOR unsigned bignum (~biguint).
 
-For elliptic curve public keys in Weierstraß form (id-ecPublicKey), keys may be point compressed as defined in Section 2.3.3 of {{SECG}}. Native C509 certificates with Weierstraß form keys use the octets 0x02, 0x03, and 0x04 as defined in {{SECG}}. If a DER encoded certificate with an uncompressed public key of type id-ecPublicKey is CBOR encoded with point compression, then the octet 0xfe is used instead of 0x02 to represent an even y-coordinate, and the octet 0xfd is used instead of 0x03 to represent an odd y-coordinate.
+For elliptic curve public keys in Weierstrass form (id-ecPublicKey), keys may be point compressed as defined in Section 2.3.3 of {{SECG}}. Native C509 certificates with Weierstrass form keys use the octets 0x02, 0x03, and 0x04 as defined in {{SECG}}. If a DER-encoded certificate with an uncompressed public key of type id-ecPublicKey is CBOR encoded with point compression, then the octet 0xfe is used instead of 0x02 to represent an even y-coordinate, and the octet 0xfd is used instead of 0x03 to represent an odd y-coordinate.
 
 ### Encoding of issuerSignatureValue
 
@@ -432,7 +447,10 @@ CBOR encoding of the following extension values is fully supported:
 
 CBOR encoding of the following extension values are partly supported:
 
-* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then \[ ~oid, bytes \] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in {{RFC4108}}. Only the general names in {{GN}} are supported.
+* Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress haven been given their own int; such otherName are encoded as follows:
+  - For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in {{RFC4108}}.
+  - For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in {{RFC8398}}.
+  - For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in {{I-D.ietf-lamps-macaddress-on}}.
 
 ~~~~~~~~~~~ cddl
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -448,11 +466,16 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* CRL Distribution Points (cRLDistributionPoints). If the CRL Distribution Points is a sequence of DistributionPointName, where each DistributionPointName only contains uniformResourceIdentifiers, the extension value can be CBOR encoded. extensionValue is encoded as follows:
+* CRL Distribution Points (cRLDistributionPoints). If all DistributionPoint elements contains the distributionPoint with fullName choice of uniformResourceIdentifier, optional reasons, and optional cRLIssuer with one directoryName, the extension value can be CBOR encoded. The 'reasons' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. If the CRLDistributionPoints consists of only one DistributionPointName, which in turn has only the fullName field of type CBOR text, it shall be encoded as CBOR text, otherwise as CBOR array.
 
 ~~~~~~~~~~~ cddl
-   DistributionPointName = [ 2* text ] / text
-   CRLDistributionPoints = [ + DistributionPointName ]
+   DistributionPointName = [
+     fullName  [ 2 * text ] / text,
+     reasons   uint / null,
+     cRLIssuer Name / null,
+   ]
+
+   CRLDistributionPoints = [ + DistributionPointName ] / text
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
@@ -499,7 +522,7 @@ CBOR encoding of the following extension values are partly supported:
      qualifier: text,
    )
    CertificatePolicies = [
-     + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )
+     + ( PolicyIdentifier, [ * PolicyQualifierInfo ] )
    ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -525,7 +548,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Resources (id-pe-autonomousSysIds).  If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as an uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
+* AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in {{RFC3779}}. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.
 
 ~~~~~~~~~~~ cddl
    ASIdOrRange = uint / [min:uint, max:uint]
@@ -533,23 +556,23 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* AS Resources v2 (id-pe-autonomousSysIds-v2). Encoded exactly like autonomousSysIds.
+* AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
 
-* IP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not present, the extension value can be CBOR encoded. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.
+* IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.
 
 ~~~~~~~~~~~ cddl
 
    Address = bytes
-   AddressPrefix = (Address, unusedBits: uint)
-   AddressRange = [min: Address, max: Address]
+   AddressPrefix = [ unusedBits: uint, Address ]
+   AddressRange = [ min: Address, max: Address ]
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice = [ + IPAddressOrRange ] / null
-   IPAddressFamily = (AFI: uint, IPAddressChoice)
+   IPAddressFamily = (AFI: uint, SAFI: uint / null, IPAddressChoice)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* IP Resources v2 (id-pe-ipAddrBlocks-v2). Encoded exactly like id-pe-ipAddrBlocks.
+* IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The X.509 extension IPAddrBlocks v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "IPAddrBlocks".
 
 * Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
 
@@ -591,7 +614,7 @@ Thus, the extension field of a certificate containing all of the above extension
 
 ## COSE Header Parameters {#cose-header-params}
 
-The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER encoded X.509 and use a COSE_C509 structure instead of COSE_X509.
+The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER-encoded X.509 and use a COSE_C509 structure instead of COSE_X509.
 
 The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
@@ -655,11 +678,29 @@ While this specification requires the use of Deterministically Encoded CBOR (see
 
 Where there is support for a specific and a generic CBOR encoding, the specific CBOR encoding MUST be used. For example, when there is support for specific CBOR encoding of an extension, as specified in {{ext-encoding}} and the C509 Extensions Registry, it MUST be used. In particular, when there is support for a specific otherName encoding (negative integer value in C509 General Names Registry) it MUST be used.
 
-Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID:~oid, ? critical: true, extensionValue:bytes)-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
+Native C509 certificates MUST only use specific CBOR encoded fields. However, when decoding a non-native C509 certificates, the decoder may need to support, for example, (extensionID: ~oid, extensionValue: bytes / [bytes])-encoding of an extension for which there is an (extensionID:int, extensionValue:Defined)-encoding. One reason is that the certificate was issued before the specific CBOR extension was registered.
+
+## C509 Name in TLS and DTLS
+
+In TLS and DTLS, the subject of trusted authory may be sent to the peer to help it selecting the certificate chain, as in the CertificateAuthoritiesExtension in {{RFC8446}}, in the certificate_authorities field of CertificateRequest in {{RFC5246}}, or in the TrustedAuthorities in {{RFC6066}}. For such usage in the TLS and DTLS, the C509 name is wrapped in a distinguished name {{X.501}} with exactly one RelativeDistinguishedName, which in turn contains exactly one AttributeTypeAndValue with the attribute C509Name. The attribute value is the raw byte string of the encoded C509 Name as in {{subject}}.
+
+   The attribute for C509 Name has the following structure:
+
+~~~~~~~~~~~
+   id-at-c509Name OBJECT IDENTIFIER ::=
+     { TBD30 }
+
+   c509Name ATTRIBUTE ::= {
+     WITH SYNTAX C509Name
+     SINGLE VALUE TRUE
+     ID id-at-c509Name }
+
+   C509Name ::= OCTET STRING
+~~~~~~~~~~~
 
 # C509 Certificate (Signing) Request {#CSR}
 
-This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), based on and compatible with RFC 2986 {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
+This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), based on and compatible with {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
 
 The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
@@ -697,7 +738,7 @@ The media type of C509CertificateRequest is application/cose-c509-pkcs10, see {{
 
 Different types of C509 Certificate Requests are defined, see {{csr-type}}, all using the same CBOR encoding and differing only in what is being signed and what type of C509 certificate is being requested:
 
-* The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER encoded RFC 2986 certification request, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
+* The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER-encoded certification request {{RFC2986}}, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
 
 * The requested C509 certificate in the C509 Certificate Request can either be of type 2 or of type 3, see {{type}}.
 
@@ -707,7 +748,7 @@ Combining these options enables the four instances of c509CertificateRequestType
 +-------------------------+---------------------------------------+
 |                         |             Signed object             |
 +-------------------------+---------------------------------------+
-|                         | CBOR encoded C509 | DER encoded C509  |
+|                         | CBOR encoded C509 | DER-encoded C509  |
 |                         |    Certificate    |    Certificate    |
 | Requested certificate   |      Request      |      Request      |
 +=========================+===================+===================+
@@ -774,6 +815,7 @@ PrivateKeyPossessionStatement = [
 ]
 ~~~~~~~~~~~
 
+
 ## Certificate Request Template {#CRT}
 
 Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certificate Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns an Certificate Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
@@ -787,24 +829,23 @@ C509CertificateRequestTemplate = [
    c509CertificateRequestTemplateType: int,
    c509CertificateRequestType: [+ int] / undefined,
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
-   subject: NameTemplate,
+   subject: NameTemplate / undefined,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subjectPublicKey: undefined
-   extensionsRequest: ExtensionsTemplate,
+   extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
-NameTemplate = [ * RDNAttributeTemplate ] / SpecialText
+NameTemplate = [ * RDNAttributeTemplate ] 
 
-RDNAttributeTemplate = (( attributeType: int,
-                       attributeValue: SpecialText / undefined ) //
-                     ( attributeType: ~oid,
-                       attributeValue: bytes / undefined ))
+RDNAttributeTemplate = (( attributeType: uint, minOccurs: uint, maxOccurs: uint,
+                          attributeValue: SpecialText / undefined ) //
+                        ( attributeType: ~oid, minOccurs: uint, maxOccurs: uint,
+                          attributeValue: bytes / undefined ))
 
-ExtensionsTemplate = [ * ExtensionTemplate ] / int
+ExtensionsTemplate = [ * ExtensionTemplate ]
 
-ExtensionTemplate = (( extensionID: int, extensionValue: any ) //
-                     ( extensionID: ~oid, ? critical: true,
-                       extensionValue: bytes / undefined ))
+ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) //
+                     ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
@@ -813,7 +854,11 @@ Except as specified in this section, the fields have the same encoding as the co
 
  Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the EST server expects the EST client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the EST server expects the EST client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the EST client is expected to provide an appropriate value for that field. For example, if the EST server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
+The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the server expects the client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the server expects the client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
+
+For AttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.
+
+For ExtensionTemplate, the field "optional" specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.
 
 The media type of C509CertificateRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
 
@@ -829,7 +874,7 @@ In the reverse direction, in case c509CertificateType = 3 was requested, a separ
 
 # Legacy Considerations {#dep-set}
 
-C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER encoded RFC 2986 CertificationRequestInfo and uses that with existing processes and code to produce an RFC 5280 DER encoded X.509 certificate. The DER encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
+C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER-encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER-encoded CertificationRequestInfo {{RFC2986}} and uses that with existing processes and code to produce an RFC 5280 DER-encoded X.509 certificate. The DER-encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
 
 For protocols like TLS/DTLS 1.2, where certificates are sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway, which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead. However, measured in energy, this is likely to be negligible compared to the reduced communication overhead.
 
@@ -1337,32 +1382,32 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 |       | Comments:                                                 |
 |       | extensionValue:  SubjectInfoAccessSyntax                  |
 +-------+-----------------------------------------------------------+
-|    32 | Name:            IP Resources                             |
+|    32 | Name:            IPAddrBlocks                             |
 |       | Identifiers:     id-pe-ipAddrBlocks                       |
 |       | OID:             1.3.6.1.5.5.7.1.7                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 07            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3779                                 |
 |       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
-|    33 | Name:            AS Resources                             |
+|    33 | Name:            AS Identifiers                           |
 |       | Identifiers:     id-pe-autonomousSysIds                   |
 |       | OID:             1.3.6.1.5.5.7.1.8                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 08            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3779                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
-|    34 | Name:            IP Resources v2                          |
+|    34 | Name:            IPAddrBlocks v2                          |
 |       | Identifiers:     id-pe-ipAddrBlocks-v2                    |
 |       | OID:             1.3.6.1.5.5.7.1.28                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1C            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8360                                 |
 |       | extensionValue:  IPAddrBlocks                             |
 +-------+-----------------------------------------------------------+
-|    35 | Name:            AS Resources v2                          |
+|    35 | Name:            AS Identifiers v2                        |
 |       | Identifiers:     id-pe-autonomousSysIds-v2                |
 |       | OID:             1.3.6.1.5.5.7.1.29                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 1D            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8360                                 |
 |       | extensionValue:  ASIdentifiers                            |
 +-------+-----------------------------------------------------------+
 |    36 | Name:            OCSP No Check                            |
@@ -1432,13 +1477,13 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" in t
 |       | Identifiers:     id-cp-ipAddr-asNumber                    |
 |       | OID:             1.3.6.1.5.5.7.14.2                       |
 |       | DER:             06 08 2B 06 01 05 05 07 0E 02            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3779                                 |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Resource PKI (RPKI) (Alternative)        |
 |       | Identifiers:     id-cp-ipAddr-asNumber-v2                 |
 |       | OID:             1.3.6.1.5.5.7.14.3                       |
 |       | DER:             06 08 2B 06 01 05 05 07 0E 03            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 8360                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Remote SIM Provisioning Role             |
 |       |                  Certificate Issuer                       |
@@ -1699,6 +1744,12 @@ IANA has created a new registry titled "C509 General Names Registry" in the new 
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
+|    -3 | Name:            otherName with MACAddress                |
+|       | Comments:        id-on-MACAddress                         |
+|       |                  (TBD90)                                  |
+|       |                  TBD91                                    |
+|       | Value:           bytes                                    |
++-------+-----------------------------------------------------------+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
 |       | Comments:        id-on-SmtpUTF8Mailbox                    |
 |       |                  (1.3.6.1.5.5.7.8.9)                      |
@@ -1745,7 +1796,7 @@ IANA has created a new registry titled "C509 General Names Registry" in the new 
 
 ## C509 Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm MUST be considered, see instruction in {{pkalg}}. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 <!-- NOTE: Check referenced section number hardcoded in the table. -->
 
@@ -1933,7 +1984,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" in the new re
 
 ## C509 Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "C509 Public Key Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Public Key Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value MUST be chosen equal to the value of signature algorithm, see {{sigalg}}. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1946,7 +1997,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
-|     1 | Name:        EC Public Key (Weierstraß) with secp256r1    |
+|     1 | Name:        EC Public Key (Weierstrass) with secp256r1   |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
@@ -1955,7 +2006,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-256, ansip256r1, prime256v1  |
 +-------+-----------------------------------------------------------+
-|     2 | Name:        EC Public Key (Weierstraß) with secp384r1    |
+|     2 | Name:        EC Public Key (Weierstrass) with secp384r1   |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
@@ -1964,7 +2015,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-384, ansip384r1              |
 +-------+-----------------------------------------------------------+
-|     3 | Name:        EC Public Key (Weierstraß) with secp521r1    |
+|     3 | Name:        EC Public Key (Weierstrass) with secp521r1   |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
 |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
@@ -1987,21 +2038,21 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       | DER:         30 05 06 03 2B 65 6F                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    10 | Name:        Ed25519 (Twisted Edwards)                    |
+|    12 | Name:        Ed25519 (Twisted Edwards)                    |
 |       | Identifiers: id-Ed25519, id-EdDSA25519                    |
 |       | OID:         1.3.101.112                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 70                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    11 | Name:        Ed448 (Edwards)                              |
+|    13 | Name:        Ed448 (Edwards)                              |
 |       | Identifiers: id-Ed448, id-EdDSA448                        |
 |       | OID:         1.3.101.113                                  |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 05 06 03 2B 65 71                         |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    24 | Name:        EC Public Key (Weierstraß) with              |
+|    24 | Name:        EC Public Key (Weierstrass) with             |
 |       |              brainpoolP256r1                              |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
@@ -2011,7 +2062,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              03 03 02 08 01 01 07                         |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
-|    25 | Name:        EC Public Key (Weierstraß) with              |
+|    25 | Name:        EC Public Key (Weierstrass) with             |
 |       |              brainpoolP384r1                              |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
@@ -2021,7 +2072,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              03 03 02 08 01 01 0B                         |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
-|    26 | Name:        EC Public Key (Weierstraß) with              |
+|    26 | Name:        EC Public Key (Weierstrass) with             |
 |       |              brainpoolP512r1                              |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
@@ -2031,7 +2082,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              03 03 02 08 01 01 0D                         |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
-|    27 | Name:        EC Public Key (Weierstraß) with              |
+|    27 | Name:        EC Public Key (Weierstrass) with             |
 |       |              FRP256v1                                     |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
@@ -2041,7 +2092,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              7A 01 81 5F 65 82 00 01                      |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
-|    28 | Name:        EC Public Key (Weierstraß) with              |
+|    28 | Name:        EC Public Key (Weierstrass) with             |
 |       |              sm2p256v1                                    |
 |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
 |       | OID:         1.2.840.10045.2.1                            |
@@ -2057,7 +2108,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 
 ### Suitability of different public key algorithms for use within IoT scenarios
 
-The public key algorithms registry {{pkalg}} specifies a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstraß curves) make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in {{pkalg}}.
+The public key algorithms registry {{pkalg}} specifies a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstrass curves) make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in {{pkalg}}.
 
 ## COSE Header Parameters Registry {#cose}
 
@@ -2363,7 +2414,14 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. C509 is defined in the same way as X.509, but uses a different value and instead of the DER-encoded X.509 certificate, opaque cert_data<1..2^24-1> in TLS 1.3 and opaque ASN.1Cert<1..2^24-1> in TLS 1.2, contains the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
+This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in {{Section 4.4.2 of RFC8446}}:
+
+~~~~~~~~~~~ aasvg
+case C509:
+  opaque c509_data<1..2^24-1>;
+~~~~~~~~~~~
+where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in {{Section 7.4.2 of RFC5246}}. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
+
 
 ~~~~~~~~~~~ aasvg
 +-------+------------------+-------------+--------------------------+
@@ -2375,19 +2433,18 @@ This document registers the following entry in the "TLS Certificate Types" regis
 
 ## TLSA Selectors Registry {#tlsa}
 
-This document registers the following entries in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters".
+This document registers the following entry in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters". The C509 certificate data, C509CertData, is defined in {{cose-header-params}}.
 
 ~~~~~~~~~~~ aasvg
 
-+-------+---------+--------------------------------+-------------------+
-| Value | Acronym |    Short Description           |     Reference     |
-+=======+=========+================================+===================+
-|  TBD7 |    C509 | CBOR encoded PKIX certificates | [[this document]] |
-+-------+---------+--------------------------------+-------------------+
++-------+---------+------------------------+-------------------+
+| Value | Acronym |   Short Description    |     Reference     |
++=======+=========+========================+===================+
+|  TBD7 |    C509 | C509 certificate data  | [[this document]] |
++-------+---------+------------------------+-------------------+
 ~~~~~~~~~~~
 
-The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.
-
+The TLSA selectors registry defined in {{RFC6698}} originally only applied to PKIX {{RFC5280}} certificates in DER encoding. This specification updates {{RFC6698}} to accept the use of C509 certificates.
 
 
 ## EDHOC Authentication Credential Types Registry
@@ -2567,7 +2624,7 @@ Below are the issuer key pair and the subject private key belonging to the above
 
 ~~~~~~~~~~~
 issuerPublicKeyAlgorithm :
-1 (EC Public Key (Weierstraß) with secp256r1)
+1 (EC Public Key (Weierstrass) with secp256r1)
 
 issuerPublicKey :
 h'02AE4CDB01F614DEFC7121285FDC7F5C6D1D42C95647F061BA0080DF678867845E'
