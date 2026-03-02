@@ -1050,11 +1050,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">C509 Certificates</td>
-<td class="right">February 2026</td>
+<td class="right">March 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 24 August 2026</td>
+<td class="center">Expires 3 September 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-20" class="published">20 February 2026</time>
+<time datetime="2026-03-02" class="published">2 March 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-24">24 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-09-03">3 September 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1142,7 +1142,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 September 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1464,7 +1464,7 @@ tag = #6
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
 <p id="section-3.1.4-1">In the general case, the sequence of 'Attribute' is encoded as a CBOR array consisting of Attribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each Attribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any X.509 restrictions, i.e., serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
@@ -6714,9 +6714,22 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <h3 id="name-tls-certificate-types-regis">
 <a href="#section-9.17" class="section-number selfRef">9.17. </a><a href="#name-tls-certificate-types-regis" class="section-name selfRef">TLS Certificate Types Registry</a>
         </h3>
-<p id="section-9.17-1">This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. C509 is defined in the same way as X.509, but uses a different value and instead of the DER-encoded X.509 certificate, opaque cert_data&lt;1..2^24-1&gt; in TLS 1.3 and opaque ASN.1Cert&lt;1..2^24-1&gt; in TLS 1.2, contains the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). Similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-9.17-1" class="pilcrow">¶</a></p>
+<p id="section-9.17-1">This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression <span>[<a href="#RFC8879" class="cite xref">RFC8879</a>]</span>. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in <span><a href="https://rfc-editor.org/rfc/rfc8446#section-4.4.2" class="relref">Section 4.4.2</a> of [<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>:<a href="#section-9.17-1" class="pilcrow">¶</a></p>
 <div id="section-9.17-2">
           <div class="alignLeft art-svg artwork" id="section-9.17-2.1">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="64" width="248" viewBox="0 0 248 64" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+              <g class="text">
+                <text x="20" y="36">case</text>
+                <text x="64" y="36">C509:</text>
+                <text x="44" y="52">opaque</text>
+                <text x="160" y="52">c509_data&lt;1..2^24-1&gt;;</text>
+              </g>
+            </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
+</div>
+</div>
+<p id="section-9.17-3">where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in <span><a href="https://rfc-editor.org/rfc/rfc5246#section-7.4.2" class="relref">Section 7.4.2</a> of [<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-9.17-3" class="pilcrow">¶</a></p>
+<div id="section-9.17-4">
+          <div class="alignLeft art-svg artwork" id="section-9.17-4.1">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="560" viewBox="0 0 560 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
@@ -6737,7 +6750,7 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
                 <text x="168" y="84">Certificate</text>
                 <text x="320" y="84">N</text>
               </g>
-            </svg><a href="#section-9.17-2.1" class="pilcrow">¶</a>
+            </svg><a href="#section-9.17-4.1" class="pilcrow">¶</a>
 </div>
 </div>
 </section>
@@ -6747,38 +6760,37 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <h3 id="name-tlsa-selectors-registry">
 <a href="#section-9.18" class="section-number selfRef">9.18. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
         </h3>
-<p id="section-9.18-1">This document registers the following entries in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters".<a href="#section-9.18-1" class="pilcrow">¶</a></p>
+<p id="section-9.18-1">This document registers the following entry in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters". The C509 certificate data, C509CertData, is defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-9.18-1" class="pilcrow">¶</a></p>
 <div id="section-9.18-2">
           <div class="alignLeft art-svg artwork" id="section-9.18-2.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="584" viewBox="0 0 584 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="112" width="520" viewBox="0 0 520 112" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
               <path d="M 8,32 L 8,96" fill="none" stroke="black"></path>
               <path d="M 72,32 L 72,96" fill="none" stroke="black"></path>
               <path d="M 152,32 L 152,96" fill="none" stroke="black"></path>
-              <path d="M 416,32 L 416,96" fill="none" stroke="black"></path>
-              <path d="M 576,32 L 576,96" fill="none" stroke="black"></path>
-              <path d="M 8,32 L 576,32" fill="none" stroke="black"></path>
-              <path d="M 8,62 L 576,62" fill="none" stroke="black"></path>
-              <path d="M 8,66 L 576,66" fill="none" stroke="black"></path>
-              <path d="M 8,96 L 576,96" fill="none" stroke="black"></path>
+              <path d="M 352,32 L 352,96" fill="none" stroke="black"></path>
+              <path d="M 512,32 L 512,96" fill="none" stroke="black"></path>
+              <path d="M 8,32 L 512,32" fill="none" stroke="black"></path>
+              <path d="M 8,62 L 512,62" fill="none" stroke="black"></path>
+              <path d="M 8,66 L 512,66" fill="none" stroke="black"></path>
+              <path d="M 8,96 L 512,96" fill="none" stroke="black"></path>
               <g class="text">
                 <text x="40" y="52">Value</text>
                 <text x="112" y="52">Acronym</text>
-                <text x="208" y="52">Short</text>
-                <text x="280" y="52">Description</text>
-                <text x="496" y="52">Reference</text>
+                <text x="200" y="52">Short</text>
+                <text x="272" y="52">Description</text>
+                <text x="432" y="52">Reference</text>
                 <text x="44" y="84">TBD7</text>
                 <text x="124" y="84">C509</text>
-                <text x="180" y="84">CBOR</text>
-                <text x="232" y="84">encoded</text>
-                <text x="284" y="84">PKIX</text>
-                <text x="356" y="84">certificates</text>
-                <text x="452" y="84">[[this</text>
-                <text x="524" y="84">document]]</text>
+                <text x="180" y="84">C509</text>
+                <text x="248" y="84">certificate</text>
+                <text x="316" y="84">data</text>
+                <text x="388" y="84">[[this</text>
+                <text x="460" y="84">document]]</text>
               </g>
             </svg><a href="#section-9.18-2.1" class="pilcrow">¶</a>
 </div>
 </div>
-<p id="section-9.18-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates, which are essentially CBOR encoded PKIX certificates.<a href="#section-9.18-3" class="pilcrow">¶</a></p>
+<p id="section-9.18-3">The TLSA selectors registry defined in <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> originally only applied to PKIX <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> certificates in DER encoding. This specification updates <span>[<a href="#RFC6698" class="cite xref">RFC6698</a>]</span> to accept the use of C509 certificates.<a href="#section-9.18-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="edhoc-authentication-credential-types-registry">
@@ -6845,6 +6857,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="RFC4108">[RFC4108]</dt>
         <dd>
 <span class="refAuthor">Housley, R.</span>, <span class="refTitle">"Using Cryptographic Message Syntax (CMS) to Protect Firmware Packages"</span>, <span class="seriesInfo">RFC 4108</span>, <span class="seriesInfo">DOI 10.17487/RFC4108</span>, <time datetime="2005-08" class="refDate">August 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4108">https://www.rfc-editor.org/rfc/rfc4108</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5246">[RFC5246]</dt>
+        <dd>
+<span class="refAuthor">Dierks, T.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.2"</span>, <span class="seriesInfo">RFC 5246</span>, <span class="seriesInfo">DOI 10.17487/RFC5246</span>, <time datetime="2008-08" class="refDate">August 2008</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc5246">https://www.rfc-editor.org/rfc/rfc5246</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC5280">[RFC5280]</dt>
         <dd>
