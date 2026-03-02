@@ -6,12 +6,12 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 17 August 2026                            University of Glasgow
+Expires: 3 September 2026                          University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                        13 February 2026
+                                                            2 March 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 August 2026.
+   This Internet-Draft will expire on 3 September 2026.
 
 Copyright Notice
 
@@ -578,7 +578,7 @@ Table of Contents
       follows:
 
       PolicyMappings = [
-        + (issuerDomainPolicy: ~oid, subjectDomainPolicy: ~oid)
+        + (issuerDomainPolicy: int/~oid, subjectDomainPolicy: int/~oid)
       ]
 
    *  Basic Constraints (basicConstraints).  If 'cA' = false then
@@ -1251,6 +1251,10 @@ Table of Contents
      +---------------------------------------+-----------+-----------+
      | ECDSA HTTPS Certificate Chain (2)     |      2193 |      1397 |
      +---------------------------------------+-----------+-----------+
+     | FN-DSA HTTPS Certificate Chain (2)    |      5127 |      4331 |
+     +---------------------------------------+-----------+-----------+
+     | ML-DSA HTTPS Certificate Chain (2)    |      9465 |      8669 |
+     +---------------------------------------+-----------+-----------+
      | RSA HTTPS Certificate Chain (4)       |      5175 |      3937 |
      +---------------------------------------+-----------+-----------+
 
@@ -1312,8 +1316,8 @@ Table of Contents
 
 9.  IANA Considerations
 
-   This document creates several new registries under the new heading
-   "CBOR Encoded X.509 (C509) Parameters".  For all items, the
+   This document creates several new registries in the new registry
+   group "CBOR Encoded X.509 (C509) Parameters".  For all items, the
    'Reference' field points to this document.
 
    The expert reviewers for the registries defined in this document are
@@ -1343,14 +1347,15 @@ Table of Contents
 
 9.1.  C509 Certificate Types Registry
 
-   IANA has created a new registry titled "C509 Certificate Types" under
-   the new heading "CBOR Encoded X.509 (C509) Parameters".  The fields
-   of the registry are Value, Description, and Reference, where Value is
-   an integer, and the other columns are text strings.  It is mandatory
-   to specify content in all columns.  For values in the interval [-24,
-   23], the registration procedure is "IETF Review with Expert Review".
-   For all other values, the registration procedure is "Expert Review".
-   The initial contents of the registry are (see Section 3.1.1):
+   IANA has created a new registry titled "C509 Certificate Types" in
+   the new registry group "CBOR Encoded X.509 (C509) Parameters".  The
+   fields of the registry are Value, Description, and Reference, where
+   Value is an integer, and the other columns are text strings.  It is
+   mandatory to specify content in all columns.  For values in the
+   interval [-24, 23], the registration procedure is "IETF Review with
+   Expert Review".  For all other values, the registration procedure is
+   "Expert Review".  The initial contents of the registry are (see
+   Section 3.1.1):
 
            +-------+-------------------------------------------+
            | Value | Description                               |
@@ -1369,13 +1374,13 @@ Table of Contents
 9.2.  C509 Certificate Request Types Registry
 
    IANA has created a new registry titled "C509 Certificate Request
-   Types" under the new heading "CBOR Encoded X.509 (C509) Parameters".
-   The fields of the registry are Value, Description, and Reference,
-   where Value is an integer, and the other columns are text strings.
-   All columns are mandatory.  For values in the interval [-24, 23] the
-   registration procedure is "IETF Review with Expert Review".  For all
-   other values the registration procedure is "Expert Review".  The
-   initial contents of the registry are:
+   Types" in the new registry group "CBOR Encoded X.509 (C509)
+   Parameters".  The fields of the registry are Value, Description, and
+   Reference, where Value is an integer, and the other columns are text
+   strings.  All columns are mandatory.  For values in the interval
+   [-24, 23] the registration procedure is "IETF Review with Expert
+   Review".  For all other values the registration procedure is "Expert
+   Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Description                                               |
@@ -1397,11 +1402,11 @@ Table of Contents
 
 9.3.  C509 Private Key Types Registry
 
-   IANA has created a new registry titled "C509 Private Key Types" under
-   the new heading "CBOR Encoded X.509 (C509) Parameters".  The fields
-   of the registry are Value, Comments, and subjectPrivateKey, and
-   Reference, where Value is an integer, and the other columns are text
-   strings.  All columns are mandatory.  For values in the interval
+   IANA has created a new registry titled "C509 Private Key Types" in
+   the new registry group "CBOR Encoded X.509 (C509) Parameters".  The
+   fields of the registry are Value, Comments, and subjectPrivateKey,
+   and Reference, where Value is an integer, and the other columns are
+   text strings.  All columns are mandatory.  For values in the interval
    [-24, 23] the registration procedure is "IETF Review with Expert
    Review".  For all other values the registration procedure is "Expert
    Review".  The initial contents of the registry are:
@@ -1421,7 +1426,7 @@ Table of Contents
 9.4.  C509 Certificate Request Templates Types Registry
 
    IANA has created a new registry titled "C509 Certificate Request
-   Templates Types" under the new heading "CBOR Encoded X.509 (C509)
+   Templates Types" in the new registry group "CBOR Encoded X.509 (C509)
    Parameters".  The columns of the registry are Value, Description, and
    Reference, where Value is an integer, and the other columns are text
    strings.  All columns are mandatory.  For values in the interval
@@ -1439,8 +1444,8 @@ Table of Contents
 
 9.5.  C509 Attributes Registry
 
-   IANA has created a new registry titled "C509 Attributes" under the
-   new heading "CBOR Encoded X.509 (C509) Parameters".  The fields of
+   IANA has created a new registry titled "C509 Attributes" in the new
+   registry group "CBOR Encoded X.509 (C509) Parameters".  The fields of
    the registry are Value, Name, Identifiers, OID, DER, Comments, and
    Reference, where Value is a non-negative integer, and the other
    columns are text strings.  Name and Identifiers are informal
@@ -1637,8 +1642,8 @@ Table of Contents
 
 9.6.  C509 Extensions Registry
 
-   IANA has created a new registry titled "C509 Extensions Registry"
-   under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
+   IANA has created a new registry titled "C509 Extensions Registry" in
+   the new registry group "CBOR Encoded X.509 (C509) Parameters".  The
    fields of the registry are Value, Name, Identifiers, OID, DER,
    Comments, extensionValue, and Reference, where Value is a positive
    integer, and the other columns are text strings.  The fields Name,
@@ -1841,7 +1846,7 @@ Table of Contents
 9.7.  C509 Certificate Policies Registry
 
    IANA has created a new registry titled "C509 Certificate Policies
-   Registry" under the new heading "CBOR Encoded X.509 (C509)
+   Registry" in the new registry group "CBOR Encoded X.509 (C509)
    Parameters".  The fields of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
    integer, and the other columns are text strings.  The fields Name,
@@ -1958,7 +1963,7 @@ Table of Contents
 9.8.  C509 Policies Qualifiers Registry
 
    IANA has created a new registry titled "C509 Policies Qualifiers
-   Registry" under the new heading "CBOR Encoded X.509 (C509)
+   Registry" in the new registry group "CBOR Encoded X.509 (C509)
    Parameters".  The fields of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
    integer, and the other columns are text strings.  The fields Name,
@@ -1989,7 +1994,7 @@ Table of Contents
 9.9.  C509 Information Access Registry
 
    IANA has created a new registry titled "C509 Information Access
-   Registry" under the new heading "CBOR Encoded X.509 (C509)
+   Registry" in the new registry group "CBOR Encoded X.509 (C509)
    Parameters".  The fields of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
    integer, and the other columns are text strings.  The fields Name,
@@ -2049,7 +2054,7 @@ Table of Contents
 9.10.  C509 Extended Key Usages Registry
 
    IANA has created a new registry titled "C509 Extended Key Usages
-   Registry" under the new heading "CBOR Encoded X.509 (C509)
+   Registry" in the new registry group "CBOR Encoded X.509 (C509)
    Parameters".  The fields of the registry are Value, Name,
    Identifiers, OID, DER, Comments, and Reference, where Value is an
    integer, and the other columns are text strings.  The fields Name,
@@ -2170,10 +2175,10 @@ Table of Contents
 9.11.  C509 General Names Registry
 
    IANA has created a new registry titled "C509 General Names Registry"
-   under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
-   fields of the registry are Value, General Name, and Reference, where
-   Value is an integer, and the other columns are text strings.  The
-   fields Name and Value are mandatory.  For values in the interval
+   in the new registry group "CBOR Encoded X.509 (C509) Parameters".
+   The fields of the registry are Value, General Name, and Reference,
+   where Value is an integer, and the other columns are text strings.
+   The fields Name and Value are mandatory.  For values in the interval
    [-24, 23] the registration procedure is "IETF Review with Expert
    Review".  For all other values the registration procedure is "Expert
    Review".  The initial contents of the registry are:
@@ -2226,8 +2231,8 @@ Table of Contents
 
 9.12.  C509 Signature Algorithms Registry
 
-   IANA has created a new registry titled "C509 Signature Algorithms"
-   under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
+   IANA has created a new registry titled "C509 Signature Algorithms" in
+   the new registry group "CBOR Encoded X.509 (C509) Parameters".  The
    registry includes both signature algorithms and non-signature proof-
    of-possession algorithms.  The fields of the registry are Value,
    Name, Identifiers, OID, Parameters, DER, Comments, and Reference,
@@ -2254,42 +2259,49 @@ Table of Contents
    |       | OID:         1.2.840.10045.4.1                            |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
-   |       | Comments:    Don't use. Compressed signature value        |
+   |       | Comments:    Don't use. See Section 3.2.2.                |
    +-------+-----------------------------------------------------------+
    |     0 | Name:        ECDSA with SHA-256                           |
    |       | Identifiers: ecdsa-with-SHA256                            |
    |       | OID:         1.2.840.10045.4.3.2                          |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 02          |
-   |       | Comments:    Compressed signature value                   |
+   |       | Comments:    See Section 3.2.2.                           |
    +-------+-----------------------------------------------------------+
    |     1 | Name:        ECDSA with SHA-384                           |
    |       | Identifiers: ecdsa-with-SHA384                            |
    |       | OID:         1.2.840.10045.4.3.3                          |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 03          |
-   |       | Comments:    Compressed signature value                   |
+   |       | Comments:    See Section 3.2.2.                           |
    +-------+-----------------------------------------------------------+
    |     2 | Name:        ECDSA with SHA-512                           |
    |       | Identifiers: ecdsa-with-SHA512                            |
    |       | OID:         1.2.840.10045.4.3.4                          |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 0A 06 08 2A 86 48 CE 3D 04 03 04          |
-   |       | Comments:    Compressed signature value                   |
+   |       | Comments:    See Section 3.2.2.                           |
    +-------+-----------------------------------------------------------+
    |     3 | Name:        ECDSA with SHAKE128                          |
    |       | Identifiers: id-ecdsa-with-shake128                       |
    |       | OID:         1.3.6.1.5.5.7.6.32                           |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 20          |
-   |       | Comments:    Compressed signature value                   |
+   |       | Comments:    See Section 3.2.2.                           |
    +-------+-----------------------------------------------------------+
    |     4 | Name:        ECDSA with SHAKE256                          |
    |       | Identifiers: id-ecdsa-with-shake256                       |
    |       | OID:         1.3.6.1.5.5.7.6.33                           |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 21          |
-   |       | Comments:    Compressed signature value                   |
+   |       | Comments:    See Section 3.2.2.                           |
+   +-------+-----------------------------------------------------------+
+   |     5 | Name:        Unsigned                                     |
+   |       | Identifiers: id-alg-unsigned                              |
+   |       | OID:         1.3.6.1.5.5.7.6.36                           |
+   |       | Parameters:  Absent                                       |
+   |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 24          |
+   |       | Comments:    bytes of size 0                              |
    +-------+-----------------------------------------------------------+
    |    12 | Name:        Ed25519                                      |
    |       | Identifiers: id-Ed25519, id-EdDSA25519                    |
@@ -2405,7 +2417,7 @@ Table of Contents
    |       | OID:         1.2.156.10197.1.501                          |
    |       | Parameters:  Absent                                       |
    |       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
-   |       | Comments:    Compressed signature value                   |
+   |       | Comments:    See Section 3.2.2.                           |
    +-------+-----------------------------------------------------------+
 
                     Figure 18: C509 Signature Algorithms
@@ -2413,14 +2425,14 @@ Table of Contents
 9.13.  C509 Public Key Algorithms Registry
 
    IANA has created a new registry titled "C509 Public Key Algorithms"
-   under the new heading "CBOR Encoded X.509 (C509) Parameters".  The
-   fields of the registry are Value, Name, Identifiers, OID, Parameters,
-   DER, Comments, and Reference, where Value is an integer, and the
-   other columns are text strings.  The fields Name, OID, Parameters,
-   and DER are mandatory.  For values in the interval [-24, 23] the
-   registration procedure is "IETF Review with Expert Review".  For all
-   other values the registration procedure is "Expert Review".  The
-   initial contents of the registry are:
+   in the new registry group "CBOR Encoded X.509 (C509) Parameters".
+   The fields of the registry are Value, Name, Identifiers, OID,
+   Parameters, DER, Comments, and Reference, where Value is an integer,
+   and the other columns are text strings.  The fields Name, OID,
+   Parameters, and DER are mandatory.  For values in the interval [-24,
+   23] the registration procedure is "IETF Review with Expert Review".
+   For all other values the registration procedure is "Expert Review".
+   The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | X.509 Public Key Algorithms                               |
@@ -2555,13 +2567,13 @@ Table of Contents
 9.14.  COSE Header Parameters Registry
 
    IANA is requested to assign the entries in Table 1 to the "COSE
-   Header Parameters" registry under the "CBOR Object Signing and
-   Encryption (COSE)" heading with this document as reference.
+   Header Parameters" registry in the registry group "CBOR Object
+   Signing and Encryption (COSE)" with this document as reference.
 
 9.15.  Media Type Application Registry
 
    IANA is requested to assign the following entries in to the
-   "application" registry under the "Media Types" heading with this
+   "application" registry in the registry group "Media Types" with this
    document as reference.
 
 9.15.1.  Media Type application/cose-c509-cert
@@ -2870,22 +2882,22 @@ Table of Contents
    IANA is requested to add entries for "application/cose-c509-cert",
    "application/cose-c509-pkcs10", "application/cose-c509-crtemplate",
    "application/cose-c509-privkey" and "application/cose-c509-pem" to
-   the "CoAP Content-Formats" registry under the registry group
+   the "CoAP Content-Formats" registry in the registry group
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested for the "application/cose-c509-cert"
    media type in the case when the parameter "usage" is set to "chain",
    see Section 9.15.1.
 
    IANA is requested to add entries for "application/cose-certhash" to
-   the "CoAP Content-Formats" registry under the registry group
+   the "CoAP Content-Formats" registry in the registry group
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested in the case when the parameter "usage"
    is set to "c509", see Section 9.15.1.
 
    IANA is requested to add entries for "application/cbor" to the "CoAP
-   Content-Formats" registry under the registry group "Constrained
-   RESTful Environments (CoRE) Parameters", in the case when the
-   encoding is a CBOR text string containing a URI, see [RFC3986].
+   Content-Formats" registry in the registry group "Constrained RESTful
+   Environments (CoRE) Parameters", in the case when the encoding is a
+   CBOR text string containing a URI, see [RFC3986].
 
 +----------------------+---------+------------------+-------+--------------+
 | Content              | Content | Media            | ID    | Reference    |
@@ -2923,11 +2935,11 @@ Table of Contents
 9.17.  TLS Certificate Types Registry
 
    This document registers the following entry in the "TLS Certificate
-   Types" registry under the "Transport Layer Security (TLS) Extensions"
-   heading.  The new certificate type can be used with additional TLS
-   certificate compression [RFC8879].  For TLS 1.3, the C509 certificate
-   type is defined as a new case in the CertificateEntry struct
-   specified in Section 4.4.2 of [RFC8446]:
+   Types" registry in the registry group "Transport Layer Security (TLS)
+   Extensions".  The new certificate type can be used with additional
+   TLS certificate compression [RFC8879].  For TLS 1.3, the C509
+   certificate type is defined as a new case in the CertificateEntry
+   struct specified in Section 4.4.2 of [RFC8446]:
 
    case C509:
      opaque c509_data<1..2^24-1>;
@@ -2949,9 +2961,9 @@ Table of Contents
 9.18.  TLSA Selectors Registry
 
    This document registers the following entry in the "TLSA Selectors"
-   registry under the "DNS-Based Authentication of Named Entities (DANE)
-   Parameters" heading.  The C509 certificate data, C509CertData, is
-   defined in Section 3.4.
+   registry in the registry group "DNS-Based Authentication of Named
+   Entities (DANE) Parameters".  The C509 certificate data,
+   C509CertData, is defined in Section 3.4.
 
    +-------+---------+------------------------+-------------------+
    | Value | Acronym |   Short Description    |     Reference     |
@@ -2967,15 +2979,16 @@ Table of Contents
 9.19.  EDHOC Authentication Credential Types Registry
 
    This document registers the following entry in the "EDHOC
-   Authentication Credential Types" registry under the "Ephemeral
-   Diffie-Hellman Over COSE (EDHOC)" heading.  This is used to identify
-   supported authentication credential type, for example, during
-   discovery of EDHOC resources, see [RFC9668].
+   Authentication Credential Types" registry in the registry group
+   "Ephemeral Diffie-Hellman Over COSE (EDHOC)".  This is useful to
+   identify C509 certificates as a supported authentication credential
+   type to use with EDHOC [RFC9528], for example, during discovery of
+   EDHOC resources, see [RFC9668].
 
    +-------+----------------------+-------------------+
    | Value | Description          |     Reference     |
    +=======+======================+===================+
-   | TBD14 | C509 certificate     | [[this document]] |
+   |   3   | C509 certificate     | [[this document]] |
    +-------+----------------------+-------------------+
 
 10.  References
@@ -3154,12 +3167,12 @@ Table of Contents
               ctls-10>.
 
    [I-D.ietf-uta-tls13-iot-profile]
-              Tschofenig, H., Fossati, T., and M. Richardson, "TLS/DTLS
-              1.3 Profiles for the Internet of Things", Work in
-              Progress, Internet-Draft, draft-ietf-uta-tls13-iot-
-              profile-18, 3 February 2026,
+              Tschofenig, H., Fossati, T., Richardson, M., and D.
+              Migault, "TLS/DTLS 1.3 Profiles for the Internet of
+              Things", Work in Progress, Internet-Draft, draft-ietf-uta-
+              tls13-iot-profile-19, 20 February 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-uta-
-              tls13-iot-profile-18>.
+              tls13-iot-profile-19>.
 
    [IEEE-802.1AR]
               Institute of Electrical and Electronics Engineers, "IEEE
