@@ -747,8 +747,6 @@ Note that a key agreement key pair may be used with a signature algorithm in a c
 
 The 'attributes' field specifies the attributes contained in a certificate request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
 
-Only non-negative value of attributeType is registered. In the certificate request of type 2, the 'attributeType' field SHALL contain only positive value. In the certificate request of type 3, the 'attributeType' field MAY have negative value. If negative value is allowed, the meaning of the sign of attributeType SHALL been explicitly specified.
-
 The remainder of this section specifies CBOR encoded attributes for Certificate Requests.
 
 ### Extension Request
@@ -771,8 +769,8 @@ The X.509 attribute "Statement of Possession of a Private Key" is defined in {{R
 ~~~~~~~~~~~ cddl
 PrivateKeyPossessionStatement = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber
-  cert: C509Certificate / null
+  serialNumber: CertificateSerialNumber,
+  cert: C509Certificate / null,
 ]
 ~~~~~~~~~~~
 
