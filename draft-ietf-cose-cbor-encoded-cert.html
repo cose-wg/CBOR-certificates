@@ -1681,7 +1681,18 @@ tag = #6
 <p id="section-3.3-19">CBOR encoding of the following extension values are partly supported:<a href="#section-3.3-19" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-20.1">
-            <p id="section-3.3-20.1.1">Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in <a href="#GN" class="auto internal xref">Section 9.11</a> the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see <a href="#GN" class="auto internal xref">Section 9.11</a>). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, the hardwareModuleName type of otherName has been given its own int due to its mandatory use in IEEE 802.1AR. When 'otherName + hardwareModuleName' is used, then [ ~oid, bytes ] is used to contain the pair ( hwType, hwSerialNum ) directly as specified in <span>[<a href="#RFC4108" class="cite xref">RFC4108</a>]</span>. Only the general names in <a href="#GN" class="auto internal xref">Section 9.11</a> are supported.<a href="#section-3.3-20.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-20.1.1">Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in <a href="#GN" class="auto internal xref">Section 9.11</a> the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see <a href="#GN" class="auto internal xref">Section 9.11</a>). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress haven been given their own int; such otherName are encoded as follows:<a href="#section-3.3-20.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3-20.1.2.1">
+                <p id="section-3.3-20.1.2.1.1">For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in <span>[<a href="#RFC4108" class="cite xref">RFC4108</a>]</span>.<a href="#section-3.3-20.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.3-20.1.2.2">
+                <p id="section-3.3-20.1.2.2.1">For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in <span>[<a href="#RFC8398" class="cite xref">RFC8398</a>]</span>.<a href="#section-3.3-20.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.3-20.1.2.3">
+                <p id="section-3.3-20.1.2.3.1">For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in <span>[<a href="#I-D.ietf-lamps-macaddress-on" class="cite xref">I-D.ietf-lamps-macaddress-on</a>]</span>.<a href="#section-3.3-20.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-21">
@@ -4824,54 +4835,46 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
 <figure id="figure-17">
           <div id="section-9.11-2.1">
             <div class="alignCenter art-svg artwork" id="section-9.11-2.1.1">
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="720" width="560" viewBox="0 0 560 720" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
-                <path d="M 8,32 L 8,704" fill="none" stroke="black"></path>
-                <path d="M 72,32 L 72,704" fill="none" stroke="black"></path>
-                <path d="M 552,32 L 552,704" fill="none" stroke="black"></path>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="816" width="560" viewBox="0 0 560 816" class="diagram" text-anchor="middle" font-family="monospace" font-size="13px" stroke-linecap="round">
+                <path d="M 8,32 L 8,800" fill="none" stroke="black"></path>
+                <path d="M 72,32 L 72,800" fill="none" stroke="black"></path>
+                <path d="M 552,32 L 552,800" fill="none" stroke="black"></path>
                 <path d="M 8,32 L 552,32" fill="none" stroke="black"></path>
                 <path d="M 8,62 L 552,62" fill="none" stroke="black"></path>
                 <path d="M 8,66 L 552,66" fill="none" stroke="black"></path>
                 <path d="M 8,160 L 552,160" fill="none" stroke="black"></path>
                 <path d="M 8,256 L 552,256" fill="none" stroke="black"></path>
-                <path d="M 8,320 L 552,320" fill="none" stroke="black"></path>
-                <path d="M 8,384 L 552,384" fill="none" stroke="black"></path>
-                <path d="M 8,448 L 552,448" fill="none" stroke="black"></path>
-                <path d="M 8,512 L 552,512" fill="none" stroke="black"></path>
-                <path d="M 8,576 L 552,576" fill="none" stroke="black"></path>
-                <path d="M 8,640 L 552,640" fill="none" stroke="black"></path>
-                <path d="M 8,704 L 552,704" fill="none" stroke="black"></path>
+                <path d="M 8,352 L 552,352" fill="none" stroke="black"></path>
+                <path d="M 8,416 L 552,416" fill="none" stroke="black"></path>
+                <path d="M 8,480 L 552,480" fill="none" stroke="black"></path>
+                <path d="M 8,544 L 552,544" fill="none" stroke="black"></path>
+                <path d="M 8,608 L 552,608" fill="none" stroke="black"></path>
+                <path d="M 8,672 L 552,672" fill="none" stroke="black"></path>
+                <path d="M 8,736 L 552,736" fill="none" stroke="black"></path>
+                <path d="M 8,800 L 552,800" fill="none" stroke="black"></path>
                 <g class="text">
                   <text x="40" y="52">Value</text>
                   <text x="112" y="52">General</text>
                   <text x="168" y="52">Names</text>
-                  <text x="52" y="84">-2</text>
+                  <text x="52" y="84">-3</text>
                   <text x="104" y="84">Name:</text>
                   <text x="256" y="84">otherName</text>
                   <text x="316" y="84">with</text>
-                  <text x="400" y="84">SmtpUTF8Mailbox</text>
+                  <text x="380" y="84">MACAddress</text>
                   <text x="120" y="100">Comments:</text>
-                  <text x="304" y="100">id-on-SmtpUTF8Mailbox</text>
-                  <text x="296" y="116">(1.3.6.1.5.5.7.8.9)</text>
-                  <text x="228" y="132">06</text>
-                  <text x="252" y="132">08</text>
-                  <text x="276" y="132">2B</text>
-                  <text x="300" y="132">06</text>
-                  <text x="324" y="132">01</text>
-                  <text x="348" y="132">05</text>
-                  <text x="372" y="132">05</text>
-                  <text x="396" y="132">07</text>
-                  <text x="420" y="132">08</text>
-                  <text x="444" y="132">09</text>
+                  <text x="284" y="100">id-on-MACAddress</text>
+                  <text x="248" y="116">(TBD90)</text>
+                  <text x="240" y="132">TBD91</text>
                   <text x="108" y="148">Value:</text>
-                  <text x="236" y="148">text</text>
-                  <text x="52" y="180">-1</text>
+                  <text x="240" y="148">bytes</text>
+                  <text x="52" y="180">-2</text>
                   <text x="104" y="180">Name:</text>
                   <text x="256" y="180">otherName</text>
                   <text x="316" y="180">with</text>
-                  <text x="412" y="180">hardwareModuleName</text>
+                  <text x="400" y="180">SmtpUTF8Mailbox</text>
                   <text x="120" y="196">Comments:</text>
-                  <text x="316" y="196">id-on-hardwareModuleName</text>
-                  <text x="296" y="212">(1.3.6.1.5.5.7.8.4)</text>
+                  <text x="304" y="196">id-on-SmtpUTF8Mailbox</text>
+                  <text x="296" y="212">(1.3.6.1.5.5.7.8.9)</text>
                   <text x="228" y="228">06</text>
                   <text x="252" y="228">08</text>
                   <text x="276" y="228">2B</text>
@@ -4881,57 +4884,77 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                   <text x="372" y="228">05</text>
                   <text x="396" y="228">07</text>
                   <text x="420" y="228">08</text>
-                  <text x="444" y="228">04</text>
+                  <text x="444" y="228">09</text>
                   <text x="108" y="244">Value:</text>
-                  <text x="224" y="244">[</text>
-                  <text x="256" y="244">~oid,</text>
-                  <text x="304" y="244">bytes</text>
-                  <text x="336" y="244">]</text>
-                  <text x="56" y="276">0</text>
+                  <text x="236" y="244">text</text>
+                  <text x="52" y="276">-1</text>
                   <text x="104" y="276">Name:</text>
                   <text x="256" y="276">otherName</text>
+                  <text x="316" y="276">with</text>
+                  <text x="412" y="276">hardwareModuleName</text>
                   <text x="120" y="292">Comments:</text>
-                  <text x="108" y="308">Value:</text>
-                  <text x="224" y="308">[</text>
-                  <text x="256" y="308">~oid,</text>
-                  <text x="304" y="308">bytes</text>
-                  <text x="336" y="308">]</text>
-                  <text x="56" y="340">1</text>
-                  <text x="104" y="340">Name:</text>
-                  <text x="260" y="340">rfc822Name</text>
-                  <text x="120" y="356">Comments:</text>
-                  <text x="108" y="372">Value:</text>
-                  <text x="236" y="372">text</text>
-                  <text x="56" y="404">2</text>
-                  <text x="104" y="404">Name:</text>
-                  <text x="248" y="404">dNSName</text>
-                  <text x="120" y="420">Comments:</text>
-                  <text x="108" y="436">Value:</text>
-                  <text x="236" y="436">text</text>
-                  <text x="56" y="468">4</text>
-                  <text x="104" y="468">Name:</text>
-                  <text x="272" y="468">directoryName</text>
-                  <text x="120" y="484">Comments:</text>
-                  <text x="108" y="500">Value:</text>
-                  <text x="236" y="500">Name</text>
-                  <text x="56" y="532">6</text>
-                  <text x="104" y="532">Name:</text>
-                  <text x="320" y="532">uniformResourceIdentifier</text>
-                  <text x="120" y="548">Comments:</text>
-                  <text x="108" y="564">Value:</text>
-                  <text x="236" y="564">text</text>
-                  <text x="56" y="596">7</text>
-                  <text x="104" y="596">Name:</text>
-                  <text x="256" y="596">iPAddress</text>
-                  <text x="120" y="612">Comments:</text>
-                  <text x="108" y="628">Value:</text>
-                  <text x="240" y="628">bytes</text>
-                  <text x="56" y="660">8</text>
-                  <text x="104" y="660">Name:</text>
-                  <text x="268" y="660">registeredID</text>
-                  <text x="120" y="676">Comments:</text>
-                  <text x="108" y="692">Value:</text>
-                  <text x="236" y="692">~oid</text>
+                  <text x="316" y="292">id-on-hardwareModuleName</text>
+                  <text x="296" y="308">(1.3.6.1.5.5.7.8.4)</text>
+                  <text x="228" y="324">06</text>
+                  <text x="252" y="324">08</text>
+                  <text x="276" y="324">2B</text>
+                  <text x="300" y="324">06</text>
+                  <text x="324" y="324">01</text>
+                  <text x="348" y="324">05</text>
+                  <text x="372" y="324">05</text>
+                  <text x="396" y="324">07</text>
+                  <text x="420" y="324">08</text>
+                  <text x="444" y="324">04</text>
+                  <text x="108" y="340">Value:</text>
+                  <text x="224" y="340">[</text>
+                  <text x="256" y="340">~oid,</text>
+                  <text x="304" y="340">bytes</text>
+                  <text x="336" y="340">]</text>
+                  <text x="56" y="372">0</text>
+                  <text x="104" y="372">Name:</text>
+                  <text x="256" y="372">otherName</text>
+                  <text x="120" y="388">Comments:</text>
+                  <text x="108" y="404">Value:</text>
+                  <text x="224" y="404">[</text>
+                  <text x="256" y="404">~oid,</text>
+                  <text x="304" y="404">bytes</text>
+                  <text x="336" y="404">]</text>
+                  <text x="56" y="436">1</text>
+                  <text x="104" y="436">Name:</text>
+                  <text x="260" y="436">rfc822Name</text>
+                  <text x="120" y="452">Comments:</text>
+                  <text x="108" y="468">Value:</text>
+                  <text x="236" y="468">text</text>
+                  <text x="56" y="500">2</text>
+                  <text x="104" y="500">Name:</text>
+                  <text x="248" y="500">dNSName</text>
+                  <text x="120" y="516">Comments:</text>
+                  <text x="108" y="532">Value:</text>
+                  <text x="236" y="532">text</text>
+                  <text x="56" y="564">4</text>
+                  <text x="104" y="564">Name:</text>
+                  <text x="272" y="564">directoryName</text>
+                  <text x="120" y="580">Comments:</text>
+                  <text x="108" y="596">Value:</text>
+                  <text x="236" y="596">Name</text>
+                  <text x="56" y="628">6</text>
+                  <text x="104" y="628">Name:</text>
+                  <text x="320" y="628">uniformResourceIdentifier</text>
+                  <text x="120" y="644">Comments:</text>
+                  <text x="108" y="660">Value:</text>
+                  <text x="236" y="660">text</text>
+                  <text x="56" y="692">7</text>
+                  <text x="104" y="692">Name:</text>
+                  <text x="256" y="692">iPAddress</text>
+                  <text x="120" y="708">Comments:</text>
+                  <text x="108" y="724">Value:</text>
+                  <text x="240" y="724">bytes</text>
+                  <text x="56" y="756">8</text>
+                  <text x="104" y="756">Name:</text>
+                  <text x="268" y="756">registeredID</text>
+                  <text x="120" y="772">Comments:</text>
+                  <text x="108" y="788">Value:</text>
+                  <text x="236" y="788">~oid</text>
                 </g>
               </svg><a href="#section-9.11-2.1.1" class="pilcrow">¶</a>
 </div>
@@ -6915,6 +6938,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
         <dd>
 <span class="refAuthor">Turner, S.</span>, <span class="refTitle">"EST (Enrollment over Secure Transport) Extensions"</span>, <span class="seriesInfo">RFC 8295</span>, <span class="seriesInfo">DOI 10.17487/RFC8295</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8295">https://www.rfc-editor.org/rfc/rfc8295</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8398">[RFC8398]</dt>
+        <dd>
+<span class="refAuthor">Melnikov, A., Ed.</span> and <span class="refAuthor">W. Chuang, Ed.</span>, <span class="refTitle">"Internationalized Email Addresses in X.509 Certificates"</span>, <span class="seriesInfo">RFC 8398</span>, <span class="seriesInfo">DOI 10.17487/RFC8398</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8398">https://www.rfc-editor.org/rfc/rfc8398</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8610">[RFC8610]</dt>
         <dd>
 <span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Vigano, C.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06" class="refDate">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8610">https://www.rfc-editor.org/rfc/rfc8610</a>&gt;</span>. </dd>
@@ -6983,6 +7010,10 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 <dt id="GSMA-eUICC">[GSMA-eUICC]</dt>
         <dd>
 <span class="refAuthor">GSMA</span>, <span class="refTitle">"GSMA eUICC PKI Certificate Policy Version 2.2"</span>, <time datetime="2025-01" class="refDate">January 2025</time>, <span>&lt;<a href="https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2025/01/SGP.14-v2.2.pdf">https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2025/01/SGP.14-v2.2.pdf</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-lamps-macaddress-on">[I-D.ietf-lamps-macaddress-on]</dt>
+        <dd>
+<span class="refAuthor">Housley, R.</span>, <span class="refAuthor">Bonnell, C.</span>, <span class="refAuthor">Mandel, J.</span>, <span class="refAuthor">Okubo, T.</span>, and <span class="refAuthor">M. StJohns</span>, <span class="refTitle">"Media Access Control (MAC) Addresses in X.509 Certificates"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-macaddress-on-06</span>, <time datetime="2026-02-18" class="refDate">18 February 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-macaddress-on-06">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-macaddress-on-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-lamps-rfc7030-csrattrs">[I-D.ietf-lamps-rfc7030-csrattrs]</dt>
         <dd>
