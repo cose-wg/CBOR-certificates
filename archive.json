@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-01T02:54:24.965870+00:00",
+  "timestamp": "2026-03-03T02:44:56.459810+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -66,7 +66,7 @@
     {
       "name": "waiting for input",
       "description": "",
-      "color": "d4c5f9"
+      "color": "60b716"
     },
     {
       "name": "low priority for core spec",
@@ -7611,19 +7611,19 @@
       "id": "I_kwDOCpt5cM7Mn7iR",
       "title": "How to encode the C509 name in CertificateAuthorities in TLS",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/287",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
         "xipki"
       ],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "Both TLS 1.2 (RFC 5246), TLS 1.3 (RFC 8446) and RFC 6066 requires the certificate authorities to be encoded as DER-encoded X.501 distinguished name.\n\n1. A straightforward idea is to convert the C509 name to the DER-encoded X.501 name, this however 1) requires complicated conversion between both formats, and 2) it is difficult to distinguish from the real X.501 name (it is possible to have both C.509 and X.509 certificate authorities if both certificate types are supported in one handshake).\n\n2. Another idea is to define a new Attribute Type (say id-c509-name) with the encoded C509-name binary as the content. This solves the problems above.\nFor this solution, a new OBJECT IDENTIFIER id-c509-name needs to be applied at IANA.\n\nFor better understanding, below are the snippets from the TLS specifications:\n\nSection 7.4.4 in RFC 5246:\n```\n      struct {\n          ClientCertificateType certificate_types<1..2^8-1>;\n          SignatureAndHashAlgorithm\n            supported_signature_algorithms<2^16-1>;\n          DistinguishedName certificate_authorities<0..2^16-1>;\n      } CertificateRequest;\n\ncertificate_authorities\n      A list of the distinguished names [X501] of acceptable\n      certificate_authorities, represented in DER-encoded format.  These\n      distinguished names may specify a desired distinguished name for a\n      root CA or for a subordinate CA; thus, this message can be used to\n      describe known roots as well as a desired authorization space.  If\n      the certificate_authorities list is empty, then the client MAY\n      send any certificate of the appropriate ClientCertificateType,\n      unless there is some external arrangement to the contrary.\n```\n\nSection 4.2.4 in RFC 8446:\n```\nstruct {\n          DistinguishedName authorities<3..2^16-1>;\n      } CertificateAuthoritiesExtension;\n\n   authorities:  A list of the distinguished names [X501] of acceptable\n      certificate authorities, represented in DER-encoded [X690] format.\n      These distinguished names specify a desired distinguished name for\n      a trust anchor or subordinate CA; thus, this message can be used\n      to describe known trust anchors as well as a desired authorization\n      space.\n\n   The client MAY send the \"certificate_authorities\" extension in the\n   ClientHello message.  The server MAY send it in the\n   CertificateRequest message.\n```\n\nSection 6 in RFC 6066:\n```\n   In order to indicate which CA root keys they possess, clients MAY\n   include an extension of type \"trusted_ca_keys\" in the (extended)\n   client hello.  The \"extension_data\" field of this extension SHALL\n   contain \"TrustedAuthorities\" where:\n\n      struct {\n          TrustedAuthority trusted_authorities_list<0..2^16-1>;\n      } TrustedAuthorities;\n\n      struct {\n          IdentifierType identifier_type;\n          select (identifier_type) {\n              case pre_agreed: struct {};\n              case key_sha1_hash: SHA1Hash;\n              case x509_name: DistinguishedName;\n              case cert_sha1_hash: SHA1Hash;\n          } identifier;\n      } TrustedAuthority;\n\n     ...\n-  \"x509_name\": contains the DER-encoded X.509 DistinguishedName of\n      the CA.\n```\n",
       "createdAt": "2025-09-19T06:16:09Z",
-      "updatedAt": "2026-02-02T09:34:26Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T15:16:00Z",
+      "closedAt": "2026-03-02T15:16:00Z",
       "comments": [
         {
           "author": "xipki",
@@ -7687,6 +7687,13 @@
           "body": "Register a new OID under PKIX. New IANA section 9.18.",
           "createdAt": "2026-02-02T09:34:26Z",
           "updatedAt": "2026-02-02T09:34:26Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "See PR #321 ",
+          "createdAt": "2026-03-01T12:58:29Z",
+          "updatedAt": "2026-03-01T12:58:29Z"
         }
       ]
     },
@@ -7778,7 +7785,7 @@
       "id": "I_kwDOCpt5cM7V_3mv",
       "title": "Use the same number (id) in siganture algorithm and key algorithm if the key can only be used for one signature algorithm",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/291",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -7789,8 +7796,8 @@
       ],
       "body": "In the X.509 world, many key types have the algorithm identifier to identify the key and the corresponding signature algorithm, examples are Ed25519, Ed448, ML-DSA-{44 | 65 | 87}, and the composite keys (see https://datatracker.ietf.org/doc/draft-ietf-lamps-pq-composite-sigs/).\n\nWhile registering new keys and signatures algorithms, we should use the same number for such cases.\n\nIn draft-15, Ed25519 has different numbers (10 in key, 12 in signature), and also Ed448(11 in key, and 13 in signature). If still possible, please change them to use the same value.",
       "createdAt": "2025-11-05T10:18:53Z",
-      "updatedAt": "2026-02-05T16:29:58Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T15:09:26Z",
+      "closedAt": "2026-03-02T15:09:25Z",
       "comments": [
         {
           "author": "emanjon",
@@ -7798,6 +7805,13 @@
           "body": "Agree. That should still be possible.\n\nWe should also add text in the IANA considerations that when registering algorithms they should have the same number.",
           "createdAt": "2026-01-27T10:38:15Z",
           "updatedAt": "2026-01-27T10:38:15Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed with #310",
+          "createdAt": "2026-03-02T15:09:26Z",
+          "updatedAt": "2026-03-02T15:09:26Z"
         }
       ]
     },
@@ -7806,19 +7820,19 @@
       "id": "I_kwDOCpt5cM7V_6MN",
       "title": "Extension CRLDistributionPoints: extend the definition to support cRLIssuer and reasons",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/292",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
         "xipki"
       ],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "RFC 5280 defines CRLDistributionPoints as follows:\n```\n  CRLDistributionPoints ::= SEQUENCE SIZE (1..MAX) OF DistributionPoint\n\n   DistributionPoint ::= SEQUENCE {\n        distributionPoint       [0]     DistributionPointName OPTIONAL,\n        reasons                 [1]     ReasonFlags OPTIONAL,\n        cRLIssuer               [2]     GeneralNames OPTIONAL }\n\n  DistributionPointName ::= CHOICE {\n        fullName                [0]     GeneralNames,\n        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }\n\n   ReasonFlags ::= BIT STRING {\n        unused                  (0),\n        keyCompromise           (1),\n        cACompromise            (2),\n        affiliationChanged      (3),\n        superseded              (4),\n        cessationOfOperation    (5),\n        certificateHold         (6),\n        privilegeWithdrawn      (7),\n        aACompromise            (8) }\n\n GeneralNames ::= SEQUENCE SIZE (1..MAX) OF GeneralName\n```\n\nIn draft-15, only a small subset is allowed:\n```\nCRL Distribution Points (cRLDistributionPoints).  If the CRL\n      Distribution Points is a sequence of DistributionPointName, where\n      each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as follows:\n\n      DistributionPointName = [ 2* text ] / text\n      CRLDistributionPoints = [ + DistributionPointName ]\n```\n\nThe reasons and cRLIssuer of a single DistributionPoint are not permitted. \n- field cRLIssuer\nIn some PKI environments, e.g. in the gemany ehealth network gematik, the CRLs will not be issued by the CA which issues certificates, but by some dedicated so called CRL signer. In this case, the cRLIssuer field is needed to specify the Subject of the CRL signer. \n- field reasons\nI have not see any real scenarios which use this field, but if an extra byte is needed to support this, I am for it.\n\nFinally, we have the new syntax to support cRLIssuer and reasons, and :\n\n```\nCRL Distribution Points (cRLDistributionPoints).  If each DistributionPointName only contains\n      uniformResourceIdentifiers, the extension value can be CBOR\n      encoded. extensionValue is encoded as CRLDistributionPoints, the choice 'text' shall be used\n      if the reasons and cRLIssuer are null, and the fullName contains only one text.\n\n      DistributionPointName = [\n         fullName  [2* text] / text\n         reasons   int / null,\n         cRLIssuer Name / null,\n      ]\n\n      CRLDistributionPoints = [ + DistributionPointName ] / text\n```",
       "createdAt": "2025-11-05T10:21:30Z",
-      "updatedAt": "2026-02-20T10:50:30Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T15:06:58Z",
+      "closedAt": "2026-03-02T15:06:58Z",
       "comments": []
     },
     {
@@ -7826,17 +7840,17 @@
       "id": "I_kwDOCpt5cM7V_7pQ",
       "title": "C509CertificateRequestTemplate: extend the syntax to supported undefined subject and extensions",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/293",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "In draft-15:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTemplateType: int,\n      c509CertificateRequestType: [+ int] / undefined,\n      subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subject: NameTemplate,\n      subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subjectPublicKey: undefined\n      extensionsRequest: ExtensionsTemplate,\n   ]\n```\n\nThe subject and extensionsRequest shall be extended to allow the \"undefined\" value. Then we have the new text:\n```\n   C509CertificateRequestTemplate = [\n      c509CertificateRequestTemplateType: int,\n      c509CertificateRequestType: [+ int] / undefined,\n      subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subject: NameTemplate *** / undefined ***,\n      subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,\n      subjectPublicKey: undefined\n      extensionsRequest: ExtensionsTemplate *** / undefined ***,\n   ]\n```\n",
       "createdAt": "2025-11-05T10:22:52Z",
-      "updatedAt": "2026-02-20T10:50:30Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T15:13:04Z",
+      "closedAt": "2026-03-02T15:13:04Z",
       "comments": [
         {
           "author": "xipki",
@@ -7858,6 +7872,13 @@
           "body": "@xipki to propose",
           "createdAt": "2026-02-20T10:38:15Z",
           "updatedAt": "2026-02-20T10:38:15Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed with #318",
+          "createdAt": "2026-03-02T15:13:04Z",
+          "updatedAt": "2026-03-02T15:13:04Z"
         }
       ]
     },
@@ -7894,16 +7915,26 @@
       "id": "I_kwDOCpt5cM7V__RG",
       "title": "Extension IP Resource and IP Resources v2",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/295",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "In draft-15:\n```\nIP Resources (id-pe-ipAddrBlocks).  If rdi and SAFI are not\n      present, the extension value can be CBOR encoded. Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.  With the\n      exception of the first Address, if the byte string has the same\n      length as the previous Address, the Address is encoded as a uint\n      with the difference to the previous Address.  It should be noted\n      that using address differences for compactness prevents encoding\n      an address range larger than 2^64 - 1 corresponding to the CBOR\n      integer max value.\n\n...\nIPAddressFamily = (AFI: uint, IPAddressChoice)\n...\n```\n\n1. rdi is not related here, please remove it.\n2. Add support of SAFI. SAFI represents the sub AFI, e.g. multi-case, uni-cast, and will be used in some cases.\n3. Remove the text of encoding the delta of address instead of the address value.\n\nNew text:\n```\nIP Resources (id-pe-ipAddrBlocks).  Each\n      AddressPrefix is encoded as a CBOR bytes string (without the\n      unused bits octet) followed by the number of unused bits encoded\n      as a CBOR uint.  Each AddressRange is encoded as an array of two\n      CBOR byte strings.  The unused bits for min and max are omitted,\n      but the unused bits in max IPAddress are set to one.\n\n...\nIPAddressFamily = (AFI: uint, **SAFI: uint/null**, IPAddressChoice)\n...\n\n```\n",
       "createdAt": "2025-11-05T10:26:49Z",
-      "updatedAt": "2026-01-28T12:50:40Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-03-02T19:06:48Z",
+      "closedAt": "2026-03-02T15:23:52Z",
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander This issue is not partially resolved by the PR. Shall I create a new issue for the remaining part (use absolute value instead only delta value) or re-open this one?",
+          "createdAt": "2026-03-02T19:06:38Z",
+          "updatedAt": "2026-03-02T19:06:48Z"
+        }
+      ]
     },
     {
       "number": 296,
@@ -7914,12 +7945,22 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "In draft-15:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.  With the exception of the first ASId, the ASid is encoded\n      as the difference to the previous ASid.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n\nConsider we have following AS-Identifiers (original value):\n\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: 600,\n    \u201emax\u201c: 710\n  },\n  \u201eid\u201c: 830\n]\n```\nShall we encode it as:\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: -399, // difference to the previous id 999: 600 - 999\n    \u201emax\u201c: 110, // difference to the min: 710 - 600\n  },\n  \u201eid\u201c: 120 // difference to the max of previous range: 830 - 710\n]\n```\nThis is quite complex to implement and also difficult to understand.\n\nMy suggestion is to remove \" With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.\u201c, namely with the new text as follows:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n",
       "createdAt": "2025-11-05T10:28:53Z",
-      "updatedAt": "2025-11-05T10:28:53Z",
+      "updatedAt": "2026-03-02T19:03:15Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander @emanjon I cannot find any examples containing this extension. Do you have any examples or links?",
+          "createdAt": "2026-03-02T19:03:15Z",
+          "updatedAt": "2026-03-02T19:03:15Z"
+        }
+      ]
     },
     {
       "number": 297,
@@ -7942,7 +7983,7 @@
       "id": "I_kwDOCpt5cM7WAD3E",
       "title": "Certificate Request Types: reduce the number of types",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/298",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -7953,8 +7994,8 @@
       ],
       "body": "In the draft-15, there are 4 types for the certificate request, and the following two seem to be redundant.\n- Type 1: CBOR re-encoded request to apply for C509 type 2 certificate.\n- Type 2: CBOR-encoded request to apply for X.509 certificate\n\nThese two types are not necessary and make it difficult to understand and implement. They can be implemented in other way, e.g. via different interface, here some examples:\n- https://example.org/enroll-c509-cert/via-c509type3req to replace type 1.\n- https://example.org/enroll-x509-cert/via-c509type0req to replace type 2.",
       "createdAt": "2025-11-05T10:31:54Z",
-      "updatedAt": "2026-02-05T16:03:17Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T21:50:46Z",
+      "closedAt": "2026-03-02T21:50:46Z",
       "comments": [
         {
           "author": "emanjon",
@@ -7981,10 +8022,12 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "In draft-15:\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If all\n      the SCTs are version v1 [RFC6962], and there are no SCT\n      extensions, the extension value can be CBOR encoded.  Other\n      versions of SCT are out of scope for this document.  LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      uint (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```\n\n1. typo in the text: \"the timestamp is encoded as a CBOR uint\" -> \"... a CBOR int\".\n2. Add support of extensions, and to allow the support of new timestamp versions, a new field is added. Finally we have the new text below:\n\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If\n      the SCTs have version v1 (value 0) [RFC6962], the syntax is as follows. LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      int (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        version: uint,\n        logID: bytes,\n        timestamp: int,\n        extensions: bytes\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```",
       "createdAt": "2025-11-05T10:37:16Z",
-      "updatedAt": "2026-02-03T10:05:50Z",
+      "updatedAt": "2026-03-01T13:03:43Z",
       "closedAt": null,
       "comments": [
         {
@@ -8000,6 +8043,13 @@
           "body": "For the verification of SignedCertificateTimestamp, we have to convert it back the DER-encoded SignedCertificateTimestampList. Thus the core question: do we need to define a C509 type for this extension? For me, it is better to have the DER-encoded extension in `bytes`.",
           "createdAt": "2026-02-03T09:59:13Z",
           "updatedAt": "2026-02-03T10:05:50Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "See PR #322 ",
+          "createdAt": "2026-03-01T13:03:43Z",
+          "updatedAt": "2026-03-01T13:03:43Z"
         }
       ]
     },
@@ -8092,15 +8142,15 @@
       "id": "I_kwDOCpt5cM7nkeYZ",
       "title": "Syntax definition text optimization in draft-16",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/306",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Please check the ending \",\" in the syntax definition. Some seem to be redundant.",
       "createdAt": "2026-02-02T10:14:10Z",
-      "updatedAt": "2026-02-03T12:51:53Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T21:51:14Z",
+      "closedAt": "2026-03-02T21:51:14Z",
       "comments": [
         {
           "author": "emanjon",
@@ -8116,17 +8166,17 @@
       "id": "I_kwDOCpt5cM7n06lw",
       "title": "Change syntax of data type with variable number of fields",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/308",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "I'm- Extensions\n\n  In draft -16:\n  ```\n  Extension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, ? critical: true,\n                 extensionValue: bytes ))\n\n  Extensions = [ * Extension ] / int\n  ```\n  To encode an `Extensions`, the application needs to iterate all fields to compute the total size of the cbor-array. This is complex, but is OK. But for the decoding, this is much more complex. The application cannot know the number of fields before parsing all of them. Thus it cannot use array (with fixed size) / allocate the exact size of memory in prior.\n\n  To avoid this, we could change the definition of `Extension` to follows:\n  ```\n  Extension = (( extensionID: int, extensionValue: Defined ) //\n                ( extensionID: ~oid, extensionValue: **bytes/[critical: true, bytes]**))\n\n  Extensions = [ * Extension ] / int\n  ```\n  Critical `extensionValue` with extensionID of type `~oid` will be represented as a cbor-array.\n\n- CertificatePolicies\n  In draft-16:\n  ```\n  CertificatePolicies = [\n     + ( PolicyIdentifier, ? [ + PolicyQualifierInfo ] )\n  ]\n  ```\n  shall be changed to\n  ```\n  CertificatePolicies = [\n     + ( PolicyIdentifier, [ * PolicyQualifierInfo ] )\n  ]\n  ```\n Zero occurrence of PolicyQualifierInfo is also represented as an array.\n \n- IPAddressChoice\n  In draft-16:\n  ```\n  Address = bytes\n  AddressPrefix = (Address, unusedBits: uint)\n  AddressRange = [min: Address, max: Address]\n  IPAddressOrRange = AddressPrefix / AddressRange.\n  IPAddressChoice = [ + IPAddressOrRange ] / null\n  ```\n  The `IPAddressOrRange` may contains 1 field (choice `AddressRange`) or 2 fields (choice `AddressPrefix`).\n\n  It shall be changed to\n  ```\n  Address = bytes\n  AddressPrefix = **[ unusedBits:unit, Address ]** -- changed to use array here\n  AddressRange = [min: Address, max: Address]\n  IPAddressOrRange = AddressPrefix / AddressRange\n  IPAddressChoice = [ + IPAddressOrRange ] / null\n  ``` \n \n- ExtensionsTemplate\n  In draft-16:\n  ```\n  ExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid, ? critical: true,\n                          extensionValue: bytes / undefined ))\n\n  ExtensionsTemplate = [ * ExtensionTemplate ] / int\n  ```\n  may be changed to\n  ```\n  ExtensionTemplate = (( extensionID: int, extensionValue: any ) //\n                        ( extensionID: ~oid,  extensionValue: bytes / undefined / [critical:true, bytes]))\n\n  ExtensionsTemplate = [ * ExtensionTemplate ] / int\n  ``` \n  Please refer to #293 for the discussion whether we should remove the `extensionValue` field.\n",
       "createdAt": "2026-02-03T06:22:07Z",
-      "updatedAt": "2026-02-26T17:40:54Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T15:11:32Z",
+      "closedAt": "2026-03-02T15:11:32Z",
       "comments": [
         {
           "author": "gselander",
@@ -8141,6 +8191,13 @@
           "body": "Fixed in PR #317 ",
           "createdAt": "2026-02-26T17:40:54Z",
           "updatedAt": "2026-02-26T17:40:54Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "#317 is merged",
+          "createdAt": "2026-03-02T15:11:32Z",
+          "updatedAt": "2026-03-02T15:11:32Z"
         }
       ]
     },
@@ -8149,17 +8206,17 @@
       "id": "I_kwDOCpt5cM7seOXu",
       "title": "Support for the attribute specified in RFC 9883",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/313",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "From Genart review\nhttps://www.mail-archive.com/cose@ietf.org/msg05154.html\n\n\nSection 4: It would be easy to add support for the attribute\nspecified in RFC 9883.  If ML-DSA and ML-KEM achieve wide deployment\noutside the Web PKI, support for this CSR attribute will be needed.  I do\nnot want to delay approval of this document, bit is looks like this would\nbe a straightforward addition.",
       "createdAt": "2026-02-20T08:46:29Z",
-      "updatedAt": "2026-02-20T10:50:31Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T21:24:09Z",
+      "closedAt": "2026-03-02T21:24:09Z",
       "comments": [
         {
           "author": "gselander",
@@ -8167,6 +8224,13 @@
           "body": "Propose to redefine the attribute handling of CSR.\nNew registry including this and challengePassword.\n",
           "createdAt": "2026-02-20T10:13:27Z",
           "updatedAt": "2026-02-20T10:13:27Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "See PR #320",
+          "createdAt": "2026-03-01T13:00:32Z",
+          "updatedAt": "2026-03-01T13:00:32Z"
         }
       ]
     },
@@ -8175,17 +8239,17 @@
       "id": "I_kwDOCpt5cM7sePbd",
       "title": "otherName that contains a MAC address",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/314",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "From\nhttps://www.mail-archive.com/cose@ietf.org/msg05154.html\n\nThere is an Internet-Draft for otherName that contains a MAC address\ngoing through the LAMPS WG.  Based on Section 3.1.4 that has special logic\nfor EUI-64, this may be of value to some implementers.  We can get an early\nassignment of the OID is there is interest in adding support for this new\notherName form to this document.  If so, it may deserve some language in\nSection 3.3.",
       "createdAt": "2026-02-20T08:47:46Z",
-      "updatedAt": "2026-02-20T10:50:31Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-02T15:14:05Z",
+      "closedAt": "2026-03-02T15:14:05Z",
       "comments": [
         {
           "author": "gselander",
@@ -8224,16 +8288,31 @@
       "id": "I_kwDOCpt5cM7uux2h",
       "title": "Update the range of integer for private use",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/324",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "For the figures where negative values are allowed, please change the following text\n\"Values {{{\u2265}}} 32768 are reserved for Private Use.\"\nto \n\"Values outside [-32768, 32767] are reserved for Private Use.\"",
       "createdAt": "2026-02-28T19:36:31Z",
-      "updatedAt": "2026-02-28T19:36:31Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-03-02T12:50:43Z",
+      "closedAt": "2026-03-02T12:50:43Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "x in [-32768, 32767] means 32767 \u2265 x \u2265 -32768. So  \"outside [-32768, 32767]\" excludes  -32768 and 32767.",
+          "createdAt": "2026-03-01T13:12:01Z",
+          "updatedAt": "2026-03-01T13:12:01Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Not needed.",
+          "createdAt": "2026-03-02T12:50:43Z",
+          "updatedAt": "2026-03-02T12:50:43Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -12385,24 +12464,26 @@
       "id": "PR_kwDOCpt5cM7AVTNC",
       "title": "DNSdir review",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/304",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Ted's dnsdir review resulted in a mail thread that ended here:\r\nhttps://www.mail-archive.com/cose@ietf.org/msg05162.html",
       "createdAt": "2026-01-30T08:00:38Z",
-      "updatedAt": "2026-02-14T01:56:59Z",
+      "updatedAt": "2026-03-02T14:24:16Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
+      "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "dnsdir-review",
-      "headRefOid": "6b92d242a9dc9db4e314e21e92a4bff9c2b92472",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "78bfcd64649056cbe5d32c586708aaf30cdbc7cc",
+      "closedAt": "2026-03-02T14:24:16Z",
+      "mergedAt": "2026-03-02T14:24:15Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "e7f95f00d937146b26a9b40f3eafa2216a41862c"
+      },
       "comments": [
         {
           "author": "xipki",
@@ -12410,6 +12491,13 @@
           "body": "1. Please remove \"full-qualified\", since the dNSName may also have some entries like \"*.example.org\" which is not a FQDN.\r\n2. Could we use reference to [Section 7.2 Internationalized Domain Names in GeneralName](https://datatracker.ietf.org/doc/html/rfc5280#section-7.2) instead describing the detailed format here in C509?",
           "createdAt": "2026-02-09T10:24:28Z",
           "updatedAt": "2026-02-09T10:24:28Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T12:51:48Z",
+          "updatedAt": "2026-03-02T12:51:48Z"
         }
       ],
       "reviews": [
@@ -12446,24 +12534,26 @@
       "id": "PR_kwDOCpt5cM7AadTA",
       "title": "Genart-review",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/305",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Russ' Genart review posted here:\r\nhttps://www.mail-archive.com/cose@ietf.org/msg05154.html\r\n\r\nHere is initial commit, more to follow.",
       "createdAt": "2026-01-30T14:53:34Z",
-      "updatedAt": "2026-02-03T13:47:34Z",
+      "updatedAt": "2026-03-02T15:32:51Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "46ac270081553686af9336219c4c9ea0ce6a6578",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "genart-review",
-      "headRefOid": "fd5018a542468871813d843746ae189b303c0e2a",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "5b325e7efe82b289636d7957f98ba89322e33141",
+      "closedAt": "2026-03-02T15:32:51Z",
+      "mergedAt": "2026-03-02T15:32:51Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "6f17ba9487ca155ed3de8cb007597d2dbb9c74ac"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -12478,6 +12568,13 @@
           "body": "Main thing missing are the two \"Additional Thoughts\" at the end of the review. ",
           "createdAt": "2026-02-03T13:47:34Z",
           "updatedAt": "2026-02-03T13:47:34Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This + #313 + #314 solves the Genart review.",
+          "createdAt": "2026-03-02T14:26:38Z",
+          "updatedAt": "2026-03-02T14:26:38Z"
         }
       ],
       "reviews": []
@@ -12537,24 +12634,26 @@
       "id": "PR_kwDOCpt5cM7BwuFG",
       "title": "Reduce number of certificate request types",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/309",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #298",
       "createdAt": "2026-02-05T15:40:00Z",
-      "updatedAt": "2026-02-20T09:45:03Z",
+      "updatedAt": "2026-03-02T21:34:09Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
+      "baseRefOid": "f73068afcf7135fe200cf8123db06a7be22b76bd",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "cert-req-types",
-      "headRefOid": "bc71d1fc1005eb2c12a92ed21552d6320857ca11",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "52998ad077dbadb308826c7d2d3396b15a6ea9be",
+      "closedAt": "2026-03-02T21:34:08Z",
+      "mergedAt": "2026-03-02T21:34:08Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "1bded495e361bb891efb6bdc0fbedeb7e52ccb3e"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -12569,6 +12668,34 @@
           "body": "@gselander to fix",
           "createdAt": "2026-02-20T09:45:03Z",
           "updatedAt": "2026-02-20T09:45:03Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Take out table. Don't restrict what kind of cert to return.",
+          "createdAt": "2026-03-02T12:55:32Z",
+          "updatedAt": "2026-03-02T12:55:32Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki please review",
+          "createdAt": "2026-03-02T14:56:45Z",
+          "updatedAt": "2026-03-02T14:56:45Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @xipki please review\r\n\r\nReady to merge!",
+          "createdAt": "2026-03-02T21:30:17Z",
+          "updatedAt": "2026-03-02T21:30:17Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merge conflict was resolved by keeping complementing explanations from both branches.",
+          "createdAt": "2026-03-02T21:34:01Z",
+          "updatedAt": "2026-03-02T21:34:01Z"
         }
       ],
       "reviews": [
@@ -12599,24 +12726,26 @@
       "id": "PR_kwDOCpt5cM7BxiYS",
       "title": "Align id between signature and public key algorithm",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/310",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addresses #291 ",
       "createdAt": "2026-02-05T16:29:27Z",
-      "updatedAt": "2026-02-20T14:40:22Z",
+      "updatedAt": "2026-03-02T15:05:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
+      "baseRefOid": "e7f95f00d937146b26a9b40f3eafa2216a41862c",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "align-id",
-      "headRefOid": "8870e09860b3a3545a2735ca7a11fd472d174a4f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "6a00c037af8fdc012059c44100f1c9e53a5eff2f",
+      "closedAt": "2026-03-02T15:05:50Z",
+      "mergedAt": "2026-03-02T15:05:50Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "4838445270336525ba262816f1b5714baac728e1"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -12631,6 +12760,13 @@
           "body": "@gselander to fix",
           "createdAt": "2026-02-20T09:40:01Z",
           "updatedAt": "2026-02-20T09:40:01Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T12:57:02Z",
+          "updatedAt": "2026-03-02T12:57:02Z"
         }
       ],
       "reviews": []
@@ -12647,7 +12783,7 @@
       "labels": [],
       "body": "Fix #303 ",
       "createdAt": "2026-02-08T20:53:19Z",
-      "updatedAt": "2026-02-09T09:57:36Z",
+      "updatedAt": "2026-03-02T19:29:39Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bffa8ab13faefabb1bf651a480b2a7ea0d5b7114",
@@ -12709,155 +12845,687 @@
       "id": "PR_kwDOCpt5cM7GnFDK",
       "title": "Fixed #292: Extension CRLDistributionPoints",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/316",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "extend the definition to support cRLIssuer and reasons",
       "createdAt": "2026-02-26T17:31:39Z",
-      "updatedAt": "2026-02-27T22:00:10Z",
+      "updatedAt": "2026-03-02T15:06:57Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue292-CRLDistributionPoints",
-      "headRefOid": "8cf82cfa5197f45f11d35eb26e61307c249fa709",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "49754a0e13f15df644caa7925390179bc605b1cc",
+      "closedAt": "2026-03-02T15:06:56Z",
+      "mergedAt": "2026-03-02T15:06:56Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "dee435cacd6db9f10f27831bc2a6ea5c27315d81"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T12:58:45Z",
+          "updatedAt": "2026-03-02T12:58:45Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7myNRe",
+          "commit": {
+            "abbreviatedOid": "8cf82cf"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T11:15:58Z",
+          "updatedAt": "2026-03-01T11:15:59Z",
+          "comments": [
+            {
+              "originalPosition": 11,
+              "body": "Missing komma:\n     fullName  [2* text] / text,",
+              "createdAt": "2026-03-01T11:15:59Z",
+              "updatedAt": "2026-03-01T11:15:59Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 317,
       "id": "PR_kwDOCpt5cM7GnGMq",
       "title": "Fixed 308: use fixed number of fields",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/317",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "For the Extension, CertificatePolicies, and IPAddressOrRange.",
       "createdAt": "2026-02-26T17:32:38Z",
-      "updatedAt": "2026-02-27T16:09:25Z",
+      "updatedAt": "2026-03-02T15:10:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue308-useFixedNoOfFields",
-      "headRefOid": "682e4e0eb4d635191b7ee7aab1652b8759707c8c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "41b11e6c4891399175f910aa6de2c03daf930a5a",
+      "closedAt": "2026-03-02T15:10:50Z",
+      "mergedAt": "2026-03-02T15:10:50Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "fead2a64c20b479e6ae25b7804b8c9071817d4ba"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T13:01:19Z",
+          "updatedAt": "2026-03-02T13:01:19Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7myVJI",
+          "commit": {
+            "abbreviatedOid": "682e4e0"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T11:38:34Z",
+          "updatedAt": "2026-03-01T11:38:34Z",
+          "comments": [
+            {
+              "originalPosition": 16,
+              "body": "Proposed reformulation:\n\n* If extensionID is encoded as an unwrapped CBOR OID tag, it is followed by the DER-encoded extnValue encoded in the following way:\n  *  if the extension is non-critical, the extnValue OCTET STRING value field is encoded as a CBOR byte string.\n  * if the extension is critical, the extnValue OCTET STRING value field is encoded as a CBOR byte string and further wrapped in a CBOR array consisting of only this element.",
+              "createdAt": "2026-03-01T11:38:34Z",
+              "updatedAt": "2026-03-01T11:38:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7myWfb",
+          "commit": {
+            "abbreviatedOid": "682e4e0"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T11:41:39Z",
+          "updatedAt": "2026-03-01T11:41:39Z",
+          "comments": [
+            {
+              "originalPosition": 7,
+              "body": "Add spaces in arrays for conformity:\n\n( extensionID: ~oid, extensionValue: bytes / [ bytes ] ))",
+              "createdAt": "2026-03-01T11:41:39Z",
+              "updatedAt": "2026-03-01T11:41:39Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 318,
       "id": "PR_kwDOCpt5cM7GnHDc",
       "title": "Fixed 293: extended C509CertificateRequestTemplate",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/318",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "and also removed text \"EST\".",
       "createdAt": "2026-02-26T17:33:32Z",
-      "updatedAt": "2026-02-28T11:21:47Z",
+      "updatedAt": "2026-03-02T15:12:23Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue293-C509CertificateRequestTemplate",
-      "headRefOid": "218799bf27417a379cccd251605ee5a3888a7230",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "b7c03d55e83f99d0e7e4b735a686a3e1604b2214",
+      "closedAt": "2026-03-02T15:12:22Z",
+      "mergedAt": "2026-03-02T15:12:22Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "a01aaa24e4dbaf2296e007b706d09629c0c6ab1d"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T13:04:58Z",
+          "updatedAt": "2026-03-02T13:04:58Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7myclg",
+          "commit": {
+            "abbreviatedOid": "218799b"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T11:59:53Z",
+          "updatedAt": "2026-03-01T11:59:53Z",
+          "comments": [
+            {
+              "originalPosition": 42,
+              "body": "Proposed text:\nFor ExtensionTemplate, the field 'optional' specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.",
+              "createdAt": "2026-03-01T11:59:53Z",
+              "updatedAt": "2026-03-01T11:59:53Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 319,
       "id": "PR_kwDOCpt5cM7GnHee",
       "title": "Fixed #314: added support of on-MACAddress.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/319",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-26T17:33:58Z",
-      "updatedAt": "2026-02-26T19:01:02Z",
+      "updatedAt": "2026-03-02T15:14:04Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue314-onMACAddress",
-      "headRefOid": "b5b820b325c7379941f00a75c006b5f749d4855d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "b48f9c6905679e3f9e5178d79d7765f44ad9f2e9",
+      "closedAt": "2026-03-02T15:14:03Z",
+      "mergedAt": "2026-03-02T15:14:03Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "2ef26616dc2e3ef10a19186990a90b94fdf8b129"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T13:10:32Z",
+          "updatedAt": "2026-03-02T13:10:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7myeVI",
+          "commit": {
+            "abbreviatedOid": "b5b820b"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T12:05:00Z",
+          "updatedAt": "2026-03-01T12:05:01Z",
+          "comments": [
+            {
+              "originalPosition": 25,
+              "body": "Nit:\n- For id-on-MACAddress, the value is CBOR bytes containing 6 octets ",
+              "createdAt": "2026-03-01T12:05:01Z",
+              "updatedAt": "2026-03-01T12:05:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7mytTE",
+          "commit": {
+            "abbreviatedOid": "b5b820b"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T12:46:04Z",
+          "updatedAt": "2026-03-01T12:46:04Z",
+          "comments": [
+            {
+              "originalPosition": 21,
+              "body": "Editorial:\nOLD\nthe otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress has been given its own int; for such otherName, it shall be encoded as below.\nNEW\nthe otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress have been given their own ints; such otherName are encoded as follows:\n\n(I think you are right that this is redundant:\n\"Only the general names in {{GN}} are supported.\")",
+              "createdAt": "2026-03-01T12:46:04Z",
+              "updatedAt": "2026-03-01T12:46:04Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 320,
       "id": "PR_kwDOCpt5cM7GnKq2",
       "title": "Change the syntax of CertificateRequest to use attributes instead extensionsRequest",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/320",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- Moved the ChallengePassword from Extension to Attribute\r\n- Added support of RFC 9833 attribute PrivateKeyPossessionStatement\r\n- Fixed text corresponding to the Figures",
       "createdAt": "2026-02-26T17:37:09Z",
-      "updatedAt": "2026-02-28T19:37:28Z",
+      "updatedAt": "2026-03-02T21:24:08Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
+      "baseRefOid": "6f17ba9487ca155ed3de8cb007597d2dbb9c74ac",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "dedicateAttributesFieldInCSR",
-      "headRefOid": "2ea018fc255fef211e6656b3d901989ab4825459",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "8a71842d0ca9f85c23dc99ef8ae9b7eee09b6257",
+      "closedAt": "2026-03-02T21:24:08Z",
+      "mergedAt": "2026-03-02T21:24:08Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "e28215dbf9a9cd17d4d51b4c6be4f90711cb8193"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Change Attribute to CRAttribute. Then ready to merge.",
+          "createdAt": "2026-03-02T14:03:39Z",
+          "updatedAt": "2026-03-02T14:03:39Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I try to merge despite the failed check, probably a whitespace.",
+          "createdAt": "2026-03-02T21:23:59Z",
+          "updatedAt": "2026-03-02T21:23:59Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7mzAH1",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T13:35:55Z",
+          "updatedAt": "2026-03-01T13:35:55Z",
+          "comments": [
+            {
+              "originalPosition": 72,
+              "body": "Proposal:\nOLD\nThis documents specifies the following attributes.\nNEW\nThe remainder of this section specifies CBOR encoded attributes for Certificate Requests.",
+              "createdAt": "2026-03-01T13:35:55Z",
+              "updatedAt": "2026-03-01T13:42:12Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7mzBHo",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T13:38:32Z",
+          "updatedAt": "2026-03-01T13:38:32Z",
+          "comments": [
+            {
+              "originalPosition": 82,
+              "body": "Clarify \"alternative 0\"",
+              "createdAt": "2026-03-01T13:38:32Z",
+              "updatedAt": "2026-03-01T13:38:32Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7mzCRV",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T13:41:33Z",
+          "updatedAt": "2026-03-01T13:41:33Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "Why was this preferred instead of keeping \"Attribute\", and introduce \"CSRAttribute\" in Certificate Request?",
+              "createdAt": "2026-03-01T13:41:33Z",
+              "updatedAt": "2026-03-01T13:41:33Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7mzEh8",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T13:46:57Z",
+          "updatedAt": "2026-03-01T13:46:58Z",
+          "comments": [
+            {
+              "originalPosition": 144,
+              "body": "The text talks about attributeValue, the table uses the term extensionValue.",
+              "createdAt": "2026-03-01T13:46:58Z",
+              "updatedAt": "2026-03-01T13:47:23Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7mzFUB",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T13:49:30Z",
+          "updatedAt": "2026-03-01T13:49:30Z",
+          "comments": [
+            {
+              "originalPosition": 166,
+              "body": "One misplaced row separator, should be between 0 and 1.",
+              "createdAt": "2026-03-01T13:49:30Z",
+              "updatedAt": "2026-03-01T13:49:30Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7mzGeb",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T13:52:05Z",
+          "updatedAt": "2026-03-01T13:52:06Z",
+          "comments": [
+            {
+              "originalPosition": 182,
+              "body": "Why is reference removed? \n(Similar for later registries.)",
+              "createdAt": "2026-03-01T13:52:06Z",
+              "updatedAt": "2026-03-01T13:56:01Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m1e2D",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T17:17:38Z",
+          "updatedAt": "2026-03-01T17:17:38Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "The attribute here in CSR is the general Attribute, which may be used otherwise. Where the attribute in Name are only related to RDN / name. So we should use Attribute here.",
+              "createdAt": "2026-03-01T17:17:38Z",
+              "updatedAt": "2026-03-01T17:17:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m1gN9",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T17:23:45Z",
+          "updatedAt": "2026-03-01T17:23:45Z",
+          "comments": [
+            {
+              "originalPosition": 82,
+              "body": "Fixed in the next commit.",
+              "createdAt": "2026-03-01T17:23:45Z",
+              "updatedAt": "2026-03-01T17:23:46Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m1gRl",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T17:24:00Z",
+          "updatedAt": "2026-03-01T17:24:00Z",
+          "comments": [
+            {
+              "originalPosition": 144,
+              "body": "Fixed in the next commit.",
+              "createdAt": "2026-03-01T17:24:00Z",
+              "updatedAt": "2026-03-01T17:24:00Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m1gbP",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T17:24:44Z",
+          "updatedAt": "2026-03-01T17:24:44Z",
+          "comments": [
+            {
+              "originalPosition": 166,
+              "body": "Fixed in the next commit.",
+              "createdAt": "2026-03-01T17:24:44Z",
+              "updatedAt": "2026-03-01T17:24:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m1gns",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T17:25:45Z",
+          "updatedAt": "2026-03-01T17:25:45Z",
+          "comments": [
+            {
+              "originalPosition": 182,
+              "body": "There is no \"Reference\" field in the Figure / Table.",
+              "createdAt": "2026-03-01T17:25:45Z",
+              "updatedAt": "2026-03-01T17:25:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m2THB",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T18:10:24Z",
+          "updatedAt": "2026-03-01T18:10:25Z",
+          "comments": [
+            {
+              "originalPosition": 182,
+              "body": "In the beginning of section 9 it is stated: \"For all items, the 'Reference' field points to this document.\" Also, the Reference field is needed for subsequent registrations. Please re-insert it.",
+              "createdAt": "2026-03-01T18:10:24Z",
+              "updatedAt": "2026-03-01T18:10:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m2bNj",
+          "commit": {
+            "abbreviatedOid": "2ea018f"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T18:18:53Z",
+          "updatedAt": "2026-03-01T18:18:53Z",
+          "comments": [
+            {
+              "originalPosition": 182,
+              "body": "In the old text, there was no field 'Reference'. We need a new PR for adding this field.",
+              "createdAt": "2026-03-01T18:18:53Z",
+              "updatedAt": "2026-03-01T18:19:07Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m2ePz",
+          "commit": {
+            "abbreviatedOid": "81bb1b0"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T18:22:03Z",
+          "updatedAt": "2026-03-01T18:22:03Z",
+          "comments": [
+            {
+              "originalPosition": 91,
+              "body": "Nits:\nOLD\nas defined in Section 9.1. in {{ I-D.bormann-cbor-notable-tags}}).  All other string types are not supported.\nNEW\nas defined in {{Section 9.1 in I-D.bormann-cbor-notable-tags}}).  No other string types are supported.",
+              "createdAt": "2026-03-01T18:22:03Z",
+              "updatedAt": "2026-03-01T18:22:03Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m2ipt",
+          "commit": {
+            "abbreviatedOid": "81bb1b0"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T18:29:20Z",
+          "updatedAt": "2026-03-01T18:29:20Z",
+          "comments": [
+            {
+              "originalPosition": 182,
+              "body": "It is fine by IANA to omit the field \"Reference\" from the table but keep it in the list of fields. They understand how to use it, and it is redundant to fill in the reference to this document.",
+              "createdAt": "2026-03-01T18:29:20Z",
+              "updatedAt": "2026-03-01T18:29:21Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m3ArN",
+          "commit": {
+            "abbreviatedOid": "81bb1b0"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T19:02:50Z",
+          "updatedAt": "2026-03-01T19:02:50Z",
+          "comments": [
+            {
+              "originalPosition": 91,
+              "body": "This will not work. Invalid reference.",
+              "createdAt": "2026-03-01T19:02:50Z",
+              "updatedAt": "2026-03-01T19:02:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7m3HD6",
+          "commit": {
+            "abbreviatedOid": "81bb1b0"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-01T19:10:54Z",
+          "updatedAt": "2026-03-01T19:10:55Z",
+          "comments": [
+            {
+              "originalPosition": 91,
+              "body": "Sorry, should be 'of': \r\nNEW2\r\nas defined in {{Section 9.1 of I-D.bormann-cbor-notable-tags}}). No other string types are supported.",
+              "createdAt": "2026-03-01T19:10:54Z",
+              "updatedAt": "2026-03-01T19:10:55Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 321,
       "id": "PR_kwDOCpt5cM7Gn-aU",
       "title": "Fixed #287: specified the encoding of C509 name in TLS / DTLS.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/321",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-02-26T18:30:05Z",
-      "updatedAt": "2026-02-27T06:59:50Z",
+      "updatedAt": "2026-03-02T15:15:59Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue287-name-in-tls",
       "headRefOid": "96845f4c06edf6a1e44fae6ab0b0fbb318bfbe69",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-03-02T15:15:58Z",
+      "mergedAt": "2026-03-02T15:15:58Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "41a145dfbdb664c3e0338e3cdf76049450c4854c"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ready to merge",
+          "createdAt": "2026-03-02T13:14:27Z",
+          "updatedAt": "2026-03-02T13:14:27Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -12872,7 +13540,7 @@
       "labels": [],
       "body": "To accelerate the process, I proposed this PR before discussion.",
       "createdAt": "2026-02-26T22:17:33Z",
-      "updatedAt": "2026-02-26T22:17:34Z",
+      "updatedAt": "2026-03-02T20:59:34Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
@@ -12883,7 +13551,29 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "First need to update the examples and table.",
+          "createdAt": "2026-03-02T13:16:56Z",
+          "updatedAt": "2026-03-02T13:34:18Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Taking the example in the annex (CAB ECDSA):\r\n\r\n- If encoded as simple bytes, we need 246 bytes for the extension value:\r\n\r\n```\r\n 777:     58 F4          # value=byte[244]\r\n 779:       00F2007700F65C942FD1773022145418083094568EE34D131933BFDF\r\n 807:       0C2F200BCC4EF164E300000174E5AC71130000040300483046022100\r\n 835:       8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FE\r\n 863:       DE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BA\r\n 891:       AEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456\r\n 919:       E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000\r\n 947:       040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007\r\n 975:       564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A\r\n1003:       2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6\r\n```\r\n\r\n- If as in draft-16 (relative time stamp compared to NotBefore, without support of version and versions), we need 209 bytes\r\n\r\n```\r\n777:     88             # value=array[8]\r\n                           # SignedCertificateTimestamp[0]\r\n 778:         58 20          # logID=byte[32]\r\n 780:           F65C942FD1773022145418083094568EE34D131933BFDF0C2F20\r\n 806:           0BCC4EF164E3\r\n 812:         19 06B3        # timestamp=1715\r\n 815:         00             # sigAlg=0: ecdsa-with-sha256\r\n 816:         58 40          # sigValue=byte[64]\r\n 818:           8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DEC\r\n 844:           A6FEDE1FE90FBCA2254366C19A2691C47A00B5B653ABBD44C2F8\r\n 870:           BAAEF4D2DAF2527CE6454995\r\n                           # SignedCertificateTimestamp[1]\r\n 882:         58 20          # logID=byte[32]\r\n 884:           5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B2\r\n 910:           5EE6F6C70ECA\r\n 916:         19 07DC        # timestamp=2012\r\n 919:         00             # sigAlg=0: ecdsa-with-sha256\r\n 920:         58 40          # sigValue=byte[64]\r\n 922:           A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F5\r\n 948:           96DC6B28726DFC91EAED02168866054EE18A2E5346C4CC51FEB3\r\n 974:           FA10A91D2EDBF99125F86CE6\r\n 986\r\n```\r\n- If with the support of version and extension, still use relative timestamp, we need 209 + 2 = 211 bytes\r\n- If without the support of version and extension, but use absolute timstamp, we need 209 + 2 * 6 = 221 bytes\r\n- If with the support of version and extension, and use absolute timstamp, we need 211 + 2 * 6 = 223 bytes\r\n",
+          "createdAt": "2026-03-02T17:12:34Z",
+          "updatedAt": "2026-03-02T17:12:34Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "As I understood, we should meet and discuss this before merging, so this will not go into -17.",
+          "createdAt": "2026-03-02T20:59:34Z",
+          "updatedAt": "2026-03-02T20:59:34Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -12891,25 +13581,42 @@
       "id": "PR_kwDOCpt5cM7GweFu",
       "title": "Fixed #295, #296 and renaming",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/323",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fixed #295, #296, and renamed the extensions to match the X.509 RFC 3779 and 8360:\r\n- renamed \"AS Resources [v2]\" to \"AS Identifiers [v2]\"\r\n- renamed \"IP Resources [v2] to \"IPAddrBlocks [v2]\"\r\n\r\nI provided this PR before discussion to accelerate the process.",
       "createdAt": "2026-02-27T07:58:09Z",
-      "updatedAt": "2026-02-27T07:58:46Z",
+      "updatedAt": "2026-03-02T15:23:51Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
+      "baseRefOid": "41a145dfbdb664c3e0338e3cdf76049450c4854c",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue295-296-RPKI",
-      "headRefOid": "da79020bf83e2250fc2768b75f0c3d49646d7aa2",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "16ec4b651afc2f2fd33f4d6dbf14296e0e64bda5",
+      "closedAt": "2026-03-02T15:23:51Z",
+      "mergedAt": "2026-03-02T15:23:51Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "c33aaf171f918cb66a50eb1f30054e835919b107"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Revert and merge name changes",
+          "createdAt": "2026-03-02T13:29:06Z",
+          "updatedAt": "2026-03-02T13:29:06Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Revert and merge name changes\r\n\r\nChanges reverted",
+          "createdAt": "2026-03-02T14:58:49Z",
+          "updatedAt": "2026-03-02T14:58:49Z"
+        }
+      ],
       "reviews": []
     }
   ]
