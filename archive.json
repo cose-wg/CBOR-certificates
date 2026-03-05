@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-03T02:44:56.459810+00:00",
+  "timestamp": "2026-03-05T02:40:43.941646+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7939,7 +7939,7 @@
     {
       "number": 296,
       "id": "I_kwDOCpt5cM7WABJ7",
-      "title": "Extension AS Resources and AS Resources v2: use the absolute value instead delta one",
+      "title": "Extension AS Identifiers and AS Identifiers v2: use the absolute value instead delta one",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/296",
       "state": "OPEN",
       "author": "xipki",
@@ -7950,7 +7950,7 @@
       ],
       "body": "In draft-15:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.  With the exception of the first ASId, the ASid is encoded\n      as the difference to the previous ASid.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n\nConsider we have following AS-Identifiers (original value):\n\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: 600,\n    \u201emax\u201c: 710\n  },\n  \u201eid\u201c: 830\n]\n```\nShall we encode it as:\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: -399, // difference to the previous id 999: 600 - 999\n    \u201emax\u201c: 110, // difference to the min: 710 - 600\n  },\n  \u201eid\u201c: 120 // difference to the max of previous range: 830 - 710\n]\n```\nThis is quite complex to implement and also difficult to understand.\n\nMy suggestion is to remove \" With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.\u201c, namely with the new text as follows:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n",
       "createdAt": "2025-11-05T10:28:53Z",
-      "updatedAt": "2026-03-02T19:03:15Z",
+      "updatedAt": "2026-03-03T10:10:11Z",
       "closedAt": null,
       "comments": [
         {
@@ -8027,7 +8027,7 @@
       ],
       "body": "In draft-15:\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If all\n      the SCTs are version v1 [RFC6962], and there are no SCT\n      extensions, the extension value can be CBOR encoded.  Other\n      versions of SCT are out of scope for this document.  LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      uint (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```\n\n1. typo in the text: \"the timestamp is encoded as a CBOR uint\" -> \"... a CBOR int\".\n2. Add support of extensions, and to allow the support of new timestamp versions, a new field is added. Finally we have the new text below:\n\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If\n      the SCTs have version v1 (value 0) [RFC6962], the syntax is as follows. LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      int (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        version: uint,\n        logID: bytes,\n        timestamp: int,\n        extensions: bytes\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```",
       "createdAt": "2025-11-05T10:37:16Z",
-      "updatedAt": "2026-03-01T13:03:43Z",
+      "updatedAt": "2026-03-03T10:34:07Z",
       "closedAt": null,
       "comments": [
         {
@@ -8040,9 +8040,9 @@
         {
           "author": "xipki",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "For the verification of SignedCertificateTimestamp, we have to convert it back the DER-encoded SignedCertificateTimestampList. Thus the core question: do we need to define a C509 type for this extension? For me, it is better to have the DER-encoded extension in `bytes`.",
+          "body": "For the verification of SignedCertificateTimestamp, we have to convert it back the TLS/DER-encoded SignedCertificateTimestampList. Thus the core question: do we need to define a C509 type for this extension? For me, it is better to have the TLS/DER-encoded extension in `bytes`.",
           "createdAt": "2026-02-03T09:59:13Z",
-          "updatedAt": "2026-02-03T10:05:50Z"
+          "updatedAt": "2026-03-03T10:32:45Z"
         },
         {
           "author": "gselander",
@@ -8050,6 +8050,13 @@
           "body": "See PR #322 ",
           "createdAt": "2026-03-01T13:03:43Z",
           "updatedAt": "2026-03-01T13:03:43Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Taking the example in the annex (CAB ECDSA):\n\n- If encoded as simple bytes, we need 246 bytes for the extension value:\n\n```\n 777:     58 F4          # value=byte[244]\n 779:       00F2007700F65C942FD1773022145418083094568EE34D131933BFDF\n 807:       0C2F200BCC4EF164E300000174E5AC71130000040300483046022100\n 835:       8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FE\n 863:       DE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BA\n 891:       AEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456\n 919:       E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000\n 947:       040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007\n 975:       564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A\n1003:       2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6\n```\n\n- If as in draft-17 (relative time stamp compared to certificate's NotBefore, without support of version and versions), we need 209 bytes\n\n```\n777:     88             # value=array[8]\n                           # SignedCertificateTimestamp[0]\n 778:         58 20          # logID=byte[32]\n 780:           F65C942FD1773022145418083094568EE34D131933BFDF0C2F20\n 806:           0BCC4EF164E3\n 812:         19 06B3        # timestamp=1715\n 815:         00             # sigAlg=0: ecdsa-with-sha256\n 816:         58 40          # sigValue=byte[64]\n 818:           8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DEC\n 844:           A6FEDE1FE90FBCA2254366C19A2691C47A00B5B653ABBD44C2F8\n 870:           BAAEF4D2DAF2527CE6454995\n                           # SignedCertificateTimestamp[1]\n 882:         58 20          # logID=byte[32]\n 884:           5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B2\n 910:           5EE6F6C70ECA\n 916:         19 07DC        # timestamp=2012\n 919:         00             # sigAlg=0: ecdsa-with-sha256\n 920:         58 40          # sigValue=byte[64]\n 922:           A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F5\n 948:           96DC6B28726DFC91EAED02168866054EE18A2E5346C4CC51FEB3\n 974:           FA10A91D2EDBF99125F86CE6\n 986\n```\n- If with the support of version and extension, still use relative timestamp, we need 209 + 2 = 211 bytes\n- If without the support of version and extension, but use absolute timstamp, we need 209 + 2 * 6 = 221 bytes\n- If with the support of version and extension, and use absolute timstamp, we need 211 + 2 * 6 = 223 bytes\n- If with the support of version and extension, and use absolute timstamp for the first, and others with relative timestamp, we need 211 + 6 = 217 bytes\n",
+          "createdAt": "2026-03-03T10:34:06Z",
+          "updatedAt": "2026-03-03T10:34:06Z"
         }
       ]
     },
@@ -8311,6 +8318,30 @@
           "body": "Not needed.",
           "createdAt": "2026-03-02T12:50:43Z",
           "updatedAt": "2026-03-02T12:50:43Z"
+        }
+      ]
+    },
+    {
+      "number": 325,
+      "id": "I_kwDOCpt5cM7vXr9P",
+      "title": "Extension IPAddrBlocks and IPAddrBlocks v2: use the absolute value instead delta one",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/325",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In draft -17:\n\n```\nIPAddrBlocks (id-pe-ipAddrBlocks).  ... With the exception of the first\n      Address, if the byte string has the same length as the previous\n      Address, the Address is encoded as a uint with the difference to\n      the previous Address.  It should be noted that using address\n      differences for compactness prevents encoding an address range\n      larger than 2^64 - 1 corresponding to the CBOR integer max value.\n```\n\nUsing delta value (difference to the previous Address) makes the implementation more complicated. And as mentioned in the text, this has limitation of the IP address that could be contained in a C509 certificate.\n\nMy suggestion is to use the absolute value. ",
+      "createdAt": "2026-03-03T10:43:30Z",
+      "updatedAt": "2026-03-03T10:44:13Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This issue covers an subset of the closed #295.",
+          "createdAt": "2026-03-03T10:44:13Z",
+          "updatedAt": "2026-03-03T10:44:13Z"
         }
       ]
     }
@@ -13540,7 +13571,7 @@
       "labels": [],
       "body": "To accelerate the process, I proposed this PR before discussion.",
       "createdAt": "2026-02-26T22:17:33Z",
-      "updatedAt": "2026-03-02T20:59:34Z",
+      "updatedAt": "2026-03-03T10:23:22Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
@@ -13562,9 +13593,9 @@
         {
           "author": "xipki",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "Taking the example in the annex (CAB ECDSA):\r\n\r\n- If encoded as simple bytes, we need 246 bytes for the extension value:\r\n\r\n```\r\n 777:     58 F4          # value=byte[244]\r\n 779:       00F2007700F65C942FD1773022145418083094568EE34D131933BFDF\r\n 807:       0C2F200BCC4EF164E300000174E5AC71130000040300483046022100\r\n 835:       8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FE\r\n 863:       DE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BA\r\n 891:       AEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456\r\n 919:       E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000\r\n 947:       040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007\r\n 975:       564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A\r\n1003:       2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6\r\n```\r\n\r\n- If as in draft-16 (relative time stamp compared to NotBefore, without support of version and versions), we need 209 bytes\r\n\r\n```\r\n777:     88             # value=array[8]\r\n                           # SignedCertificateTimestamp[0]\r\n 778:         58 20          # logID=byte[32]\r\n 780:           F65C942FD1773022145418083094568EE34D131933BFDF0C2F20\r\n 806:           0BCC4EF164E3\r\n 812:         19 06B3        # timestamp=1715\r\n 815:         00             # sigAlg=0: ecdsa-with-sha256\r\n 816:         58 40          # sigValue=byte[64]\r\n 818:           8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DEC\r\n 844:           A6FEDE1FE90FBCA2254366C19A2691C47A00B5B653ABBD44C2F8\r\n 870:           BAAEF4D2DAF2527CE6454995\r\n                           # SignedCertificateTimestamp[1]\r\n 882:         58 20          # logID=byte[32]\r\n 884:           5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B2\r\n 910:           5EE6F6C70ECA\r\n 916:         19 07DC        # timestamp=2012\r\n 919:         00             # sigAlg=0: ecdsa-with-sha256\r\n 920:         58 40          # sigValue=byte[64]\r\n 922:           A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F5\r\n 948:           96DC6B28726DFC91EAED02168866054EE18A2E5346C4CC51FEB3\r\n 974:           FA10A91D2EDBF99125F86CE6\r\n 986\r\n```\r\n- If with the support of version and extension, still use relative timestamp, we need 209 + 2 = 211 bytes\r\n- If without the support of version and extension, but use absolute timstamp, we need 209 + 2 * 6 = 221 bytes\r\n- If with the support of version and extension, and use absolute timstamp, we need 211 + 2 * 6 = 223 bytes\r\n",
+          "body": "Taking the example in the annex (CAB ECDSA):\r\n\r\n- If encoded as simple bytes, we need 246 bytes for the extension value:\r\n\r\n```\r\n 777:     58 F4          # value=byte[244]\r\n 779:       00F2007700F65C942FD1773022145418083094568EE34D131933BFDF\r\n 807:       0C2F200BCC4EF164E300000174E5AC71130000040300483046022100\r\n 835:       8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FE\r\n 863:       DE1FE90F022100BCA2254366C19A2691C47A00B5B653ABBD44C2F8BA\r\n 891:       AEF4D2DAF2527CE64549950077005CDC4392FEE6AB4544B15E9AD456\r\n 919:       E61037FBD5FA47DCA17394B25EE6F6C70ECA00000174E5AC723C0000\r\n 947:       040300483046022100A5E0906E63E91D4FDDEFFF0352B91E50896007\r\n 975:       564B448A3828F596DC6B28726D022100FC91EAED02168866054EE18A\r\n1003:       2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6\r\n```\r\n\r\n- If as in draft-16 (relative time stamp compared to NotBefore, without support of version and versions), we need 209 bytes\r\n\r\n```\r\n777:     88             # value=array[8]\r\n                           # SignedCertificateTimestamp[0]\r\n 778:         58 20          # logID=byte[32]\r\n 780:           F65C942FD1773022145418083094568EE34D131933BFDF0C2F20\r\n 806:           0BCC4EF164E3\r\n 812:         19 06B3        # timestamp=1715\r\n 815:         00             # sigAlg=0: ecdsa-with-sha256\r\n 816:         58 40          # sigValue=byte[64]\r\n 818:           8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DEC\r\n 844:           A6FEDE1FE90FBCA2254366C19A2691C47A00B5B653ABBD44C2F8\r\n 870:           BAAEF4D2DAF2527CE6454995\r\n                           # SignedCertificateTimestamp[1]\r\n 882:         58 20          # logID=byte[32]\r\n 884:           5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B2\r\n 910:           5EE6F6C70ECA\r\n 916:         19 07DC        # timestamp=2012\r\n 919:         00             # sigAlg=0: ecdsa-with-sha256\r\n 920:         58 40          # sigValue=byte[64]\r\n 922:           A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F5\r\n 948:           96DC6B28726DFC91EAED02168866054EE18A2E5346C4CC51FEB3\r\n 974:           FA10A91D2EDBF99125F86CE6\r\n 986\r\n```\r\n- If with the support of version and extension, still use relative timestamp, we need 209 + 2 = 211 bytes\r\n- If without the support of version and extension, but use absolute timstamp, we need 209 + 2 * 6 = 221 bytes\r\n- If with the support of version and extension, and use absolute timstamp, we need 211 + 2 * 6 = 223 bytes\r\n- If with the support of version and extension, and use absolute timstamp for the first, and others with relative timestamp, we need 211 + 6 = 217 bytes\r\n",
           "createdAt": "2026-03-02T17:12:34Z",
-          "updatedAt": "2026-03-02T17:12:34Z"
+          "updatedAt": "2026-03-03T10:23:22Z"
         },
         {
           "author": "gselander",
