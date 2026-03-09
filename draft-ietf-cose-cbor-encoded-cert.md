@@ -574,19 +574,6 @@ CBOR encoding of the following extension values are partly supported:
 
 * IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The X.509 extension IPAddrBlocks v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "IPAddrBlocks".
 
-* Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
-
-~~~~~~~~~~~ cddl
-   SignedCertificateTimestamp = (
-     logID: bytes,
-     timestamp: int,
-     sigAlg: AlgorithmIdentifier,
-     sigValue: any,
-   )
-   SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
-~~~~~~~~~~~
-{: sourcecode-name="c509.cddl"}
-
 * OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL, it can be CBOR encoded. The CBOR encoded extensionValue is the value null.
 
 * Precertificate Signing Certificate. The CBOR encoded extensionValue is the value null.
@@ -1298,13 +1285,6 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
 |       | extensionValue:  AuthorityInfoAccessSyntax                |
-+-------+-----------------------------------------------------------+
-|    10 | Name:            Signed Certificate Timestamp List        |
-|       | Identifiers:                                              |
-|       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
-|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
-|       | Comments:                                                 |
-|       | extensionValue:  SignedCertificateTimestamps              |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | Identifiers:     subjectDirectoryAttributes               |
