@@ -647,6 +647,18 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
 
+Similarly, we also define the COSE header parameters used for identifying or transporting the sender's key for static-static key agreement algorithms corresponding to {{Section 3 of RFC9360}}, see {{iana-sender}}.
+
+* c5c-sender contains the chain of certificates starting with the sender's key exchange certificate. The structure is the same as 'c5c'.
+* c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.
+* c5u-sender contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.
+
+| Name | Label | Value Type | Description |
+| c5c-sender | TBD20 | COSE_C509 | An ordered chain of C509 certificates |
+| c5t-sender | TBD21 | COSE_CertHash | Hash of a ~C509Certificate |
+| c5u-sender | TBD22 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+{: #iana-sender title="COSE Header Parameters for Sender Keys" cols="r l l l"}
+
 ## Private Key Structures
 
 Certificate management also makes use of data structures including private keys, see, e.g., {{RFC7468}}. This section defines the following CBOR encoded structures:
@@ -2096,7 +2108,7 @@ The public key algorithms registry {{pkalg}} specifies a number of algorithms, n
 
 ## COSE Header Parameters Registry {#cose}
 
-IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
+IANA is requested to assign the entries in {{iana-header}} and {{iana-sender}} to the "COSE Header Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
 
 ## Media Type Application Registry
 
