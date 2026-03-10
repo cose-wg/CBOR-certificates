@@ -40,6 +40,9 @@ author:
       - name: Martin Furuhed
         org: IN Groupe
         email: martin.furuhed@ingroupe.com
+      - name: Lijun Liao
+        org: NIO
+        email: lijun.liao@gmail.com
 
 
 normative:
@@ -3084,8 +3087,3 @@ The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
 {: numbered="no"}
 
 The authors want to thank Henk Birkholz, Corey Bonnell, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for reviewing and commenting on intermediate versions of the draft and help with GitHub.
-
-# Contributors
-{: numbered="no"}
-
-Special acknowledgement goes to Lijun Liao for his careful review and many detailed improvement proposals.
