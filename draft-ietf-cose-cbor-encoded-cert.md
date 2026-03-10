@@ -3083,7 +3083,7 @@ The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Corey Bonnell, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for reviewing and commenting on intermediate versions of the draft and help with GitHub.
+The authors want to thank Henk Birkholz, Corey Bonnell, Carsten Bormann,  Viktor Dukhovni, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
 
 # Contributors
 {: numbered="no"}
