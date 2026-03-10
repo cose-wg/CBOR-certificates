@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-08T02:44:37.566366+00:00",
+  "timestamp": "2026-03-10T02:37:12.609693+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -82,6 +82,11 @@
       "name": "needs PR",
       "description": "",
       "color": "fbca04"
+    },
+    {
+      "name": "Implementation issue",
+      "description": "",
+      "color": "5cbce9"
     }
   ],
   "issues": [
@@ -7705,11 +7710,15 @@
       "state": "OPEN",
       "author": "BrianSipos",
       "authorAssociation": "CONTRIBUTOR",
-      "assignees": [],
-      "labels": [],
+      "assignees": [
+        "gselander"
+      ],
+      "labels": [
+        "PR exists"
+      ],
       "body": "In looking through C509-defined COSE header parameters, I notice that there is no C509 equivalent to the X509 sender identifiers defined in [RFC 9360](https://www.rfc-editor.org/rfc/rfc9360.html#section-3).\n\nIf parity is desired, there should be \"c5t-sender\" \"c5c-sender\" \"c5u-sender\" equivalents.\n",
       "createdAt": "2025-10-08T14:00:45Z",
-      "updatedAt": "2026-01-27T10:33:29Z",
+      "updatedAt": "2026-03-09T13:11:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -7730,10 +7739,12 @@
       "author": "smhmeier",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Implementation issue"
+      ],
       "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
       "createdAt": "2025-11-03T08:46:03Z",
-      "updatedAt": "2026-03-05T09:07:19Z",
+      "updatedAt": "2026-03-09T10:06:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -7953,11 +7964,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "PR exists"
+        "low priority for core spec"
       ],
       "body": "In draft-15:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.  With the exception of the first ASId, the ASid is encoded\n      as the difference to the previous ASid.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n\nConsider we have following AS-Identifiers (original value):\n\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: 600,\n    \u201emax\u201c: 710\n  },\n  \u201eid\u201c: 830\n]\n```\nShall we encode it as:\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: -399, // difference to the previous id 999: 600 - 999\n    \u201emax\u201c: 110, // difference to the min: 710 - 600\n  },\n  \u201eid\u201c: 120 // difference to the max of previous range: 830 - 710\n]\n```\nThis is quite complex to implement and also difficult to understand.\n\nMy suggestion is to remove \" With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.\u201c, namely with the new text as follows:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n",
       "createdAt": "2025-11-05T10:28:53Z",
-      "updatedAt": "2026-03-03T10:10:11Z",
+      "updatedAt": "2026-03-09T10:07:50Z",
       "closedAt": null,
       "comments": [
         {
@@ -7966,6 +7977,13 @@
           "body": "@gselander @emanjon I cannot find any examples containing this extension. Do you have any examples or links?",
           "createdAt": "2026-03-02T19:03:15Z",
           "updatedAt": "2026-03-02T19:03:15Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": " \n> [@gselander](https://github.com/gselander) [@emanjon](https://github.com/emanjon) I cannot find any examples containing this extension. Do you have any examples or links?\n\nJohn to provide the RPKI example cert.",
+          "createdAt": "2026-03-09T09:45:22Z",
+          "updatedAt": "2026-03-09T09:45:22Z"
         }
       ]
     },
@@ -7978,12 +7996,22 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "low priority for core spec"
+      ],
       "body": "In draft -15, there is no syntax to save / transport the public key. A straightforward idea is to define it as follows:\n\n```\nC509PublicKey = [\n   C509PublicKeyType: int,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier,\n   subjectPublicKey: Defined,\n]\n```\n\nAnd we also need a media type for this.",
       "createdAt": "2025-11-05T10:29:48Z",
-      "updatedAt": "2025-11-05T10:29:48Z",
+      "updatedAt": "2026-03-09T10:07:07Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Not urgent for main spec.",
+          "createdAt": "2026-03-09T09:59:31Z",
+          "updatedAt": "2026-03-09T09:59:31Z"
+        }
+      ]
     },
     {
       "number": 298,
@@ -8030,11 +8058,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "PR exists"
+        "needs PR"
       ],
       "body": "In draft-15:\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If all\n      the SCTs are version v1 [RFC6962], and there are no SCT\n      extensions, the extension value can be CBOR encoded.  Other\n      versions of SCT are out of scope for this document.  LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      uint (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```\n\n1. typo in the text: \"the timestamp is encoded as a CBOR uint\" -> \"... a CBOR int\".\n2. Add support of extensions, and to allow the support of new timestamp versions, a new field is added. Finally we have the new text below:\n\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If\n      the SCTs have version v1 (value 0) [RFC6962], the syntax is as follows. LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      int (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        version: uint,\n        logID: bytes,\n        timestamp: int,\n        extensions: bytes\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```",
       "createdAt": "2025-11-05T10:37:16Z",
-      "updatedAt": "2026-03-03T10:34:07Z",
+      "updatedAt": "2026-03-09T10:06:51Z",
       "closedAt": null,
       "comments": [
         {
@@ -8076,10 +8104,12 @@
       "author": "dgtlrift",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Implementation issue"
+      ],
       "body": "c509_demo_impl should include flag to write the converted file to new target file destination for future processing/testing.",
       "createdAt": "2025-12-17T17:39:17Z",
-      "updatedAt": "2025-12-17T17:39:17Z",
+      "updatedAt": "2026-03-09T10:06:24Z",
       "closedAt": null,
       "comments": []
     },
@@ -8091,13 +8121,15 @@
       "state": "OPEN",
       "author": "dgtlrift",
       "authorAssociation": "NONE",
-      "assignees": [],
+      "assignees": [
+        "emanjon"
+      ],
       "labels": [
-        "waiting for input"
+        "needs PR"
       ],
       "body": "Wi-SUN certificate templates generate certificates that are not convertible to c509 with the c509_demo_impl implementation.\n\nSee [SiLabs KBA: Create your Own Wi-SUN Certificates](https://community.silabs.com/s/article/Create-your-Own-Wi-SUN-Certificates?language=en_US#:~:text=Generate%20a%20CSR%20for%20the%20intermediate%202%20CA%20openssl%20req,openssl%2Dwisun.conf%2011.) for openssl config details.",
       "createdAt": "2025-12-17T17:49:06Z",
-      "updatedAt": "2026-02-02T11:41:51Z",
+      "updatedAt": "2026-03-09T12:26:17Z",
       "closedAt": null,
       "comments": [
         {
@@ -8120,6 +8152,20 @@
           "body": "@emanjon I am not familiar with the c509_demo_impl code, can you use it to covert the X509 certificates to C509?",
           "createdAt": "2026-02-02T11:41:51Z",
           "updatedAt": "2026-02-02T11:41:51Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Compatibility with WI-SUN thus confimed, let's add that to intro text. Done in db6f90d.\n\nIssue with c509_demo_impl implementation, not specification, needs to be handled.",
+          "createdAt": "2026-03-09T09:26:47Z",
+          "updatedAt": "2026-03-09T12:26:17Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Need to add int encoding to KeyPurposeId 1.3.6.1.4.1.45605.1",
+          "createdAt": "2026-03-09T09:36:33Z",
+          "updatedAt": "2026-03-09T09:36:33Z"
         }
       ]
     },
@@ -8290,10 +8336,12 @@
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Implementation issue"
+      ],
       "body": "State that it is not maintained",
       "createdAt": "2026-02-20T10:58:59Z",
-      "updatedAt": "2026-02-20T10:58:59Z",
+      "updatedAt": "2026-03-09T10:06:25Z",
       "closedAt": null,
       "comments": []
     },
@@ -8337,10 +8385,12 @@
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "needs PR"
+      ],
       "body": "In draft -17:\n\n```\nIPAddrBlocks (id-pe-ipAddrBlocks).  ... With the exception of the first\n      Address, if the byte string has the same length as the previous\n      Address, the Address is encoded as a uint with the difference to\n      the previous Address.  It should be noted that using address\n      differences for compactness prevents encoding an address range\n      larger than 2^64 - 1 corresponding to the CBOR integer max value.\n```\n\nUsing delta value (difference to the previous Address) makes the implementation more complicated. And as mentioned in the text, this has limitation of the IP address that could be contained in a C509 certificate.\n\nMy suggestion is to use the absolute value. ",
       "createdAt": "2026-03-03T10:43:30Z",
-      "updatedAt": "2026-03-03T10:44:13Z",
+      "updatedAt": "2026-03-09T09:53:19Z",
       "closedAt": null,
       "comments": [
         {
@@ -8349,6 +8399,13 @@
           "body": "This issue covers an subset of the closed #295.",
           "createdAt": "2026-03-03T10:44:13Z",
           "updatedAt": "2026-03-03T10:44:13Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Need to make a PR.",
+          "createdAt": "2026-03-09T09:52:45Z",
+          "updatedAt": "2026-03-09T09:52:45Z"
         }
       ]
     }
@@ -13571,21 +13628,21 @@
       "id": "PR_kwDOCpt5cM7Gq_ya",
       "title": "Fixed #299, simplified the syntax for extension Signed Certificate Timestamp List",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/322",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "To accelerate the process, I proposed this PR before discussion.",
       "createdAt": "2026-02-26T22:17:33Z",
-      "updatedAt": "2026-03-03T10:23:22Z",
+      "updatedAt": "2026-03-09T10:53:44Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "121e86c86814eace3f87a896b762fbf4eeec2cef",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue299-sct",
       "headRefOid": "0dd548b1e8885f41a65b27b11d9abefaa9ff774a",
-      "closedAt": null,
+      "closedAt": "2026-03-09T10:53:44Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -13610,6 +13667,20 @@
           "body": "As I understood, we should meet and discuss this before merging, so this will not go into -17.",
           "createdAt": "2026-03-02T20:59:34Z",
           "updatedAt": "2026-03-02T20:59:34Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Propose to change this to (OID,bytes), i.e. remove CBOR encoding altogether.",
+          "createdAt": "2026-03-09T09:13:19Z",
+          "updatedAt": "2026-03-09T09:13:19Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Remove CBOR encoding of Signed Certificate Timestamp List ",
+          "createdAt": "2026-03-09T10:05:31Z",
+          "updatedAt": "2026-03-09T10:05:31Z"
         }
       ],
       "reviews": []
@@ -13653,6 +13724,128 @@
           "body": "> Revert and merge name changes\r\n\r\nChanges reverted",
           "createdAt": "2026-03-02T14:58:49Z",
           "updatedAt": "2026-03-02T14:58:49Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 326,
+      "id": "PR_kwDOCpt5cM7JEcQq",
+      "title": "COSE Parameters for Sender Keys with ECDH-SS",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/326",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Algorithm-specific parameters that are used for identifying or transporting the sender's key for static-static key agreement algorithms. Addresses #288.",
+      "createdAt": "2026-03-09T13:09:33Z",
+      "updatedAt": "2026-03-09T13:26:50Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "SS-sender-params",
+      "headRefOid": "2c15dd54766ca2acdc5688a75d442ee687bd67bb",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@BrianSipos Please review",
+          "createdAt": "2026-03-09T13:10:55Z",
+          "updatedAt": "2026-03-09T13:10:55Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7pYFqO",
+          "commit": {
+            "abbreviatedOid": "2c15dd5"
+          },
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-09T13:26:42Z",
+          "updatedAt": "2026-03-09T13:26:50Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "The sender parameters would actually end up in the \"COSE Header Algorithm Parameters\" registry, and they would need to be negative labels (possibly starting at -30) to fit in that registry. If you have preference of label code ordering that can be added as IANA guidance.",
+              "createdAt": "2026-03-09T13:26:42Z",
+              "updatedAt": "2026-03-09T13:26:50Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 327,
+      "id": "PR_kwDOCpt5cM7JFFvP",
+      "title": "Fix #299 remove sct",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/327",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Changed both normative text and examples",
+      "createdAt": "2026-03-09T13:47:42Z",
+      "updatedAt": "2026-03-09T13:47:43Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "issue299-removeSCT",
+      "headRefOid": "023ab1eea98f1c02041e756221eae80677a88686",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 328,
+      "id": "PR_kwDOCpt5cM7JFH01",
+      "title": "fixed #325. used absolute value in ip addr blocks",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/328",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-09T13:49:29Z",
+      "updatedAt": "2026-03-09T14:05:40Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "issue325-IPAddrBlocks",
+      "headRefOid": "885a9f7a64e11853a4e4c2801342a23b0098fec2",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "If we are ok with the cddl, AddressPrefix = [ unusedBits: uint, Address ], then yes, the text needs to be updated to reflect this!",
+          "createdAt": "2026-03-09T13:55:05Z",
+          "updatedAt": "2026-03-09T13:55:05Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> If we are ok with the cddl, AddressPrefix = [ unusedBits: uint, Address ], then yes, the text needs to be updated to reflect this!\r\n\r\nThe CDDL is correct. Change in this PR should have reflected the CDDL. Or any suggestion?",
+          "createdAt": "2026-03-09T14:05:40Z",
+          "updatedAt": "2026-03-09T14:05:40Z"
         }
       ],
       "reviews": []
