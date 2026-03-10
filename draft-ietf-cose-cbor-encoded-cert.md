@@ -1717,6 +1717,12 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" in th
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |
 |       | Comments:        RFC 6962                               |
 +-------+---------------------------------------------------------+
+|    20 | Name:            Wi-SUN Fan Device                      |
+|       | Identifiers:     id-kp-wisun-fan-device                 |
+|       | OID:             1.3.6.1.4.1.45605.1                    |
+|       | DER:             06 09 2B 06 01 04 01 82 E4 25 01       |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-eku title="C509 Extended Key Usages"}
 {: artwork-align="center"}
