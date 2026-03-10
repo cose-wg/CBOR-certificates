@@ -616,7 +616,7 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 23, 8, \[ 3, 9 \], 3, "example.com" \].
 
-## COSE Header Parameters {#cose-header-params}
+## C509 COSE Header Parameters {#cose-header-params}
 
 The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER-encoded X.509 and use a COSE_C509 structure instead of COSE_X509.
 
@@ -643,21 +643,27 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
 | c5t | 22 | COSE_CertHash | Hash of a ~C509Certificate |
 | c5u | 23 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
-{: #iana-header title="COSE Header Parameters" cols="r l l l"}
+{: #iana-header title="C509 COSE Header Parameters" cols="r l l l"}
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
 
-Similarly, we also define the COSE header parameters used for identifying or transporting the sender's key for static-static key agreement algorithms corresponding to {{Section 3 of RFC9360}}, see {{iana-sender}}.
+
+## C509 COSE Header Algorithm Parameters {#cose-header-alg-params}
+
+In this section we define the COSE header parameters used for identifying or transporting the sender's key for static-static key agreement algorithms corresponding to {{Section 3 of RFC9360}}, see {{iana-sender}}.
 
 * c5c-sender contains the chain of certificates starting with the sender's key exchange certificate. The structure is the same as 'c5c'.
 * c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.
 * c5u-sender contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.
 
-| Name | Label | Value Type | Description |
-| c5c-sender | TBD20 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t-sender | TBD21 | COSE_CertHash | Hash of a ~C509Certificate |
-| c5u-sender | TBD22 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
-{: #iana-sender title="COSE Header Parameters for Sender Keys" cols="r l l l"}
+| Name | Label | Value Type | Algorithm | Description |
+| c5c-sender | -30 (suggested) | COSE_C509 | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | An ordered chain of C509 certificates |
+| c5t-sender | -31 (suggested) | COSE_CertHash | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | Hash of a ~C509Certificate |
+| c5u-sender | -32 (suggested) | uri | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+{: #iana-sender title="Static ECDH Algorithm Values" cols="r l l l l"}
+
+
+
 
 ## Private Key Structures
 
@@ -2108,7 +2114,11 @@ The public key algorithms registry {{pkalg}} specifies a number of algorithms, n
 
 ## COSE Header Parameters Registry {#cose}
 
-IANA is requested to assign the entries in {{iana-header}} and {{iana-sender}} to the "COSE Header Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
+IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
+
+## COSE Header Algorithm Parameters Registry {#cose-alg}
+
+IANA is requested to assign the entries in {{iana-sender}} to the "COSE Header Algorithm Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
 
 ## Media Type Application Registry
 
