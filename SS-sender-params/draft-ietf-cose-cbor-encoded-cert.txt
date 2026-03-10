@@ -6,12 +6,12 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 10 September 2026                         University of Glasgow
+Expires: 11 September 2026                         University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                            9 March 2026
+                                                           10 March 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 September 2026.
+   This Internet-Draft will expire on 11 September 2026.
 
 Copyright Notice
 
@@ -92,10 +92,11 @@ Table of Contents
      3.1.  Message Fields
      3.2.  Encoding of subjectPublicKey and issuerSignatureValue
      3.3.  Encoding of Extensions
-     3.4.  COSE Header Parameters
-     3.5.  Private Key Structures
-     3.6.  Deterministic Encoding
-     3.7.  C509 Name in TLS and DTLS
+     3.4.  C509 COSE Header Parameters
+     3.5.  C509 COSE Header Algorithm Parameters
+     3.6.  Private Key Structures
+     3.7.  Deterministic Encoding
+     3.8.  C509 Name in TLS and DTLS
    4.  C509 Certificate (Signing) Request
      4.1.  Certificate Request Types
      4.2.  Subject Signature Algorithm
@@ -121,11 +122,12 @@ Table of Contents
      9.13. C509 Signature Algorithms Registry
      9.14. C509 Public Key Algorithms Registry
      9.15. COSE Header Parameters Registry
-     9.16. Media Type Application Registry
-     9.17. CoAP Content-Formats Registry
-     9.18. TLS Certificate Types Registry
-     9.19. TLSA Selectors Registry
-     9.20. EDHOC Authentication Credential Types Registry
+     9.16. COSE Header Algorithm Parameters Registry
+     9.17. Media Type Application Registry
+     9.18. CoAP Content-Formats Registry
+     9.19. TLS Certificate Types Registry
+     9.20. TLSA Selectors Registry
+     9.21. EDHOC Authentication Credential Types Registry
    10. References
      10.1.  Normative References
      10.2.  Informative References
@@ -229,7 +231,7 @@ Table of Contents
    Section 4; COSE headers for use of the C509 certificates with COSE,
    see Section 9.15; a TLS certificate type for use of the C509
    certificates with TLS and QUIC (with or without additional TLS
-   certificate compression), see Section 9.18; and a C509 file format.
+   certificate compression), see Section 9.19; and a C509 file format.
    The TLSA selectors registry is extended to include C509 certificates,
    thus this document updates [RFC6698].
 
@@ -828,7 +830,7 @@ Table of Contents
    above extensions in the given order would be encoded as the CBOR
    array [ -4, -1, 2, 23, 8, [ 3, 9 ], 3, "example.com" ].
 
-3.4.  COSE Header Parameters
+3.4.  C509 COSE Header Parameters
 
    The formatting and processing for c5b, c5c, c5t, and c5u, defined in
    Table 1 below, are similar to x5bag, x5chain, x5t, x5u defined in
@@ -846,8 +848,8 @@ Table of Contents
    example.
 
    The COSE_C509 item has media type application/cose-c509-cert, see
-   Section 9.16.1.  Different CoAP Content-Formats are defined depending
-   on "usage" = "chain" or not, see Section 9.17.  Stored file formats
+   Section 9.17.1.  Different CoAP Content-Formats are defined depending
+   on "usage" = "chain" or not, see Section 9.18.  Stored file formats
    are defined for the cases with/without ("usage" = "chain") with
    "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the
    corresponding Content-Formats TBD15/TBD3, enveloped as described in
@@ -887,13 +889,15 @@ Table of Contents
       |      |       |               | of certificates             |
       +------+-------+---------------+-----------------------------+
 
-                     Table 1: COSE Header Parameters
+                   Table 1: C509 COSE Header Parameters
 
    Note that certificates can also be identified with a 'kid' header
    parameter by storing 'kid' and the associated bag or chain in a
    dictionary.
 
-   Similarly, we also define the COSE header parameters used for
+3.5.  C509 COSE Header Algorithm Parameters
+
+   In this section we define the COSE header parameters used for
    identifying or transporting the sender's key for static-static key
    agreement algorithms corresponding to Section 3 of [RFC9360], see
    Table 2.
@@ -908,22 +912,46 @@ Table of Contents
    *  c5u-sender contains a URI for the sender's key exchange
       certificate.  The structure and processing are the same as 'c5u'.
 
-   +============+=======+===============+=============================+
-   |       Name | Label | Value Type    | Description                 |
-   +============+=======+===============+=============================+
-   | c5c-sender | TBD20 | COSE_C509     | An ordered chain of C509    |
-   |            |       |               | certificates                |
-   +------------+-------+---------------+-----------------------------+
-   | c5t-sender | TBD21 | COSE_CertHash | Hash of a ~C509Certificate  |
-   +------------+-------+---------------+-----------------------------+
-   | c5u-sender | TBD22 | uri           | URI pointing to a COSE_C509 |
-   |            |       |               | containing an ordered chain |
-   |            |       |               | of certificates             |
-   +------------+-------+---------------+-----------------------------+
+   +======+=============+===============+==========+==================+
+   |  Name| Label       | Value Type    |Algorithm | Description      |
+   +======+=============+===============+==========+==================+
+   |  c5c-| -30         | COSE_C509     |ECDH-     | An ordered chain |
+   |sender| (suggested) |               |SS+HKDF-  | of C509          |
+   |      |             |               |256, ECDH-| certificates     |
+   |      |             |               |SS+HKDF-  |                  |
+   |      |             |               |512, ECDH-|                  |
+   |      |             |               |SS+A128KW,|                  |
+   |      |             |               |ECDH-     |                  |
+   |      |             |               |SS+A192KW,|                  |
+   |      |             |               |ECDH-     |                  |
+   |      |             |               |SS+A256KW |                  |
+   +------+-------------+---------------+----------+------------------+
+   |  c5t-| -31         | COSE_CertHash |ECDH-     | Hash of a        |
+   |sender| (suggested) |               |SS+HKDF-  | ~C509Certificate |
+   |      |             |               |256, ECDH-|                  |
+   |      |             |               |SS+HKDF-  |                  |
+   |      |             |               |512, ECDH-|                  |
+   |      |             |               |SS+A128KW,|                  |
+   |      |             |               |ECDH-     |                  |
+   |      |             |               |SS+A192KW,|                  |
+   |      |             |               |ECDH-     |                  |
+   |      |             |               |SS+A256KW |                  |
+   +------+-------------+---------------+----------+------------------+
+   |  c5u-| -32         | uri           |ECDH-     | URI pointing to  |
+   |sender| (suggested) |               |SS+HKDF-  | a COSE_C509      |
+   |      |             |               |256, ECDH-| containing an    |
+   |      |             |               |SS+HKDF-  | ordered chain of |
+   |      |             |               |512, ECDH-| certificates     |
+   |      |             |               |SS+A128KW,|                  |
+   |      |             |               |ECDH-     |                  |
+   |      |             |               |SS+A192KW,|                  |
+   |      |             |               |ECDH-     |                  |
+   |      |             |               |SS+A256KW |                  |
+   +------+-------------+---------------+----------+------------------+
 
-             Table 2: COSE Header Parameters for Sender Keys
+                  Table 2: Static ECDH Algorithm Values
 
-3.5.  Private Key Structures
+3.6.  Private Key Structures
 
    Certificate management also makes use of data structures including
    private keys, see, e.g., [RFC7468].  This section defines the
@@ -946,8 +974,8 @@ Table of Contents
    that have a C509 AlgorithmIdentifier defined.
 
    The C509PrivateKey item is served with the application/cose-
-   c509-privkey media type, see Section 9.16.4, with corresponding CoAP
-   Content-Format defined in Section 9.17.  A stored file format is
+   c509-privkey media type, see Section 9.17.4, with corresponding CoAP
+   Content-Format defined in Section 9.18.  A stored file format is
    defined with "magic number" TBD12 using the reserved CBOR tag 55799
    and the Content-Format TBD10, enveloped as described in Section 2.2
    of [RFC9277].
@@ -958,12 +986,12 @@ Table of Contents
    ]
 
    The C509PEM item is served with the application/cose-c509-pem media
-   type, see Section 9.16.5, with corresponding CoAP Content-Format
-   defined in Section 9.17.  A stored file format is defined with "magic
+   type, see Section 9.17.5, with corresponding CoAP Content-Format
+   defined in Section 9.18.  A stored file format is defined with "magic
    number" TBD13 using the reserved CBOR tag 55799 and the Content-
    Format TBD11, enveloped as described in Section 2.2 of [RFC9277].
 
-3.6.  Deterministic Encoding
+3.7.  Deterministic Encoding
 
    In some use cases it is desirable to be able to specify a unique C509
    representation of a given X.509 certificate.
@@ -991,7 +1019,7 @@ Table of Contents
    that the certificate was issued before the specific CBOR extension
    was registered.
 
-3.7.  C509 Name in TLS and DTLS
+3.8.  C509 Name in TLS and DTLS
 
    In TLS and DTLS, the subject of trusted authory may be sent to the
    peer to help it selecting the certificate chain, as in the
@@ -1054,8 +1082,8 @@ Table of Contents
    compatibility with existing procedures and code.
 
    The media type of C509CertificateRequest is application/cose-
-   c509-pkcs10, see Section 9.16.2, with corresponding CoAP Content-
-   Format defined in Section 9.17.  The "magic number" TBD9 is defined
+   c509-pkcs10, see Section 9.17.2, with corresponding CoAP Content-
+   Format defined in Section 9.18.  The "magic number" TBD9 is defined
    using the reserved CBOR tag 55799 and the Content-Format TBD4,
    enveloped as described in Section 2.2 of [RFC9277].
 
@@ -1231,8 +1259,8 @@ Table of Contents
    is not allowed.
 
    The media type of C509CertificateRequestTemplate is application/cose-
-   c509-crtemplate, see Section 9.16.3, with corresponding CoAP Content-
-   Format defined in Section 9.17.  The "magic number" TBD18 is defined
+   c509-crtemplate, see Section 9.17.3, with corresponding CoAP Content-
+   Format defined in Section 9.18.  The "magic number" TBD18 is defined
    using the reserved CBOR tag 55799 and the Content-Format TBD19,
    enveloped as described in Section 2.2 of [RFC9277].
 
@@ -2687,17 +2715,24 @@ Table of Contents
 
 9.15.  COSE Header Parameters Registry
 
-   IANA is requested to assign the entries in Table 1 and Table 2 to the
-   "COSE Header Parameters" registry in the registry group "CBOR Object
+   IANA is requested to assign the entries in Table 1 to the "COSE
+   Header Parameters" registry in the registry group "CBOR Object
    Signing and Encryption (COSE)" with this document as reference.
 
-9.16.  Media Type Application Registry
+9.16.  COSE Header Algorithm Parameters Registry
+
+   IANA is requested to assign the entries in Table 2 to the "COSE
+   Header Algorithm Parameters" registry in the registry group "CBOR
+   Object Signing and Encryption (COSE)" with this document as
+   reference.
+
+9.17.  Media Type Application Registry
 
    IANA is requested to assign the following entries in to the
    "application" registry in the registry group "Media Types" with this
    document as reference.
 
-9.16.1.  Media Type application/cose-c509-cert
+9.17.1.  Media Type application/cose-c509-cert
 
    When the application/cose-c509-cert media type is used, the data is a
    COSE_C509 structure.  If the parameter "usage" is set to "chain",
@@ -2752,7 +2787,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.16.2.  Media Type application/cose-c509-pkcs10
+9.17.2.  Media Type application/cose-c509-pkcs10
 
    When the application/cose-c509-pkcs10 media type is used, the data is
    a C509CertificateRequest structure.
@@ -2800,7 +2835,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.16.3.  Media Type application/cose-c509-crtemplate
+9.17.3.  Media Type application/cose-c509-crtemplate
 
    When the application/cose-c509-crtemplate media type is used, the
    data is a C509CertificateRequestTemplate structure.
@@ -2848,7 +2883,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.16.4.  Media Type application/cose-c509-privkey
+9.17.4.  Media Type application/cose-c509-privkey
 
    When the application/cose-c509-privkey media type is used, the data
    is a C509PrivateKey structure.
@@ -2896,7 +2931,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.16.5.  Media Type application/cose-c509-pem
+9.17.5.  Media Type application/cose-c509-pem
 
    When the application/cose-c509-pem media type is used, the data is a
    C509PEM structure.
@@ -2944,7 +2979,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.16.6.  Media Type application/cose-certhash
+9.17.6.  Media Type application/cose-certhash
 
    When the application/cose-certhash media type is used, the data is a
    COSE_CertHash structure, see [RFC9360].
@@ -2998,7 +3033,7 @@ Table of Contents
 
    Change controller: IETF
 
-9.17.  CoAP Content-Formats Registry
+9.18.  CoAP Content-Formats Registry
 
    IANA is requested to add entries for "application/cose-c509-cert",
    "application/cose-c509-pkcs10", "application/cose-c509-crtemplate",
@@ -3007,13 +3042,13 @@ Table of Contents
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested for the "application/cose-c509-cert"
    media type in the case when the parameter "usage" is set to "chain",
-   see Section 9.16.1.
+   see Section 9.17.1.
 
    IANA is requested to add entries for "application/cose-certhash" to
    the "CoAP Content-Formats" registry in the registry group
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested in the case when the parameter "usage"
-   is set to "c509", see Section 9.16.1.
+   is set to "c509", see Section 9.17.1.
 
    IANA is requested to add entries for "application/cbor" to the "CoAP
    Content-Formats" registry in the registry group "Constrained RESTful
@@ -3053,7 +3088,7 @@ Table of Contents
 
                   Figure 20: CoAP Content-Format IDs
 
-9.18.  TLS Certificate Types Registry
+9.19.  TLS Certificate Types Registry
 
    This document registers the following entry in the "TLS Certificate
    Types" registry in the registry group "Transport Layer Security (TLS)
@@ -3079,7 +3114,7 @@ Table of Contents
    |  TBD5 | C509 Certificate |           N |                          |
    +-------+------------------+-------------+--------------------------+
 
-9.19.  TLSA Selectors Registry
+9.20.  TLSA Selectors Registry
 
    This document registers the following entry in the "TLSA Selectors"
    registry in the registry group "DNS-Based Authentication of Named
@@ -3097,7 +3132,7 @@ Table of Contents
    specification updates [RFC6698] to accept the use of C509
    certificates.
 
-9.20.  EDHOC Authentication Credential Types Registry
+9.21.  EDHOC Authentication Credential Types Registry
 
    This document registers the following entry in the "EDHOC
    Authentication Credential Types" registry in the registry group
