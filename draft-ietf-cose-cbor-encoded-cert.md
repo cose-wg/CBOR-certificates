@@ -42,7 +42,7 @@ author:
         email: martin.furuhed@ingroupe.com
       - name: Lijun Liao
         org: NIO
-        email: lijun.liao@gmail.com
+        email: lijun.liao@nio.io
 
 
 normative:
