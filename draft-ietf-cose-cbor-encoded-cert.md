@@ -1217,8 +1217,6 @@ The initial contents of the registry are:
 |       | OID:             1.2.840.113549.1.9.7                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
 |       | Comments:        RFC 2985                                 |
-|       |                  Negative value for Printable String,     |
-|       |                  and positive value for UTF8 String       |
 |       | attributeValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Private Key Possession Statement         |
