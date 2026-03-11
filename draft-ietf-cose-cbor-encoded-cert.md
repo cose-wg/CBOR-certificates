@@ -1846,6 +1846,13 @@ IANA has created a new registry titled "C509 Signature Algorithms" in the new re
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 24          |
 |       | Comments:    bytes of size 0                              |
 +-------+-----------------------------------------------------------+
+|     8 | Name:        SM2 with SM3                                 |
+|       | Identifiers: sm2-with-sm3                                 |
+|       | OID:         1.2.156.10197.1.501                          |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
+|       | Comments:    See Section 3.2.2.                           |
++-------+-----------------------------------------------------------+
 |    12 | Name:        Ed25519                                      |
 |       | Identifiers: id-Ed25519, id-EdDSA25519                    |
 |       | OID:         1.3.101.112                                  |
@@ -1955,13 +1962,6 @@ IANA has created a new registry titled "C509 Signature Algorithms" in the new re
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    45 | Name:        SM2 with SM3                                 |
-|       | Identifiers: sm2-with-sm3                                 |
-|       | OID:         1.2.156.10197.1.501                          |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
-|       | Comments:    See Section 3.2.2.                           |
-+-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="C509 Signature Algorithms"}
 {: artwork-align="center"}
@@ -2007,6 +2007,16 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              04 00 23                                     |
 |       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-521, ansip521r1              |
++-------+-----------------------------------------------------------+
+|     6 | Name:        EC Public Key (Weierstrass) with             |
+|       |              sm2p256v1                                    |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = sm2p256v1                       |
+|       |              (1.2.156.10197.1.301)                        |
+|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
+|       |              1C CF 55 01 82 2D                            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |     8 | Name:        X25519 (Montgomery)                          |
 |       | Identifiers: id-X25519                                    |
@@ -2074,16 +2084,6 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              (1.2.250.1.223.101.256.1)                    |
 |       | DER:         30 15 06 07 2A 86 48 CE 3D 02 01 06 0A 2A 81 |
 |       |              7A 01 81 5F 65 82 00 01                      |
-|       | Comments:    Compressed subjectPublicKey                  |
-+-------+-----------------------------------------------------------+
-|    28 | Name:        EC Public Key (Weierstrass) with             |
-|       |              sm2p256v1                                    |
-|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
-|       | OID:         1.2.840.10045.2.1                            |
-|       | Parameters:  namedCurve = sm2p256v1                       |
-|       |              (1.2.156.10197.1.301)                        |
-|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
-|       |              1C CF 55 01 82 2D                            |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
