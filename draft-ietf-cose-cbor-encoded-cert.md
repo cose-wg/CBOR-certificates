@@ -656,13 +656,11 @@ In this section we define the COSE header parameters used for identifying or tra
 * c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.
 * c5u-sender contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.
 
-| Name | Label | Value Type | Algorithm | Description |
-| c5c-sender | -30 (suggested) | COSE_C509 | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | An ordered chain of C509 certificates |
-| c5t-sender | -31 (suggested) | COSE_CertHash | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | Hash of a ~C509Certificate |
-| c5u-sender | -32 (suggested) | uri | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+| Name | Algorithm | Label | Type | Description |
+| c5c-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -30 (suggested) | COSE_C509 | An ordered chain of C509 certificates |
+| c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a ~C509Certificate |
+| c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
 {: #iana-sender title="Static ECDH Algorithm Values" cols="r l l l l"}
-
-
 
 
 ## Private Key Structures
