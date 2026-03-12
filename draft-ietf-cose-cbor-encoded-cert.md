@@ -707,7 +707,7 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
 
 # C509 Certificate (Signing) Request {#CSR}
 
-This section defines the format of a C509 Certification Request, based on and compatible with {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
+This section defines the format of a C509 Certification Request based on {{RFC2986}}. It reuses the formatting of C509 certificates defined in {{certificate}}. A Certification Request is commonly referred to as a Certificate Signing Request (CSR).
 
 The CDDL for the C509 Certification Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
