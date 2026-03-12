@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-10T02:37:12.609693+00:00",
+  "timestamp": "2026-03-12T02:42:05.517727+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -3962,9 +3962,17 @@
       ],
       "body": "In the file `draft-cose-cbor-revocation-management.md`:\r\n\r\nThe `C509CertificateRevocationList` is defined as follows\r\n\r\n```\r\n -- Not a mistake, but a typo in the original document, shall be C509CertificateRevocationList\r\nTBSCertificateSigningRequest = (\r\n   C509CertificateRevocationListType: int,\r\n   issuer: Name,\r\n   thisUpdate: Time,\r\n   nextUpdate: Time,\r\n   revokedCertificates: RevokedCertificates,\r\n   crlExtensions: Extensions,\r\n   issuerSignatureAlgorithm: AlgorithmIdentifier,\r\n)\r\n```\r\n\r\nAs discussed in #149,  `issuerSignatureAlgorithm` field shall be before `issuer`. And since `revokedCertificates` may be very large, and `crlExtensions` may be required before parsing the whole `revokedCertificates`, I prefer to have `crlExtensions` before `revokedCertificates`.\r\n\r\nFinally, we shall have the following structure\r\n```\r\nC509CertificateRevocationList = (\r\n   C509CertificateRevocationListType: int,\r\n   *** issuerSignatureAlgorithm: AlgorithmIdentifier, ***\r\n   issuer: Name,\r\n   thisUpdate: Time,\r\n   nextUpdate: Time,\r\n   *** crlExtensions: Extensions,***\r\n   revokedCertificates: RevokedCertificates,\r\n)\r\n```\r\n",
       "createdAt": "2024-01-12T13:41:40Z",
-      "updatedAt": "2024-12-19T11:04:09Z",
+      "updatedAt": "2026-03-11T12:44:17Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander This issue can be closed as \"Won't fix\"",
+          "createdAt": "2026-03-11T12:44:17Z",
+          "updatedAt": "2026-03-11T12:44:17Z"
+        }
+      ]
     },
     {
       "number": 155,
@@ -4928,11 +4936,11 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "less priority"
+        "low priority for core spec"
       ],
       "body": "Please add the hex-encoded C509 certificates in the sections `Example CAB Baseline ECDSA HTTPS X.509 Certificate` and `Example CAB Baseline RSA HTTPS X.509 Certificate`.",
       "createdAt": "2024-04-23T19:58:38Z",
-      "updatedAt": "2024-12-13T13:23:07Z",
+      "updatedAt": "2026-03-11T12:43:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -4955,6 +4963,13 @@
           "body": "Current understanding: While this is a simple request, it is a lot of work to carry out, also considering the change in byte count of the encoding, and mainly aesthetic outcome, so we think this has less priority. When we later will make test vectors we should be more consequent from the start.",
           "createdAt": "2024-12-13T13:22:42Z",
           "updatedAt": "2024-12-13T13:22:42Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander This issue can be closed as \"Won't fix\"",
+          "createdAt": "2026-03-11T12:43:57Z",
+          "updatedAt": "2026-03-11T12:43:57Z"
         }
       ]
     },
@@ -7345,7 +7360,7 @@
       ],
       "body": "The current language states that natively encoding SCTs with extensions is not supported. This is a reasonable choice for the current state of CT today, but the CT ecosystem will likely be moving to Sunlight/Static CT. The Static CT specification mandates the inclusion of the [`LeafIndex` SCT extension](https://github.com/C2SP/C2SP/blob/main/static-ct-api.md#sct-extension).\n\nIf the ability to CBOR encode SCTs is desired, then this extension should likely be accommodated in the specification.",
       "createdAt": "2025-07-21T08:24:18Z",
-      "updatedAt": "2025-10-09T21:27:53Z",
+      "updatedAt": "2026-03-11T12:46:19Z",
       "closedAt": null,
       "comments": [
         {
@@ -7417,6 +7432,13 @@
           "body": "BTW, in the text description \"the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore)\": uint shall be changed to int. ",
           "createdAt": "2025-10-09T21:27:52Z",
           "updatedAt": "2025-10-09T21:27:52Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander This issue can be closed as \"Won't fix\"",
+          "createdAt": "2026-03-11T12:42:58Z",
+          "updatedAt": "2026-03-11T12:46:19Z"
         }
       ]
     },
@@ -7707,7 +7729,7 @@
       "id": "I_kwDOCpt5cM7QWkgo",
       "title": "ECDH-SS sender identity parameters",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/288",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "BrianSipos",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [
@@ -7718,8 +7740,8 @@
       ],
       "body": "In looking through C509-defined COSE header parameters, I notice that there is no C509 equivalent to the X509 sender identifiers defined in [RFC 9360](https://www.rfc-editor.org/rfc/rfc9360.html#section-3).\n\nIf parity is desired, there should be \"c5t-sender\" \"c5c-sender\" \"c5u-sender\" equivalents.\n",
       "createdAt": "2025-10-08T14:00:45Z",
-      "updatedAt": "2026-03-09T13:11:20Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-11T11:48:59Z",
+      "closedAt": "2026-03-11T11:48:59Z",
       "comments": [
         {
           "author": "emanjon",
@@ -7727,6 +7749,13 @@
           "body": "Good point. That should likely be added.",
           "createdAt": "2026-01-27T10:33:29Z",
           "updatedAt": "2026-01-27T10:33:29Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "PR #326 is now merged and addressed all comments from Brian.",
+          "createdAt": "2026-03-11T11:48:59Z",
+          "updatedAt": "2026-03-11T11:48:59Z"
         }
       ]
     },
@@ -7959,7 +7988,7 @@
       "id": "I_kwDOCpt5cM7WABJ7",
       "title": "Extension AS Identifiers and AS Identifiers v2: use the absolute value instead delta one",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/296",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -7968,8 +7997,8 @@
       ],
       "body": "In draft-15:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.  With the exception of the first ASId, the ASid is encoded\n      as the difference to the previous ASid.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n\nConsider we have following AS-Identifiers (original value):\n\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: 600,\n    \u201emax\u201c: 710\n  },\n  \u201eid\u201c: 830\n]\n```\nShall we encode it as:\n```\n[\n  \u201eid\u201c: 999,\n  \u201erange\u201c: {\n    \u201emin\u201c: -399, // difference to the previous id 999: 600 - 999\n    \u201emax\u201c: 110, // difference to the min: 710 - 600\n  },\n  \u201eid\u201c: 120 // difference to the max of previous range: 830 - 710\n]\n```\nThis is quite complex to implement and also difficult to understand.\n\nMy suggestion is to remove \" With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.\u201c, namely with the new text as follows:\n\n```\nAS Resources (id-pe-autonomousSysIds).  If rdi is not present, the\n      extension value can be CBOR encoded.  Each ASId is encoded as an\n      uint.\n\n      ASIdOrRange = uint / [min:uint, max:uint]\n      ASIdentifiers = [ + ASIdOrRange ] / null\n```\n",
       "createdAt": "2025-11-05T10:28:53Z",
-      "updatedAt": "2026-03-09T10:07:50Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-11T10:19:24Z",
+      "closedAt": "2026-03-11T10:19:24Z",
       "comments": [
         {
           "author": "xipki",
@@ -7984,6 +8013,13 @@
           "body": " \n> [@gselander](https://github.com/gselander) [@emanjon](https://github.com/emanjon) I cannot find any examples containing this extension. Do you have any examples or links?\n\nJohn to provide the RPKI example cert.",
           "createdAt": "2026-03-09T09:45:22Z",
           "updatedAt": "2026-03-09T09:45:22Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Not to be fixed",
+          "createdAt": "2026-03-11T10:19:24Z",
+          "updatedAt": "2026-03-11T10:19:24Z"
         }
       ]
     },
@@ -8053,17 +8089,17 @@
       "id": "I_kwDOCpt5cM7WAJh-",
       "title": "Extension Signed Certificate Timestamp (Certificate Transparency): extend the syntax to support extensions and new timestamp versions",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/299",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
-        "needs PR"
+        "low priority for core spec"
       ],
       "body": "In draft-15:\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If all\n      the SCTs are version v1 [RFC6962], and there are no SCT\n      extensions, the extension value can be CBOR encoded.  Other\n      versions of SCT are out of scope for this document.  LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      uint (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        logID: bytes,\n        timestamp: int,\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```\n\n1. typo in the text: \"the timestamp is encoded as a CBOR uint\" -> \"... a CBOR int\".\n2. Add support of extensions, and to allow the support of new timestamp versions, a new field is added. Finally we have the new text below:\n\n``` \n*  Signed Certificate Timestamp (Certificate Transparency).  If\n      the SCTs have version v1 (value 0) [RFC6962], the syntax is as follows. LogIDs are\n      encoded as CBOR byte strings, the timestamp is encoded as a CBOR\n      int (milliseconds since validityNotBefore), and the signature is\n      encoded with an (AlgorithmIdentifier, any) pair in the same way as\n      issuerSignatureAlgorithm and issuerSignatureValue.\n\n      SignedCertificateTimestamp = (\n        version: uint,\n        logID: bytes,\n        timestamp: int,\n        extensions: bytes\n        sigAlg: AlgorithmIdentifier,\n        sigValue: any,\n      )\n      SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]\n```",
       "createdAt": "2025-11-05T10:37:16Z",
-      "updatedAt": "2026-03-09T10:06:51Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-11T10:19:08Z",
+      "closedAt": "2026-03-11T10:19:08Z",
       "comments": [
         {
           "author": "xipki",
@@ -8118,19 +8154,19 @@
       "id": "I_kwDOCpt5cM7e6b4V",
       "title": "Wi-SUN Certificates",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/301",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "dgtlrift",
       "authorAssociation": "NONE",
       "assignees": [
         "emanjon"
       ],
       "labels": [
-        "needs PR"
+        "PR exists"
       ],
       "body": "Wi-SUN certificate templates generate certificates that are not convertible to c509 with the c509_demo_impl implementation.\n\nSee [SiLabs KBA: Create your Own Wi-SUN Certificates](https://community.silabs.com/s/article/Create-your-Own-Wi-SUN-Certificates?language=en_US#:~:text=Generate%20a%20CSR%20for%20the%20intermediate%202%20CA%20openssl%20req,openssl%2Dwisun.conf%2011.) for openssl config details.",
       "createdAt": "2025-12-17T17:49:06Z",
-      "updatedAt": "2026-03-09T12:26:17Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-11T11:51:07Z",
+      "closedAt": "2026-03-11T11:51:07Z",
       "comments": [
         {
           "author": "xipki",
@@ -8166,6 +8202,13 @@
           "body": "Need to add int encoding to KeyPurposeId 1.3.6.1.4.1.45605.1",
           "createdAt": "2026-03-09T09:36:33Z",
           "updatedAt": "2026-03-09T09:36:33Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed in PR #329",
+          "createdAt": "2026-03-11T11:51:07Z",
+          "updatedAt": "2026-03-11T11:51:07Z"
         }
       ]
     },
@@ -8408,6 +8451,94 @@
           "updatedAt": "2026-03-09T09:52:45Z"
         }
       ]
+    },
+    {
+      "number": 330,
+      "id": "I_kwDOCpt5cM7xfOKU",
+      "title": "Editorial: Plural or singular in IANA section",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/330",
+      "state": "OPEN",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Should be aligned\n\n`   | Value | Private Key Types                                         |\n`\n`   | Value | RDN Attribute                                             |\n`",
+      "createdAt": "2026-03-10T12:33:33Z",
+      "updatedAt": "2026-03-10T12:33:33Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 331,
+      "id": "I_kwDOCpt5cM7xfntT",
+      "title": "Constradicting encoding of Challende Password",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/331",
+      "state": "CLOSED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "```\n    A UTF8 String\n   is encoded as CBOR text, and a Printable String is tagged with number\n   121 (alternative 0 as defined in Section 9.1 of\n   [I-D.bormann-cbor-notable-tags])\n```\n\n```\n   |       |                  Negative value for Printable String,     |\n   |       |                  and positive value for UTF8 String       |\n```\n\nAlso do we really need to support both?",
+      "createdAt": "2026-03-10T12:50:53Z",
+      "updatedAt": "2026-03-11T10:17:35Z",
+      "closedAt": "2026-03-11T10:17:35Z",
+      "comments": []
+    },
+    {
+      "number": 332,
+      "id": "I_kwDOCpt5cM7x16lG",
+      "title": "Assign small number (<=23) for the SM2 signature algorithm and public key",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/332",
+      "state": "CLOSED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In China, SM2 is widely used, and in many areas, it the only one allowed. So If still possible, can you please assign small number (<= 23) for SM2 to save the wired bytes?\n\nIn -17, \"Figure 19: C509 Public Key Algorithms\" assigns 28 to \"EC Public Key (Weierstrass) with sm2p256v1\", and \"Figure 18: C509 Signature Algorithms\" assigns 45 for \"SM2 with SM3\".\n\nFor example, I would suggest to assign 8 to SM2 signature algorithm, and 6 for the SM2 public key.",
+      "createdAt": "2026-03-11T10:49:00Z",
+      "updatedAt": "2026-03-11T11:41:25Z",
+      "closedAt": "2026-03-11T11:41:25Z",
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "That makes sense to me. All used ECC algorithms could get small numbers.",
+          "createdAt": "2026-03-11T11:37:38Z",
+          "updatedAt": "2026-03-11T11:37:38Z"
+        }
+      ]
+    },
+    {
+      "number": 334,
+      "id": "I_kwDOCpt5cM7x_PHi",
+      "title": "Editorial: text optimzation",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/334",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "1. Add suffix \"v2\" to the name and identifier of GSMA certificate profile identifiers\n2. Add reference to Figures if available\n3. Align the name and identifier of \"jurisdiction*\" attributes with CA/Browser\n4. Align text in Figure \"C509 General Names\"",
+      "createdAt": "2026-03-11T18:25:04Z",
+      "updatedAt": "2026-03-11T18:25:04Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 336,
+      "id": "I_kwDOCpt5cM7yBhdd",
+      "title": "Editorial: Use \"Certification Request\" instead \"Certificate Request\" to align RFC 2986",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/336",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "And remove the non-standard term \"CSR\".",
+      "createdAt": "2026-03-11T20:24:55Z",
+      "updatedAt": "2026-03-11T20:26:27Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -13733,24 +13864,26 @@
       "id": "PR_kwDOCpt5cM7JEcQq",
       "title": "COSE Parameters for Sender Keys with ECDH-SS",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/326",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Algorithm-specific parameters that are used for identifying or transporting the sender's key for static-static key agreement algorithms. Addresses #288.",
       "createdAt": "2026-03-09T13:09:33Z",
-      "updatedAt": "2026-03-09T13:26:50Z",
+      "updatedAt": "2026-03-11T10:47:49Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "SS-sender-params",
-      "headRefOid": "2c15dd54766ca2acdc5688a75d442ee687bd67bb",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "7b1048dfe0613c193de9eb29c43dd0f2b3cbdb24",
+      "closedAt": "2026-03-11T10:47:49Z",
+      "mergedAt": "2026-03-11T10:47:49Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "57eb6162e47c67aeeb309a280b14d8714004c902"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -13758,6 +13891,13 @@
           "body": "@BrianSipos Please review",
           "createdAt": "2026-03-09T13:10:55Z",
           "updatedAt": "2026-03-09T13:10:55Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Order fixed",
+          "createdAt": "2026-03-11T10:47:44Z",
+          "updatedAt": "2026-03-11T10:47:44Z"
         }
       ],
       "reviews": [
@@ -13780,6 +13920,52 @@
               "updatedAt": "2026-03-09T13:26:50Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7puMsT",
+          "commit": {
+            "abbreviatedOid": "2c15dd5"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-03-10T10:02:50Z",
+          "updatedAt": "2026-03-10T10:02:50Z",
+          "comments": [
+            {
+              "originalPosition": 24,
+              "body": "@BrianSipos Thanks for quick response! Please review the update. Since you have a specific use case, let us know if you are missing anything.",
+              "createdAt": "2026-03-10T10:02:50Z",
+              "updatedAt": "2026-03-10T10:02:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7pxTym",
+          "commit": {
+            "abbreviatedOid": "9eab4b1"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-10T12:27:48Z",
+          "updatedAt": "2026-03-10T12:27:48Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7qBk8Z",
+          "commit": {
+            "abbreviatedOid": "9eab4b1"
+          },
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "I think this looks good. The order of columns in your table is different than in the IANA registry (as below) but that can also be dealt with during IANA feedback.\n\n```\nName \tAlgorithm \tLabel \tType \tDescription \tReference \n```",
+          "createdAt": "2026-03-11T00:58:24Z",
+          "updatedAt": "2026-03-11T00:58:24Z",
+          "comments": []
         }
       ]
     },
@@ -13788,26 +13974,63 @@
       "id": "PR_kwDOCpt5cM7JFFvP",
       "title": "Fix #299 remove sct",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/327",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Changed both normative text and examples",
       "createdAt": "2026-03-09T13:47:42Z",
-      "updatedAt": "2026-03-09T13:47:43Z",
+      "updatedAt": "2026-03-11T10:19:06Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue299-removeSCT",
       "headRefOid": "023ab1eea98f1c02041e756221eae80677a88686",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "closedAt": "2026-03-11T10:19:06Z",
+      "mergedAt": "2026-03-11T10:19:06Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "406891e612a93b41c8ce932fdd2b8e36baed1f61"
+      },
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Should we remove the EKU as well?\r\n",
+          "createdAt": "2026-03-10T12:26:28Z",
+          "updatedAt": "2026-03-10T12:26:28Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7ptXrs",
+          "commit": {
+            "abbreviatedOid": "023ab1e"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-10T09:29:38Z",
+          "updatedAt": "2026-03-10T09:29:38Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOCpt5cM7pxUPi",
+          "commit": {
+            "abbreviatedOid": "023ab1e"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-10T12:28:06Z",
+          "updatedAt": "2026-03-10T12:28:06Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 328,
@@ -13848,6 +14071,134 @@
           "updatedAt": "2026-03-09T14:05:40Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 329,
+      "id": "PR_kwDOCpt5cM7JUy_u",
+      "title": "Wi-SUN Fan Device EKU",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/329",
+      "state": "MERGED",
+      "author": "emanjon",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-10T09:32:30Z",
+      "updatedAt": "2026-03-11T10:13:04Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "Wi-SUN-Fan-Device-EKU",
+      "headRefOid": "22356d8053c9fa2e5059c9fa1e150ac01932cd0b",
+      "closedAt": "2026-03-11T10:13:04Z",
+      "mergedAt": "2026-03-11T10:13:04Z",
+      "mergedBy": "emanjon",
+      "mergeCommit": {
+        "oid": "979d5c9fe65b7c06b22dbd3174db9a6cc1b6f7cd"
+      },
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks straightforward to me. And I guess there is no relevant / stable enough reference to provide as a comment?",
+          "createdAt": "2026-03-10T09:48:37Z",
+          "updatedAt": "2026-03-10T09:48:37Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The Wi-SUN specifications are only available for members, so there is not good link except wi-sun.org\r\n\r\nhttps://ws.wi-sun.org/site/login?return=%2Fwg%2FWS%2Fdocument%2F17480\r\n",
+          "createdAt": "2026-03-10T10:43:18Z",
+          "updatedAt": "2026-03-10T10:43:18Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Discussed in meeting with authors. Agree to merge",
+          "createdAt": "2026-03-11T10:12:18Z",
+          "updatedAt": "2026-03-11T10:12:18Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 333,
+      "id": "PR_kwDOCpt5cM7Jrxy7",
+      "title": "Add Lijun as co-author",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/333",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-11T11:44:28Z",
+      "updatedAt": "2026-03-11T11:44:29Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "add-lijun",
+      "headRefOid": "5660f7a43480d4071130de6ef7331b2c52fb3ded",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 335,
+      "id": "PR_kwDOCpt5cM7Jy8cK",
+      "title": "Fix #334.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/335",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-11T18:29:12Z",
+      "updatedAt": "2026-03-11T21:50:49Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "add-referenceInFigures",
+      "headRefOid": "b16e840265095e6489bd3b7e554cd545e5f8bd32",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 337,
+      "id": "PR_kwDOCpt5cM7J047M",
+      "title": "Fix #336: Use \"Certification Request\" instead \"Certificate Request\" to align RFC 2986",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/337",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-11T20:26:13Z",
+      "updatedAt": "2026-03-11T20:26:14Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "certificationRequestText",
+      "headRefOid": "2393ba2f30978aeaacdaaa53cf32f1c303f06af1",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
       "reviews": []
     }
   ]
