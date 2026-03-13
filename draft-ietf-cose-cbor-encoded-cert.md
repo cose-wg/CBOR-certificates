@@ -579,7 +579,7 @@ CBOR encoding of the following extension values are partly supported:
     - Otherwise, if the byte sequence of any IPAddress (including addressPrefix, and the min and max fields of addressRange) exceeds 8 octets in length, the IPAddressChoice representation SHALL be used.
 
     - Otherwise, the IntIPAddressChoice representation SHALL be used.
-  
+
   For IntIPAddressChoice, IntAddressPrefix and the min and max values of IntAddressRange SHALL be encoded as big-endian integers representing the following byte sequence:
 
   ```
@@ -601,8 +601,9 @@ CBOR encoding of the following extension values are partly supported:
    IPAddressOrRange = AddressPrefix / AddressRange
    IPAddressChoice  = [ + IPAddressOrRange ]
 
-   IPAddressFamily = (AFI: uint, SAFI: uint / null, 
-                      IntIPAddressChoice / IPAddressChoice / NullIPAddressChoice)
+   IPAddressFamily = (AFI: uint, SAFI: uint / null,
+                      IntIPAddressChoice / IPAddressChoice
+                      / NullIPAddressChoice)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
