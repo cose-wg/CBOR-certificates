@@ -6,12 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 12 September 2026                         University of Glasgow
+Expires: 14 September 2026                         University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
-                                                           11 March 2026
+                                                                 L. Liao
+                                                                     NIO
+                                                           13 March 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -68,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 September 2026.
+   This Internet-Draft will expire on 14 September 2026.
 
 Copyright Notice
 
@@ -137,7 +139,6 @@ Table of Contents
      A.3.  Example: CAB Baseline ECDSA HTTPS X.509 Certificate
      A.4.  Example: CAB Baseline RSA HTTPS X.509 Certificate
    Acknowledgments
-   Contributors
    Authors' Addresses
 
 1.  Introduction
@@ -3328,9 +3329,9 @@ Table of Contents
               Housley, R., Bonnell, C., Mandel, J., Okubo, T., and M.
               StJohns, "Media Access Control (MAC) Addresses in X.509
               Certificates", Work in Progress, Internet-Draft, draft-
-              ietf-lamps-macaddress-on-06, 18 February 2026,
+              ietf-lamps-macaddress-on-07, 12 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              macaddress-on-06>.
+              macaddress-on-07>.
 
    [I-D.ietf-lamps-rfc7030-csrattrs]
               Richardson, M., Friel, O., von Oheimb, D., and D. Harkins,
@@ -4097,11 +4098,6 @@ Acknowledgments
    Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for
    reviewing and commenting on intermediate versions of the draft.
 
-Contributors
-
-   Special acknowledgement goes to Lijun Liao for his careful review and
-   many detailed improvement proposals.
-
 Authors' Addresses
 
    John Preuß Mattsson
@@ -4127,3 +4123,8 @@ Authors' Addresses
    Martin Furuhed
    IN Groupe
    Email: martin.furuhed@ingroupe.com
+
+
+   Lijun Liao
+   NIO
+   Email: lijun.liao@nio.io
