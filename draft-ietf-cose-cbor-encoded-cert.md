@@ -581,19 +581,6 @@ CBOR encoding of the following extension values are partly supported:
 
 * IPAddrBlocks v2 (id-pe-ipAddrBlocks-v2). The X.509 extension IPAddrBlocks v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "IPAddrBlocks".
 
-* Signed Certificate Timestamp (Certificate Transparency). If all the SCTs are version v1 {{RFC6962}}, and there are no SCT extensions, the extension value can be CBOR encoded. Other versions of SCT are out of scope for this document. LogIDs are encoded as CBOR byte strings, the timestamp is encoded as a CBOR uint (milliseconds since validityNotBefore), and the signature is encoded with an (AlgorithmIdentifier, any) pair in the same way as issuerSignatureAlgorithm and issuerSignatureValue.
-
-~~~~~~~~~~~ cddl
-   SignedCertificateTimestamp = (
-     logID: bytes,
-     timestamp: int,
-     sigAlg: AlgorithmIdentifier,
-     sigValue: any,
-   )
-   SignedCertificateTimestamps = [ + SignedCertificateTimestamp ]
-~~~~~~~~~~~
-{: sourcecode-name="c509.cddl"}
-
 * OCSP No Check (id-pkix-ocsp-nocheck). If the extension value is NULL, it can be CBOR encoded. The CBOR encoded extensionValue is the value null.
 
 * Precertificate Signing Certificate. The CBOR encoded extensionValue is the value null.
@@ -619,7 +606,7 @@ The examples below use values from {{extype}}, {{EKU}}, and {{GN}}:
 
 Thus, the extension field of a certificate containing all of the above extensions in the given order would be encoded as the CBOR array \[ -4, -1, 2, 23, 8, \[ 3, 9 \], 3, "example.com" \].
 
-## COSE Header Parameters {#cose-header-params}
+## C509 COSE Header Parameters {#cose-header-params}
 
 The formatting and processing for c5b, c5c, c5t, and c5u, defined in {{iana-header}} below, are similar to x5bag, x5chain, x5t, x5u defined in {{RFC9360}} except that the certificates are C509 instead of DER-encoded X.509 and use a COSE_C509 structure instead of COSE_X509.
 
@@ -646,9 +633,25 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
 | c5t | 22 | COSE_CertHash | Hash of a ~C509Certificate |
 | c5u | 23 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
-{: #iana-header title="COSE Header Parameters" cols="r l l l"}
+{: #iana-header title="C509 COSE Header Parameters" cols="r l l l"}
 
 Note that certificates can also be identified with a 'kid' header parameter by storing 'kid' and the associated bag or chain in a dictionary.
+
+
+## C509 COSE Header Algorithm Parameters {#cose-header-alg-params}
+
+In this section we define the COSE header parameters used for identifying or transporting the sender's key for static-static key agreement algorithms corresponding to {{Section 3 of RFC9360}}, see {{iana-sender}}.
+
+* c5c-sender contains the chain of certificates starting with the sender's key exchange certificate. The structure is the same as 'c5c'.
+* c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.
+* c5u-sender contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.
+
+| Name | Algorithm | Label | Type | Description |
+| c5c-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -30 (suggested) | COSE_C509 | An ordered chain of C509 certificates |
+| c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a ~C509Certificate |
+| c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+{: #iana-sender title="Static ECDH Algorithm Values" cols="r l l l l"}
+
 
 ## Private Key Structures
 
@@ -1220,8 +1223,6 @@ The initial contents of the registry are:
 |       | OID:             1.2.840.113549.1.9.7                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 07         |
 |       | Comments:        RFC 2985                                 |
-|       |                  Negative value for Printable String,     |
-|       |                  and positive value for UTF8 String       |
 |       | attributeValue:  ChallengePassword                        |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Private Key Possession Statement         |
@@ -1305,13 +1306,6 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:                                                 |
 |       | extensionValue:  AuthorityInfoAccessSyntax                |
-+-------+-----------------------------------------------------------+
-|    10 | Name:            Signed Certificate Timestamp List        |
-|       | Identifiers:                                              |
-|       | OID:             1.3.6.1.4.1.11129.2.4.2                  |
-|       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 02      |
-|       | Comments:                                                 |
-|       | extensionValue:  SignedCertificateTimestamps              |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | Identifiers:     subjectDirectoryAttributes               |
@@ -1720,6 +1714,12 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" in th
 |       | DER:             06 0A 2B 06 01 04 01 D6 79 02 04 04    |
 |       | Comments:        RFC 6962                               |
 +-------+---------------------------------------------------------+
+|    20 | Name:            Wi-SUN FAN Device                      |
+|       | Identifiers:     id-kp-wisun-fan-device                 |
+|       | OID:             1.3.6.1.4.1.45605.1                    |
+|       | DER:             06 09 2B 06 01 04 01 82 E4 25 01       |
+|       | Comments:                                               |
++-------+---------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-eku title="C509 Extended Key Usages"}
 {: artwork-align="center"}
@@ -1849,6 +1849,13 @@ IANA has created a new registry titled "C509 Signature Algorithms" in the new re
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 24          |
 |       | Comments:    bytes of size 0                              |
 +-------+-----------------------------------------------------------+
+|     8 | Name:        SM2 with SM3                                 |
+|       | Identifiers: sm2-with-sm3                                 |
+|       | OID:         1.2.156.10197.1.501                          |
+|       | Parameters:  Absent                                       |
+|       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
+|       | Comments:    See Section 3.2.2.                           |
++-------+-----------------------------------------------------------+
 |    12 | Name:        Ed25519                                      |
 |       | Identifiers: id-Ed25519, id-EdDSA25519                    |
 |       | OID:         1.3.101.112                                  |
@@ -1958,13 +1965,6 @@ IANA has created a new registry titled "C509 Signature Algorithms" in the new re
 |       | DER:         30 0A 06 08 2B 06 01 05 05 07 06 1F          |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
-|    45 | Name:        SM2 with SM3                                 |
-|       | Identifiers: sm2-with-sm3                                 |
-|       | OID:         1.2.156.10197.1.501                          |
-|       | Parameters:  Absent                                       |
-|       | DER:         30 0A 06 08 2A 81 1C CF 55 01 83 75          |
-|       | Comments:    See Section 3.2.2.                           |
-+-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-sigalgs title="C509 Signature Algorithms"}
 {: artwork-align="center"}
@@ -2010,6 +2010,16 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              04 00 23                                     |
 |       | Comments:    Compressed subjectPublicKey                  |
 |       |              Also known as P-521, ansip521r1              |
++-------+-----------------------------------------------------------+
+|     6 | Name:        EC Public Key (Weierstrass) with             |
+|       |              sm2p256v1                                    |
+|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
+|       | OID:         1.2.840.10045.2.1                            |
+|       | Parameters:  namedCurve = sm2p256v1                       |
+|       |              (1.2.156.10197.1.301)                        |
+|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
+|       |              1C CF 55 01 82 2D                            |
+|       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
 |     8 | Name:        X25519 (Montgomery)                          |
 |       | Identifiers: id-X25519                                    |
@@ -2079,16 +2089,6 @@ IANA has created a new registry titled "C509 Public Key Algorithms" in the new r
 |       |              7A 01 81 5F 65 82 00 01                      |
 |       | Comments:    Compressed subjectPublicKey                  |
 +-------+-----------------------------------------------------------+
-|    28 | Name:        EC Public Key (Weierstrass) with             |
-|       |              sm2p256v1                                    |
-|       | Identifiers: ecPublicKey, id-ecPublicKey                  |
-|       | OID:         1.2.840.10045.2.1                            |
-|       | Parameters:  namedCurve = sm2p256v1                       |
-|       |              (1.2.156.10197.1.301)                        |
-|       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
-|       |              1C CF 55 01 82 2D                            |
-|       | Comments:    Compressed subjectPublicKey                  |
-+-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pkalgs title="C509 Public Key Algorithms"}
 {: artwork-align="center"}
@@ -2100,6 +2100,10 @@ The public key algorithms registry {{pkalg}} specifies a number of algorithms, n
 ## COSE Header Parameters Registry {#cose}
 
 IANA is requested to assign the entries in {{iana-header}} to the "COSE Header Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
+
+## COSE Header Algorithm Parameters Registry {#cose-alg}
+
+IANA is requested to assign the entries in {{iana-sender}} to the "COSE Header Algorithm Parameters" registry in the registry group "CBOR Object Signing and Encryption (COSE)" with this document as reference.
 
 ## Media Type Application Registry
 
@@ -2909,30 +2913,29 @@ h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
  3, [2, "sni.cloudflaressl.com", 2, "www.ietf.org"],
 -2, 1,
  8, [1, 2],
- 5, ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl",
-     "http://crl4.digicert.com/CloudflareIncECCCA-3.crl"],
- 6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"],  2],
+ 5, [
+     ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl", null, null],
+     ["http://crl4.digicert.com/CloudflareIncECCCA-3.crl", null, null]
+    ],
+ 6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"], 2, []],
  9, [1, "http://ocsp.digicert.com",
      2, "http://cacerts.digicert.com/CloudflareIncECCCA-3.crt"],
 -4, -2,
-10, [
-    h'F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E3',
-    77922190,
-    0,
-    h'F8D1B4A93D2F0D4C4176DFB488BCC73B86443D7DE00E6AC8174D8948A8843668
-    29FF5A34068A240C69502788E8EE25AB7ED2CBCF686ECE7B5F96B431A90702FA',
-    h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
-    77922238,
-    0,
-    h'E891C197BFB0E3D30CB6CEE60D94C3C75FD1175336931108D89812D4D29D81D0
-    A159D16C4647D1483757FCD6CE4E75EC7B5EF657EFE028F8E5CC4792682DAC43'
-    ]
+ h'2B06010401D679020402',
+ h'0481F300F1007600F65C942FD1773022145418083094568EE34D131933BFDF0C
+   2F200BCC4EF164E3000001739C835F8E0000040300473045022100F8D1B4A93D
+   2F0D4C4176DFB488BCC73B86443D7DE00E6AC8174D8948A8843668022029FF5A
+   34068A240C69502788E8EE25AB7ED2CBCF686ECE7B5F96B431A90702FA007700
+   5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA
+   000001739C835FBE0000040300483046022100E891C197BFB0E3D30CB6CEE60D
+   94C3C75FD1175336931108D89812D4D29D81D0022100A159D16C4647D1483757
+   FCD6CE4E75EC7B5EF657EFE028F8E5CC4792682DAC43'
 ],
 h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
   B5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 783 bytes.
+The size of the CBOR encoding (CBOR sequence) is 835 bytes.
 
 ## Example: CAB Baseline RSA HTTPS X.509 Certificate
 
@@ -3040,7 +3043,7 @@ h'A6A55C870E39B40E',
 0,
 h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
   E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E508879
-  3A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37
+  3A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37g
   D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B8211
   7C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79
   B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E24
@@ -3050,26 +3053,23 @@ h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
 -4, -2,
  8, [ 1, 2 ],
  -2, 5,
- 5, ["http://crl.starfieldtech.com/sfig2s1-242.crl"],
- 6, [ h'6086480186fd6e01071701',
-      [1, "http://certificates.starfieldtech.com/repository/"], 1 ],
+ 5, "http://crl.starfieldtech.com/sfig2s1-242.crl",
+ 6, [ h'6086480186FD6E01071701',
+     [1, "http://certificates.starfieldtech.com/repository/"], 1, []],
  9, [ 1, "http://ocsp.starfieldtech.com/",
       2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
  7, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
  3, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
  1, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
-10, [
-    h'F65C942FD1773022145418083094568EE34D131933BFDF0C2F200BCC4EF164E3',
-    1715,
-    0,
-    h'8CF54852CE5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F
-      BCA2254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE6454995',
-    h'5CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70ECA',
-    2012,
-    0,
-    h'A5E0906E63E91D4FDDEFFF0352B91E50896007564B448A3828F596DC6B28726D
-      FC91EAED02168866054EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
-    ]
+ h'2B06010401D679020402',
+ h'0481F400F2007700F65C942FD1773022145418083094568EE34D131933BFDF0C
+   2F200BCC4EF164E300000174E5AC711300000403004830460221008CF54852CE
+   5635433911CF10CDB91F52B33639223AD138A41DECA6FEDE1FE90F022100BCA2
+   254366C19A2691C47A00B5B653ABBD44C2F8BAAEF4D2DAF2527CE64549950077
+   005CDC4392FEE6AB4544B15E9AD456E61037FBD5FA47DCA17394B25EE6F6C70E
+   CA00000174E5AC723C0000040300483046022100A5E0906E63E91D4FDDEFFF03
+   52B91E50896007564B448A3828F596DC6B28726D022100FC91EAED0216886605
+   4EE18A2E5346C4CC51FEB3FA10A91D2EDBF99125F86CE6'
 ],
 h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
   B33F9DB3D7E0594C19A8E419A50CA770727763D5FE64510AD27AD650A58A9238
@@ -3081,9 +3081,9 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
   F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D'
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1245 bytes.
+The size of the CBOR encoding (CBOR sequence) is 1295 bytes.
 
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Corey Bonnell, Carsten Bormann, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for reviewing and commenting on intermediate versions of the draft and help with GitHub.
+The authors want to thank Henk Birkholz, Corey Bonnell, Carsten Bormann,  Viktor Dukhovni, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
