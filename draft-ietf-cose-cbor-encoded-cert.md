@@ -564,16 +564,45 @@ CBOR encoding of the following extension values are partly supported:
 
 * AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
 
-* IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.
+* IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. The ASN.1 BIT STRING value of IPAddress is converted to a byte sequence defined as:
+
+  ```
+  bytes = unusedBits || value
+  ```
+
+  where unusedBits is a single octet indicating the number of unused bits in the final octet of the BIT STRING, and value is the sequence of octets containing the BIT STRING value. This byte sequence preserves the exact information contained in the ASN.1 BIT STRING.
+
+  For each IPAddressFamily, the representation is selected as follows:
+
+    - If inherit is present, the NullIPAddressChoice representation SHALL be used.
+
+    - Otherwise, if the byte sequence of any IPAddress (including addressPrefix, and the min and max fields of addressRange) exceeds 8 octets in length, the IPAddressChoice representation SHALL be used.
+
+    - Otherwise, the IntIPAddressChoice representation SHALL be used.
+  
+  For IntIPAddressChoice, IntAddressPrefix and the min and max values of IntAddressRange SHALL be encoded as big-endian integers representing the following byte sequence:
+
+  ```
+  bytes = (unusedBits + 1) || value
+  ```
+
+  With the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
 
 ~~~~~~~~~~~ cddl
+   NullIPAddressChoice = null
 
-   Address = bytes
-   AddressPrefix = [ unusedBits: uint, Address ]
-   AddressRange = [ min: Address, max: Address ]
+   IntAddressPrefix = int
+   IntAddressRange  = [ min: int, max: int ]
+   IntIPAddressOrRange = IntAddressPrefix / IntAddressRange
+   IntIPAddressChoice  = [ + IntIPAddressOrRange ]
+
+   AddressPrefix = bytes
+   AddressRange  = [ min: bytes, max: bytes ]
    IPAddressOrRange = AddressPrefix / AddressRange
-   IPAddressChoice = [ + IPAddressOrRange ] / null
-   IPAddressFamily = (AFI: uint, SAFI: uint / null, IPAddressChoice)
+   IPAddressChoice  = [ + IPAddressOrRange ]
+
+   IPAddressFamily = (AFI: uint, SAFI: uint / null, 
+                      IntIPAddressChoice / IPAddressChoice / NullIPAddressChoice)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
