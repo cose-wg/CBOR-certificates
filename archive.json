@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-12T02:42:05.517727+00:00",
+  "timestamp": "2026-03-15T03:16:33.833992+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -4931,7 +4931,7 @@
       "id": "I_kwDOCpt5cM6Gr9Td",
       "title": "Missing the hex-encoded C509 certificate for the CAB HTTPS certificate examples",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/182",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -4940,8 +4940,8 @@
       ],
       "body": "Please add the hex-encoded C509 certificates in the sections `Example CAB Baseline ECDSA HTTPS X.509 Certificate` and `Example CAB Baseline RSA HTTPS X.509 Certificate`.",
       "createdAt": "2024-04-23T19:58:38Z",
-      "updatedAt": "2026-03-11T12:43:58Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-13T13:05:55Z",
+      "closedAt": "2026-03-13T13:05:55Z",
       "comments": [
         {
           "author": "highlunder",
@@ -8424,7 +8424,7 @@
       "id": "I_kwDOCpt5cM7vXr9P",
       "title": "Extension IPAddrBlocks and IPAddrBlocks v2: use the absolute value instead delta one",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/325",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -8433,8 +8433,8 @@
       ],
       "body": "In draft -17:\n\n```\nIPAddrBlocks (id-pe-ipAddrBlocks).  ... With the exception of the first\n      Address, if the byte string has the same length as the previous\n      Address, the Address is encoded as a uint with the difference to\n      the previous Address.  It should be noted that using address\n      differences for compactness prevents encoding an address range\n      larger than 2^64 - 1 corresponding to the CBOR integer max value.\n```\n\nUsing delta value (difference to the previous Address) makes the implementation more complicated. And as mentioned in the text, this has limitation of the IP address that could be contained in a C509 certificate.\n\nMy suggestion is to use the absolute value. ",
       "createdAt": "2026-03-03T10:43:30Z",
-      "updatedAt": "2026-03-09T09:53:19Z",
-      "closedAt": null,
+      "updatedAt": "2026-03-13T11:00:34Z",
+      "closedAt": "2026-03-13T11:00:34Z",
       "comments": [
         {
           "author": "xipki",
@@ -8449,6 +8449,13 @@
           "body": "Need to make a PR.",
           "createdAt": "2026-03-09T09:52:45Z",
           "updatedAt": "2026-03-09T09:52:45Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Won't fix. See #339 ",
+          "createdAt": "2026-03-13T11:00:33Z",
+          "updatedAt": "2026-03-13T11:00:33Z"
         }
       ]
     },
@@ -8520,9 +8527,31 @@
       "labels": [],
       "body": "1. Add suffix \"v2\" to the name and identifier of GSMA certificate profile identifiers\n2. Add reference to Figures if available\n3. Align the name and identifier of \"jurisdiction*\" attributes with CA/Browser\n4. Align text in Figure \"C509 General Names\"",
       "createdAt": "2026-03-11T18:25:04Z",
-      "updatedAt": "2026-03-11T18:25:04Z",
+      "updatedAt": "2026-03-13T07:48:05Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "If there is a v3 and there identifiers are easy to register we should add them. If v2 is obsolete it should maybe be removed\n",
+          "createdAt": "2026-03-13T07:43:06Z",
+          "updatedAt": "2026-03-13T07:43:06Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "You will find the definition here: https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2023/12/SGP.22-v3.1.pdf",
+          "createdAt": "2026-03-13T07:45:51Z",
+          "updatedAt": "2026-03-13T07:45:51Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "They define new OIDs under the name without suffix \"-v2\". Right now the new names does not have suffix \"-v3\" (but they may add -v3 in the spec version v4). I have no idea whether the v2 is deprecated.",
+          "createdAt": "2026-03-13T07:47:00Z",
+          "updatedAt": "2026-03-13T07:48:05Z"
+        }
+      ]
     },
     {
       "number": 336,
@@ -8536,7 +8565,98 @@
       "labels": [],
       "body": "And remove the non-standard term \"CSR\".",
       "createdAt": "2026-03-11T20:24:55Z",
-      "updatedAt": "2026-03-11T20:26:27Z",
+      "updatedAt": "2026-03-13T08:27:15Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "RFC2986 is dated November 2000. I don't hear anyone using the term certification request. The term I hear people use is CSR. But I think c509CertificationSigningRequestTemplateType is too long. So I wrote the current text linking the term used in the document to the term used in the discussions:\n\n\"\n4. C509 Certificate (Signing) Request\n\nThis section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), ...\n\"\n\nCertificate Signing Request is then not used elsewhere in the document (except in the abstract).\n\nMy proposal is to keep it, or else change to Certificate Signing Request (CSR) only.\n",
+          "createdAt": "2026-03-12T06:17:27Z",
+          "updatedAt": "2026-03-12T06:20:07Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "RFC 2986 is still the official reference for CSR. And the term \"certification request\" is still used in the recent RFCs 7030 (EST) and 9480 (CMP).\n\nAnd as I understand:\n\n| Term | Used by |\n|---|---|\n| **Certification Request** | RFCs and ASN.1 definitions |\n| **PKCS#10 Certification Request** | PKIX protocols |\n| **CSR (Certificate Signing Request)** | tooling and developer documentation |\n\nBTW: I don not find the text `c509CertificationSigningRequestTemplateType`, do you mean `c509CertificationRequestTemplateType`?",
+          "createdAt": "2026-03-12T07:20:43Z",
+          "updatedAt": "2026-03-12T07:20:43Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\n\n> BTW: I don not find the text c509CertificationSigningRequestTemplateType, do you mean c509CertificationRequestTemplateType?\n\n\nExactly, that's what I meant with\n> But I think c509CertificationSigningRequestTemplateType is too long. \n\nI didn't want to go there.\n\nI can live with \"Certification Request\", but would like to see \"also known as a Certificate Signing Request (CSR)\".\n\n@emanjon What's your preference?",
+          "createdAt": "2026-03-12T08:33:50Z",
+          "updatedAt": "2026-03-12T08:33:50Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I will add \"also known as a C509 Certificate Signing Request (CSR)\" back, and then we will have the following text\n\n```\nThis section defines the format of a C509 Certification Request, also known as \na C509 Certificate Signing Request (CSR), based on and compatible with \n{{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.\n```\nThe text `and compatible with {{RFC2986}}` is confused, since the `C509 Certification Request` is not compatible with RFC2986. I prefer to have this text block:\n```\nThis section defines the format of a C509 Certification Request based on {{RFC2986}}.  \nIt reuses the formatting of C509 certificates defined in {{certificate}}.  \nA Certification Request is commonly referred to as a Certificate Signing Request (CSR).\n```\n",
+          "createdAt": "2026-03-12T09:04:47Z",
+          "updatedAt": "2026-03-12T09:12:49Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm fine with this.",
+          "createdAt": "2026-03-12T09:45:14Z",
+          "updatedAt": "2026-03-12T09:45:14Z"
+        },
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "On this topic, I can live with anything @gselander can live with.\n",
+          "createdAt": "2026-03-13T08:27:15Z",
+          "updatedAt": "2026-03-13T08:27:15Z"
+        }
+      ]
+    },
+    {
+      "number": 338,
+      "id": "I_kwDOCpt5cM7yI2L9",
+      "title": "\"usage\" in media types",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/338",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\"Hello David & COSE WG,\n\nI've reviewed the request. One thing that surprised me was the presence\nof an optional parameter \"usage\" without any explanation for some of the\nmedia types defined.\nIs this a copy/paste error maybe? Has there been a media-types review of\nthese already?\n\nNote that for all the CoAP Content-Format requests that do include a\n\"usage\" parameter, the explanation is present! So this does not hamper\nthe present registration request.\n\nIf in Figure 20 the spaces in  \"usage = chain\" and \"usage = c509\" could\nbe removed, per RFC 9876 Section 4.1.4, and the new media types are\napproved, then this request can be approved.\n\nregards\n\nEsko\"\n\nI think It should say \"... and IF the new media types are\napproved, then this request can be approved.\"\n\n",
+      "createdAt": "2026-03-12T06:01:40Z",
+      "updatedAt": "2026-03-12T06:01:40Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 339,
+      "id": "I_kwDOCpt5cM7ynQuQ",
+      "title": "Extensions IPAddrBlocks and IPAddrBlocks-v2: extend syntax to cover unusedBits != 0 in the Range choice.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/339",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-13T10:59:55Z",
+      "updatedAt": "2026-03-13T10:59:55Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 342,
+      "id": "I_kwDOCpt5cM7y66su",
+      "title": "Move several extensions from \"partly supported\" to \"fully supported\"",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/342",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The following extensions are fully supported, thus they shall be moved from list of \"partly supported\" to \"fully supported\":\n\n1. IPAddrBlocks and IPAddrBlocks v2 (after the merge of #339 )\n2. OCSP No Check (the extension value SHALL be NULL according to RFC 6960)\n3. Precertificate Signing Certificate\n4. TLS Features",
+      "createdAt": "2026-03-14T11:08:13Z",
+      "updatedAt": "2026-03-14T11:09:18Z",
       "closedAt": null,
       "comments": []
     }
@@ -14037,21 +14157,21 @@
       "id": "PR_kwDOCpt5cM7JFH01",
       "title": "fixed #325. used absolute value in ip addr blocks",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/328",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-03-09T13:49:29Z",
-      "updatedAt": "2026-03-09T14:05:40Z",
+      "updatedAt": "2026-03-13T10:57:19Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "db6f90db38a2aa784c568573df7e9d96be050566",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "issue325-IPAddrBlocks",
       "headRefOid": "885a9f7a64e11853a4e4c2801342a23b0098fec2",
-      "closedAt": null,
+      "closedAt": "2026-03-13T10:57:19Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -14128,26 +14248,48 @@
       "id": "PR_kwDOCpt5cM7Jrxy7",
       "title": "Add Lijun as co-author",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/333",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T11:44:28Z",
-      "updatedAt": "2026-03-11T11:44:29Z",
+      "updatedAt": "2026-03-13T07:39:31Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "add-lijun",
-      "headRefOid": "5660f7a43480d4071130de6ef7331b2c52fb3ded",
-      "closedAt": null,
+      "headRefOid": "9a06c54324a3ffebf25fd1428b62053daf2b90c9",
+      "closedAt": "2026-03-13T07:39:30Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Some conflicts and now some compilation errors, I make a commit to main and close this instead",
+          "createdAt": "2026-03-13T07:37:26Z",
+          "updatedAt": "2026-03-13T07:37:26Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7qgjna",
+          "commit": {
+            "abbreviatedOid": "5660f7a"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-12T07:03:49Z",
+          "updatedAt": "2026-03-12T07:03:49Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 335,
@@ -14161,13 +14303,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T18:29:12Z",
-      "updatedAt": "2026-03-11T21:50:49Z",
+      "updatedAt": "2026-03-14T09:35:58Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "add-referenceInFigures",
-      "headRefOid": "b16e840265095e6489bd3b7e554cd545e5f8bd32",
+      "headRefOid": "cd5c304ecf9f628927aa65563f2053577c1d4c00",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -14187,13 +14329,94 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T20:26:13Z",
-      "updatedAt": "2026-03-11T20:26:14Z",
+      "updatedAt": "2026-03-13T08:39:54Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "certificationRequestText",
-      "headRefOid": "2393ba2f30978aeaacdaaa53cf32f1c303f06af1",
+      "headRefOid": "e083c597c3cbc1e71451fbb1d24b906e795af512",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@gselander ? I don't have any strong opinions. Both terms are used extensively. I think Certificate Request is a much better name for PKI, but could be confused with TLS Certificate Request message...",
+          "createdAt": "2026-03-13T07:35:45Z",
+          "updatedAt": "2026-03-13T07:35:45Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@emanjon G\u00f6ran and I have started discussion under #336. Can you comment there?",
+          "createdAt": "2026-03-13T07:58:45Z",
+          "updatedAt": "2026-03-13T08:39:54Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7q-U_j",
+          "commit": {
+            "abbreviatedOid": "e083c59"
+          },
+          "author": "emanjon",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-03-13T07:31:21Z",
+          "updatedAt": "2026-03-13T07:31:21Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 340,
+      "id": "PR_kwDOCpt5cM7KWAru",
+      "title": "Fix #339: Extended the syntax of IPAddrBlocks (v2) to support unusedBits",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/340",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-13T12:05:08Z",
+      "updatedAt": "2026-03-13T12:08:18Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "issue339-extendIPAddrBlocks",
+      "headRefOid": "abfc1d027a8b1754dd27ae76fc4f63993058578f",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 341,
+      "id": "PR_kwDOCpt5cM7KdGZK",
+      "title": "Updated the size to the latest spec.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/341",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-03-13T18:58:05Z",
+      "updatedAt": "2026-03-13T18:58:14Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "update-cert-sizes",
+      "headRefOid": "ac20e2ff87a686cf9b592d6b4356bc5d2fb2b3a8",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
