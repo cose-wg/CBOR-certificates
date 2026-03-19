@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-15T03:16:33.833992+00:00",
+  "timestamp": "2026-03-19T02:50:07.601332+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8565,7 +8565,7 @@
       "labels": [],
       "body": "And remove the non-standard term \"CSR\".",
       "createdAt": "2026-03-11T20:24:55Z",
-      "updatedAt": "2026-03-13T08:27:15Z",
+      "updatedAt": "2026-03-17T15:16:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -8609,6 +8609,13 @@
           "body": "On this topic, I can live with anything @gselander can live with.\n",
           "createdAt": "2026-03-13T08:27:15Z",
           "updatedAt": "2026-03-13T08:27:15Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I have most definitely encountered CSR more often than \"Certification Request\", but like John I'm ok with what G\u00f6ran accepts.",
+          "createdAt": "2026-03-17T15:16:40Z",
+          "updatedAt": "2026-03-17T15:16:40Z"
         }
       ]
     },
