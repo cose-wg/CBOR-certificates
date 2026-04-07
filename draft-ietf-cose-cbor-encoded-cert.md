@@ -709,7 +709,7 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    The attribute for C509 Name has the following structure:
 
 ~~~~~~~~~~~
-   id-rdna-c509Name OBJECT IDENTIFIER ::= {1 3 6 1 5 5 7 25 TBD30}
+   id-at-c509Name OBJECT IDENTIFIER ::= { TBD30 }
    c509Name ATTRIBUTE ::= {
      WITH SYNTAX C509Name
      SINGLE VALUE TRUE
@@ -2461,19 +2461,6 @@ This document registers the following entry in the "EDHOC Authentication Credent
 +=======+======================+===================+
 |   3   | C509 certificate     | [[this document]] |
 +-------+----------------------+-------------------+
-~~~~~~~~~~~
-
-## Relative Distinguished Name Attribute
-
-This document regists the following entry in the "SMI Security for PKIX Relative Distinguished Name Attribute" registry [RFC9925]:
-
-~~~~~~~~~~~ aasvg
-
-+---------+----------------------+-------------------+
-| Decimal | Description          |     Reference     |
-+=========+======================+===================+
-| TBD30   | C509 Name            | [[this document]] |
-+---------+----------------------+-------------------+
 ~~~~~~~~~~~
 
 --- back
