@@ -2472,7 +2472,7 @@ This document regists the following entry in the "SMI Security for PKIX Relative
 +---------+----------------------+-------------------+
 | Decimal | Description          |     Reference     |
 +=========+======================+===================+
-| TBD30   | C509 Name            | [[this document]] |
+| TBD30   | id-rdna-c509Name     | [[this document]] |
 +---------+----------------------+-------------------+
 ~~~~~~~~~~~
 
