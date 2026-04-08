@@ -836,7 +836,7 @@ C509CertificateRequestTemplate = [
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate / undefined,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
-   subjectPublicKey: undefined
+   subjectPublicKey: undefined,
    extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
