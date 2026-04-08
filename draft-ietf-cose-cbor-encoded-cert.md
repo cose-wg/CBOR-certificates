@@ -702,7 +702,7 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    c509Name ATTRIBUTE ::= {
      WITH SYNTAX C509Name
      SINGLE VALUE TRUE
-     ID id-at-c509Name }
+     ID id-rdna-c509Name }
 
    C509Name ::= OCTET STRING
 ~~~~~~~~~~~
