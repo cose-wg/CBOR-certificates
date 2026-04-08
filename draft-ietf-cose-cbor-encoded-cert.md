@@ -60,6 +60,7 @@ normative:
   RFC7030:
   RFC7120:
   RFC7250:
+  RFC7299:
   RFC8126:
   RFC8295:
   RFC8360:
@@ -696,8 +697,7 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    The attribute for C509 Name has the following structure:
 
 ~~~~~~~~~~~
-   id-at-c509Name OBJECT IDENTIFIER ::=
-     { TBD30 }
+   id-rdna-c509Name OBJECT IDENTIFIER ::= { 1 3 6 1 5 5 7 25 TBD30 }
 
    c509Name ATTRIBUTE ::= {
      WITH SYNTAX C509Name
@@ -2450,6 +2450,17 @@ This document registers the following entry in the "EDHOC Authentication Credent
 +-------+----------------------+-------------------+
 ~~~~~~~~~~~
 
+## Relative Distinguished Name Attribute
+
+This document regists the following entry in the "SMI Security for PKIX Relative Distinguished Name Attribute" registry [RFC7299]:
+
+~~~~~~~~~~~ aasvg
++---------+----------------------+-------------------+
+| Decimal | Description          |     Reference     |
++=========+======================+===================+
+| TBD30   | id-rdna-c509Name     | [[this document]] |
++---------+----------------------+-------------------+
+~~~~~~~~~~~
 --- back
 
 # C509 Certificate Examples {#appA}
