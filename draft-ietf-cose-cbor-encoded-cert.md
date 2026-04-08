@@ -2442,7 +2442,6 @@ The TLSA selectors registry defined in {{RFC6698}} originally only applied to PK
 This document registers the following entry in the "EDHOC Authentication Credential Types" registry in the registry group "Ephemeral Diffie-Hellman Over COSE (EDHOC)". This is useful to identify C509 certificates as a supported authentication credential type to use with EDHOC {{RFC9528}}, for example, during discovery of EDHOC resources, see {{RFC9668}}.
 
 ~~~~~~~~~~~ aasvg
-
 +-------+----------------------+-------------------+
 | Value | Description          |     Reference     |
 +=======+======================+===================+
@@ -2461,6 +2460,7 @@ This document regists the following entry in the "SMI Security for PKIX Relative
 | TBD30   | id-rdna-c509Name     | [[this document]] |
 +---------+----------------------+-------------------+
 ~~~~~~~~~~~
+
 --- back
 
 # C509 Certificate Examples {#appA}
