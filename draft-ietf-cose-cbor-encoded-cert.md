@@ -72,7 +72,6 @@ normative:
   RFC9542:
   RFC9668:
   RFC9883:
-  RFC9925:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
