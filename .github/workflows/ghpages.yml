@@ -40,17 +40,30 @@ jobs:
         key: i-d-${{ steps.setup.outputs.date }}
         restore-keys: i-d-
 
-    - name: "Build Drafts"
-      uses: martinthomson/i-d-template@v1
+    - name: "Setup Python"
+      uses: actions/setup-python@v5
       with:
-        token: ${{ github.token }}
+        python-version: "3.11"
+
+    - name: "Setup Ruby"
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "3.3"
+        bundler-cache: false
+
+    - name: "Setup Node"
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: "Build Drafts"
+      run: make all
 
     - name: "Update GitHub Pages"
-      uses: martinthomson/i-d-template@v1
       if: ${{ github.event_name == 'push' }}
-      with:
-        make: gh-pages
-        token: ${{ github.token }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: make gh-pages
 
     - name: "Archive Built Drafts"
       uses: actions/upload-artifact@v4
