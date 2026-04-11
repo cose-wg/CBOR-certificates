@@ -886,33 +886,33 @@ In the examples using ECDSA and RSA HTTPS certificate chains (www.ietf.org (ECDS
 In the examples using FN-DSA and ML-DSA certificate chains, the largest portion of the certificate size consists of the public keys and signatures, which are essentially random. As a result, both Brotli and C509 achieve only very limited size reduction. However, C509 still performs slightly better.
 
 ~~~~~~~~~ aasvg
-+-------------------+-----------+------------+-----------+------------+
-|     Description   | COSE_X509 | Brotli(    | COSE_C509 | Brotli(    |
-| (number of certs) |           | COSE_X509) |           | COSE_X509) |
-+-------------------+-----------+------------+-----------+------------+
-| RFC 7925 profiled |       319 |        305 |       142 |        146 |
-| IoT Certificate   |           |            |           |            |
-| (1)               |           |            |           |            |
-+-------------------+-----------+------------+-----------+------------+
-| RPKI Certificate  |     20981 |       9102 |     11523 |       7121 |
-| (1)               |           |            |           |            |
-+-------------------+-----------+------------+-----------+------------+
-| ECDSA HTTPS       |      1644 |       1172 |      1012 |        892 |
-| Certificate Chain |           |            |           |            |
-| (2)               |           |            |           |            |
-+-------------------+-----------+------------+-----------+------------+
-| RSA HTTPS         |      2909 |       2093 |      2240 |       1798 |
-| Certificate Chain |           |            |           |            |
-| (2)               |           |            |           |            |
-+-------------------+-----------+------------+-----------+------------+
-| FN-DSA-512 HTTPS  |      4417 |       4009 |      3897 |       3737 |
-| Certificate Chain |           |            |           |            |
-| (2)               |           |            |           |            |
-+-------------------+-----------+------------+-----------+------------+
-| ML-DSA-65 HTTPS   |     11863 |      11396 |     11318 |      11131 |
-| Certificate Chain |           |            |           |            |
-| (2)               |           |            |           |            |
-+-------------------+-----------+------------+-----------+------------+
++-------------------+-----------+-----------+-----------+------------+
+|    Description    | COSE_X509 | COSE_C509 | Brotli(   | Brotli(    |
+| (number of certs) |           |           | COSE_X509)| COSE_C509) |
++-------------------+-----------+-----------+-----------+------------+
+| RFC 7925 profiled |       319 |       142 |       305 |        146 |
+| IoT Certificate   |           |           |           |            |
+| (1)               |           |           |           |            |
++-------------------+-----------+-----------+-----------+------------+
+| RPKI Certificate  |     20981 |     11523 |      9102 |       7121 |
+| (1)               |           |           |           |            |
++-------------------+-----------+-----------+-----------+------------+
+| ECDSA HTTPS       |      1644 |      1012 |      1172 |        892 |
+| Certificate Chain |           |           |           |            |
+| (2)               |           |           |           |            |
++-------------------+-----------+-----------+-----------+------------+
+| RSA HTTPS         |      2909 |      2240 |      2093 |       1798 |
+| Certificate Chain |           |           |           |            |
+| (2)               |           |           |           |            |
++-------------------+-----------+-----------+-----------+------------+
+| FN-DSA-512 HTTPS  |      4417 |      3897 |      4009 |       3737 |
+| Certificate Chain |           |           |           |            |
+| (2)               |           |           |           |            |
++-------------------+-----------+-----------+-----------+------------+
+| ML-DSA-65 HTTPS   |     11863 |     11318 |     11396 |      11131 |
+| Certificate Chain |           |           |           |            |
+| (2)               |           |           |           |            |
++-------------------+-----------+-----------+-----------+------------+
 ~~~~~~~~~~~
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain)."}
 {: artwork-align="center"}
