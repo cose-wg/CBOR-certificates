@@ -39,29 +39,17 @@ jobs:
         key: i-d-${{ steps.setup.outputs.date }}
         restore-keys: i-d-
 
-    - name: "Setup Python"
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
-
-    - name: "Setup Ruby"
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: "3.3"
-        bundler-cache: false
-
-    - name: "Setup Node"
-      uses: actions/setup-node@v4
-      with:
-        node-version: "20"
-
     - name: "Build Drafts"
-      run: make all
+      uses: martinthomson/i-d-template@v1
+      with:
+        token: ${{ github.token }}
 
     - name: "Upload to Datatracker"
+      uses: martinthomson/i-d-template@v1
+      with:
+        make: upload
       env:
         UPLOAD_EMAIL: ${{ inputs.email }}
-      run: make upload
 
     - name: "Archive Submitted Drafts"
       uses: actions/upload-artifact@v4
