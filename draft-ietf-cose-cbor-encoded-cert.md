@@ -1741,54 +1741,54 @@ IANA has created a new registry titled "C509 General Names Registry" in the new 
 +-------+-----------------------------------------------------------+
 | Value | General Names                                             |
 +=======+===========================================================+
-|    -3 | Name:            otherName with MACAddress                |
-|       | Comments:        TBD92(Use RFC for I-D-lamps-macaddress-on)|
-|       |                  id-on-MACAddress                        |
-|       |                  (1.3.6.1.5.5.7.8.12)                    |
-|       |                  06 08 2B 06 01 05 05 07 08 0C           |
-|       | GeneralNameValue:  bytes                                 |
+|    -3 | Name:             otherName with MACAddress               |
+|       | Comments:         TBD92(Use RFC for I-D-lamps-macaddress-on)|
+|       |                   id-on-MACAddress                        |
+|       |                   (1.3.6.1.5.5.7.8.12)                    |
+|       |                   06 08 2B 06 01 05 05 07 08 0C           |
+|       | GeneralNameValue: bytes                                   |
 +-------+-----------------------------------------------------------+
-|    -2 | Name:            otherName with SmtpUTF8Mailbox          |
-|       | Comments:        RFC 8398                                |
-|       |                  id-on-SmtpUTF8Mailbox                   |
-|       |                  (1.3.6.1.5.5.7.8.9)                     |
-|       |                  06 08 2B 06 01 05 05 07 08 09           |
-|       | GeneralNameValue:  text                                  |
+|    -2 | Name:             otherName with SmtpUTF8Mailbox          |
+|       | Comments:         RFC 8398                                |
+|       |                   id-on-SmtpUTF8Mailbox                   |
+|       |                   (1.3.6.1.5.5.7.8.9)                     |
+|       |                   06 08 2B 06 01 05 05 07 08 09           |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
-|    -1 | Name:            otherName with hardwareModuleName       |
-|       | Comments:        RFC 4108                                |
-|       |                  id-on-hardwareModuleName                |
-|       |                  (1.3.6.1.5.5.7.8.4)                     |
-|       |                  06 08 2B 06 01 05 05 07 08 04           |
-|       | GeneralNameValue:  [ ~oid, bytes ]                       |
+|    -1 | Name:             otherName with hardwareModuleName       |
+|       | Comments:         RFC 4108                                |
+|       |                   id-on-hardwareModuleName                |
+|       |                   (1.3.6.1.5.5.7.8.4)                     |
+|       |                   06 08 2B 06 01 05 05 07 08 04           |
+|       | GeneralNameValue: [ ~oid, bytes ]                         |
 +-------+-----------------------------------------------------------+
-|     0 | Name:            otherName                               |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  [ ~oid, bytes ]                       |
+|     0 | Name:             otherName                               |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: [ ~oid, bytes ]                         |
 +-------+-----------------------------------------------------------+
-|     1 | Name:            rfc822Name                              |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  text                                  |
+|     1 | Name:             rfc822Name                              |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
-|     2 | Name:            dNSName                                 |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  text                                  |
+|     2 | Name:             dNSName                                 |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
-|     4 | Name:            directoryName                           |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  Name                                  |
+|     4 | Name:             directoryName                           |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: Name                                    |
 +-------+-----------------------------------------------------------+
-|     6 | Name:            uniformResourceIdentifier               |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  text                                  |
+|     6 | Name:             uniformResourceIdentifier               |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
-|     7 | Name:            iPAddress                               |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  bytes                                 |
+|     7 | Name:             iPAddress                               |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: bytes                                   |
 +-------+-----------------------------------------------------------+
-|     8 | Name:            registeredID                            |
-|       | Comments:        RFC 5280                                |
-|       | GeneralNameValue:  ~oid                                  |
+|     8 | Name:             registeredID                            |
+|       | Comments:         RFC 5280                                |
+|       | GeneralNameValue: ~oid                                    |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-gn title="C509 General Names"}
