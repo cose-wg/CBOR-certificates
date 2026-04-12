@@ -967,7 +967,7 @@ IANA has created a new registry titled "C509 Certificate Types" under the regist
 
 ## C509 Certificate Request Types Registry {#csr-type}
 
-IANA has created a new registry titled "C509 Certificate Request Types" under the nregistry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Request Types" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
