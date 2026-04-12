@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-09T02:53:25.638378+00:00",
+  "timestamp": "2026-04-12T03:29:42.719087+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8627,11 +8627,13 @@
       "state": "OPEN",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
-      "assignees": [],
+      "assignees": [
+        "gselander"
+      ],
       "labels": [],
       "body": "\"Hello David & COSE WG,\n\nI've reviewed the request. One thing that surprised me was the presence\nof an optional parameter \"usage\" without any explanation for some of the\nmedia types defined.\nIs this a copy/paste error maybe? Has there been a media-types review of\nthese already?\n\nNote that for all the CoAP Content-Format requests that do include a\n\"usage\" parameter, the explanation is present! So this does not hamper\nthe present registration request.\n\nIf in Figure 20 the spaces in  \"usage = chain\" and \"usage = c509\" could\nbe removed, per RFC 9876 Section 4.1.4, and the new media types are\napproved, then this request can be approved.\n\nregards\n\nEsko\"\n\nI think It should say \"... and IF the new media types are\napproved, then this request can be approved.\"\n\n",
       "createdAt": "2026-03-12T06:01:40Z",
-      "updatedAt": "2026-03-12T06:01:40Z",
+      "updatedAt": "2026-04-11T08:21:19Z",
       "closedAt": null,
       "comments": []
     },
@@ -8677,11 +8679,66 @@
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": ">There is a registry for RDN attributes. It was created ny RFC 9925, and the ASN.1 module in RFC 9925 can be used as a template for the assignment of the naming attribute defined here.\n>\n> https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-1.3.6.1.5.5.7.25\n>\n>Can we change id-at-c509Name to id-rdna-c509Name and assign it in this registry?\n>\n>Russ\n",
+      "body": "Mail Link: https://mailarchive.ietf.org/arch/msg/cose/480I3jmbeSYKLl_oHRtQ2kEE9UM/\n\n>There is a registry for RDN attributes. It was created ny RFC 9925, and the ASN.1 module in RFC 9925 can be used as a template for the assignment of the naming attribute defined here.\n>\n> https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-1.3.6.1.5.5.7.25\n>\n>Can we change id-at-c509Name to id-rdna-c509Name and assign it in this registry?\n>\n>Russ\n",
       "createdAt": "2026-04-07T21:07:27Z",
-      "updatedAt": "2026-04-07T21:07:27Z",
+      "updatedAt": "2026-04-09T08:21:02Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "#344 ",
+          "createdAt": "2026-04-09T08:19:06Z",
+          "updatedAt": "2026-04-09T08:19:06Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@xipki Reply to Russ in email.",
+          "createdAt": "2026-04-09T08:21:02Z",
+          "updatedAt": "2026-04-09T08:21:02Z"
+        }
+      ]
+    },
+    {
+      "number": 345,
+      "id": "I_kwDOCpt5cM78Kjxq",
+      "title": "Gunter Van de Velde's No Objection on draft-ietf-cose-cbor-encoded-cert-17",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/345",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Link: https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/\n\n[COSE] Gunter Van de Velde's No Objection on draft-ietf-cose-cbor-encoded-cert-17: (with COMMENT)\nGunter Van de Velde via Datatracker <noreply@ietf.org> Wed, 08 April 2026 11:06 UTC[Show header](https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/#)\n\nGunter Van de Velde has entered the following ballot position for\ndraft-ietf-cose-cbor-encoded-cert-17: No Objection\n\nWhen responding, please keep the subject line intact and reply to all\nemail addresses included in the To and CC lines. (Feel free to cut this\nintroductory paragraph, however.)\n\n\nPlease refer to https://www.ietf.org/about/groups/iesg/statements/handling-ballot-positions/ \nfor more information about how to handle DISCUSS and COMMENT positions.\n\n\nThe document, along with other ballot positions, can be found here:\nhttps://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/\n\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nMany thanks for the write-up. Appreciated.\n\nMy observation is that while the shepherd writeup claims nothing noteworthy\nwhen running idnits, but when i run idnits\n([https://author-tools.ietf.org/api/idnits?url=https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-17.txt](https://author-tools.ietf.org/api/idnits?url=https%3A%2F%2Fwww.ietf.org%2Farchive%2Fid%2Fdraft-ietf-cose-cbor-encoded-cert-17.txt))\ni end up with a long laundry list of observations. Maybe worthwhile to run\nthrough the list and explain why they are deemed not meaningful/relevant and\nadd this context in the write-up?\n\nOne of those idnits observations is that there may only be v4 examples and no\nv6 examples?\n\nG/",
+      "createdAt": "2026-04-09T08:15:28Z",
+      "updatedAt": "2026-04-09T08:16:19Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 346,
+      "id": "I_kwDOCpt5cM78KuMn",
+      "title": "[COSE] [IANA #1442481] expert review for draft-ietf-cose-cbor-encoded-cert (core-parameters)",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/346",
+      "state": "CLOSED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Link: https://mailarchive.ietf.org/arch/msg/cose/eE1HZkShYxeA2G26XUGYKTJttpI/\n\n------\nHello David & COSE WG,\n\nI've reviewed the request. One thing that surprised me was the presence \nof an optional parameter \"usage\" without any explanation for some of the \nmedia types defined.\nIs this a copy/paste error maybe? Has there been a media-types review of \nthese already?\n\nNote that for all the CoAP Content-Format requests that do include a \n\"usage\" parameter, the explanation is present! So this does not hamper \nthe present registration request.\n\nIf in Figure 20 the spaces in  \"usage = chain\" and \"usage = c509\" could \nbe removed, per RFC 9876 Section 4.1.4, and the new media types are \napproved, then this request can be approved.\n\nregards\n\nEsko",
+      "createdAt": "2026-04-09T08:23:21Z",
+      "updatedAt": "2026-04-11T08:20:51Z",
+      "closedAt": "2026-04-11T08:20:51Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This is duplicating #338. ",
+          "createdAt": "2026-04-11T08:20:51Z",
+          "updatedAt": "2026-04-11T08:20:51Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -14317,7 +14374,7 @@
     {
       "number": 335,
       "id": "PR_kwDOCpt5cM7Jy8cK",
-      "title": "Fix #334.",
+      "title": "Fix #334",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/335",
       "state": "OPEN",
       "author": "xipki",
@@ -14326,19 +14383,40 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T18:29:12Z",
-      "updatedAt": "2026-04-08T08:43:52Z",
+      "updatedAt": "2026-04-11T13:37:57Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "add-referenceInFigures",
-      "headRefOid": "3c8265970f1177c43530c8e591739482b84de8d3",
+      "headRefOid": "73fb1cfa0c62d4f2e3b1ba6697d33dcce9a7116a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM7zPdy1",
+          "commit": {
+            "abbreviatedOid": "3c82659"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-09T08:45:09Z",
+          "updatedAt": "2026-04-09T08:45:09Z",
+          "comments": [
+            {
+              "originalPosition": 245,
+              "body": "Use \"Microsoft PEN Attribute\"",
+              "createdAt": "2026-04-09T08:45:09Z",
+              "updatedAt": "2026-04-09T08:45:09Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 337,
@@ -14352,13 +14430,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T20:26:13Z",
-      "updatedAt": "2026-03-13T08:39:54Z",
+      "updatedAt": "2026-04-11T15:54:46Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "certificationRequestText",
-      "headRefOid": "e083c597c3cbc1e71451fbb1d24b906e795af512",
+      "headRefOid": "ae7f25746b01e9651fbb591b33a21a99cf7aa593",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -14383,14 +14461,14 @@
         {
           "id": "PRR_kwDOCpt5cM7q-U_j",
           "commit": {
-            "abbreviatedOid": "e083c59"
+            "abbreviatedOid": "d7d7b8a"
           },
           "author": "emanjon",
           "authorAssociation": "COLLABORATOR",
           "state": "APPROVED",
           "body": "",
           "createdAt": "2026-03-13T07:31:21Z",
-          "updatedAt": "2026-03-13T07:31:21Z",
+          "updatedAt": "2026-04-11T15:53:18Z",
           "comments": []
         }
       ]
@@ -14433,13 +14511,13 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-13T18:58:05Z",
-      "updatedAt": "2026-03-13T18:58:14Z",
+      "updatedAt": "2026-04-11T15:45:21Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "update-cert-sizes",
-      "headRefOid": "ac20e2ff87a686cf9b592d6b4356bc5d2fb2b3a8",
+      "headRefOid": "affda923950501fc4dbf4bcc658db8afb3d200b2",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -14472,6 +14550,53 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 347,
+      "id": "PR_kwDOCpt5cM7RbDvo",
+      "title": "nist and minor edits frm Med's IESG Review",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/347",
+      "state": "OPEN",
+      "author": "boucadair",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Feel free to grab whatever useful.\r\n\r\nThanks again for the great work.",
+      "createdAt": "2026-04-10T10:56:13Z",
+      "updatedAt": "2026-04-11T13:34:24Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
+      "headRepository": "boucadair/CBOR-certificates",
+      "headRefName": "patch-1",
+      "headRefOid": "2ce252acd921eff9e702ad851ffed0f5933eadd9",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM70AlK5",
+          "commit": {
+            "abbreviatedOid": "2ce252a"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-11T13:34:23Z",
+          "updatedAt": "2026-04-11T13:34:24Z",
+          "comments": [
+            {
+              "originalPosition": 165,
+              "body": "registry instead nregistry?",
+              "createdAt": "2026-04-11T13:34:24Z",
+              "updatedAt": "2026-04-11T13:34:24Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
