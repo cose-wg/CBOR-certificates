@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-12T03:29:42.719087+00:00",
+  "timestamp": "2026-04-14T03:25:56.793746+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -14563,13 +14563,13 @@
       "labels": [],
       "body": "Feel free to grab whatever useful.\r\n\r\nThanks again for the great work.",
       "createdAt": "2026-04-10T10:56:13Z",
-      "updatedAt": "2026-04-11T13:34:24Z",
+      "updatedAt": "2026-04-12T14:02:12Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
       "headRepository": "boucadair/CBOR-certificates",
       "headRefName": "patch-1",
-      "headRefOid": "2ce252acd921eff9e702ad851ffed0f5933eadd9",
+      "headRefOid": "e1435f83fd6915f4aee3e494563ea6df1ee86f4b",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -14593,6 +14593,26 @@
               "body": "registry instead nregistry?",
               "createdAt": "2026-04-11T13:34:24Z",
               "updatedAt": "2026-04-11T13:34:24Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM70FnDk",
+          "commit": {
+            "abbreviatedOid": "2ce252a"
+          },
+          "author": "boucadair",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-12T14:02:12Z",
+          "updatedAt": "2026-04-12T14:02:12Z",
+          "comments": [
+            {
+              "originalPosition": 165,
+              "body": "Yes, fixed in https://github.com/cose-wg/CBOR-certificates/pull/347/commits/e1435f83fd6915f4aee3e494563ea6df1ee86f4b",
+              "createdAt": "2026-04-12T14:02:12Z",
+              "updatedAt": "2026-04-12T14:02:12Z"
             }
           ]
         }
