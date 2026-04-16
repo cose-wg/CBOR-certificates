@@ -158,7 +158,7 @@ informative:
         ins: GSMA
     date: January 2025
 
-  GSMA-SCP.22:
+  GSMA-SGP.22:
     title: GSMA RSP Technial Specification Version 3.1 Final
     target: https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2023/12/SGP.22-v3.1.pdf
     date: December 2023
