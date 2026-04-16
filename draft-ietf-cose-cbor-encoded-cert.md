@@ -567,7 +567,7 @@ CBOR encoding of the following extension values are partly supported:
 * IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. The ASN.1 BIT STRING value of IPAddress is converted to a byte sequence defined as:
 
   ```
-  bytes = unusedBits || value
+  unusedBits || value
   ```
 
   where unusedBits is a single octet indicating the number of unused bits in the final octet of the BIT STRING, and value is the sequence of octets containing the BIT STRING value. This byte sequence preserves the exact information contained in the ASN.1 BIT STRING.
@@ -583,10 +583,10 @@ CBOR encoding of the following extension values are partly supported:
   For IntIPAddressChoice, IntAddressPrefix and the min and max values of IntAddressRange SHALL be encoded as big-endian integers representing the following byte sequence:
 
   ```
-  bytes = (unusedBits + 1) || value
+  (unusedBits + 1) || value
   ```
 
-  With the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
+  For IntIPAddressChoice, with the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
 
 ~~~~~~~~~~~ cddl
    NullIPAddressChoice = null
