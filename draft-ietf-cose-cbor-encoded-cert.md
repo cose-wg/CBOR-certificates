@@ -60,6 +60,7 @@ normative:
   RFC7030:
   RFC7120:
   RFC7250:
+  RFC7299:
   RFC8126:
   RFC8295:
   RFC8360:
@@ -696,13 +697,12 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    The attribute for C509 Name has the following structure:
 
 ~~~~~~~~~~~
-   id-at-c509Name OBJECT IDENTIFIER ::=
-     { TBD30 }
+   id-rdna-c509Name OBJECT IDENTIFIER ::= { 1 3 6 1 5 5 7 25 TBD30 }
 
    c509Name ATTRIBUTE ::= {
      WITH SYNTAX C509Name
      SINGLE VALUE TRUE
-     ID id-at-c509Name }
+     ID id-rdna-c509Name }
 
    C509Name ::= OCTET STRING
 ~~~~~~~~~~~
@@ -824,7 +824,7 @@ C509CertificateRequestTemplate = [
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate / undefined,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
-   subjectPublicKey: undefined
+   subjectPublicKey: undefined,
    extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
@@ -2442,12 +2442,23 @@ The TLSA selectors registry defined in {{RFC6698}} originally only applied to PK
 This document registers the following entry in the "EDHOC Authentication Credential Types" registry in the registry group "Ephemeral Diffie-Hellman Over COSE (EDHOC)". This is useful to identify C509 certificates as a supported authentication credential type to use with EDHOC {{RFC9528}}, for example, during discovery of EDHOC resources, see {{RFC9668}}.
 
 ~~~~~~~~~~~ aasvg
-
 +-------+----------------------+-------------------+
 | Value | Description          |     Reference     |
 +=======+======================+===================+
 |   3   | C509 certificate     | [[this document]] |
 +-------+----------------------+-------------------+
+~~~~~~~~~~~
+
+## Relative Distinguished Name Attribute
+
+This document regists the following entry in the "SMI Security for PKIX Relative Distinguished Name Attribute" registry [RFC7299]:
+
+~~~~~~~~~~~ aasvg
++---------+----------------------+-------------------+
+| Decimal | Description          |     Reference     |
++=========+======================+===================+
+| TBD30   | id-rdna-c509Name     | [[this document]] |
++---------+----------------------+-------------------+
 ~~~~~~~~~~~
 
 --- back
