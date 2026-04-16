@@ -2377,7 +2377,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
 | cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
-| usage = chain        |         |                  |       |              |
+| usage=chain          |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
 | application/         | -       | [[link to 9.15]] | TBD4  | [[this       |
 | cose-c509-pkcs10     |         |                  |       |   document]] |
@@ -2396,7 +2396,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 +----------------------+---------+------------------+-------+--------------+
 | application/         |         |                  |       | [[this       |
 | cose-certhash;       | -       | [[link to 9.15]] | TBD17 |   document]] |
-| usage = c509         |         |                  |       |              |
+| usage=c509           |         |                  |       |              |
 +----------------------+---------+------------------+-------+--------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
