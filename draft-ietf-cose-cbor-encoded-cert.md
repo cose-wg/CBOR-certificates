@@ -704,7 +704,7 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    C509Name ::= OCTET STRING
 ~~~~~~~~~~~
 
-# C509 Certificate (Signing) Request {#CSR}
+# C509 Certification Request {#CSR}
 
 This section defines the format of a C509 Certification Request based on {{RFC2986}}. It reuses the formatting of C509 certificates defined in {{certificate}}. A Certification Request is commonly referred to as a Certificate Signing Request (CSR).
 
