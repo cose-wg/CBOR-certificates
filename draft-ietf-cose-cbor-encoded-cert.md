@@ -574,7 +574,7 @@ CBOR encoding of the following extension values are partly supported:
 
   For each IPAddressFamily, the representation is selected as follows:
 
-    - If inherit is present, the NullIPAddressChoice representation SHALL be used.
+    - If inherit is present, `null` SHALL be used.
 
     - Otherwise, if the byte sequence of any IPAddress (including addressPrefix, and the min and max fields of addressRange) exceeds 8 octets in length, the IPAddressChoice representation SHALL be used.
 
@@ -586,11 +586,9 @@ CBOR encoding of the following extension values are partly supported:
   (unusedBits + 1) || value
   ```
 
-  For IntIPAddressChoice, with the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
+  The first byte is encoded as (unusedBits + 1) instead of unusedBits in order to guarantee a non-zero value. With the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
 
 ~~~~~~~~~~~ cddl
-   NullIPAddressChoice = null
-
    IntAddressPrefix = int
    IntAddressRange  = [ min: int, max: int ]
    IntIPAddressOrRange = IntAddressPrefix / IntAddressRange
@@ -602,8 +600,7 @@ CBOR encoding of the following extension values are partly supported:
    IPAddressChoice  = [ + IPAddressOrRange ]
 
    IPAddressFamily = (AFI: uint, SAFI: uint / null,
-                      IntIPAddressChoice / IPAddressChoice
-                      / NullIPAddressChoice)
+                      IntIPAddressChoice / IPAddressChoice / null)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
