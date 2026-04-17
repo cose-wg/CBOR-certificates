@@ -274,7 +274,7 @@ In the encoding described below, the elements in arrays are always encoded in th
 
 ## Message Fields {#message-fields}
 
-The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see {{fig-CBORCertCDDL}}.
+The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see {{fig-CBORCertCDDL}}. While much of {{RFC5280}} encodings used in practice is supported, there are a few instances indicated with "not supported" where no alternative is provided and hence no C509 encoding can be generated.
 
 The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g., {{rfc7925-prof}}.
 
