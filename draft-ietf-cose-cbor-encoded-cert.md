@@ -75,6 +75,7 @@ normative:
   RFC9549:
   RFC9668:
   RFC9883:
+  I-D.ietf-lamps-macaddress-on:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -122,7 +123,6 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
-  I-D.ietf-lamps-macaddress-on:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
