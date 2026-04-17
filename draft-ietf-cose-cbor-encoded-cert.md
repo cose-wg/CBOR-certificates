@@ -52,7 +52,6 @@ normative:
   RFC4108:
   RFC5246:
   RFC5280:
-  RFC5246:
   RFC5958:
   RFC6066:
   RFC6698:
@@ -60,6 +59,7 @@ normative:
   RFC7030:
   RFC7120:
   RFC7250:
+  RFC7299:
   RFC8126:
   RFC8295:
   RFC8360:
@@ -197,7 +197,7 @@ This document specifies a CBOR encoding of X.509 certificates. The resulting cer
 
 Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER-encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is over the CBOR encoding instead of the DER encoding, avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 and the same reduced size compared to X.509.
 
-The document also specifies CBOR encoded data structures for certificate (signing) requests and certificate request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698; the TLSA selectors registry is extended to include C509 certificates.
+The document also specifies CBOR encoded data structures for certificate (signing) requests and certification request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698; the TLSA selectors registry is extended to include C509 certificates.
 
 --- middle
 
@@ -225,7 +225,7 @@ This document defines two types of C509 using the same CBOR encoding and differi
 
 Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
-This document also specifies C509 Certificate Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates {{RFC6698}}.
+This document also specifies C509 Certification Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates {{RFC6698}}.
 
 # Notational Conventions {#notation}
 
@@ -698,32 +698,31 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    The attribute for C509 Name has the following structure:
 
 ~~~~~~~~~~~
-   id-at-c509Name OBJECT IDENTIFIER ::=
-     { TBD30 }
+   id-rdna-c509Name OBJECT IDENTIFIER ::= { 1 3 6 1 5 5 7 25 TBD30 }
 
    c509Name ATTRIBUTE ::= {
      WITH SYNTAX C509Name
      SINGLE VALUE TRUE
-     ID id-at-c509Name }
+     ID id-rdna-c509Name }
 
    C509Name ::= OCTET STRING
 ~~~~~~~~~~~
 
-# C509 Certificate (Signing) Request {#CSR}
+# C509 Certification Request {#CSR}
 
-This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), based on and compatible with {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
+This section defines the format of a C509 Certification Request based on {{RFC2986}}. It reuses the formatting of C509 certificates defined in {{certificate}}. A Certification Request is commonly referred to as a Certificate Signing Request (CSR).
 
-The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
+The CDDL for the C509 Certification Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~ cddl
-C509CertificateRequest = [
-   TBSCertificateRequest,
+C509CertificationRequest = [
+   TBSCertificationRequest,
    subjectSignatureValue: any,
 ]
 
 ; The elements of the following group are used in a CBOR Sequence:
-TBSCertificateRequest = (
-   c509CertificateRequestType: int,
+TBSCertificationRequest = (
+   c509CertificationRequestType: int,
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
@@ -738,26 +737,26 @@ CRAttribute = (( attributeType: int, attributeValue: Defined ) //
 
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
-{: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
+{: #fig-C509CSRCDDL title="CDDL for C509CertificationRequest."}
 
-After verifying the subjectSignatureValue, the Certification Authority (CA) MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
+After verifying the subjectSignatureValue, the Certification Authority (CA) MAY transform the C509CertificationRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
-The media type of C509CertificateRequest is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in {{Section 2.2 of RFC9277}}.
+The media type of C509CertificationRequest is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 
-## Certificate Request Types
+## Certification Request Types
 
-Two types of C509 Certificate Requests are defined, both using the same CBOR encoding and differing only in what is being signed, see {{csr-type}}.
-The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER-encoded certification request {{RFC2986}}, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
+Two types of C509 Certification Requests are defined, both using the same CBOR encoding and differing only in what is being signed, see {{csr-type}}.
+The C509 Certification Request can either be an invertible CBOR re-encoding of a DER-encoded certification request {{RFC2986}}, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
 
-* c509CertificateRequestType = 2. This type indicates that the C509 Certificate Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence
-TBSCertificateRequest, see {{fig-C509CSRCDDL}}. This encoding removes the need for ASN.1 and DER parsing, and re-encoding in the requesting party.
+* c509CertificationRequestType = 2. This type indicates that the C509 Certification Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence
+TBSCertificationRequest, see {{fig-C509CSRCDDL}}. This encoding removes the need for ASN.1 and DER parsing, and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is a CBOR re-encoded {{RFC2986}} certification request, as defined in {{CSR}}. This encoding is backwards compatible with legacy RFC 2986 certification requests, and enables a reduced transport overhead.
+* c509CertificationRequestType = 3. This type indicates that the C509 Certification Request is a CBOR re-encoded {{RFC2986}} certification request, as defined in {{CSR}}. This encoding is backwards compatible with legacy RFC 2986 certification requests, and enables a reduced transport overhead.
 
-The type of certificate issued after the request is decided by the application. The default type of issued certificate in case of C509 is that c509CertificateType = c509CertificateRequestType.
+The type of certificate issued after the request is decided by the application. The default type of issued certificate in case of C509 is that c509CertificateType = c509CertificationRequestType.
 
-An implementation MAY only support certain values of c509CertificateRequestType.
+An implementation MAY only support certain values of c509CertificationRequestType.
 
 
 ## Subject Signature Algorithm
@@ -777,13 +776,13 @@ DhSigStaticType = [
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
+Note that a key agreement key pair may be used with a signature algorithm in a certification request, see {{app-DH-keys}}.
 
-## Certificate Request Attributes
+## Certification Request Attributes
 
-The 'attributes' field specifies the attributes contained in a certificate request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
+The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
 
-The remainder of this section specifies CBOR encoded attributes for Certificate Requests.
+The remainder of this section specifies CBOR encoded attributes for Certification Requests.
 
 ### Extension Request
 
@@ -791,7 +790,7 @@ The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attribut
 
 ### Challenge Password
 
-The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{Section 9.1 of I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{Section 9.1 of I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certification request type 2, only UTF8 String is allowed.
 
 ~~~~~~~~~~~ cddl
 ChallengePassword = text / #6.121(text)
@@ -811,22 +810,22 @@ PrivateKeyPossessionStatement = [
 ~~~~~~~~~~~
 
 
-## Certificate Request Template {#CRT}
+## Certification Request Template {#CRT}
 
-Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certificate Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns an Certificate Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certification Request. Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certification Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns a Certification Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
 
-The approach of {{RFC8295}} is also followed for C509. The C509CertificateRequestTemplate is based on TBSCertificateRequest of the C509CertificateRequest, see {{fig-C509CSRCDDL}}, but excludes the subjectSignatureValue field from the template since that needs no further specification.
+The approach of {{RFC8295}} is also followed for C509. The C509CertificationRequestTemplate is based on TBSCertificationRequest of the C509CertificationRequest, see {{fig-C509CSRCDDL}}, but excludes the subjectSignatureValue field from the template since that needs no further specification.
 
-The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
+The C509 Certification Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
 ~~~~~~~~~~~ cddl
-C509CertificateRequestTemplate = [
-   c509CertificateRequestTemplateType: int,
-   c509CertificateRequestType: [+ int] / undefined,
+C509CertificationRequestTemplate = [
+   c509CertificationRequestTemplateType: int,
+   c509CertificationRequestType: [+ int] / undefined,
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate / undefined,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
-   subjectPublicKey: undefined
+   subjectPublicKey: undefined,
    extensionsRequest: ExtensionsTemplate / undefined,
 ]
 
@@ -843,27 +842,27 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                      ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
-{: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
+{: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificationRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. The specification of the template makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Consistent with this rule, note that the subjectPublicKey field always has the value undefined in the template.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificationRequest, see {{fig-C509CSRCDDL}}. The specification of the template makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Consistent with this rule, note that the subjectPublicKey field always has the value undefined in the template.
 
-Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
+Different types of Certification Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificationRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the server expects the client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the server expects the client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
+The presence of a Defined (non-undefined) value in a C509CertificationRequestTemplate indicates that the server expects the client to use that value in the certification request. If multiple AlgorithmIdentifier or c509CertificationRequestType values are present, the server expects the client to select one of them for use in the Certification Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
 
 For AttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.
 
 For ExtensionTemplate, the field "optional" specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.
 
-The media type of C509CertificateRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
+The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 # C509 Processing and Certificate Issuance
 
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
 
-The Certificate Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see {{Section 4.1 of RFC2986}}. The CA can make use of a Certificate Request Template defined in {{CRT}}, for simplified configuration.
+The Certification Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see {{Section 4.1 of RFC2986}}. The CA can make use of a Certification Request Template defined in {{CRT}}, for simplified configuration.
 
-When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
+When a certification request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
 
 In the reverse direction, in case c509CertificateType = 3 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 2 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with the CA may be needed.
 
@@ -871,7 +870,7 @@ In the reverse direction, in case c509CertificateType = 3 was requested, a separ
 
 ## Legacy Considerations {#dep-set}
 
-C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER-encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER-encoded CertificationRequestInfo {{RFC2986}} and uses that with existing processes and code to produce an RFC 5280 DER-encoded X.509 certificate. The DER-encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
+C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER-encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 Certification Request, the CA transforms it into a DER-encoded CertificationRequestInfo {{RFC2986}} and uses that with existing processes and code to produce an RFC 5280 DER-encoded X.509 certificate. The DER-encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
 
 For protocols like TLS/DTLS 1.2, where certificates are sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway, which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead. However, measured in energy, this is likely to be negligible compared to the reduced communication overhead.
 
@@ -965,9 +964,9 @@ IANA has created a new registry titled "C509 Certificate Types" under the regist
 {: #fig-types title="C509 Certificate Types"}
 {: artwork-align="center"}
 
-## C509 Certificate Request Types Registry {#csr-type}
+## C509 Certification Request Types Registry {#csr-type}
 
-IANA has created a new registry titled "C509 Certificate Request Types" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certification Request Types" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -977,12 +976,12 @@ IANA has created a new registry titled "C509 Certificate Request Types" under th
 +-------+-----------------------------------------------------------+
 |     1 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     2 | Natively Signed C509 Certificate Request.                 |
+|     2 | Natively Signed C509 Certification Request.                 |
 +-------+-----------------------------------------------------------+
 |     3 | CBOR re-encoding of RFC 2986 certification request.       |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-csr-types title="C509 Certificate Request Types"}
+{: #fig-csr-types title="C509 Certification Request Types"}
 {: artwork-align="center"}
 
 ## C509 Private Key Types Registry {#privkeys}
@@ -1003,18 +1002,17 @@ IANA has created a new registry titled "C509 Private Key Types" in the new regis
 {: #fig-rivkeys title="C509 Private Key Types"}
 {: artwork-align="center"}
 
-## C509 Certificate Request Templates Types Registry {#temp-type}
+## C509 Certification Request Templates Types Registry {#temp-type}
 
-IANA has created a new registry titled "C509 Certificate Request Templates Types" under the  registry group "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
-
+IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Simple C509 Certificate Request Template                  |
+|     0 | Simple C509 Certification Request Template                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-temp-types title="C509 Certificate Request Templates Types"}
+{: #fig-temp-types title="C509 Certification Request Templates Types"}
 {: artwork-align="center"}
 
 ## C509 RDN Attributes Registry {#rdnatttype}
@@ -2162,7 +2160,7 @@ Change controller: IETF
 
 
 ### Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
-When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificateRequest structure.
+When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificationRequest structure.
 
 Type name: application
 
@@ -2180,7 +2178,7 @@ Interoperability considerations: N/A
 
 Published specification: [[this document]]
 
-Applications that use this media type: Applications that employ COSE and C509 Certificate Request.
+Applications that use this media type: Applications that employ COSE and C509 Certification Request.
 
 Fragment identifier considerations: N/A
 
@@ -2202,7 +2200,7 @@ Author: COSE WG
 Change controller: IETF
 
 ### Media Type application/cose-c509-crtemplate {#c509-crtemplate}
-When the application/cose-c509-crtemplate media type is used, the data is a C509CertificateRequestTemplate structure.
+When the application/cose-c509-crtemplate media type is used, the data is a C509CertificationRequestTemplate structure.
 
 Type name: application
 
@@ -2220,7 +2218,7 @@ Interoperability considerations: N/A
 
 Published specification: [[this document]]
 
-Applications that use this media type: Applications that employ COSE and C509 Certificate Request.
+Applications that use this media type: Applications that employ COSE and C509 Certification Request.
 
 Fragment identifier considerations: N/A
 
@@ -2448,12 +2446,23 @@ The TLSA selectors registry defined in {{RFC6698}} originally only applied to PK
 This document registers the following entry in the "EDHOC Authentication Credential Types" registry in the registry group "Ephemeral Diffie-Hellman Over COSE (EDHOC)". This is useful to identify C509 certificates as a supported authentication credential type to use with EDHOC {{RFC9528}}, for example, during discovery of EDHOC resources, see {{RFC9668}}.
 
 ~~~~~~~~~~~ aasvg
-
 +-------+----------------------+-------------------+
 | Value | Description          |     Reference     |
 +=======+======================+===================+
 |   3   | C509 certificate     | [[this document]] |
 +-------+----------------------+-------------------+
+~~~~~~~~~~~
+
+## Relative Distinguished Name Attribute
+
+This document regists the following entry in the "SMI Security for PKIX Relative Distinguished Name Attribute" registry [RFC7299]:
+
+~~~~~~~~~~~ aasvg
++---------+----------------------+-------------------+
+| Decimal | Description          |     Reference     |
++=========+======================+===================+
+| TBD30   | id-rdna-c509Name     | [[this document]] |
++---------+----------------------+-------------------+
 ~~~~~~~~~~~
 
 --- back
@@ -2612,7 +2621,7 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
 
-The two previous examples illustrate keyUsage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used to sign a certificate request.
+The two previous examples illustrate keyUsage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used to sign a certification request.
 
 ### Example: Additional Keys for the Example Certificates
 
