@@ -52,7 +52,6 @@ normative:
   RFC4108:
   RFC5246:
   RFC5280:
-  RFC5246:
   RFC5958:
   RFC6066:
   RFC6698:
@@ -73,6 +72,7 @@ normative:
   RFC9277:
   RFC9360:
   RFC9542:
+  RFC9549:
   RFC9668:
   RFC9883:
 
@@ -122,7 +122,6 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
-  I-D.bormann-cbor-notable-tags:
   I-D.ietf-lamps-macaddress-on:
 
   CAB-TLS:
@@ -206,51 +205,60 @@ informative:
         ins: R. Davis
     date: April 2018
 
+  IANA-CBOR-TAGS:
+    target: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+    title: Concise Binary Object Representation (CBOR) Tags
+    author:
+      -
+        ins: IANA
+
 --- abstract
 
 This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 certificates. The CBOR encoding supports a large subset of RFC 5280, common certificate profiles and is extensible.
 
 Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER-encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is over the CBOR encoding instead of the DER encoding, avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 and the same reduced size compared to X.509.
 
-The document also specifies CBOR encoded data structures for certificate (signing) requests and certificate request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698; the TLSA selectors registry is extended to include C509 certificates.
+The document also specifies CBOR encoded data structures for certificate (signing) requests and certification request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698; the TLSA selectors registry is extended to include C509 certificates.
 
 --- middle
 
 # Introduction {#intro}
 
-One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS {{RFC9190}} {{RFC9191}} where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC {{RFC9000}} where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and RPKI {{RFC6487}} where a single certificate can be very large. More compact certificate representations are therefore desirable in many use cases.
+One of the challenges with deploying a Public Key Infrastructure (PKI) for the Internet of Things (IoT) is the size and parsing of X.509 public key certificates {{RFC5280}}, since those are not optimized for constrained environments {{RFC7228}}. Large certificate chains are also problematic in non-constrained protocols such as EAP-TLS {{RFC9190}} {{RFC9191}} where authenticators typically drop an EAP session after only 40–50 round-trips, QUIC {{RFC9000}} where the latency increases significantly unless the server sends less than three times as many bytes as received prior to validating the client address, and Resource Public Key Infrastructure (RPKI) {{RFC6487}} where a single certificate can be very large. More compact certificate representations are, therefore, desirable in many use cases.
 
-X.509 certificates are defined with Abstract Syntax Notation One (ASN.1) and encoded using the Distinguished Encoding Rules (DER). This document specifies an alternative encoding of X.509 certificates, using the Concise Binary Object Representation (CBOR) {{RFC8949}}, initially proposed in {{X.509-IoT}}. The use of a more compact encoding  reduces the certificate size, which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The re-encoding of X.509 is called C509 and the resulting certificates are termed C509 certificates. C509 is not a general CBOR encoding for ASN.1 data structures.
+X.509 certificates are defined with Abstract Syntax Notation One (ASN.1) and encoded using the Distinguished Encoding Rules (DER) {{X.690}}. This document specifies an alternative encoding of X.509 certificates, using the Concise Binary Object Representation (CBOR) {{RFC8949}}, initially proposed in {{X.509-IoT}}. The use of a more compact encoding  reduces the certificate size, which has known performance benefits in terms of decreased communication overhead, power consumption, latency, storage, etc. The re-encoding of X.509 is called C509 and the resulting certificates are termed C509 certificates. C509 is not a general CBOR encoding for ASN.1 data structures.
 
-CBOR is a data format designed for small code size and small message size to support systems with very limited memory, processor power, and instruction sets. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans, simplifying development and debugging. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. RFC 8610 also extends the diagnostic notation. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. Implementors can get familiar with CBOR by using the CBOR playground {{CborMe}}.
+CBOR is a data format designed for small code size and small message size to support systems with very limited memory, processor power, and instruction sets. CBOR builds on the JSON data model but extends it by, e.g., encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is readable and editable by humans, simplifying development and debugging. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. {{RFC8610}} also extends the diagnostic notation. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. Implementors can get familiar with CBOR by using the CBOR playground {{CborMe}}.
 
-The C509 encoding supports a large subset of RFC 5280 and all certificates compatible with the RFC 7925, IEEE 802.1AR (DevID), CAB Baseline {{CAB-TLS}},  {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.  This document does not specify a certificate profile.
+The C509 encoding supports a large subset of {{RFC5280}} and all certificates compatible with the {{RFC7925}}, IEEE 802.1AR (DevID) {{IEEE-802.1AR}}, CAB Baseline {{CAB-TLS}},  {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, and eUICC {{GSMA-eUICC}} profiled X.509 certificates, and is designed to render a compact encoding of certificates used in constrained environments.  This document does not specify a certificate profile.
 
-CAB Baseline Requirements {{CAB-TLS}}, RFC 7925 {{RFC7925}}, IEEE 802.1AR {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. RFC 7925 {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target Internet of Things deployments.
+CAB Baseline Requirements {{CAB-TLS}}, {{RFC7925}}, {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate-based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target IoT deployments.
 
-C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Unmanned Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS). When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of RFC 7925 profiled certificates by over 50%.
+C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS). When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of {{RFC7925}}-profiled certificates by over 50%.
 
-C509 is designed to be extensible to additional features of X.509, for example support for new algorithms, including new post-quantum algorithms, which can be registered in the IANA registry as they become specified, see {{sigalg}}.
+C509 is designed to be extensible to additional features of X.509, for example, support for new algorithms, including new Post-Quantum (PQ) algorithms, which can be registered in the IANA registry as they become specified, see {{sigalg}}.
 
-Two types of C509 are defined using the same CBOR encoding and differing only in what is being signed:
+This document defines two types of C509 using the same CBOR encoding and differing only in what is being signed:
 
-1. An invertible CBOR re-encoding of DER-encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER-encoded X.509 certificate. Due to the widespread deployment of X.509 it is necessary to allow backward compatibility.
+1. An invertible CBOR re-encoding of DER-encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER-encoded X.509 certificate. Due to the widespread deployment of X.509, it is necessary to allow backward compatibility.
 
 2. Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of over the DER encoding. This removes the need for ASN.1 and DER parsing and the associated complexity but they are not backwards compatible with implementations requiring DER-encoded X.509.
 
 Natively signed C509 certificates can be applied in devices that are only required to authenticate to natively signed C509 certificate compatible servers, which is not a major restriction for many IoT deployments where the parties issuing and verifying certificates can be a restricted ecosystem.
 
-This document also specifies C509 Certificate Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates {{RFC6698}}.
+This document also specifies C509 Certification Requests, see {{CSR}}; COSE headers for use of the C509 certificates with COSE, see {{cose}}; a TLS certificate type for use of the C509 certificates with TLS and QUIC (with or without additional TLS certificate compression), see {{tls}}; and a C509 file format. The TLSA selectors registry is extended to include C509 certificates, thus this document updates {{RFC6698}}.
 
 # Notational Conventions {#notation}
 
 {::boilerplate bcp14-tagged}
 
-This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refers to Deterministically Encoded CBOR as specified in Sections 4.2.1 and 4.2.2 of {{RFC8949}}.
+This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refers to Deterministically Encoded CBOR as specified in {{Sections 4.2.1 and 4.2.2 of RFC8949}}.
 
 # C509 Certificate {#certificate}
 
-This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}. In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
+This section specifies the content and encoding for C509 certificates, with the overall objective to produce a very compact representation supporting large parts of {{RFC5280}}, and everything in {{RFC7925}}, {{IEEE-802.1AR}}, RPKI {{RFC6487}}, GSMA eUICC {{GSMA-eUICC}}, and CAB Baseline {{CAB-TLS}} {{CAB-Code}}.
+
+In the CBOR encoding, static fields are elided, elliptic curve points and time values are compressed, OID are replaced with short integers or complemented with CBOR OID encoding {{RFC9090}}, and redundant encoding is removed. Combining these different components reduces the certificate size significantly, which is not possible with general purpose compression algorithms, see {{fig-size-TLS}}.
 
 The C509 certificate can be either a CBOR re-encoding of a DER-encoded X.509 certificate, in which case the signature is calculated on the DER-encoded ASN.1 data in the X.509 certificate, or a natively signed C509 certificate, in which case the signature is calculated directly on the CBOR encoded data. In both cases the certificate content is adhering to the restrictions given by {{RFC5280}}. The re-encoding is known to work with DER-encoded certificates but might work with other canonical encodings. The re-encoding does not work for BER encoded certificates.
 
@@ -260,7 +268,7 @@ In the encoding described below, the elements in arrays are always encoded in th
 
 The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see {{fig-CBORCertCDDL}}.
 
-The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g., {{rfc7925-prof}}.
+The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g., {{rfc7925-prof}}.
 
 ~~~~~~~~~~~ cddl
 C509Certificate = [
@@ -331,7 +339,7 @@ The text strings are further optimized as follows:
 
   * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
   * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'-'9' or 'A'-'F', it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
-  * Otherwise it is encoded as a CBOR text string.
+  * Otherwise, it is encoded as a CBOR text string.
 
 The final encoding of the extension value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.
 
@@ -548,7 +556,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 4.2.1.10 of RFC5280}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the netmask. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 2.2 of RFC9549}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the netmask. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
 
 ~~~~~~~~~~~ cddl
    GeneralSubtrees = [ + GeneralName ]
@@ -654,7 +662,7 @@ Note that certificates can also be identified with a 'kid' header parameter by s
 
 ## C509 COSE Header Algorithm Parameters {#cose-header-alg-params}
 
-In this section we define the COSE header parameters used for identifying or transporting the sender's key for static-static key agreement algorithms corresponding to {{Section 3 of RFC9360}}, see {{iana-sender}}.
+This section defines the COSE header parameters used for identifying or transporting the sender's key for static-static key agreement algorithms corresponding to {{Section 3 of RFC9360}}, see {{iana-sender}}.
 
 * c5c-sender contains the chain of certificates starting with the sender's key exchange certificate. The structure is the same as 'c5c'.
 * c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.
@@ -721,21 +729,21 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    C509Name ::= OCTET STRING
 ~~~~~~~~~~~
 
-# C509 Certificate (Signing) Request {#CSR}
+# C509 Certification Request {#CSR}
 
-This section defines the format of a C509 Certificate Request, also known as a C509 Certificate Signing Request (CSR), based on and compatible with {{RFC2986}}, and reusing the formatting of C509 certificates defined in {{certificate}}.
+This section defines the format of a C509 Certification Request based on {{RFC2986}}. It reuses the formatting of C509 certificates defined in {{certificate}}. A Certification Request is commonly referred to as a Certificate Signing Request (CSR).
 
-The CDDL for the C509 Certificate Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
+The CDDL for the C509 Certification Request is shown in {{fig-C509CSRCDDL}}. The fields have the same encoding as the corresponding fields of the C509 Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~ cddl
-C509CertificateRequest = [
-   TBSCertificateRequest,
+C509CertificationRequest = [
+   TBSCertificationRequest,
    subjectSignatureValue: any,
 ]
 
 ; The elements of the following group are used in a CBOR Sequence:
-TBSCertificateRequest = (
-   c509CertificateRequestType: int,
+TBSCertificationRequest = (
+   c509CertificationRequestType: int,
    subjectSignatureAlgorithm: AlgorithmIdentifier,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
@@ -750,26 +758,26 @@ CRAttribute = (( attributeType: int, attributeValue: Defined ) //
 
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
-{: #fig-C509CSRCDDL title="CDDL for C509CertificateRequest."}
+{: #fig-C509CSRCDDL title="CDDL for C509CertificationRequest."}
 
-After verifying the subjectSignatureValue, the CA MAY transform the C509CertificateRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
+After verifying the subjectSignatureValue, the Certification Authority (CA) MAY transform the C509CertificationRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and code.
 
-The media type of C509CertificateRequest is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in {{Section 2.2 of RFC9277}}.
+The media type of C509CertificationRequest is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 
-## Certificate Request Types
+## Certification Request Types
 
-Two types of C509 Certificate Requests are defined, both using the same CBOR encoding and differing only in what is being signed, see {{csr-type}}.
-The C509 Certificate Request can either be an invertible CBOR re-encoding of a DER-encoded certification request {{RFC2986}}, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
+Two types of C509 Certification Requests are defined, both using the same CBOR encoding and differing only in what is being signed, see {{csr-type}}.
+The C509 Certification Request can either be an invertible CBOR re-encoding of a DER-encoded certification request {{RFC2986}}, or it can be natively signed where the signature is calculated over the CBOR encoding instead of the DER encoding.
 
-* c509CertificateRequestType = 2. This type indicates that the C509 Certificate Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence
-TBSCertificateRequest, see {{fig-C509CSRCDDL}}. This encoding removes the need for ASN.1 and DER parsing, and re-encoding in the requesting party.
+* c509CertificationRequestType = 2. This type indicates that the C509 Certification Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence
+TBSCertificationRequest, see {{fig-C509CSRCDDL}}. This encoding removes the need for ASN.1 and DER parsing, and re-encoding in the requesting party.
 
-* c509CertificateRequestType = 3. This type indicates that the C509 Certificate Request is a CBOR re-encoded RFC 2986 certification request, as defined in {{CSR}}. This encoding is backwards compatible with legacy RFC 2986 certification requests, and enables a reduced transport overhead.
+* c509CertificationRequestType = 3. This type indicates that the C509 Certification Request is a CBOR re-encoded {{RFC2986}} certification request, as defined in {{CSR}}. This encoding is backwards compatible with legacy RFC 2986 certification requests, and enables a reduced transport overhead.
 
-The type of certificate issued after the request is decided by the application. The default type of issued certificate in case of C509 is that c509CertificateType = c509CertificateRequestType.
+The type of certificate issued after the request is decided by the application. The default type of issued certificate in case of C509 is that c509CertificateType = c509CertificationRequestType.
 
-An implementation MAY only support certain values of c509CertificateRequestType.
+An implementation MAY only support certain values of c509CertificationRequestType.
 
 
 ## Subject Signature Algorithm
@@ -789,13 +797,13 @@ DhSigStaticType = [
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-Note that a key agreement key pair may be used with a signature algorithm in a certificate request, see {{app-DH-keys}}.
+Note that a key agreement key pair may be used with a signature algorithm in a certification request, see {{app-DH-keys}}.
 
-## Certificate Request Attributes
+## Certification Request Attributes
 
-The 'attributes' field specifies the attributes contained in a certificate request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
+The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
 
-The remainder of this section specifies CBOR encoded attributes for Certificate Requests.
+The remainder of this section specifies CBOR encoded attributes for Certification Requests.
 
 ### Extension Request
 
@@ -803,7 +811,7 @@ The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attribut
 
 ### Challenge Password
 
-The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{Section 9.1 of I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certificate request type 2, only UTF8 String is allowed.
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{IANA-CBOR-TAGS}}). All other string types are not supported. For certification request type 2, only UTF8 String is allowed.
 
 ~~~~~~~~~~~ cddl
 ChallengePassword = text / #6.121(text)
@@ -823,18 +831,18 @@ PrivateKeyPossessionStatement = [
 ~~~~~~~~~~~
 
 
-## Certificate Request Template {#CRT}
+## Certification Request Template {#CRT}
 
-Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certificate Signing Request (CSR). Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certificate Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns an Certificate Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certification Request. Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certification Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns a Certification Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
 
-For C509 we follow the approach of {{RFC8295}}. The C509CertificateRequestTemplate is based on TBSCertificateRequest of the C509CertificateRequest, see {{fig-C509CSRCDDL}}, but excludes the subjectSignatureValue field from the template since that needs no further specification.
+The approach of {{RFC8295}} is also followed for C509. The C509CertificationRequestTemplate is based on TBSCertificationRequest of the C509CertificationRequest, see {{fig-C509CSRCDDL}}, but excludes the subjectSignatureValue field from the template since that needs no further specification.
 
-The C509 Certificate Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
+The C509 Certification Request Template is shown in {{fig-C509CSRTemplateCDDL}}.
 
 ~~~~~~~~~~~ cddl
-C509CertificateRequestTemplate = [
-   c509CertificateRequestTemplateType: int,
-   c509CertificateRequestType: [+ int] / undefined,
+C509CertificationRequestTemplate = [
+   c509CertificationRequestTemplateType: int,
+   c509CertificationRequestType: [+ int] / undefined,
    subjectSignatureAlgorithm: [+ AlgorithmIdentifier] / undefined,
    subject: NameTemplate / undefined,
    subjectPublicKeyAlgorithm: [+ AlgorithmIdentifier] / undefined,
@@ -855,33 +863,35 @@ ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) 
                      ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
-{: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificateRequestTemplate."}
+{: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificationRequestTemplate."}
 
-Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificateRequest, see {{fig-C509CSRCDDL}}. The specification of the template makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Consistent with this rule, note that the subjectPublicKey field always has the value undefined in the template.
+Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificationRequest, see {{fig-C509CSRCDDL}}. The specification of the template makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Consistent with this rule, note that the subjectPublicKey field always has the value undefined in the template.
 
- Different types of Certificate Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificateRequestTemplateType integer. Each type may have its own CDDL structure.
+Different types of Certification Request Templates can be defined (see {{temp-type}}), distinguished by the c509CertificationRequestTemplateType integer. Each type may have its own CDDL structure.
 
-The presence of a Defined (non-undefined) value in a C509CertificateRequestTemplate indicates that the server expects the client to use that value in the certificate request. If multiple AlgorithmIdentifier or c509CertificateRequestType values are present, the server expects the client to select one of them for use in the Certificate Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
+The presence of a Defined (non-undefined) value in a C509CertificationRequestTemplate indicates that the server expects the client to use that value in the certification request. If multiple AlgorithmIdentifier or c509CertificationRequestType values are present, the server expects the client to select one of them for use in the Certification Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client SHOULD fill in a corresponding GeneralNameValue.
 
 For AttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.
 
 For ExtensionTemplate, the field "optional" specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.
 
-The media type of C509CertificateRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
+The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 # C509 Processing and Certificate Issuance
 
 It is straightforward to integrate the C509 format into legacy X.509 processing during certificate issuance. C509 processing can be performed as an isolated function of the CA, or as a separate function trusted by the CA.
 
-The Certificate Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see Section 4.1 of {{RFC2986}}. The CA can make use of a Certificate Request Template defined in {{CRT}}, for simplified configuration.
+The Certification Request format defined in {{CSR}} follows the PKCS#10 format to enable a direct mapping to the certification request information, see {{Section 4.1 of RFC2986}}. The CA can make use of a Certification Request Template defined in {{CRT}}, for simplified configuration.
 
-When a certificate request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
+When a certification request is received, the CA, or function trusted by the CA, needs to perform some limited C509 processing and verify the proof-of-possession corresponding to the public key, before normal certificate generation can take place.
 
 In the reverse direction, in case c509CertificateType = 3 was requested, a separate C509 processing function can perform the conversion from a generated X.509 certificate to C509 as a bump-in-the-wire. In case c509CertificateType = 2 was requested, the C509 processing needs to be performed before signing the certificate, in which case a tighter integration with the CA may be needed.
 
-# Legacy Considerations {#dep-set}
+# Operational Considerations
 
-C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER-encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 CSR, the CA transforms it into a DER-encoded CertificationRequestInfo {{RFC2986}} and uses that with existing processes and code to produce an RFC 5280 DER-encoded X.509 certificate. The DER-encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
+## Legacy Considerations {#dep-set}
+
+C509 certificates can be deployed with legacy X.509 certificates and CA infrastructure. An existing CA can continue to use its existing procedures and code for PKCS#10, and DER-encoded X.509 and only implement C509 as a thin processing layer on top. When receiving a C509 Certification Request, the CA transforms it into a DER-encoded CertificationRequestInfo {{RFC2986}} and uses that with existing processes and code to produce an RFC 5280 DER-encoded X.509 certificate. The DER-encoded X.509 is then transformed into a C509 certificate. At any later point, the C509 certificate can be used to recreate the original X.509 data structure needed to verify the signature.
 
 For protocols like TLS/DTLS 1.2, where certificates are sent unencrypted, the actual encoding and compression can be done at different locations depending on the deployment setting. For example, the mapping between C509 certificate and standard X.509 certificate can take place in a 6LoWPAN border gateway, which allows the server side to stay unmodified. This case gives the advantage of the low overhead of a C509 certificate over constrained wireless links. The conversion to X.509 within a constrained IoT device will incur a computational overhead. However, measured in energy, this is likely to be negligible compared to the reduced communication overhead.
 
@@ -889,9 +899,9 @@ For the setting with constrained server and server-only authentication, the serv
 
 For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encrypted, the proposed encoding needs to be done fully end-to-end, through adding the encoding/decoding functionality to the server.
 
-# Expected Certificate Sizes
+## Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in Figures {{fig-size-COSE}}{: format="counter"} and {{fig-size-TLS}}{: format="counter"}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After RFC 7925 profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli {{RFC7932}} will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. In the examples with HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 uses dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
+The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in Figures {{fig-size-COSE}}{: format="counter"} and {{fig-size-TLS}}{: format="counter"}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli {{RFC7932}} will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. In the examples with HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 uses dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
 
 ~~~~~~~~~ aasvg
 +---------------------------------------+-----------+-----------+
@@ -949,13 +959,15 @@ As stated in {{cose-header-params}}, the contents of the COSE Header Parameters 
 
 This document creates several new registries in the new registry group "CBOR Encoded X.509 (C509) Parameters". For all items, the 'Reference' field points to this document.
 
+## Designated Expert Guidance
+
 The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate an entry that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1-byte encoding, other values in the interval \[-256, 255\] have a 2-byte encoding, and the remaining values in the interval \[-65536, 65535\] have a 3-byte encoding.
 
-All assignments according to "IETF Review with Expert Review" are made on a "IETF Review" basis per Section 4.8 of {{RFC8126}} with "Expert Review" additionally required per Section 4.5 of {{RFC8126}}. The procedure for early IANA allocation of "standards track code points" defined in {{RFC7120}} also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{RFC7120}}.
+All assignments according to "IETF Review with Expert Review" are made on a "IETF Review" basis per {{Section 4.8 of RFC8126}} with "Expert Review" additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of "standards track code points" defined in {{RFC7120}} also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{RFC7120}}.
 
 ## C509 Certificate Types Registry {#type}
 
-IANA has created a new registry titled "C509 Certificate Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval \[-24, 23\], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are (see {{version}}):
+IANA has created a new registry titled "C509 Certificate Types" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval \[-24, 23\], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are (see {{version}}):
 
 ~~~~~~~~~~~ aasvg
 +-------+-------------------------------------------+
@@ -973,9 +985,9 @@ IANA has created a new registry titled "C509 Certificate Types" in the new regis
 {: #fig-types title="C509 Certificate Types"}
 {: artwork-align="center"}
 
-## C509 Certificate Request Types Registry {#csr-type}
+## C509 Certification Request Types Registry {#csr-type}
 
-IANA has created a new registry titled "C509 Certificate Request Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certification Request Types" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -985,12 +997,12 @@ IANA has created a new registry titled "C509 Certificate Request Types" in the n
 +-------+-----------------------------------------------------------+
 |     1 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     2 | Natively Signed C509 Certificate Request.                 |
+|     2 | Natively Signed C509 Certification Request.                 |
 +-------+-----------------------------------------------------------+
 |     3 | CBOR re-encoding of RFC 2986 certification request.       |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-csr-types title="C509 Certificate Request Types"}
+{: #fig-csr-types title="C509 Certification Request Types"}
 {: artwork-align="center"}
 
 ## C509 Private Key Types Registry {#privkeys}
@@ -1011,18 +1023,17 @@ IANA has created a new registry titled "C509 Private Key Types" in the new regis
 {: #fig-rivkeys title="C509 Private Key Types"}
 {: artwork-align="center"}
 
-## C509 Certificate Request Templates Types Registry {#temp-type}
+## C509 Certification Request Templates Types Registry {#temp-type}
 
-IANA has created a new registry titled "C509 Certificate Request Templates Types" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
-
+IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Simple C509 Certificate Request Template                  |
+|     0 | Simple C509 Certification Request Template                  |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
-{: #fig-temp-types title="C509 Certificate Request Templates Types"}
+{: #fig-temp-types title="C509 Certification Request Templates Types"}
 {: artwork-align="center"}
 
 ## C509 RDN Attributes Registry {#rdnatttype}
@@ -1215,7 +1226,7 @@ The initial contents of the registry are:
 
 ## C509 CR Attributes Registry {#cratttype}
 
-IANA has created a new registry titled "C509 CR Attributes" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
+IANA has created a new registry titled "C509 CR Attributes" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID {{X.690}}.
 
 The initial contents of the registry are:
 
@@ -1250,7 +1261,7 @@ The initial contents of the registry are:
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1430,7 +1441,7 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 
 ## C509 Certificate Policies Registry {#CP}
 
-IANA has created a new registry titled "C509 Certificate Policies Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Certificate Policies Registry" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1589,7 +1600,7 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" in t
 
 ## C509 Policies Qualifiers Registry {#PQ}
 
-IANA has created a new registry titled "C509 Policies Qualifiers Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Policies Qualifiers Registry" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1613,7 +1624,7 @@ IANA has created a new registry titled "C509 Policies Qualifiers Registry" in th
 
 ## C509 Information Access Registry {#IA}
 
-IANA has created a new registry titled "C509 Information Access Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Information Access Registry" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1667,7 +1678,7 @@ IANA has created a new registry titled "C509 Information Access Registry" in the
 
 ## C509 Extended Key Usages Registry {#EKU}
 
-IANA has created a new registry titled "C509 Extended Key Usages Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extended Key Usages Registry" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+---------------------------------------------------------+
@@ -1786,7 +1797,7 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" in th
 {: artwork-align="center"}
 
 ## C509 General Names Registry {#GN}
-IANA has created a new registry titled "C509 General Names Registry" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 General Names Registry" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1847,7 +1858,7 @@ IANA has created a new registry titled "C509 General Names Registry" in the new 
 
 ## C509 Signature Algorithms Registry {#sigalg}
 
-IANA has created a new registry titled "C509 Signature Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm MUST be considered, see instruction in {{pkalg}}. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Signature Algorithms" under the registry group "CBOR Encoded X.509 (C509) Parameters". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm MUST be considered, see instruction in {{pkalg}}. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 <!-- NOTE: Check referenced section number hardcoded in the table. -->
 
@@ -2035,7 +2046,7 @@ IANA has created a new registry titled "C509 Signature Algorithms" in the new re
 
 ## C509 Public Key Algorithms Registry {#pkalg}
 
-IANA has created a new registry titled "C509 Public Key Algorithms" in the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value MUST be chosen equal to the value of signature algorithm, see {{sigalg}}. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Public Key Algorithms" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value MUST be chosen equal to the value of signature algorithm, see {{sigalg}}. For values in the interval \[-24, 23\] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -2221,7 +2232,7 @@ Change controller: IETF
 
 
 ### Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
-When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificateRequest structure.
+When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificationRequest structure.
 
 Type name: application
 
@@ -2239,7 +2250,7 @@ Interoperability considerations: N/A
 
 Published specification: [[this document]]
 
-Applications that use this media type: Applications that employ COSE and C509 Certificate Request.
+Applications that use this media type: Applications that employ COSE and C509 Certification Request.
 
 Fragment identifier considerations: N/A
 
@@ -2261,7 +2272,7 @@ Author: COSE WG
 Change controller: IETF
 
 ### Media Type application/cose-c509-crtemplate {#c509-crtemplate}
-When the application/cose-c509-crtemplate media type is used, the data is a C509CertificateRequestTemplate structure.
+When the application/cose-c509-crtemplate media type is used, the data is a C509CertificationRequestTemplate structure.
 
 Type name: application
 
@@ -2279,7 +2290,7 @@ Interoperability considerations: N/A
 
 Published specification: [[this document]]
 
-Applications that use this media type: Applications that employ COSE and C509 Certificate Request.
+Applications that use this media type: Applications that employ COSE and C509 Certification Request.
 
 Fragment identifier considerations: N/A
 
@@ -2682,7 +2693,7 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
 
-The two previous examples illustrate keyUsage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used to sign a certificate request.
+The two previous examples illustrate keyUsage digitalSignature. A C509 certificate for a public Diffie-Hellman key would instead have key usage keyAgreement encoded according to {{ext-encoding}} (in this case of single extension encoded as integer 16 instead of 1 for digital signature) but otherwise identical in format. Note that Section 5.6.3.2 of {{SP-800-56A}} allows a key agreement key pair to be used to sign a certification request.
 
 ### Example: Additional Keys for the Example Certificates
 
