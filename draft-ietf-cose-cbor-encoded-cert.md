@@ -205,7 +205,6 @@ informative:
         ins: R. Davis
     date: April 2018
 
-<<<<<<< issue339-extendIPAddrBlocks
   IANA-AFI:
     target: https://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml
     title: Address Family Numbers
@@ -213,14 +212,13 @@ informative:
   IANA-SAFI:
     target: https://www.iana.org/assignments/safi-namespace/safi-namespace.xhtml
     title: Subsequent Address Family Identifiers (SAFI) Parameters
-=======
+    
   IANA-CBOR-TAGS:
     target: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
     title: Concise Binary Object Representation (CBOR) Tags
     author:
       -
         ins: IANA
->>>>>>> master
 
 --- abstract
 
