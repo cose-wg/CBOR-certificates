@@ -938,42 +938,55 @@ For protocols like IKEv2, TLS/DTLS 1.3, and EDHOC, where certificates are encryp
 
 ## Expected Certificate Sizes
 
-The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in Figures {{fig-size-COSE}}{: format="counter"} and {{fig-size-TLS}}{: format="counter"}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli {{RFC7932}} will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. In the examples with HTTPS certificate chains (www.ietf.org and tools.ietf.org) both C509 and Brotli perform well complementing each other. C509 uses dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
+The CBOR encoding of the sample certificate chains given in {{appA}} results in the numbers shown in Figures {{fig-size-COSE}}{: format="counter"} and {{fig-size-TLS}}{: format="counter"}. COSE_X509 is defined in {{RFC9360}} and COSE_C509 is defined in {{cose}}. After {{RFC7925}} profiling, most duplicated information has been removed, and the remaining text strings are minimal in size. Therefore, the further size reduction reached with general compression mechanisms such as Brotli {{RFC7932}} will be small, mainly corresponding to making the ASN.1 encoding more compact. CBOR encoding can however significantly compress RFC 7925 profiled certificates. In the examples with HTTPS certificate chains (ww.ietf.org (ECDSA) and cabrowser.org (RSA)) both C509 and Brotli perform well complementing each other. C509 uses dedicated information to compress individual certificates, while Brotli can compress duplicate information in the entire chain. Note that C509 certificates of type 2 and 3 have the same size. For Brotli, the Rust crate Brotli 3.3.0 was used with compression level 11 and window size 22.
+
+In the examples using FN-DSA and ML-DSA certificate chains, the largest portion of the certificate size consists of the public keys and signatures, which are essentially random. As a result, both Brotli and C509 achieve only very limited size reduction. However, C509 still performs slightly better.
 
 ~~~~~~~~~ aasvg
-+---------------------------------------+-----------+-----------+
-|                                       | COSE_X509 | COSE_C509 |
-+---------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1) |       317 |       142 |
-+---------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain (2)     |      2193 |      1397 |
-+---------------------------------------+-----------+-----------+
-| FN-DSA HTTPS Certificate Chain (2)    |      5127 |      4331 |
-+---------------------------------------+-----------+-----------+
-| ML-DSA HTTPS Certificate Chain (2)    |      9465 |      8669 |
-+---------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain (4)       |      5175 |      3937 |
-+---------------------------------------+-----------+-----------+
++----------------------------------------+-----------+-----------+
+| Description (number of certs)          | COSE_X509 | COSE_C509 |
++----------------------------------------+-----------+-----------+
+| RFC 7925 profiled IoT Certificate (1)  |       319 |       142 |
++----------------------------------------+-----------+-----------+
+| RPKI Certificate (1)                   |     20981 |     11523 |
++----------------------------------------+-----------+-----------+
+| ECDSA HTTPS Certificate Chain (2)      |      1644 |      1012 |
++----------------------------------------+-----------+-----------+
+| RSA HTTPS Certificate Chain (2)        |      2909 |      2240 |
++----------------------------------------+-----------+-----------+
+| FN-DSA-512 HTTPS Certificate Chain (2) |      4417 |      3897 |
++----------------------------------------+-----------+-----------+
+| ML-DSA-65 HTTPS Certificate Chain (2)  |     11863 |     11318 |
++----------------------------------------+-----------+-----------+
+
 ~~~~~~~~~~~
 {: #fig-size-COSE title="Comparing Sizes of Certificate Chains in COSE. Number of bytes (length of certificate chain)."}
 {: artwork-align="center"}
 
 ~~~~~~~~~~~ aasvg
-+-------------------+-------+----------------+------+---------------+
-|                   | X.509 | X.509 + Brotli | C509 | C509 + Brotli |
-+-------------------+-------+----------------+------+---------------+
-| RFC 7925 Cert (1) |   327 |            324 |  152 |           170 |
-+-------------------+-------+----------------+------+---------------+
-| RPKI Cert (1)     | 20991 |           9134 | 8663 |          5671 |
-+-------------------+-------+----------------+------+---------------+
-| HTTPS Chain (2)   |  2204 |           1455 | 1417 |          1066 |
-+-------------------+-------+----------------+------+---------------+
-| HTTPS Chain (4)   |  5190 |           3244 | 3961 |          2848 |
-+-------------------+-------+----------------+------+---------------+
-| HTTPS Bag (8)     | 11578 |           3979 | 8885 |          3522 |
-+-------------------+-------+----------------+------+---------------+
++-----------------------+-------+---------+-------+--------+
+| Description           | X.509 | X.509 + | C509  | C509 + |
+| (number of certs)     |       | Brotli  |       | Brotli |
++-----------------------+-------+---------+-------+--------+
+| RFC 7925 profiled     |   325 |     317 |  149  |    158 |
+| IoT Certificate (1)   |       |         |       |        |
++-----------------------+-------+---------+-------+--------+
+| RPKI Certificate (1)  | 20987 |    9109 | 11529 |   7020 |
++-----------------------+-------+---------+-------+--------+
+| ECDSA HTTPS           |  1651 |    1181 |  1019 |    930 |
+| Certificate Chain (2) |       |         |       |        |
++-----------------------+-------+---------+-------+--------+
+| RSA HTTPS             |  2656 |    2195 |  2071 |   1913 |
+| Certificate Chain (2) |       |         |       |        |
++-----------------------+-------+---------+-------+--------+
+| FN-DSA-512 HTTPS      |  4437 |    4026 |  3917 |   3776 |
+| Certificate Chain (2) |       |         |       |        |
++-----------------------+-------+---------+-------+--------+
+| ML-DSA-65 HTTPS       | 11869 |   11420 | 11325 |  11148 |
+| Certificate Chain (2) |       |         |       |        |
++-----------------------+-------+---------+-------+--------+
 ~~~~~~~~~~~
-{: #fig-size-TLS title="Comparing Sizes of Certificate Chains with TLS. Number of bytes (length of certificate chain). X.509 and C509 are Certificate messages. X.509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
+{: #fig-size-TLS title="Comparing Sizes of Certificate Chains with TLS 1.3. Number of bytes (length of certificate chain). X.509 and C509 are Certificate messages. X.509 + Brotli and C509 + Brotli are CompressedCertificate messages."}
 {: artwork-align="center"}
 
 # Security Considerations {#sec-cons}
