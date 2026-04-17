@@ -158,6 +158,11 @@ informative:
         ins: GSMA
     date: January 2025
 
+  GSMA-SGP.22:
+    title: GSMA RSP Technial Specification Version 3.1 Final
+    target: https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2023/12/SGP.22-v3.1.pdf
+    date: December 2023
+
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
     title: Lightweight X.509 Digital Certificates for the Internet of Things.
@@ -1472,61 +1477,110 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" in t
 |       | DER:             06 08 2B 06 01 05 05 07 0E 03            |
 |       | Comments:        RFC 8360                                 |
 +-------+-----------------------------------------------------------+
-|    10 | Name:            Remote SIM Provisioning Role             |
+|    24 | Name:            Remote SIM Provisioning Role             |
 |       |                  Certificate Issuer                       |
 |       | Identifiers:     id-rspRole-ci                            |
 |       | OID:             2.23.146.1.2.1.0                         |
 |       | DER:             06 07 67 81 12 01 02 01 00               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    11 | Name:            Remote SIM Provisioning Role             |
-|       |                  eUICC                                    |
-|       | Identifiers:     id-rspRole-euicc                         |
+|    25 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC v2                                 |
+|       | Identifiers:     id-rspRole-euicc-v2                      |
 |       | OID:             2.23.146.1.2.1.1                         |
 |       | DER:             06 07 67 81 12 01 02 01 01               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    12 | Name:            Remote SIM Provisioning Role             |
-|       |                  eUICC Manufacturer                       |
-|       | Identifiers:     id-rspRole-eum                           |
+|    26 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC                                    |
+|       | Identifiers:     id-rspRole-euicc                         |
+|       | OID:             2.23.146.1.2.1.0.0.0.0.0                 |
+|       | DER:             06 0B 67 81 12 01 02 01 00 00 00 00 00   |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    27 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC Manufacturer v2                    |
+|       | Identifiers:     id-rspRole-eum-v2                        |
 |       | OID:             2.23.146.1.2.1.2                         |
 |       | DER:             06 07 67 81 12 01 02 01 02               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    13 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DP+ TLS                               |
-|       | Identifiers:     id-rspRole-dp-tls                        |
+|    28 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC Manufacturer                       |
+|       | Identifiers:     id-rspRole-eum                           |
+|       | OID:             2.23.146.1.2.1.0.0.0                     |
+|       | DER:             06 09 67 81 12 01 02 01 00 00 00         |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    29 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ TLS v2                            |
+|       | Identifiers:     id-rspRole-dp-tls-v2                     |
 |       | OID:             2.23.146.1.2.1.3                         |
 |       | DER:             06 07 67 81 12 01 02 01 03               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    14 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DP+ Authentication                    |
-|       | Identifiers:     id-rspRole-dp-auth                       |
+|    30 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ TLS                               |
+|       | Identifiers:     id-rspRole-dp-tls                        |
+|       | OID:             2.23.146.1.2.1.0.0.1.0                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 01 00      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    31 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Authentication v2                 |
+|       | Identifiers:     id-rspRole-dp-auth-v2                    |
 |       | OID:             2.23.146.1.2.1.4                         |
 |       | DER:             06 07 67 81 12 01 02 01 04               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    15 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DP+ Profile Binding                   |
-|       | Identifiers:     id-rspRole-dp-pb                         |
+|    32 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Authentication                    |
+|       | Identifiers:     id-rspRole-dp-auth                       |
+|       | OID:             2.23.146.1.2.1.0.0.1.1                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 01 01      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    33 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Profile Binding v2                |
+|       | Identifiers:     id-rspRole-dp-pb-v2                      |
 |       | OID:             2.23.146.1.2.1.5                         |
 |       | DER:             06 07 67 81 12 01 02 01 05               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    16 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DS TLS                                |
-|       | Identifiers:     id-rspRole-ds-tls                        |
+|    34 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Profile Binding                   |
+|       | Identifiers:     id-rspRole-dp-pb                         |
+|       | OID:             2.23.146.1.2.1.0.0.1.2                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 01 02      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    35 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS TLS v2                             |
+|       | Identifiers:     id-rspRole-ds-tls-v2                     |
 |       | OID:             2.23.146.1.2.1.6                         |
 |       | DER:             06 07 67 81 12 01 02 01 06               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    17 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DS Authentication                     |
-|       | Identifiers:     id-rspRole-ds-auth                       |
+|    36 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS TLS                                |
+|       | Identifiers:     id-rspRole-ds-tls                        |
+|       | OID:             2.23.146.1.2.1.0.0.2.0                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 02 00      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    37 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS Authentication v2                  |
+|       | Identifiers:     id-rspRole-ds-auth-v2                    |
 |       | OID:             2.23.146.1.2.1.7                         |
 |       | DER:             06 07 67 81 12 01 02 01 07               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    38 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS Authentication                     |
+|       | Identifiers:     id-rspRole-ds-auth                       |
+|       | OID:             2.23.146.1.2.1.0.0.2.1                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 02 01      |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-cp title="C509 Certificate Policies"}
