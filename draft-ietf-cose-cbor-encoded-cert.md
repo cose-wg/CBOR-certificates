@@ -212,7 +212,7 @@ informative:
   IANA-SAFI:
     target: https://www.iana.org/assignments/safi-namespace/safi-namespace.xhtml
     title: Subsequent Address Family Identifiers (SAFI) Parameters
-    
+
   IANA-CBOR-TAGS:
     target: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
     title: Concise Binary Object Representation (CBOR) Tags
@@ -1034,7 +1034,7 @@ IANA has created a new registry titled "C509 Certification Request Types" under 
 +-------+-----------------------------------------------------------+
 |     1 | Reserved                                                  |
 +-------+-----------------------------------------------------------+
-|     2 | Natively Signed C509 Certification Request.                 |
+|     2 | Natively Signed C509 Certification Request.               |
 +-------+-----------------------------------------------------------+
 |     3 | CBOR re-encoding of RFC 2986 certification request.       |
 +-------+-----------------------------------------------------------+
@@ -1063,11 +1063,12 @@ IANA has created a new registry titled "C509 Private Key Types" in the new regis
 ## C509 Certification Request Templates Types Registry {#temp-type}
 
 IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval \[-24, 23\] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
 | Value | Description                                               |
 +=======+===========================================================+
-|     0 | Simple C509 Certification Request Template                  |
+|     0 | Simple C509 Certification Request Template                |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-temp-types title="C509 Certification Request Templates Types"}
