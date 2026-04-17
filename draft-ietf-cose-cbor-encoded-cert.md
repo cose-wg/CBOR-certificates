@@ -205,6 +205,14 @@ informative:
         ins: R. Davis
     date: April 2018
 
+  IANA-AFI:
+    target: https://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml
+    title: Address Family Numbers
+
+  IANA-SAFI:
+    target: https://www.iana.org/assignments/safi-namespace/safi-namespace.xhtml
+    title: Subsequent Address Family Identifiers (SAFI) Parameters
+    
   IANA-CBOR-TAGS:
     target: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
     title: Concise Binary Object Representation (CBOR) Tags
@@ -587,16 +595,45 @@ CBOR encoding of the following extension values are partly supported:
 
 * AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in {{RFC8360}}. The extension value is encoded exactly like in the extension "AS Identifiers".
 
-* IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. Each AddressPrefix is encoded as a CBOR bytes string (without the unused bits octet) followed by the number of unused bits encoded as a CBOR uint. Each AddressRange is encoded as an array of two CBOR byte strings. The unused bits for min and max are omitted, but the unused bits in max IPAddress are set to one. With the exception of the first Address, if the byte string has the same length as the previous Address, the Address is encoded as a uint with the difference to the previous Address. It should be noted that using address differences for compactness prevents encoding an address range larger than 2<sup>64</sup> - 1 corresponding to the CBOR integer max value.
+* IPAddrBlocks (id-pe-ipAddrBlocks). The X.509 extension IPAddrBlocks is specified in {{RFC3779}}. The ASN.1 BIT STRING value of IPAddress is converted to a byte sequence defined as:
+
+  ```
+  unusedBits || value
+  ```
+
+  where unusedBits is a single octet indicating the number of unused bits in the final octet of the BIT STRING, and value is the sequence of octets containing the BIT STRING value. This byte sequence preserves the exact information contained in the ASN.1 BIT STRING.
+
+  For each IPAddressFamily, the representation is selected as follows:
+
+    - If inherit is present, `null` SHALL be used.
+
+    - Otherwise, if the byte sequence of any IPAddress (including addressPrefix, and the min and max fields of addressRange) exceeds 8 octets in length, the IPAddressChoice representation SHALL be used.
+
+    - Otherwise, the IntIPAddressChoice representation SHALL be used.
+
+  For IntIPAddressChoice, IntAddressPrefix and the min and max values of IntAddressRange SHALL be encoded as big-endian integers representing the following byte sequence:
+
+  ```
+  (unusedBits + 1) || value
+  ```
+
+  The first byte is encoded as (unusedBits + 1) instead of unusedBits in order to guarantee a non-zero value. With the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
+
+  As specified in {{RFC3779}}, the IPAddressFamily element contains an Address Family Identifier (AFI) and, optionally, a Subsequent Address Family Identifier (SAFI). AFIs and SAFIs are defined in [IANA-AFI] and [IANA-SAFI], respectively. The limitations specified in {{RFC3779}} apply here as well.
 
 ~~~~~~~~~~~ cddl
+   IntAddressPrefix = int
+   IntAddressRange  = [ min: int, max: int ]
+   IntIPAddressOrRange = IntAddressPrefix / IntAddressRange
+   IntIPAddressChoice  = [ + IntIPAddressOrRange ]
 
-   Address = bytes
-   AddressPrefix = [ unusedBits: uint, Address ]
-   AddressRange = [ min: Address, max: Address ]
+   AddressPrefix = bytes
+   AddressRange  = [ min: bytes, max: bytes ]
    IPAddressOrRange = AddressPrefix / AddressRange
-   IPAddressChoice = [ + IPAddressOrRange ] / null
-   IPAddressFamily = (AFI: uint, SAFI: uint / null, IPAddressChoice)
+   IPAddressChoice  = [ + IPAddressOrRange ]
+
+   IPAddressFamily = (AFI: uint, SAFI: uint / null,
+                      IntIPAddressChoice / IPAddressChoice / null)
    IPAddrBlocks = [ + IPAddressFamily ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -3168,6 +3205,161 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
 ~~~~~~~~~~~
 
 The size of the CBOR encoding (CBOR sequence) is 1295 bytes.
+
+## Example: Certificate with Extensions IPAddrBlocks and IPAddrBlocksV2
+
+An example X.509 certificate with extensions IPAddrBlocks and IPAddrBlocksV2.
+
+~~~~~~~~~~~
+Certificate:
+  SHA256 Fingerprint:
+    c4917e6e4be1fe23eea1862fb57061aecead12b30db8f536cfe0da4a899bec75
+  Data:
+    Version: v3 (2)
+    Serial Number:
+      12:34
+    Issuer: CN=selfsign-brainpoolp384r1,SURNAME=my surname,T=my title,
+            GIVENNAME=my givenName,Name=my name
+    Validity:
+      Not Before: Thu Jan 02 01:00:00 CET 2025
+      Not After : Fri Jan 02 01:00:00 CET 2026
+    Subject: CN=selfsign-brainpoolp384r1,SURNAME=my surname,T=my title
+             ,GIVENNAME=my givenName,Name=my name
+    Subject Public Key Info:
+      Public Key Algorithm: EC/BRAINPOOLP384R1
+      Pub:
+        04:67:09:c9:92:91:9b:49:c4:8f:d9:31:d0:5c:49:7d:38:65:
+        e6:08:4c:91:df:3a:4c:7e:78:1f:41:85:43:b0:23:d5:9e:8b:
+        f2:5d:13:3f:b1:a0:94:e9:d4:2c:8f:a6:ed:3b:46:e9:88:3a:
+        35:ab:d4:b0:a9:d3:0a:ae:fd:9b:7e:88:ed:38:00:56:5d:1e:
+        7f:06:33:13:4d:65:19:29:2d:49:bd:55:ec:30:a1:67:19:7f:
+        ec:0f:74:29:82:2b:95
+    X509v3 extensions:
+      X509v3 keyUsage:
+        digitalSignature
+      X509v3 sbgp-ipAddrBlock:
+        IPv4:
+          22.82.0.0/16
+          23.83.112.0/20
+          23.106.104.0 - 23.106.119.255
+          23.109.0.0/16
+          23.111.16.0 - 23.111.63.255
+        IPv6:
+          2001:5::/32
+          2001:600:: - 2001:7f9:ffff:ffff:ffff:ffff:ffff:ffff
+          2001:7fb:: - 2001:bff:ffff:ffff:ffff:ffff:ffff:ffff
+          2001:1400::/22
+      X509v3 sbgp-ipAddrBlockV2:
+        IPv4 unicast:
+          22.82.0.0/16
+          23.83.112.0/20
+          23.106.104.0 - 23.106.119.255
+          23.109.0.0/16
+          23.111.16.0 - 23.111.63.255
+        IPv6 unicast:
+          2001:5::/32
+          2002:2::/72
+          2002:3:: - 2002:8:0:ffff:ffff:ffff:ffff:ffff
+  Signature Algorithm: SHA384WITHECDSA
+  Signature Value:
+    30:64:02:30:67:09:c9:92:91:9b:49:c4:8f:d9:31:d0:5c:49:
+    7d:38:65:e6:08:4c:91:df:3a:4c:7e:78:1f:41:85:43:b0:23:
+    d5:9e:8b:f2:5d:13:3f:b1:a0:94:e9:d4:2c:8f:a6:ed:02:30:
+    3f:7d:d0:c9:cf:50:86:29:85:29:f0:22:b8:2b:f6:32:f4:9d:
+    40:9a:2f:2e:70:0e:c2:b0:bd:24:a3:bb:09:41:85:da:7c:21:
+    af:47:9f:10:81:9a:41:04:c1:a4:b3:76
+~~~~~~~~~~~
+
+The DER encoding of the certificate is 791 bytes:
+
+~~~~~~~~~~~
+30 82 03 13 30 82 02 9a a0 03 02 01 02 02 02 12 34 30 0a 06 08 2a 86
+48 ce 3d 04 03 03 30 74 31 21 30 1f 06 03 55 04 03 0c 18 73 65 6c 66
+73 69 67 6e 2d 62 72 61 69 6e 70 6f 6f 6c 70 33 38 34 72 31 31 13 30
+11 06 03 55 04 04 0c 0a 6d 79 20 73 75 72 6e 61 6d 65 31 11 30 0f 06
+03 55 04 0c 0c 08 6d 79 20 74 69 74 6c 65 31 15 30 13 06 03 55 04 2a
+0c 0c 6d 79 20 67 69 76 65 6e 4e 61 6d 65 31 10 30 0e 06 03 55 04 29
+0c 07 6d 79 20 6e 61 6d 65 30 1e 17 0d 32 35 30 31 30 32 30 30 30 30
+30 30 5a 17 0d 32 36 30 31 30 32 30 30 30 30 30 30 5a 30 74 31 21 30
+1f 06 03 55 04 03 0c 18 73 65 6c 66 73 69 67 6e 2d 62 72 61 69 6e 70
+6f 6f 6c 70 33 38 34 72 31 31 13 30 11 06 03 55 04 04 0c 0a 6d 79 20
+73 75 72 6e 61 6d 65 31 11 30 0f 06 03 55 04 0c 0c 08 6d 79 20 74 69
+74 6c 65 31 15 30 13 06 03 55 04 2a 0c 0c 6d 79 20 67 69 76 65 6e 4e
+61 6d 65 31 10 30 0e 06 03 55 04 29 0c 07 6d 79 20 6e 61 6d 65 30 7a
+30 14 06 07 2a 86 48 ce 3d 02 01 06 09 2b 24 03 03 02 08 01 01 0b 03
+62 00 04 67 09 c9 92 91 9b 49 c4 8f d9 31 d0 5c 49 7d 38 65 e6 08 4c
+91 df 3a 4c 7e 78 1f 41 85 43 b0 23 d5 9e 8b f2 5d 13 3f b1 a0 94 e9
+d4 2c 8f a6 ed 3b 46 e9 88 3a 35 ab d4 b0 a9 d3 0a ae fd 9b 7e 88 ed
+38 00 56 5d 1e 7f 06 33 13 4d 65 19 29 2d 49 bd 55 ec 30 a1 67 19 7f
+ec 0f 74 29 82 2b 95 a3 81 fa 30 81 f7 30 0b 06 03 55 1d 0f 04 04 03
+02 07 80 30 75 06 08 2b 06 01 05 05 07 01 07 04 69 30 67 30 32 04 02
+00 01 30 2c 03 03 00 16 52 03 04 04 17 53 70 30 0c 03 04 00 17 6a 68
+03 04 00 17 6a 77 03 03 00 17 6d 30 0c 03 04 00 17 6f 10 03 04 00 17
+6f 3f 30 31 04 02 00 02 30 2b 03 05 00 20 01 00 05 30 0d 03 04 00 20
+01 06 03 05 00 20 01 07 f9 30 0d 03 05 00 20 01 07 fb 03 04 00 20 01
+0b 03 04 02 20 01 14 30 71 06 08 2b 06 01 05 05 07 01 1c 04 65 30 63
+30 33 04 03 00 01 01 30 2c 03 03 00 16 52 03 04 04 17 53 70 30 0c 03
+04 00 17 6a 68 03 04 00 17 6a 77 03 03 00 17 6d 30 0c 03 04 00 17 6f
+10 03 04 00 17 6f 3f 30 2c 04 03 00 02 01 30 25 03 05 00 20 01 00 05
+03 0a 00 20 02 00 02 00 00 00 00 00 30 10 03 05 00 20 02 00 03 03 07
+00 20 02 00 08 00 00 30 0a 06 08 2a 86 48 ce 3d 04 03 03 03 67 00 30
+64 02 30 67 09 c9 92 91 9b 49 c4 8f d9 31 d0 5c 49 7d 38 65 e6 08 4c
+91 df 3a 4c 7e 78 1f 41 85 43 b0 23 d5 9e 8b f2 5d 13 3f b1 a0 94 e9
+d4 2c 8f a6 ed 02 30 3f 7d d0 c9 cf 50 86 29 85 29 f0 22 b8 2b f6 32
+f4 9d 40 9a 2f 2e 70 0e c2 b0 bd 24 a3 bb 09 41 85 da 7c 21 af 47 9f
+10 81 9a 41 04 c1 a4 b3 76
+~~~~~~~~~~~
+
+### Example: C509 Certificate Encoding
+
+The CBOR encoding (~C509Certificate) of the X.509 certificate is shown below in CBOR diagnostic format.
+
+~~~~~~~~~~~
+/This defines a CBOR Sequence (RFC 8742):/
+
+3,
+h'1234',
+1,
+null,
+1735776000,
+1767312000,
+[
+  1, "selfsign-brainpoolp384r1", 2, "my surname", 10, "my title",
+  13, "my givenName", 25, "my name"
+],
+25,
+h'046709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B0
+  23D59E8BF25D133FB1A094E9D42C8FA6ED3B46E9883A35ABD4B0A9D30AAEFD9B
+  7E88ED3800565D1E7F0633134D6519292D49BD55EC30A167197FEC0F7429822B
+  95',
+[
+ 2, 1,
+ 32, [ 1, null,
+       [
+         71250, 85343518, [-67102984, 15], -18240266,
+         [18241443, 47]
+       ],
+       2, null,
+       [
+         4831903749, [-4813029119, 4813031155], [2, -4813031152],
+         33554441]
+       ],
+ 34, [ 1, 1,
+       [
+         71250, 85343518, [-67102984, 15], -18240266, [18241443, 47]
+       ],
+       2, 1,
+       [
+         h'0020010005', h'00200200020000000000',
+         [h'0020020003', h'00200200080000']
+       ]
+     ]
+],
+h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
+  D59E8BF25D133FB1A094E9D42C8FA6ED3F7DD0C9CF5086298529F022B82BF632
+  F49D409A2F2E700EC2B0BD24A3BB094185DA7C21AF479F10819A4104C1A4B376'
+~~~~~~~~~~~
+
 
 # Acknowledgments
 {: numbered="no"}
