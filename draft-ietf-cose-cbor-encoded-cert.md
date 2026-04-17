@@ -242,7 +242,7 @@ The C509 encoding supports a large subset of {{RFC5280}} and all certificates co
 
 CAB Baseline Requirements {{CAB-TLS}}, {{RFC7925}}, {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles which can be applied to certificate-based authentication with, e.g., TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}, or Compact TLS 1.3 {{I-D.ietf-tls-ctls}}. {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target IoT deployments.
 
-C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS). When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of {{RFC7925}}-profiled certificates by over 50%.
+At the time of publishing there are several implementations C509 targeting, e.g., in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS). When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can in many cases reduce the size of {{RFC7925}}-profiled certificates by over 50%, see {{fig-size-COSE}}.
 
 C509 is designed to be extensible to additional features of X.509, for example, support for new algorithms, including new Post-Quantum (PQ) algorithms, which can be registered in the IANA registry as they become specified, see {{sigalg}}.
 
