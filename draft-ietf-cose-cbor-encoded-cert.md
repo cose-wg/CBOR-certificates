@@ -1337,7 +1337,7 @@ IANA has created a new registry titled "C509 Extensions Registry" in the new reg
 |       | Identifiers:     nameConstraints                          |
 |       | OID:             2.5.29.30                                |
 |       | DER:             06 03 55 1D 1E                           |
-|       | Comments:        RFC 5280                                 |
+|       | Comments:        RFC 9549                                 |
 |       | extensionValue:  NameConstraints                          |
 +-------+-----------------------------------------------------------+
 |    27 | Name:            Policy Mappings                          |
