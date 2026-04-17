@@ -72,6 +72,7 @@ normative:
   RFC9277:
   RFC9360:
   RFC9542:
+  RFC9549:
   RFC9668:
   RFC9883:
 
@@ -112,7 +113,6 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
-  I-D.bormann-cbor-notable-tags:
   I-D.ietf-lamps-macaddress-on:
 
   CAB-TLS:
@@ -190,6 +190,13 @@ informative:
       -
         ins: R. Davis
     date: April 2018
+
+  IANA-CBOR-TAGS:
+    target: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
+    title: Concise Binary Object Representation (CBOR) Tags
+    author:
+      -
+        ins: IANA
 
 --- abstract
 
@@ -535,7 +542,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 4.2.1.10 of RFC5280}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the netmask. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 2.2 of RFC9549}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the netmask. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
 
 ~~~~~~~~~~~ cddl
    GeneralSubtrees = [ + GeneralName ]
@@ -790,7 +797,7 @@ The X.509 attribute "Extension Request" is defined in {{RFC2985}}. The 'attribut
 
 ### Challenge Password
 
-The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{Section 9.1 of I-D.bormann-cbor-notable-tags}}). All other string types are not supported. For certification request type 2, only UTF8 String is allowed.
+The X.509 attribute "Challenge Password" is defined in {{RFC2985}}. The 'attributeValue' field has type ChallengePassword. A UTF8 String is encoded as CBOR text, and a Printable String is tagged with number 121 (alternative 0 as defined in {{IANA-CBOR-TAGS}}). All other string types are not supported. For certification request type 2, only UTF8 String is allowed.
 
 ~~~~~~~~~~~ cddl
 ChallengePassword = text / #6.121(text)
