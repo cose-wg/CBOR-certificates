@@ -86,6 +86,11 @@ normative:
     target: https://www.itu.int/rec/T-REC-X.501/en
     date: December 2019
 
+  X.520:
+    title: "Information Technology - Open Systems Interconnection - The Directory: Selected attribute types"
+    target: https://www.itu.int/rec/T-REC-X.520/en
+    date: October 2019
+
   X.690:
     title: ASN.1 encoding rules. Specification of Basic Encoding Rules (BER), Canonical Encoding Rules (CER) and Distinguished Encoding Rules (DER)
     target: https://www.itu.int/rec/T-REC-X.690
@@ -95,8 +100,12 @@ normative:
     target: https://wi-sun.org
 
 informative:
+  RFC1274:
+  RFC2247:
+  RFC3161:
   RFC6487:
   RFC6955:
+  RFC6960:
   RFC7228:
   RFC7468:
   RFC7925:
@@ -148,6 +157,11 @@ informative:
       -
         ins: GSMA
     date: January 2025
+
+  GSMA-SGP.22:
+    title: GSMA RSP Technial Specification Version 3.1 Final
+    target: https://www.gsma.com/solutions-and-impact/technologies/esim/wp-content/uploads/2023/12/SGP.22-v3.1.pdf
+    date: December 2023
 
   X.509-IoT:
     target: https://doi.org/10.1007/978-3-319-93797-7_14
@@ -768,7 +782,7 @@ An implementation MAY only support certain values of c509CertificationRequestTyp
 
 ## Subject Signature Algorithm
 
-subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both signature algorithms and non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. The non-signature roof-of-possession algorithms with SHA-2 and HMAC-SHA2 (see values 14-16 in {{sigalg}}) requires a signature value with syntax DhSigStatic defined as follows:
+subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both signature algorithms and non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. The non-signature proof-of-possession algorithms with SHA-2 and HMAC-SHA2 (see values 14-16 in {{sigalg}}) require a signature value with syntax DhSigStatic defined as follows:
 
 ~~~~~~~~~~~ cddl
 DhSigStatic = MessageDigest / DhSigStaticType
@@ -1036,176 +1050,175 @@ The initial contents of the registry are:
 |       | Identifiers:     emailAddress, e-mailAddress              |
 |       | OID:             1.2.840.113549.1.9.1                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 01         |
-|       | Comments:                                                 |
+|       | Comments:        RFC 2985                                 |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            Common Name                              |
 |       | Identifiers:     commonName, cn                           |
 |       | OID:             2.5.4.3                                  |
 |       | DER:             06 03 55 04 03                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Surname                                  |
 |       | Identifiers:     surname, sn                              |
 |       | OID:             2.5.4.4                                  |
 |       | DER:             06 03 55 04 04                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Serial Number                            |
 |       | Identifiers:     serialNumber                             |
 |       | OID:             2.5.4.5                                  |
 |       | DER:             06 03 55 04 05                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Country                                  |
 |       | Identifiers:     countryName, c                           |
 |       | OID:             2.5.4.6                                  |
 |       | DER:             06 03 55 04 06                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            Locality                                 |
 |       | Identifiers:     localityName, locality, l                |
 |       | OID:             2.5.4.7                                  |
 |       | DER:             06 03 55 04 07                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            State or Province                        |
 |       | Identifiers:     stateOrProvinceName, st                  |
 |       | OID:             2.5.4.8                                  |
 |       | DER:             06 03 55 04 08                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Street Address                           |
 |       | Identifiers:     streetAddress, street                    |
 |       | OID:             2.5.4.9                                  |
 |       | DER:             06 03 55 04 09                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Organization                             |
 |       | Identifiers:     organizationName, o                      |
 |       | OID:             2.5.4.10                                 |
 |       | DER:             06 03 55 04 0A                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Organizational Unit                      |
 |       | Identifiers:     organizationalUnitName, ou               |
 |       | OID:             2.5.4.11                                 |
 |       | DER:             06 03 55 04 0B                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            Title                                    |
 |       | Identifiers:     title                                    |
 |       | OID:             2.5.4.12                                 |
 |       | DER:             06 03 55 04 0C                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    11 | Name:            Business Category                        |
 |       | Identifiers:     businessCategory                         |
 |       | OID:             2.5.4.15                                 |
 |       | DER:             06 03 55 04 0F                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    12 | Name:            Postal Code                              |
 |       | Identifiers:     postalCode                               |
 |       | OID:             2.5.4.17                                 |
 |       | DER:             06 03 55 04 11                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    13 | Name:            Given Name                               |
 |       | Identifiers:     givenName                                |
 |       | OID:             2.5.4.42                                 |
 |       | DER:             06 03 55 04 2A                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    14 | Name:            Initials                                 |
 |       | Identifiers:     initials                                 |
 |       | OID:             2.5.4.43                                 |
 |       | DER:             06 03 55 04 2B                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    15 | Name:            Generation Qualifier                     |
 |       | Identifiers:     generationQualifier                      |
 |       | OID:             2.5.4.44                                 |
 |       | DER:             06 03 55 04 2C                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    16 | Name:            DN Qualifier                             |
 |       | Identifiers:     dnQualifier                              |
 |       | OID:             2.5.4.46                                 |
 |       | DER:             06 03 55 04 2E                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    17 | Name:            Pseudonym                                |
 |       | Identifiers:     pseudonym                                |
 |       | OID:             2.5.4.65                                 |
 |       | DER:             06 03 55 04 41                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    18 | Name:            Organization Identifier                  |
 |       | Identifiers:     organizationIdentifier                   |
 |       | OID:             2.5.4.97                                 |
 |       | DER:             06 03 55 04 61                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
-|    19 | Name:            Inc. Locality                            |
-|       | Identifiers:     jurisdictionOfIncorporationLocalityName  |
+|    19 | Name:            Jurisdiction Locality Name               |
+|       | Identifiers:     jurisdictionLocalityName                 |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.1                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 01   |
-|       | Comments:                                                 |
+|       | Comments:        Proprietary Microsoft Attribute          |
 +-------+-----------------------------------------------------------+
-|    20 | Name:            Inc. State or Province                   |
-|       | Identifiers:     jurisdictionOfIncorporation              |
-|       |                  StateOrProvinceName                      |
+|    20 | Name:            Jurisdiction State or Province           |
+|       | Identifiers:     jurisdictionStateOrProvinceName          |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.2                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 02   |
-|       | Comments:                                                 |
+|       | Comments:        Proprietary Microsoft Attribute          |
 +-------+-----------------------------------------------------------+
-|    21 | Name:            Inc. Country                             |
-|       | Identifiers:     jurisdictionOfIncorporationCountryName   |
+|    21 | Name:            Jurisdiction Country Name                |
+|       | Identifiers:     jurisdictionCountryName                  |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.3                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 03   |
-|       | Comments:                                                 |
+|       | Comments:        Proprietary Microsoft Attribute          |
 +-------+-----------------------------------------------------------+
 |    22 | Name:            Domain Component                         |
 |       | Identifiers:     domainComponent, dc                      |
 |       | OID:             0.9.2342.19200300.100.1.25               |
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 19      |
-|       | Comments:                                                 |
+|       | Comments:        RFC 1274                                 |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Name                                     |
 |       | Identifiers:     name                                     |
 |       | OID:             2.5.4.41                                 |
 |       | DER:             06 03 55 04 29                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    26 | Name:            Telephone Number                         |
 |       | Identifiers:     telephoneNumber                          |
 |       | OID:             2.5.4.20                                 |
 |       | DER:             06 03 55 04 14                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    27 | Name:            Directory Management Domain Name         |
 |       | Identifiers:     dmdName                                  |
 |       | OID:             2.5.4.54                                 |
 |       | DER:             06 03 55 04 36                           |
-|       | Comments:                                                 |
+|       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
 |    28 | Name:            userid                                   |
 |       | Identifiers:     uid                                      |
 |       | OID:             0.9.2342.19200300.100.1.1                |
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 01      |
-|       | Comments:                                                 |
+|       | Comments:        RFC 1274                                 |
 +-------+-----------------------------------------------------------+
 |    29 | Name:            Unstructured Name                        |
 |       | Identifiers:     unstructuredName                         |
 |       | OID:             1.2.840.113549.1.9.2                     |
 |       | DER:             06 09 2A 86 48 86 F7 0D 01 09 02         |
-|       | Comments:                                                 |
+|       | Comments:        RFC 2985                                 |
 +-------+-----------------------------------------------------------+
 |    30 | Name:            Unstructured Address                     |
 |       | Identifiers:     unstructuredAddress                      |
 |       | OID:             1.2.840.113549.1.9.8                     |
 |       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
-|       | Comments:                                                 |
+|       | Comments:        RFC 2985                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-rdnattrtype title="C509 RDN Attributes"}
@@ -1248,7 +1261,7 @@ The initial contents of the registry are:
 
 ## C509 Extensions Registry {#extype}
 
-IANA has created a new registry titled "C509 Extensions Registry" under the registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, abd extensionValue are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
+IANA has created a new registry titled "C509 Extensions Registry" under the new registry group "CBOR Encoded X.509 (C509) Parameters". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For values in the interval \[1, 23\] the registration procedure is "IETF Review with Expert Review". Values {{{≥}}} 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:
 
 ~~~~~~~~~~~ aasvg
 +-------+-----------------------------------------------------------+
@@ -1258,119 +1271,119 @@ IANA has created a new registry titled "C509 Extensions Registry" under the regi
 |       | Identifiers:     subjectKeyIdentifier                     |
 |       | OID:             2.5.29.14                                |
 |       | DER:             06 03 55 1D 0E                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  SubjectKeyIdentifier                     |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Key Usage                                |
 |       | Identifiers:     keyUsage                                 |
 |       | OID:             2.5.29.15                                |
 |       | DER:             06 03 55 1D 0F                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | AttributeValue:  KeyUsage                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Subject Alternative Name                 |
 |       | Identifiers:     subjectAltName                           |
 |       | OID:             2.5.29.17                                |
 |       | DER:             06 03 55 1D 11                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  SubjectAltName                           |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Basic Constraints                        |
 |       | Identifiers:     basicConstraints                         |
 |       | OID:             2.5.29.19                                |
 |       | DER:             06 03 55 1D 13                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  BasicConstraints                         |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            CRL Distribution Points                  |
 |       | Identifiers:     cRLDistributionPoints                    |
 |       | OID:             2.5.29.31                                |
 |       | DER:             06 03 55 1D 1F                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  CRLDistributionPoints                    |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            Certificate Policies                     |
 |       | Identifiers:     certificatePolicies                      |
 |       | OID:             2.5.29.32                                |
 |       | DER:             06 03 55 1D 20                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  CertificatePolicies                      |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Authority Key Identifier                 |
 |       | Identifiers:     authorityKeyIdentifier                   |
 |       | OID:             2.5.29.35                                |
 |       | DER:             06 03 55 1D 23                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  AuthorityKeyIdentifier                   |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            Extended Key Usage                       |
 |       | Identifiers:     extKeyUsage                              |
 |       | OID:             2.5.29.37                                |
 |       | DER:             06 03 55 1D 25                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  ExtKeyUsageSyntax                        |
 +-------+-----------------------------------------------------------+
 |     9 | Name:            Authority Information Access             |
 |       | Identifiers:     authorityInfoAccess                      |
 |       | OID:             1.3.6.1.5.5.7.1.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  AuthorityInfoAccessSyntax                |
 +-------+-----------------------------------------------------------+
 |    24 | Name:            Subject Directory Attributes             |
 |       | Identifiers:     subjectDirectoryAttributes               |
 |       | OID:             2.5.29.9                                 |
 |       | DER:             06 03 55 1D 09                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  SubjectDirectoryAttributes               |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Issuer Alternative Name                  |
 |       | Identifiers:     issuerAltName                            |
 |       | OID:             2.5.29.18                                |
 |       | DER:             06 03 55 1D 12                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  IssuerAltName                            |
 +-------+-----------------------------------------------------------+
 |    26 | Name:            Name Constraints                         |
 |       | Identifiers:     nameConstraints                          |
 |       | OID:             2.5.29.30                                |
 |       | DER:             06 03 55 1D 1E                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 9549                                 |
 |       | extensionValue:  NameConstraints                          |
 +-------+-----------------------------------------------------------+
 |    27 | Name:            Policy Mappings                          |
 |       | Identifiers:     policyMappings                           |
 |       | OID:             2.5.29.33                                |
 |       | DER:             06 03 55 1D 21                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  PolicyMappings                           |
 +-------+-----------------------------------------------------------+
 |    28 | Name:            Policy Constraints                       |
 |       | Identifiers:     policyConstraints                        |
 |       | OID:             2.5.29.36                                |
 |       | DER:             06 03 55 1D 24                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  PolicyConstraints                        |
 +-------+-----------------------------------------------------------+
 |    29 | Name:            Freshest CRL                             |
 |       | Identifiers:     freshestCRL                              |
 |       | OID:             2.5.29.46                                |
 |       | DER:             06 03 55 1D 2E                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  FreshestCRL                              |
 +-------+-----------------------------------------------------------+
 |    30 | Name:            Inhibit anyPolicy                        |
 |       | Identifiers:     inhibitAnyPolicy                         |
 |       | OID:             2.5.29.54                                |
 |       | DER:             06 03 55 1D 36                           |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  InhibitAnyPolicy                         |
 +-------+-----------------------------------------------------------+
 |    31 | Name:            Subject Information Access               |
 |       | Identifiers:     subjectInfoAccess                        |
 |       | OID:             1.3.6.1.5.5.7.1.11                       |
 |       | DER:             06 08 2B 06 01 05 05 07 01 0B            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 |       | extensionValue:  SubjectInfoAccessSyntax                  |
 +-------+-----------------------------------------------------------+
 |    32 | Name:            IPAddrBlocks                             |
@@ -1405,7 +1418,7 @@ IANA has created a new registry titled "C509 Extensions Registry" under the regi
 |       | Identifiers:     id-pkix-ocsp-nocheck                     |
 |       | OID:             1.3.6.1.5.5.7.48.1.5                     |
 |       | DER:             06 09 2B 06 01 05 05 07 30 01 05         |
-|       | Comments:                                                 |
+|       | Comments:        RFC 6960                                 |
 |       | extensionValue:  null                                     |
 +-------+-----------------------------------------------------------+
 |    37 | Name:            Precertificate Signing Certificate       |
@@ -1438,31 +1451,31 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 |       | Identifiers:     anyPolicy                                |
 |       | OID:             2.5.29.32.0                              |
 |       | DER:             06 04 55 1D 20 00                        |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            Domain Validation (DV)                   |
 |       | Identifiers:     domain-validated                         |
 |       | OID:             2.23.140.1.2.1                           |
 |       | DER:             06 06 67 81 0C 01 02 01                  |
-|       | Comments:                                                 |
+|       | Comments:        CA/Browser Forum                         |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            Organization Validation (OV)             |
 |       | Identifiers:     organization-validated                   |
 |       | OID:             2.23.140.1.2.2                           |
 |       | DER:             06 06 67 81 0C 01 02 02                  |
-|       | Comments:                                                 |
+|       | Comments:        CA/Browser Forum                         |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Individual Validation (IV)               |
 |       | Identifiers:     individual-validated                     |
 |       | OID:             2.23.140.1.2.3                           |
 |       | DER:             06 06 67 81 0C 01 02 03                  |
-|       | Comments:                                                 |
+|       | Comments:        CA/Browser Forum                         |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            Extended Validation (EV)                 |
 |       | Identifiers:     ev-guidelines                            |
 |       | OID:             2.23.140.1.1                             |
 |       | DER:             06 05 67 81 0C 01 01                     |
-|       | Comments:                                                 |
+|       | Comments:        CA/Browser Forum                         |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            Resource PKI (RPKI)                      |
 |       | Identifiers:     id-cp-ipAddr-asNumber                    |
@@ -1476,61 +1489,110 @@ IANA has created a new registry titled "C509 Certificate Policies Registry" unde
 |       | DER:             06 08 2B 06 01 05 05 07 0E 03            |
 |       | Comments:        RFC 8360                                 |
 +-------+-----------------------------------------------------------+
-|    10 | Name:            Remote SIM Provisioning Role             |
+|    24 | Name:            Remote SIM Provisioning Role             |
 |       |                  Certificate Issuer                       |
 |       | Identifiers:     id-rspRole-ci                            |
 |       | OID:             2.23.146.1.2.1.0                         |
 |       | DER:             06 07 67 81 12 01 02 01 00               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    11 | Name:            Remote SIM Provisioning Role             |
-|       |                  eUICC                                    |
-|       | Identifiers:     id-rspRole-euicc                         |
+|    25 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC v2                                 |
+|       | Identifiers:     id-rspRole-euicc-v2                      |
 |       | OID:             2.23.146.1.2.1.1                         |
 |       | DER:             06 07 67 81 12 01 02 01 01               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    12 | Name:            Remote SIM Provisioning Role             |
-|       |                  eUICC Manufacturer                       |
-|       | Identifiers:     id-rspRole-eum                           |
+|    26 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC                                    |
+|       | Identifiers:     id-rspRole-euicc                         |
+|       | OID:             2.23.146.1.2.1.0.0.0.0.0                 |
+|       | DER:             06 0B 67 81 12 01 02 01 00 00 00 00 00   |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    27 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC Manufacturer v2                    |
+|       | Identifiers:     id-rspRole-eum-v2                        |
 |       | OID:             2.23.146.1.2.1.2                         |
 |       | DER:             06 07 67 81 12 01 02 01 02               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    13 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DP+ TLS                               |
-|       | Identifiers:     id-rspRole-dp-tls                        |
+|    28 | Name:            Remote SIM Provisioning Role             |
+|       |                  eUICC Manufacturer                       |
+|       | Identifiers:     id-rspRole-eum                           |
+|       | OID:             2.23.146.1.2.1.0.0.0                     |
+|       | DER:             06 09 67 81 12 01 02 01 00 00 00         |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    29 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ TLS v2                            |
+|       | Identifiers:     id-rspRole-dp-tls-v2                     |
 |       | OID:             2.23.146.1.2.1.3                         |
 |       | DER:             06 07 67 81 12 01 02 01 03               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    14 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DP+ Authentication                    |
-|       | Identifiers:     id-rspRole-dp-auth                       |
+|    30 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ TLS                               |
+|       | Identifiers:     id-rspRole-dp-tls                        |
+|       | OID:             2.23.146.1.2.1.0.0.1.0                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 01 00      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    31 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Authentication v2                 |
+|       | Identifiers:     id-rspRole-dp-auth-v2                    |
 |       | OID:             2.23.146.1.2.1.4                         |
 |       | DER:             06 07 67 81 12 01 02 01 04               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    15 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DP+ Profile Binding                   |
-|       | Identifiers:     id-rspRole-dp-pb                         |
+|    32 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Authentication                    |
+|       | Identifiers:     id-rspRole-dp-auth                       |
+|       | OID:             2.23.146.1.2.1.0.0.1.1                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 01 01      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    33 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Profile Binding v2                |
+|       | Identifiers:     id-rspRole-dp-pb-v2                      |
 |       | OID:             2.23.146.1.2.1.5                         |
 |       | DER:             06 07 67 81 12 01 02 01 05               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    16 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DS TLS                                |
-|       | Identifiers:     id-rspRole-ds-tls                        |
+|    34 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DP+ Profile Binding                   |
+|       | Identifiers:     id-rspRole-dp-pb                         |
+|       | OID:             2.23.146.1.2.1.0.0.1.2                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 01 02      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    35 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS TLS v2                             |
+|       | Identifiers:     id-rspRole-ds-tls-v2                     |
 |       | OID:             2.23.146.1.2.1.6                         |
 |       | DER:             06 07 67 81 12 01 02 01 06               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
-|    17 | Name:            Remote SIM Provisioning Role             |
-|       |                  SM-DS Authentication                     |
-|       | Identifiers:     id-rspRole-ds-auth                       |
+|    36 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS TLS                                |
+|       | Identifiers:     id-rspRole-ds-tls                        |
+|       | OID:             2.23.146.1.2.1.0.0.2.0                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 02 00      |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    37 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS Authentication v2                  |
+|       | Identifiers:     id-rspRole-ds-auth-v2                    |
 |       | OID:             2.23.146.1.2.1.7                         |
 |       | DER:             06 07 67 81 12 01 02 01 07               |
-|       | Comments:                                                 |
+|       | Comments:        GSMA SGP.22                              |
++-------+-----------------------------------------------------------+
+|    38 | Name:            Remote SIM Provisioning Role             |
+|       |                  SM-DS Authentication                     |
+|       | Identifiers:     id-rspRole-ds-auth                       |
+|       | OID:             2.23.146.1.2.1.0.0.2.1                   |
+|       | DER:             06 0A 67 81 12 01 02 01 00 00 02 01      |
+|       | Comments:        GSMA SGP.22                              |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-cp title="C509 Certificate Policies"}
@@ -1548,13 +1610,13 @@ IANA has created a new registry titled "C509 Policies Qualifiers Registry" under
 |       | Identifiers:     id-qt-cps, cps                           |
 |       | OID:             1.3.6.1.5.5.7.2.1                        |
 |       | DER:             06 08 2B 06 01 05 05 07 02 01            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            User Notice                              |
 |       | Identifiers:     id-qt-unotice, unotice                   |
 |       | OID:             1.3.6.1.5.5.7.2.2                        |
 |       | DER:             06 08 2B 06 01 05 05 07 02 02            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-pq title="C509 Policies Qualifiers"}
@@ -1572,25 +1634,25 @@ IANA has created a new registry titled "C509 Information Access Registry" under 
 |       | Identifiers:     id-ad-ocsp, id-pkix-ocsp                 |
 |       | OID:             1.3.6.1.5.5.7.48.1                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 01            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            CA Issuers                               |
 |       | Identifiers:     id-ad-caIssuers, caIssuers               |
 |       | OID:             1.3.6.1.5.5.7.48.2                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 02            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Time Stamping                            |
 |       | Identifiers:     id-ad-timeStamping, timeStamping         |
 |       | OID:             1.3.6.1.5.5.7.48.3                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 03            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 3161                                 |
 +-------+-----------------------------------------------------------+
 |     5 | Name:            CA Repository                            |
 |       | Identifiers:     id-ad-caRepository                       |
 |       | OID:             1.3.6.1.5.5.7.48.5                       |
 |       | DER:             06 08 2B 06 01 05 05 07 30 05            |
-|       | Comments:                                                 |
+|       | Comments:        RFC 5280                                 |
 +-------+-----------------------------------------------------------+
 |    10 | Name:            RPKI Manifest                            |
 |       | Identifiers:     id-ad-rpkiManifest                       |
@@ -1656,7 +1718,7 @@ IANA has created a new registry titled "C509 Extended Key Usages Registry" under
 |       | Identifiers:     id-kp-timeStamping, timestamping       |
 |       | OID:             1.3.6.1.5.5.7.3.8                      |
 |       | DER:             06 08 2B 06 01 05 05 07 03 08          |
-|       | Comments:                                               |
+|       | Comments:        RFC 3161                               |
 +-------+---------------------------------------------------------+
 |     9 | Name:            OCSP Signing                           |
 |       | Identifiers:     id-kp-OCSPSigning                      |
@@ -1742,50 +1804,53 @@ IANA has created a new registry titled "C509 General Names Registry" under the r
 | Value | General Names                                             |
 +=======+===========================================================+
 |    -3 | Name:            otherName with MACAddress                |
-|       | Comments:        id-on-MACAddress                         |
-|       |                  (TBD90)                                  |
-|       |                  TBD91                                    |
-|       | Value:           bytes                                    |
+|       | Comments:        TBD92(Use RFC for I-D-lamps-macaddress-on)|
+|       |                  id-on-MACAddress                         |
+|       |                  (1.3.6.1.5.5.7.8.12)                     |
+|       |                  06 08 2B 06 01 05 05 07 08 0C            |
+|       | GeneralNameValue: bytes                                   |
 +-------+-----------------------------------------------------------+
 |    -2 | Name:            otherName with SmtpUTF8Mailbox           |
-|       | Comments:        id-on-SmtpUTF8Mailbox                    |
+|       | Comments:        RFC 8398                                 |
+|       |                  id-on-SmtpUTF8Mailbox                    |
 |       |                  (1.3.6.1.5.5.7.8.9)                      |
 |       |                  06 08 2B 06 01 05 05 07 08 09            |
-|       | GeneralNameValue:  text                                   |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
 |    -1 | Name:            otherName with hardwareModuleName        |
-|       | Comments:        id-on-hardwareModuleName                 |
+|       | Comments:        RFC 4108                                 |
+|       |                  id-on-hardwareModuleName                 |
 |       |                  (1.3.6.1.5.5.7.8.4)                      |
 |       |                  06 08 2B 06 01 05 05 07 08 04            |
-|       | GeneralNameValue:  [ ~oid, bytes ]                        |
+|       | GeneralNameValue: [ ~oid, bytes ]                         |
 +-------+-----------------------------------------------------------+
 |     0 | Name:            otherName                                |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  [ ~oid, bytes ]                        |
+|       | Comments:        RFC 5280                                 |
+|       | GeneralNameValue: [ ~oid, bytes ]                         |
 +-------+-----------------------------------------------------------+
 |     1 | Name:            rfc822Name                               |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  text                                   |
+|       | Comments:        RFC 5280                                 |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
 |     2 | Name:            dNSName                                  |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  text                                   |
+|       | Comments:        RFC 5280                                 |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
 |     4 | Name:            directoryName                            |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  Name                                   |
+|       | Comments:        RFC 5280                                 |
+|       | GeneralNameValue: Name                                    |
 +-------+-----------------------------------------------------------+
 |     6 | Name:            uniformResourceIdentifier                |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  text                                   |
+|       | Comments:        RFC 5280                                 |
+|       | GeneralNameValue: text                                    |
 +-------+-----------------------------------------------------------+
 |     7 | Name:            iPAddress                                |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  bytes                                  |
+|       | Comments:        RFC 5280                                 |
+|       | GeneralNameValue: bytes                                   |
 +-------+-----------------------------------------------------------+
 |     8 | Name:            registeredID                             |
-|       | Comments:                                                 |
-|       | GeneralNameValue:  ~oid                                   |
+|       | Comments         RFC 5280                                 |
+|       | GeneralNameValue: ~oid                                    |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
 {: #fig-gn title="C509 General Names"}
@@ -2105,7 +2170,7 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the re
 
 ### Suitability of different public key algorithms for use within IoT scenarios
 
-The public key algorithms registry {{pkalg}} specifies a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstrass curves) make them suitable candidates for IoT public key usage. These curves are represented by ids 1–11 and 24–28 in {{pkalg}}.
+The public key algorithms registry {{pkalg}} specifies a number of algorithms, not all which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstrass curves) make them suitable candidates for IoT public key usage.
 
 ## COSE Header Parameters Registry {#cose}
 
@@ -3064,7 +3129,7 @@ h'A6A55C870E39B40E',
 0,
 h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
   E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E508879
-  3A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37g
+  3A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37
   D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B8211
   7C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79
   B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E24
