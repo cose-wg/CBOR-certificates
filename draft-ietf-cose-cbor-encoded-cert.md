@@ -191,6 +191,14 @@ informative:
         ins: R. Davis
     date: April 2018
 
+  IANA-AFI:
+    target: https://www.iana.org/assignments/address-family-numbers/address-family-numbers.xhtml
+    title: Address Family Numbers
+
+  IANA-SAFI:
+    target: https://www.iana.org/assignments/safi-namespace/safi-namespace.xhtml
+    title: Subsequent Address Family Identifiers (SAFI) Parameters
+
 --- abstract
 
 This document specifies a CBOR encoding of X.509 certificates. The resulting certificates are called C509 certificates. The CBOR encoding supports a large subset of RFC 5280, common certificate profiles and is extensible.
@@ -587,6 +595,8 @@ CBOR encoding of the following extension values are partly supported:
   ```
 
   The first byte is encoded as (unusedBits + 1) instead of unusedBits in order to guarantee a non-zero value. With the exception of the first IPAddress, each subsequent IPAddress SHALL be encoded as a CBOR integer representing the difference from the previous IPAddress.
+
+  As specified in {{RFC3779}}, the IPAddressFamily element contains an Address Family Identifier (AFI) and, optionally, a Subsequent Address Family Identifier (SAFI). AFIs and SAFIs are defined in [IANA-AFI] and [IANA-SAFI], respectively. The limitations specified in {{RFC3779}} apply here as well.
 
 ~~~~~~~~~~~ cddl
    IntAddressPrefix = int
