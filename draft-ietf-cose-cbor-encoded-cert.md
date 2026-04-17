@@ -768,7 +768,7 @@ An implementation MAY only support certain values of c509CertificateRequestType.
 
 ## Subject Signature Algorithm
 
-subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both signature algorithms and non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. The non-signature roof-of-possession algorithms with SHA-2 and HMAC-SHA2 (see values 14-16 in {{sigalg}}) requires a signature value with syntax DhSigStatic defined as follows:
+subjectSignatureAlgorithm can be a signature algorithm or a non-signature proof-of-possession algorithm, e.g., as defined in {{RFC6955}}. In the case of {{RFC6955}}, the signature is replaced by a MAC and requires a public Diffie-Hellman key of the verifier distributed out-of-band. Both signature algorithms and non-signature proof-of-possession algorithms are listed in the C509 Signature Algorithms Registry, see {{sigalg}}. The non-signature proof-of-possession algorithms with SHA-2 and HMAC-SHA2 (see values 14-16 in {{sigalg}}) require a signature value with syntax DhSigStatic defined as follows:
 
 ~~~~~~~~~~~ cddl
 DhSigStatic = MessageDigest / DhSigStaticType
@@ -3064,7 +3064,7 @@ h'A6A55C870E39B40E',
 0,
 h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
   E5F099B5F47A7A485521EE0E3912F9CE0DCAF56961C704ED6E0F1D3B1E508879
-  3A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37g
+  3A0E314116F1B1026468A5CDF54A0ACA99963508C37E275DD0A9CFF3E728AF37
   D8B67BDDF37EAE6E977FF7CA694ECCD006DF5D279B3B12E7E6FE086B527B8211
   7C72B346EBC1E878B80FCBE1EBBD064458DC8350B2A0625BDC81B836E39E7C79
   B2A9538AE00BC94A2A13393113BD2CCFA870CF8C8D3D01A388AE1200361D1E24
