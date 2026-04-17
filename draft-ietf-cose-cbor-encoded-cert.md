@@ -1143,21 +1143,20 @@ The initial contents of the registry are:
 |       | DER:             06 03 55 04 61                           |
 |       | Comments:        X.520                                    |
 +-------+-----------------------------------------------------------+
-|    19 | Name:            Inc. Locality                            |
-|       | Identifiers:     jurisdictionOfIncorporationLocalityName  |
+|    19 | Name:            Jurisdiction Locality Name               |
+|       | Identifiers:     jurisdictionLocalityName                 |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.1                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 01   |
 |       | Comments:        Proprietary Microsoft Attribute          |
 +-------+-----------------------------------------------------------+
-|    20 | Name:            Inc. State or Province                   |
-|       | Identifiers:     jurisdictionOfIncorporation              |
-|       |                  StateOrProvinceName                      |
+|    20 | Name:            Jurisdiction State or Province           |
+|       | Identifiers:     jurisdictionStateOrProvinceName          |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.2                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 02   |
 |       | Comments:        Proprietary Microsoft Attribute          |
 +-------+-----------------------------------------------------------+
-|    21 | Name:            Inc. Country                             |
-|       | Identifiers:     jurisdictionOfIncorporationCountryName   |
+|    21 | Name:            Jurisdiction Country Name                |
+|       | Identifiers:     jurisdictionCountryName                  |
 |       | OID:             1.3.6.1.4.1.311.60.2.1.3                 |
 |       | DER:             06 0B 2B 06 01 04 01 82 37 3C 02 01 03   |
 |       | Comments:        Proprietary Microsoft Attribute          |
