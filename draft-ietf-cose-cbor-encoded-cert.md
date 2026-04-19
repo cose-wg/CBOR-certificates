@@ -302,16 +302,18 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * RDNAttribute ] / SpecialText
 
-RDNAttribute = (( attributeType: int, attributeValue: SpecialText ) //
-                ( attributeType: ~oid, attributeValue: bytes ))
+RDNAttribute =
+   (( attributeType: int, attributeValue: SpecialText ) //
+    ( attributeType: ~oid, attributeValue: bytes ))
 
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
-Extension = (( extensionID: int, extensionValue: Defined ) //
-             ( extensionID: ~oid, extensionValue: bytes / [ bytes ] ))
+Extension =
+   (( extensionID: int, extensionValue: Defined ) //
+    ( extensionID: ~oid, extensionValue: bytes / [ bytes ] ))
 
 SpecialText = text / bytes / tag
 
@@ -578,9 +580,9 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
 ~~~~~~~~~~~ cddl
-   RDNAttributes = (( attributeType: int,
-                      attributeValue: [ + SpecialText] ) //
-                    ( attributeType: ~oid, attributeValue: [+ bytes] ))
+RDNAttributes =
+   (( attributeType: int, attributeValue: [ + SpecialText] ) //
+    ( attributeType: ~oid, attributeValue: [+ bytes] ))
    SubjectDirectoryAttributes = [ + RDNAttributes ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -756,14 +758,14 @@ In TLS and DTLS, the subject of trusted authory may be sent to the peer to help 
    The attribute for C509 Name has the following structure:
 
 ~~~~~~~~~~~
-   id-rdna-c509Name OBJECT IDENTIFIER ::= { 1 3 6 1 5 5 7 25 TBD30 }
+id-rdna-c509Name OBJECT IDENTIFIER ::= { 1 3 6 1 5 5 7 25 TBD30 }
 
-   c509Name ATTRIBUTE ::= {
-     WITH SYNTAX C509Name
-     SINGLE VALUE TRUE
-     ID id-rdna-c509Name }
+c509Name ATTRIBUTE ::= {
+   WITH SYNTAX C509Name
+   SINGLE VALUE TRUE
+   ID id-rdna-c509Name }
 
-   C509Name ::= OCTET STRING
+C509Name ::= OCTET STRING
 ~~~~~~~~~~~
 
 # C509 Certification Request {#CSR}
@@ -792,7 +794,6 @@ CRAttributes = [ * CRAttribute ]
 
 CRAttribute = (( attributeType: int, attributeValue: Defined ) //
                ( attributeType: ~oid, attributeValue: bytes ))
-
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRCDDL title="CDDL for C509CertificationRequest."}
@@ -889,15 +890,18 @@ C509CertificationRequestTemplate = [
 
 NameTemplate = [ * RDNAttributeTemplate ]
 
-RDNAttributeTemplate = (( attributeType: uint, minOccurs: uint, maxOccurs: uint,
-                          attributeValue: SpecialText / undefined ) //
-                        ( attributeType: ~oid, minOccurs: uint, maxOccurs: uint,
-                          attributeValue: bytes / undefined ))
+RDNAttributeTemplate =
+   (( attributeType: uint, minOccurs: uint, maxOccurs: uint,
+      attributeValue: SpecialText / undefined ) //
+    ( attributeType: ~oid, minOccurs: uint, maxOccurs: uint,
+      attributeValue: bytes / undefined ))
 
 ExtensionsTemplate = [ * ExtensionTemplate ]
 
-ExtensionTemplate = (( extensionID: uint, optional: bool, extensionValue: any ) //
-                     ( extensionID: ~oid, optional: bool, extensionValue: bytes / undefined ))
+ExtensionTemplate =
+   (( extensionID: uint, optional: bool, extensionValue: any ) //
+    ( extensionID: ~oid, optional: bool,
+    extensionValue: bytes / undefined ))
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificationRequestTemplate."}
@@ -1855,7 +1859,7 @@ IANA has created a new registry titled "C509 General Names Registry" under the r
 | Value | General Names                                             |
 +=======+===========================================================+
 |    -3 | Name:            otherName with MACAddress                |
-|       | Comments:        TBD92(Use RFC for I-D-lamps-macaddress-on)|
+|       | Comments:        TBD92(Use RFC I-D-lamps-macaddress-on)   |
 |       |                  id-on-MACAddress                         |
 |       |                  (1.3.6.1.5.5.7.8.12)                     |
 |       |                  06 08 2B 06 01 05 05 07 08 0C            |
@@ -2495,36 +2499,36 @@ IANA is requested to add entries for "application/cose-certhash" to the "CoAP Co
 IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
 ~~~~~~~~~~~ aasvg
-+----------------------+---------+------------------+-------+--------------+
-| Content              | Content | Media            | ID    | Reference    |
-| Format               | Coding  | Type             |       |              |
-+======================+=========+==================+=======+==============+
-| application/         | -       | [[link to 9.15]] | TBD3  | [[this       |
-| cose-c509-cert       |         |                  |       |   document]] |
-+----------------------+---------+------------------+-------+--------------+
-| application/         |         |                  |       | [[this       |
-| cose-c509-cert;      | -       | [[link to 9.15]] | TBD15 |   document]] |
-| usage = chain        |         |                  |       |              |
-+----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.15]] | TBD4  | [[this       |
-| cose-c509-pkcs10     |         |                  |       |   document]] |
-+----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.15]] | TBD19 | [[this       |
-| cose-c509-crtemplate |         |                  |       |   document]] |
-+----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.15]] | TBD10 | [[this       |
-| cose-c509-privkey    |         |                  |       |   document]] |
-+----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.15]] | TBD11 | [[this       |
-| cose-c509-pem        |         |                  |       |   document]] |
-+----------------------+---------+------------------+-------+--------------+
-| application/         | -       | [[link to 9.15]] | TBD16 | [[this       |
-| cose-certhash        |         |                  |       |   document]] |
-+----------------------+---------+------------------+-------+--------------+
-| application/         |         |                  |       | [[this       |
-| cose-certhash;       | -       | [[link to 9.15]] | TBD17 |   document]] |
-| usage = c509         |         |                  |       |              |
-+----------------------+---------+------------------+-------+--------------+
++----------------------+---------+-----------+-------+------------+
+| Content              | Content | Media     | ID    | Reference  |
+| Format               | Coding  | Type      |       |            |
++======================+=========+===========+=======+============+
+| application/         | -       | [[link    | TBD3  | [[this     |
+| cose-c509-cert       |         | to 9.15]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
+| application/         |         | [[link    |       | [[this     |
+| cose-c509-cert;      | -       | to 9.15]] | TBD15 | document]] |
+| usage = chain        |         |           |       |            |
++----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD4  | [[this     |
+| cose-c509-pkcs10     |         | to 9.15]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD19 | [[this     |
+| cose-c509-crtemplate |         | to 9.15]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD10 | [[this     |
+| cose-c509-privkey    |         | to 9.15]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD11 | [[this     |
+| cose-c509-pem        |         | to 9.15]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD16 | [[this     |
+| cose-certhash        |         | to 9.15]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
+| application/         |         | [[link    |       | [[this     |
+| cose-certhash;       | -       | to 9.15]] | TBD17 | document]] |
+| usage = c509         |         |           |       |            |
++----------------------+---------+-----------+-------+------------+
 ~~~~~~~~~~~
 {: #fig-format-ids title="CoAP Content-Format IDs"}
 
@@ -2824,47 +2828,49 @@ An example of an IEEE 802.1AR profiled X.509 certificate (Secure Device Identifi
 
 ~~~~~~~~~~~
 Certificate:
-    Data:
-        Version: 3 (0x2)
-        Serial Number: 9112578475118446130 (0x7e7661d7b54e4632)
-        Signature Algorithm: ecdsa-with-SHA256
-        Issuer: C=US, ST=CA, O=Example Inc, OU=certification, CN=802.1AR CA
-        Validity
-            Not Before: Jan 31 11:29:16 2019 GMT
-            Not After : Dec 31 23:59:59 9999 GMT
-        Subject: C=US, ST=CA, L=LA, O=example Inc, OU=IoT/serialNumber=Wt1234
-        Subject Public Key Info:
-            Public Key Algorithm: id-ecPublicKey
-                Public-Key: (256 bit)
-                pub:
-                    04:c8:b4:21:f1:1c:25:e4:7e:3a:c5:71:23:bf:2d:
-                    9f:dc:49:4f:02:8b:c3:51:cc:80:c0:3f:15:0b:f5:
-                    0c:ff:95:8d:75:41:9d:81:a6:a2:45:df:fa:e7:90:
-                    be:95:cf:75:f6:02:f9:15:26:18:f8:16:a2:b2:3b:
-                    56:38:e5:9f:d9
-                ASN1 OID: prime256v1
-                NIST CURVE: P-256
-        X509v3 extensions:
-            X509v3 Basic Constraints:
-                CA:FALSE
-            X509v3 Subject Key Identifier:
-                96:60:0D:87:16:BF:7F:D0:E7:52:D0:AC:76:07:77:AD:66:5D:02:A0
-            X509v3 Authority Key Identifier:
-                68:D1:65:51:F9:51:BF:C8:2A:43:1D:0D:9F:08:BC:2D:20:5B:11:60
-            X509v3 Key Usage: critical
-                Digital Signature, Key Encipherment
-            X509v3 Subject Alternative Name:
-                otherName:
-                    type-id: 1.3.6.1.5.5.7.8.4 (id-on-hardwareModuleName)
-                    value:
-                        hwType: 1.3.6.1.4.1.6715.10.1
-                        hwSerialNum: 01:02:03:04
+  Data:
+    Version: 3 (0x2)
+    Serial Number: 9112578475118446130 (0x7e7661d7b54e4632)
     Signature Algorithm: ecdsa-with-SHA256
-    Signature Value:
-        30:46:02:21:00:c0:d8:19:96:d2:50:7d:69:3f:3c:48:ea:a5:
-        ee:94:91:bd:a6:db:21:40:99:d9:81:17:c6:3b:36:13:74:cd:
-        86:02:21:00:a7:74:98:9f:4c:32:1a:5c:f2:5d:83:2a:4d:33:
-        6a:08:ad:67:df:20:f1:50:64:21:18:8a:0a:de:6d:34:92:36
+    Issuer: C=US, ST=CA, O=Example Inc, OU=certification,
+            CN=802.1AR CA
+    Validity
+      Not Before: Jan 31 11:29:16 2019 GMT
+      Not After : Dec 31 23:59:59 9999 GMT
+    Subject: C=US, ST=CA, L=LA, O=example Inc,
+             OU=IoT/serialNumber=Wt1234
+    Subject Public Key Info:
+      Public Key Algorithm: id-ecPublicKey
+        Public-Key: (256 bit)
+        pub:
+          04:c8:b4:21:f1:1c:25:e4:7e:3a:c5:71:23:bf:2d:
+          9f:dc:49:4f:02:8b:c3:51:cc:80:c0:3f:15:0b:f5:
+          0c:ff:95:8d:75:41:9d:81:a6:a2:45:df:fa:e7:90:
+          be:95:cf:75:f6:02:f9:15:26:18:f8:16:a2:b2:3b:
+          56:38:e5:9f:d9
+          ASN1 OID: prime256v1
+          NIST CURVE: P-256
+    X509v3 extensions:
+      X509v3 Basic Constraints:
+        CA:FALSE
+      X509v3 Subject Key Identifier:
+        96:60:0D:87:16:BF:7F:D0:E7:52:D0:AC:76:07:77:AD:66:5D:02:A0
+      X509v3 Authority Key Identifier:
+        68:D1:65:51:F9:51:BF:C8:2A:43:1D:0D:9F:08:BC:2D:20:5B:11:60
+      X509v3 Key Usage: critical
+        Digital Signature, Key Encipherment
+      X509v3 Subject Alternative Name:
+        otherName:
+          type-id: 1.3.6.1.5.5.7.8.4 (id-on-hardwareModuleName)
+          value:
+            hwType: 1.3.6.1.4.1.6715.10.1
+            hwSerialNum: 01:02:03:04
+  Signature Algorithm: ecdsa-with-SHA256
+  Signature Value:
+    30:46:02:21:00:c0:d8:19:96:d2:50:7d:69:3f:3c:48:ea:a5:
+    ee:94:91:bd:a6:db:21:40:99:d9:81:17:c6:3b:36:13:74:cd:
+    86:02:21:00:a7:74:98:9f:4c:32:1a:5c:f2:5d:83:2a:4d:33:
+    6a:08:ad:67:df:20:f1:50:64:21:18:8a:0a:de:6d:34:92:36
 ~~~~~~~~~~~
 
 The DER encoding of the certificate is 577 bytes:
@@ -2927,7 +2933,8 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   -3, "Wt1234"
  ],
  1,
- h'FDC8B421F11C25E47E3AC57123BF2D9FDC494F028BC351CC80C03F150BF50CFF95',
+ h'FDC8B421F11C25E47E3AC57123BF2D9FDC494F028BC351CC80C03F150BF50CFF
+   95',
  [
    4, -2,
    1, h'96600D8716BF7FD0E752D0AC760777AD665D02A0',
@@ -2936,8 +2943,8 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
   3, [-1, [h'2B06010401B43B0A01', h'01020304']]
      / subjectAltName with hardwareModuleName /
  ],
- h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86A7
-   74989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
+ h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86
+   A774989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
 ~~~~~~~~~~~
 
 The size of the CBOR encoding (CBOR sequence) is 275 bytes:
@@ -3043,7 +3050,8 @@ h'047FA1E31928EE403BA0B83A395673FC',
  -1, "sni.cloudflaressl.com"
 ],
 1,
-h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
+h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E
+  20',
 [
  7, h'A5CE37EAEBB0750E946788B445FAD9241087961F',
  1, h'CC0B50E7D837DBF243F3853D4860F53B39BE9B2A',
@@ -3051,10 +3059,13 @@ h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E20',
 -2, 1,
  8, [1, 2],
  5, [
-     ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl", null, null],
-     ["http://crl4.digicert.com/CloudflareIncECCCA-3.crl", null, null]
+     ["http://crl3.digicert.com/CloudflareIncECCCA-3.crl",
+       null, null],
+     ["http://crl4.digicert.com/CloudflareIncECCCA-3.crl",
+       null, null]
     ],
- 6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"], 2, []],
+ 6, [h'6086480186FD6C0101', [1, "https://www.digicert.com/CPS"],
+     2, []],
  9, [1, "http://ocsp.digicert.com",
      2, "http://cacerts.digicert.com/CloudflareIncECCCA-3.crt"],
 -4, -2,
@@ -3192,9 +3203,12 @@ h'B1E137E8EB82D689FADBF5C24B77F02C4ADE726E3E1360D1A8661EC4AD3D3260
  -2, 5,
  5, "http://crl.starfieldtech.com/sfig2s1-242.crl",
  6, [ h'6086480186FD6E01071701',
-     [1, "http://certificates.starfieldtech.com/repository/"], 1, []],
- 9, [ 1, "http://ocsp.starfieldtech.com/",
-      2, "http://certificates.starfieldtech.com/repository/sfig2.crt" ],
+     [1, "http://certificates.starfieldtech.com/repository/"],
+     1,
+     []
+    ],
+ 9, [ 1, "http://ocsp.starfieldtech.com/", 2,
+      "http://certificates.starfieldtech.com/repository/sfig2.crt"],
  7, h'254581685026383D3B2D2CBECD6AD9B63DB36663',
  3, [ 2, "*.tools.ietf.org", 2, "tools.ietf.org" ],
  1, h'AD8AB41C0751D7928907B0B784622F36557A5F4D',
@@ -3232,13 +3246,13 @@ Certificate:
     Version: v3 (2)
     Serial Number:
       12:34
-    Issuer: CN=selfsign-brainpoolp384r1,SURNAME=my surname,T=my title,
-            GIVENNAME=my givenName,Name=my name
+    Issuer: CN=selfsign-brainpoolp384r1,SURNAME=my surname,
+            T=my title, GIVENNAME=my givenName,Name=my name
     Validity:
       Not Before: Thu Jan 02 01:00:00 CET 2025
       Not After : Fri Jan 02 01:00:00 CET 2026
-    Subject: CN=selfsign-brainpoolp384r1,SURNAME=my surname,T=my title
-             ,GIVENNAME=my givenName,Name=my name
+    Subject: CN=selfsign-brainpoolp384r1,SURNAME=my surname,
+             T=my title ,GIVENNAME=my givenName,Name=my name
     Subject Public Key Info:
       Public Key Algorithm: EC/BRAINPOOLP384R1
       Pub:
