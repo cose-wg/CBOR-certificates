@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-19T03:34:20.122452+00:00",
+  "timestamp": "2026-04-21T03:28:27.106733+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -15022,6 +15022,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 357,
+      "id": "PR_kwDOCpt5cM7TsuuA",
+      "title": "Fix the \"line too long\" error mentioned in #345",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/357",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "#345",
+      "createdAt": "2026-04-19T10:10:27Z",
+      "updatedAt": "2026-04-19T10:10:29Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "0aa0fc9b210a8b4f3214531143b0f2b64ec30262",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "fix-lineTooLong",
+      "headRefOid": "35a4f64416a329ba8cca73a7e876b45480703be7",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
