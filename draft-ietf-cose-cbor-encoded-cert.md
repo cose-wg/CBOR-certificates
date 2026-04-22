@@ -75,6 +75,7 @@ normative:
   RFC9549:
   RFC9668:
   RFC9883:
+  I-D.ietf-lamps-macaddress-on:
 
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
@@ -122,7 +123,6 @@ informative:
   I-D.ietf-uta-tls13-iot-profile:
   I-D.ietf-tls-ctls:
   I-D.ietf-lamps-rfc7030-csrattrs:
-  I-D.ietf-lamps-macaddress-on:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
@@ -274,7 +274,7 @@ In the encoding described below, the elements in arrays are always encoded in th
 
 ## Message Fields {#message-fields}
 
-The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see {{fig-CBORCertCDDL}}.
+The X.509 fields and their CBOR encodings are described in this section, and used in the definition of C509 certificates, see {{fig-CBORCertCDDL}}. While much of {{RFC5280}} encodings used in practice is supported, there are a few instances indicated with "not supported" where no alternative is provided and hence no C509 encoding can be generated.
 
 The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore only have documentary value. Applications not requiring a CBOR item MAY represent C509 certificates with the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices, e.g., {{rfc7925-prof}}.
 
@@ -428,7 +428,7 @@ A note on extensionID naming: in existing OID databases, most IDs can be found i
 
 CBOR encoding of the following extension values is fully supported:
 
-*  Subject Key Identifier (subjectKeyIdentifier). In natively signed certificates, KeyIdentifier SHOULD be composed of the leftmost 160-bits of the SHA-256 hash of the CBOR encoded subjectPublicKey. Other methods of generating unique numbers can be used. The extensionValue is encoded as follows:
+*  Subject Key Identifier (subjectKeyIdentifier). In natively signed certificates, KeyIdentifier can, for example, be composed of the leftmost 160-bits of the SHA-256 hash of the CBOR encoded subjectPublicKey. Other methods of generating unique numbers can be used. The extensionValue is encoded as follows:
 
 ~~~~~~~~~~~ cddl
    KeyIdentifier = bytes
@@ -566,7 +566,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 2.2 of RFC9549}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the netmask. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}} the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in {{Section 2.2 of RFC9549}}. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the prefix. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
 
 ~~~~~~~~~~~ cddl
    GeneralSubtrees = [ + GeneralName ]
@@ -1012,6 +1012,8 @@ As stated in {{cose-header-params}}, the contents of the COSE Header Parameters 
 # IANA Considerations {#iana}
 
 This document creates several new registries in the new registry group "CBOR Encoded X.509 (C509) Parameters". For all items, the 'Reference' field points to this document.
+
+Editor's note: Add informative reference to the newly created IANA registries and updated existing registries.
 
 ## Designated Expert Guidance
 
