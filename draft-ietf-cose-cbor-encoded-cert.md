@@ -1,7 +1,7 @@
 ---
 v: 3
 title: "CBOR Encoded X.509 Certificates (C509 Certificates)"
-docname: draft-ietf-cose-cbor-encoded-cert-latest
+docname: draft-ietf-cose-cbor-encoded-cert-18
 abbrev: C509 Certificates
 
 v3xml2rfc:
@@ -3400,4 +3400,4 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Viktor Dukhovni, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
+The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Viktor Dukhovni, Russ Housley, Paul Hoffmann, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
