@@ -996,6 +996,8 @@ As stated in {{cose-header-params}}, the contents of the COSE Header Parameters 
 
 This document creates several new registries in the new registry group "CBOR Encoded X.509 (C509) Parameters". For all items, the 'Reference' field points to this document.
 
+Editor's note: Add informative reference to the newly created IANA registries and updated existing registries.
+
 ## Designated Expert Guidance
 
 The expert reviewers for the registries defined in this document are expected to ensure that the usage solves a valid use case that could not be solved better in a different way, that it is not going to duplicate an entry that is already registered, and that the registered point is likely to be used in deployments. They are furthermore expected to check the clarity of purpose and use of the requested code points. Experts should take into account the expected usage of entries when approving point assignment, and the length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1-byte encoding, other values in the interval \[-256, 255\] have a 2-byte encoding, and the remaining values in the interval \[-65536, 65535\] have a 3-byte encoding.
