@@ -1,7 +1,7 @@
 ---
 v: 3
 title: "CBOR Encoded X.509 Certificates (C509 Certificates)"
-docname: draft-ietf-cose-cbor-encoded-cert-18
+docname: draft-ietf-cose-cbor-encoded-cert-latest
 abbrev: C509 Certificates
 
 v3xml2rfc:
