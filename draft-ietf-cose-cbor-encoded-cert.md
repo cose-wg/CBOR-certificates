@@ -2494,39 +2494,40 @@ Change controller: IETF
 IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-crtemplate", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters".
 A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
 
-IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{c509-cert}}.
+IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{cose-certhash}}.
 
 IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see {{RFC3986}}.
 
 ~~~~~~~~~~~ aasvg
+
 +----------------------+---------+-----------+-------+------------+
 | Content              | Content | Media     | ID    | Reference  |
 | Format               | Coding  | Type      |       |            |
 +======================+=========+===========+=======+============+
 | application/         | -       | [[link    | TBD3  | [[this     |
-| cose-c509-cert       |         | to 9.15]] |       | document]] |
+| cose-c509-cert       |         | to 9.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-c509-cert;      | -       | to 9.15]] | TBD15 | document]] |
+| cose-c509-cert;      | -       | to 9.16]] | TBD15 | document]] |
 | usage = chain        |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD4  | [[this     |
-| cose-c509-pkcs10     |         | to 9.15]] |       | document]] |
+| cose-c509-pkcs10     |         | to 9.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD19 | [[this     |
-| cose-c509-crtemplate |         | to 9.15]] |       | document]] |
+| cose-c509-crtemplate |         | to 9.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD10 | [[this     |
-| cose-c509-privkey    |         | to 9.15]] |       | document]] |
+| cose-c509-privkey    |         | to 9.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD11 | [[this     |
-| cose-c509-pem        |         | to 9.15]] |       | document]] |
+| cose-c509-pem        |         | to 9.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD16 | [[this     |
-| cose-certhash        |         | to 9.15]] |       | document]] |
+| cose-certhash        |         | to 9.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-certhash;       | -       | to 9.15]] | TBD17 | document]] |
+| cose-certhash;       | -       | to 9.16]] | TBD17 | document]] |
 | usage = c509         |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 ~~~~~~~~~~~
