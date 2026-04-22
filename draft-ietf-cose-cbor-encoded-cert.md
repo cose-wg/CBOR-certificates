@@ -2512,29 +2512,29 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 | Format               | Coding  | Type      |       |            |
 +======================+=========+===========+=======+============+
 | application/         | -       | [[link    | TBD3  | [[this     |
-| cose-c509-cert       |         | to 8.16]] |       | document]] |
+| cose-c509-cert       |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-c509-cert;      | -       | to 8.16]] | TBD15 | document]] |
+| cose-c509-cert;      | -       | to 8.18]] | TBD15 | document]] |
 | usage = chain        |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD4  | [[this     |
-| cose-c509-pkcs10     |         | to 8.16]] |       | document]] |
+| cose-c509-pkcs10     |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD19 | [[this     |
-| cose-c509-crtemplate |         | to 8.16]] |       | document]] |
+| cose-c509-crtemplate |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD10 | [[this     |
-| cose-c509-privkey    |         | to 8.16]] |       | document]] |
+| cose-c509-privkey    |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD11 | [[this     |
-| cose-c509-pem        |         | to 8.16]] |       | document]] |
+| cose-c509-pem        |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD16 | [[this     |
-| cose-certhash        |         | to 8.16]] |       | document]] |
+| cose-certhash        |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-certhash;       | -       | to 8.16]] | TBD17 | document]] |
+| cose-certhash;       | -       | to 8.18]] | TBD17 | document]] |
 | usage = c509         |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 ~~~~~~~~~~~
