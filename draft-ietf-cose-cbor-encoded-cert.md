@@ -302,18 +302,20 @@ CertificateSerialNumber = ~biguint
 
 Name = [ * RDNAttribute ] / SpecialText
 
-RDNAttribute =
-   (( attributeType: int, attributeValue: SpecialText ) //
-    ( attributeType: ~oid, attributeValue: bytes ))
+RDNAttribute = (
+    ( attributeType: int, attributeValue: SpecialText ) //
+    ( attributeType: ~oid, attributeValue: bytes )
+)
 
 AlgorithmIdentifier = int / ~oid /
                     [ algorithm: ~oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 
-Extension =
-   (( extensionID: int, extensionValue: Defined ) //
-    ( extensionID: ~oid, extensionValue: bytes / [ bytes ] ))
+Extension = (
+    ( extensionID: int, extensionValue: Defined ) //
+    ( extensionID: ~oid, extensionValue: bytes / [ bytes ] )
+)
 
 SpecialText = text / bytes / tag
 
@@ -580,9 +582,10 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
 
 ~~~~~~~~~~~ cddl
-RDNAttributes =
-   (( attributeType: int, attributeValue: [ + SpecialText] ) //
-    ( attributeType: ~oid, attributeValue: [+ bytes] ))
+RDNAttributes = (
+    ( attributeType: int, attributeValue: [ + SpecialText] ) //
+    ( attributeType: ~oid, attributeValue: [+ bytes] )
+)
    SubjectDirectoryAttributes = [ + RDNAttributes ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
@@ -890,18 +893,20 @@ C509CertificationRequestTemplate = [
 
 NameTemplate = [ * RDNAttributeTemplate ]
 
-RDNAttributeTemplate =
-   (( attributeType: uint, minOccurs: uint, maxOccurs: uint,
+RDNAttributeTemplate = (
+    ( attributeType: uint, minOccurs: uint, maxOccurs: uint,
       attributeValue: SpecialText / undefined ) //
     ( attributeType: ~oid, minOccurs: uint, maxOccurs: uint,
-      attributeValue: bytes / undefined ))
+      attributeValue: bytes / undefined )
+)
 
 ExtensionsTemplate = [ * ExtensionTemplate ]
 
-ExtensionTemplate =
-   (( extensionID: uint, optional: bool, extensionValue: any ) //
+ExtensionTemplate = (
+    ( extensionID: uint, optional: bool, extensionValue: any ) //
     ( extensionID: ~oid, optional: bool,
-    extensionValue: bytes / undefined ))
+    extensionValue: bytes / undefined )
+)
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-C509CSRTemplateCDDL title="CDDL for C509CertificationRequestTemplate."}
@@ -2507,29 +2512,29 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 | Format               | Coding  | Type      |       |            |
 +======================+=========+===========+=======+============+
 | application/         | -       | [[link    | TBD3  | [[this     |
-| cose-c509-cert       |         | to 9.16]] |       | document]] |
+| cose-c509-cert       |         | to 8.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-c509-cert;      | -       | to 9.16]] | TBD15 | document]] |
+| cose-c509-cert;      | -       | to 8.16]] | TBD15 | document]] |
 | usage = chain        |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD4  | [[this     |
-| cose-c509-pkcs10     |         | to 9.16]] |       | document]] |
+| cose-c509-pkcs10     |         | to 8.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD19 | [[this     |
-| cose-c509-crtemplate |         | to 9.16]] |       | document]] |
+| cose-c509-crtemplate |         | to 8.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD10 | [[this     |
-| cose-c509-privkey    |         | to 9.16]] |       | document]] |
+| cose-c509-privkey    |         | to 8.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD11 | [[this     |
-| cose-c509-pem        |         | to 9.16]] |       | document]] |
+| cose-c509-pem        |         | to 8.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD16 | [[this     |
-| cose-certhash        |         | to 9.16]] |       | document]] |
+| cose-certhash        |         | to 8.16]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-certhash;       | -       | to 9.16]] | TBD17 | document]] |
+| cose-certhash;       | -       | to 8.16]] | TBD17 | document]] |
 | usage = c509         |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 ~~~~~~~~~~~
@@ -3395,4 +3400,4 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Corey Bonnell, Carsten Bormann,  Viktor Dukhovni, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
+The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Viktor Dukhovni, Russ Housley, Olle Johansson, Benjamin Kaduk, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
