@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-21T03:28:27.106733+00:00",
+  "timestamp": "2026-04-23T03:30:04.064352+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8719,7 +8719,7 @@
       "labels": [],
       "body": "Link: https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/\n\n[COSE] Gunter Van de Velde's No Objection on draft-ietf-cose-cbor-encoded-cert-17: (with COMMENT)\nGunter Van de Velde via Datatracker <noreply@ietf.org> Wed, 08 April 2026 11:06 UTC[Show header](https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/#)\n\nGunter Van de Velde has entered the following ballot position for\ndraft-ietf-cose-cbor-encoded-cert-17: No Objection\n\nWhen responding, please keep the subject line intact and reply to all\nemail addresses included in the To and CC lines. (Feel free to cut this\nintroductory paragraph, however.)\n\n\nPlease refer to https://www.ietf.org/about/groups/iesg/statements/handling-ballot-positions/ \nfor more information about how to handle DISCUSS and COMMENT positions.\n\n\nThe document, along with other ballot positions, can be found here:\nhttps://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/\n\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nMany thanks for the write-up. Appreciated.\n\nMy observation is that while the shepherd writeup claims nothing noteworthy\nwhen running idnits, but when i run idnits\n([https://author-tools.ietf.org/api/idnits?url=https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-17.txt](https://author-tools.ietf.org/api/idnits?url=https%3A%2F%2Fwww.ietf.org%2Farchive%2Fid%2Fdraft-ietf-cose-cbor-encoded-cert-17.txt))\ni end up with a long laundry list of observations. Maybe worthwhile to run\nthrough the list and explain why they are deemed not meaningful/relevant and\nadd this context in the write-up?\n\nOne of those idnits observations is that there may only be v4 examples and no\nv6 examples?\n\nG/",
       "createdAt": "2026-04-09T08:15:28Z",
-      "updatedAt": "2026-04-17T07:11:02Z",
+      "updatedAt": "2026-04-22T09:31:23Z",
       "closedAt": null,
       "comments": [
         {
@@ -8728,6 +8728,13 @@
           "body": "Carsten's response:\nhttps://mailarchive.ietf.org/arch/msg/cose/KUxW4UegoP2X3HFzpmFBH8s3pnQ/\n\nHi Gunter,\n\neven though this document has left the WG, let me quickly add a couple of observations to yours.\n\n> My observation is that while the shepherd writeup claims nothing noteworthy\n> when running idnits, but when i run idnits\n> ([https://author-tools.ietf.org/api/idnits?url=https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-17.txt](https://author-tools.ietf.org/api/idnits?url=https%3A%2F%2Fwww.ietf.org%2Farchive%2Fid%2Fdraft-ietf-cose-cbor-encoded-cert-17.txt))\n> i end up with a long laundry list of observations.\n\n...Summary: 6 errors (**), 0 flaws (~~), 8 warnings (==), 9 comments (--).\n\n> Maybe worthwhile to run\n> through the list and explain why they are deemed not meaningful/relevant and\n> add this context in the write-up?\n\nWe could do that in the future.\nidnits has so many false positives that it is a chore to process its output.\n\nE.g., these \u201cerrors\u201d (\u201c**\u201d) point to PKCS 9 and PKCS 10:\n\n  ** Downref: Normative reference to an Informational RFC: RFC 2985\n\n  ** Downref: Normative reference to an Informational RFC: RFC 2986\n\nThese are frequent downrefs [1], with 13 [2] resp. 33 [3] normative references from other documents at this point:\n\n[1]: https://datatracker.ietf.org/doc/downref\n[2]: https://datatracker.ietf.org/doc/rfc2985/referencedby/\n[3]: https://datatracker.ietf.org/doc/rfc2986/referencedby/\n\nidnits could know that.\n\nI\u2019ll leave\n\n  ** Obsolete normative reference: RFC 5246 (Obsoleted by RFC 8446)\n\n  ** Obsolete normative reference: RFC 6962 (Obsoleted by RFC 9162)\n\n  ** Obsolete normative reference: RFC 8398 (Obsoleted by RFC 9598)\n\n\u2026to the authors; while the first one just points to the RFC with the original definition, it seems the other two could make use of the new specification.\n\n  ** There are 43 instances of too long lines in the document, the longest\n     one being 25 characters in excess of 72.\n\n\u2026could also be addressed by the authors, either via RFC 8792 or by editing the unruly sourcecode, e.g., by adding a newline after a rule start that has an excessively long identifier.\nMost of the instances come from the formatter malfunction in Table 20.\nThis may need to be addressed by the tools team/RPC.\n\n> One of those idnits observations is that there may only be v4 examples and no\n> v6 examples?\n\nThis is actually a correct observation: There is one IPv4 example in Section 3.3 that is not accompanied by a IPv6 example.  Looking at this document as a potential user, I consider this fine, as the principle explained here becomes quite clear from the IPv4 example.\n\nThere are tons of constructs in the draft that may look like dotted-quads (IPv4 addresses) to a tool such as idnits but that are really ASN.1 Object Identifiers.\nI think this is where \"42 instances of lines with non-RFC6890-compliant IPv4 addresses\u201d comes from.\n\nMany programming languages have pragmas to suppress misleading warnings; it doesn\u2019t seem easy to add such a feature to idnits but it will need to be done if idnits is to be taken more seriously by authors.",
           "createdAt": "2026-04-17T07:11:02Z",
           "updatedAt": "2026-04-17T07:11:02Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "- The \"line too long\" and IPv4 / v6 addresses problems have been resolved in draft -18.\n- The references to latest RFCs (8398 -> 9598) will be fixed in the next version (-19).\n- RFC 6962 will not be changed to 9162, the OIDs we use in the Figures are only defined in 6962, not in 9162.",
+          "createdAt": "2026-04-22T09:31:23Z",
+          "updatedAt": "2026-04-22T09:31:23Z"
         }
       ]
     },
@@ -14420,14 +14427,14 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-03-11T11:44:28Z",
-      "updatedAt": "2026-03-13T07:39:31Z",
+      "updatedAt": "2026-04-22T08:01:56Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "1538bb02c31e2c41e44cdc53f03455bd5a95aee1",
+      "baseRefOid": "f67f3e83ecb4b84e0652f993f467bd3690b2d132",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "add-lijun",
       "headRefOid": "9a06c54324a3ffebf25fd1428b62053daf2b90c9",
-      "closedAt": "2026-03-13T07:39:30Z",
+      "closedAt": "2026-04-22T08:01:56Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -14775,25 +14782,35 @@
       "id": "PR_kwDOCpt5cM7S32zA",
       "title": "Fixing \"usage\" in media types",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/348",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing  #338",
       "createdAt": "2026-04-16T06:36:41Z",
-      "updatedAt": "2026-04-16T06:43:26Z",
+      "updatedAt": "2026-04-22T07:34:35Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "b99fb9c69a44c2c8430fabe08e02304d0778a8d0",
+      "baseRefOid": "c98b7f080e858341f1e32e920c0e4556ba31c2b5",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "usage-in-media",
-      "headRefOid": "86cd16262cde161320e39d5ab6b2dd338702e61f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "5a48ae681774963821be2fcfde9b8e3e0306d1ee",
+      "closedAt": "2026-04-22T07:34:35Z",
+      "mergedAt": "2026-04-22T07:34:35Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "15da7d1ac34e64170fdac9087fce2708c57e9de2"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merging for -18. \r\n\r\nhttps://github.com/cose-wg/CBOR-certificates/issues/338 may need further text addition.",
+          "createdAt": "2026-04-22T07:34:23Z",
+          "updatedAt": "2026-04-22T07:34:23Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -14885,24 +14902,26 @@
       "id": "PR_kwDOCpt5cM7TWHQY",
       "title": "Remaining comments from Med",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/354",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-04-17T14:15:48Z",
-      "updatedAt": "2026-04-17T14:15:50Z",
+      "updatedAt": "2026-04-22T07:30:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "39550421f420cfd04d5bfb184d8725c6b7cb2dab",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "med-review",
-      "headRefOid": "f4bc1c6b1869bfbae1725085b3dcc1df7e02a919",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "acacc4d98ba89788cad30eadc680b3f53edc5926",
+      "closedAt": "2026-04-22T07:30:49Z",
+      "mergedAt": "2026-04-22T07:30:49Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "855c4ba341b988845ecbd2e1a49725536e57aad4"
+      },
       "comments": [],
       "reviews": []
     },
@@ -14911,25 +14930,56 @@
       "id": "PR_kwDOCpt5cM7TWUMH",
       "title": "Remaining changes following Eric's review",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/355",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-04-17T14:26:33Z",
-      "updatedAt": "2026-04-17T16:05:11Z",
+      "updatedAt": "2026-04-22T07:42:10Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "39550421f420cfd04d5bfb184d8725c6b7cb2dab",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "eric-review",
-      "headRefOid": "854cc278ef38c09cbcaf4a822f600910fcf3098e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "1a728949f53b7e1f0a2cc545bf0b0987dd51fc46",
+      "closedAt": "2026-04-22T07:42:10Z",
+      "mergedAt": "2026-04-22T07:42:10Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "f67f3e83ecb4b84e0652f993f467bd3690b2d132"
+      },
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thumbs up from me!\r\n\r\nA sidenote: the auto-checker seems to be complaining about the pipe symbol in \"John | Preu\u00df Mattsson\", although that is not a new addition. Any reason to keep it there?",
+          "createdAt": "2026-04-21T14:45:53Z",
+          "updatedAt": "2026-04-21T14:45:53Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The change from \"J. Preu\u00df Mattson\" to \"John | Preu\u00df Mattson\" was in https://github.com/cose-wg/CBOR-certificates/commit/8c6f87b787fe5b65d2f304dfa07eeb52b86cd595.",
+          "createdAt": "2026-04-22T06:34:45Z",
+          "updatedAt": "2026-04-22T06:34:45Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "The | clarifies what is 1st name and what is last name. Let's ignore the auto-checker.",
+          "createdAt": "2026-04-22T06:39:22Z",
+          "updatedAt": "2026-04-22T06:39:22Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merging for -18",
+          "createdAt": "2026-04-22T07:42:01Z",
+          "updatedAt": "2026-04-22T07:42:01Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM72KXek",
@@ -15028,24 +15078,26 @@
       "id": "PR_kwDOCpt5cM7TsuuA",
       "title": "Fix the \"line too long\" error mentioned in #345",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/357",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "#345",
       "createdAt": "2026-04-19T10:10:27Z",
-      "updatedAt": "2026-04-19T10:10:29Z",
+      "updatedAt": "2026-04-22T07:12:54Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "0aa0fc9b210a8b4f3214531143b0f2b64ec30262",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "fix-lineTooLong",
-      "headRefOid": "35a4f64416a329ba8cca73a7e876b45480703be7",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "aa4cb56ac151792174c53bd07163d679a115c5c8",
+      "closedAt": "2026-04-22T07:12:54Z",
+      "mergedAt": "2026-04-22T07:12:54Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "c98b7f080e858341f1e32e920c0e4556ba31c2b5"
+      },
       "comments": [],
       "reviews": []
     }
