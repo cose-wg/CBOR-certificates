@@ -3923,7 +3923,7 @@ ExtensionTemplate = (
 <p id="section-8.18.4-2">Type name: application<a href="#section-8.18.4-2" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-3">Subtype name: cose-c509-privkey<a href="#section-8.18.4-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-4">Required parameters: N/A<a href="#section-8.18.4-4" class="pilcrow">¶</a></p>
-<p id="section-8.18.4-5">Optional parameters: usage<a href="#section-8.18.4-5" class="pilcrow">¶</a></p>
+<p id="section-8.18.4-5">Optional parameters:<a href="#section-8.18.4-5" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-6">Encoding considerations: binary<a href="#section-8.18.4-6" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-7">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.4-7" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-8">Interoperability considerations: N/A<a href="#section-8.18.4-8" class="pilcrow">¶</a></p>
@@ -3961,7 +3961,7 @@ ExtensionTemplate = (
 <p id="section-8.18.5-2">Type name: application<a href="#section-8.18.5-2" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-3">Subtype name: cose-c509-pem<a href="#section-8.18.5-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-4">Required parameters: N/A<a href="#section-8.18.5-4" class="pilcrow">¶</a></p>
-<p id="section-8.18.5-5">Optional parameters: usage<a href="#section-8.18.5-5" class="pilcrow">¶</a></p>
+<p id="section-8.18.5-5">Optional parameters:<a href="#section-8.18.5-5" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-6">Encoding considerations: binary<a href="#section-8.18.5-6" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-7">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.5-7" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-8">Interoperability considerations: N/A<a href="#section-8.18.5-8" class="pilcrow">¶</a></p>
@@ -3995,7 +3995,7 @@ ExtensionTemplate = (
           <h4 id="name-media-type-application-cose-ce">
 <a href="#section-8.18.6" class="section-number selfRef">8.18.6. </a><a href="#name-media-type-application-cose-ce" class="section-name selfRef">Media Type application/cose-certhash</a>
           </h4>
-<p id="section-8.18.6-1">When the application/cose-certhash media type is used, the data is a COSE_CertHash structure, see <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>.<a href="#section-8.18.6-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-1">When the application/cose-certhash media type is used, the data is a COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>. If the parameter "usage" is set to "c509", the hash value is calculated over a C509 certificate.<a href="#section-8.18.6-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.6-2">Type name: application<a href="#section-8.18.6-2" class="pilcrow">¶</a></p>
 <p id="section-8.18.6-3">Subtype name: cose-certhash<a href="#section-8.18.6-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.6-4">Required parameters: N/A<a href="#section-8.18.6-4" class="pilcrow">¶</a></p>
@@ -4005,7 +4005,8 @@ ExtensionTemplate = (
               <p id="section-8.18.6-6.1.1">Can be absent to provide no further information about what the hash value is calculated over.<a href="#section-8.18.6-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.6-6.2">
-              <p id="section-8.18.6-6.2.1">Can be set to "c509" to indicate that the hash value is calculated over a C509 certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.18.6-6.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.6-6.2.1">Can be set to "c509" to indicate that the COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> is used, with
+hashValue calculated over a C509 certificate as defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.18.6-6.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-8.18.6-7">Encoding considerations: binary<a href="#section-8.18.6-7" class="pilcrow">¶</a></p>

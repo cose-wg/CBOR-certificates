@@ -2978,7 +2978,7 @@ Table of Contents
 
    Required parameters: N/A
 
-   Optional parameters: usage
+   Optional parameters:
 
    Encoding considerations: binary
 
@@ -3026,7 +3026,7 @@ Table of Contents
 
    Required parameters: N/A
 
-   Optional parameters: usage
+   Optional parameters:
 
    Encoding considerations: binary
 
@@ -3066,7 +3066,9 @@ Table of Contents
 8.18.6.  Media Type application/cose-certhash
 
    When the application/cose-certhash media type is used, the data is a
-   COSE_CertHash structure, see [RFC9360].
+   COSE_CertHash structure as defined in [RFC9360].  If the parameter
+   "usage" is set to "c509", the hash value is calculated over a C509
+   certificate.
 
    Type name: application
 
@@ -3079,8 +3081,9 @@ Table of Contents
    *  Can be absent to provide no further information about what the
       hash value is calculated over.
 
-   *  Can be set to "c509" to indicate that the hash value is calculated
-      over a C509 certificate, see Section 3.4.
+   *  Can be set to "c509" to indicate that the COSE_CertHash structure
+      as defined in [RFC9360] is used, with hashValue calculated over a
+      C509 certificate as defined in Section 3.4.
 
    Encoding considerations: binary
 
