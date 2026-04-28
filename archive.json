@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-23T03:30:04.064352+00:00",
+  "timestamp": "2026-04-28T03:49:15.355425+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -8471,9 +8471,17 @@
       "labels": [],
       "body": "Should be aligned\n\n`   | Value | Private Key Types                                         |\n`\n`   | Value | RDN Attribute                                             |\n`",
       "createdAt": "2026-03-10T12:33:33Z",
-      "updatedAt": "2026-03-10T12:33:33Z",
+      "updatedAt": "2026-04-27T15:36:59Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in #363 ",
+          "createdAt": "2026-04-27T15:36:59Z",
+          "updatedAt": "2026-04-27T15:36:59Z"
+        }
+      ]
     },
     {
       "number": 331,
@@ -8633,9 +8641,24 @@
       "labels": [],
       "body": "\"Hello David & COSE WG,\n\nI've reviewed the request. One thing that surprised me was the presence\nof an optional parameter \"usage\" without any explanation for some of the\nmedia types defined.\nIs this a copy/paste error maybe? Has there been a media-types review of\nthese already?\n\nNote that for all the CoAP Content-Format requests that do include a\n\"usage\" parameter, the explanation is present! So this does not hamper\nthe present registration request.\n\nIf in Figure 20 the spaces in  \"usage = chain\" and \"usage = c509\" could\nbe removed, per RFC 9876 Section 4.1.4, and the new media types are\napproved, then this request can be approved.\n\nregards\n\nEsko\"\n\nI think It should say \"... and IF the new media types are\napproved, then this request can be approved.\"\n\n",
       "createdAt": "2026-03-12T06:01:40Z",
-      "updatedAt": "2026-04-11T08:21:19Z",
+      "updatedAt": "2026-04-27T19:30:16Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander we are waiting for input.",
+          "createdAt": "2026-04-27T08:51:41Z",
+          "updatedAt": "2026-04-27T08:51:41Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The white space in \"usage = xxx\" is fixed in https://github.com/cose-wg/CBOR-certificates/pull/363/changes/2cc59a20cc5e4ed4405b18ac1851357da043bf92.",
+          "createdAt": "2026-04-27T19:30:16Z",
+          "updatedAt": "2026-04-27T19:30:16Z"
+        }
+      ]
     },
     {
       "number": 339,
@@ -8656,18 +8679,40 @@
     {
       "number": 342,
       "id": "I_kwDOCpt5cM7y66su",
-      "title": "Move several extensions from \"partly supported\" to \"fully supported\"",
+      "title": "Clean-up extensions, extended key usage enums, and fix build-error",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/342",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
-      "body": "The following extensions are fully supported, thus they shall be moved from list of \"partly supported\" to \"fully supported\":\n\n1. IPAddrBlocks and IPAddrBlocks v2 (after the merge of #339 )\n2. OCSP No Check (the extension value SHALL be NULL according to RFC 6960)\n3. Precertificate Signing Certificate\n4. TLS Features",
+      "body": "The following extensions are fully supported, thus they shall be moved from list of \"partly supported\" to \"fully supported\":\n\n1. IPAddrBlocks and IPAddrBlocks v2 (after the merge of #339 )\n2. OCSP No Check (the extension value SHALL be NULL according to RFC 6960)\n3. TLS Features\n\nAnd remove the RFC6962-related definitions:\n- Extension PreCertificate\n- Extended Key Usage enum \"Certificate Transparency\" \n\nAnd the reference for SmtpUTF8Mailbox in extensions shall be RFC 9598 instead 8398",
       "createdAt": "2026-03-14T11:08:13Z",
-      "updatedAt": "2026-03-14T11:09:18Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-04-27T13:32:59Z",
+      "closedAt": "2026-04-27T13:32:59Z",
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@xipki PR",
+          "createdAt": "2026-04-27T08:51:58Z",
+          "updatedAt": "2026-04-27T08:51:58Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in #360 ",
+          "createdAt": "2026-04-27T10:51:29Z",
+          "updatedAt": "2026-04-27T10:51:29Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Covers also the RFC references problems in #345 ",
+          "createdAt": "2026-04-27T10:52:14Z",
+          "updatedAt": "2026-04-27T11:04:48Z"
+        }
+      ]
     },
     {
       "number": 343,
@@ -8719,7 +8764,7 @@
       "labels": [],
       "body": "Link: https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/\n\n[COSE] Gunter Van de Velde's No Objection on draft-ietf-cose-cbor-encoded-cert-17: (with COMMENT)\nGunter Van de Velde via Datatracker <noreply@ietf.org> Wed, 08 April 2026 11:06 UTC[Show header](https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/#)\n\nGunter Van de Velde has entered the following ballot position for\ndraft-ietf-cose-cbor-encoded-cert-17: No Objection\n\nWhen responding, please keep the subject line intact and reply to all\nemail addresses included in the To and CC lines. (Feel free to cut this\nintroductory paragraph, however.)\n\n\nPlease refer to https://www.ietf.org/about/groups/iesg/statements/handling-ballot-positions/ \nfor more information about how to handle DISCUSS and COMMENT positions.\n\n\nThe document, along with other ballot positions, can be found here:\nhttps://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/\n\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nMany thanks for the write-up. Appreciated.\n\nMy observation is that while the shepherd writeup claims nothing noteworthy\nwhen running idnits, but when i run idnits\n([https://author-tools.ietf.org/api/idnits?url=https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-17.txt](https://author-tools.ietf.org/api/idnits?url=https%3A%2F%2Fwww.ietf.org%2Farchive%2Fid%2Fdraft-ietf-cose-cbor-encoded-cert-17.txt))\ni end up with a long laundry list of observations. Maybe worthwhile to run\nthrough the list and explain why they are deemed not meaningful/relevant and\nadd this context in the write-up?\n\nOne of those idnits observations is that there may only be v4 examples and no\nv6 examples?\n\nG/",
       "createdAt": "2026-04-09T08:15:28Z",
-      "updatedAt": "2026-04-22T09:31:23Z",
+      "updatedAt": "2026-04-27T15:39:34Z",
       "closedAt": null,
       "comments": [
         {
@@ -8735,6 +8780,20 @@
           "body": "- The \"line too long\" and IPv4 / v6 addresses problems have been resolved in draft -18.\n- The references to latest RFCs (8398 -> 9598) will be fixed in the next version (-19).\n- RFC 6962 will not be changed to 9162, the OIDs we use in the Figures are only defined in 6962, not in 9162.",
           "createdAt": "2026-04-22T09:31:23Z",
           "updatedAt": "2026-04-22T09:31:23Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "RFC 8398 -> 9598: fixed in #360\nRFC 6962: removed in #360",
+          "createdAt": "2026-04-27T08:52:22Z",
+          "updatedAt": "2026-04-27T10:51:00Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander I think we do not have open problems here.",
+          "createdAt": "2026-04-27T15:39:34Z",
+          "updatedAt": "2026-04-27T15:39:34Z"
         }
       ]
     },
@@ -8812,9 +8871,17 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/cose/PR2QT5WGx6Eb3LtU6whdWYXHktI/\n\n\n----------------------------------------------------------------------\nDISCUSS:\n----------------------------------------------------------------------\n\n\n# \u00c9ric Vyncke INT AD comments for draft-ietf-cose-cbor-encoded-cert-17\nCC @evyncke\n\nThank you for the work put into this document.\n\nPlease find below some blocking DISCUSS points, some non-blocking COMMENT\npoints/nits (replies would be appreciated even if only for my own education).\n\nSpecial thanks to Ivaylo Petrov for the shepherd's write-up including the WG\nconsensus *BUT* it lacks the justification of the intended status.\n\nOther thanks to Ted Lemon, the DNS directorate reviewer:\nhttps://datatracker.ietf.org/doc/review-ietf-cose-cbor-encoded-cert-17-dnsdir-telechat-lemon-2026-03-30/\n(and I have read the previous email threads with the authors)\n\nI hope that this review helps to improve the document,\n\nRegards,\n\n-\u00e9ric\n\nNote: this ballot comments follow the Markdown syntax of\nhttps://github.com/mnot/ietf-comments/tree/main, i.e., they can be processed by\na tool to create github issues.\n\n## DISCUSS (blocking)\n\nAs noted in\nhttps://datatracker.ietf.org/doc/statement-iesg-handling-ballot-positions-20220121/,\na DISCUSS ballot is a request to have a discussion on the points below; I\nreally think that the document would be improved with a change here, but can be\nconvinced otherwise.\n\n### Section 3.3\n\nAbout \"IpAddrBlocks\", the whole text is a little unclear to me to be honest, so\nI may have misread the specification BUT the text `It should be noted that\nusing address differences for compactness prevents encoding an address range\nlarger than 2**64 - 1 corresponding to the CBOR integer max value.` seems\nreally a bad choice for IPv6 addresses as the usual prefix size if 64-bit long.\nI.e., the encoding cannot cope with 2001:db8::/63. There are no examples in the\nappendix about this encoding, and this does not help the reader.\n\nAlso very unclear to me (missing references and how to use): `IPAddressFamily =\n(AFI: uint, SAFI: uint / null, IPAddressChoice)`\n\nThe text `as specified in [I-D.ietf-lamps-macaddress-on]` makes the reference\nnormative.\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\n\n## COMMENTS (non-blocking)\n\n### Section 1\n\nPlease add a reference to `IEEE 802.1AR (DevID)`.\n\nAlso add references to `C509 is deployed in, e.g.,...``\n\n### Section 3.1.8 (and others)\n\nWhat does `Not supported.` mean in this case ? Should the text be explicit and\nstate that if this field exist in the X.509 then no C509 can be generated?\n(just to be clear)\n\n### Section 3.3\n\nAbout \"Name Constraints\" s/where the last octet indicates the number of bits in\nthe *netmask*/where the last octet indicates the number of bits in the *prefix*/\n\nAbout \"IPAddrBlocks\", just wondering why not using the 'number of used octets'\nas it is closer to the usual CIDR/IPv6 prefix notation in `Each AddressPrefix\nis encoded as a CBOR bytes string (without the unused bits octet) followed by\nthe number of unused bits encoded as a CBOR uint` ?\n\n`KeyIdentifier SHOULD be composed of the leftmost 160-bits of the SHA-256 hash\nof the CBOR encoded subjectPublicKey. Other methods of generating unique\nnumbers can be used.` why a SHOULD as other methods can be used ? This sentence\ndoes not seem to follow\nhttps://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/.\n\n### Section 9\n\nSuggest adding informative reference to the newly created IANA registries *AND*\nupdated existing registries.\n\nSomehow like Med Boucadair, I am puzzled by the last paragraph as it is\nconfusing at the best while trying to paraphrase RFC 8126. Let's rather delete\nit.\n\n### Section A.3.1\n\nPlease avoid using real FQDN (e.g., `sni.cloudflaressl.com`) in IETF documents,\nrather use \"example.org\"\n\n",
       "createdAt": "2026-04-16T08:22:35Z",
-      "updatedAt": "2026-04-16T08:25:02Z",
+      "updatedAt": "2026-04-27T08:53:03Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander please close this issue.",
+          "createdAt": "2026-04-27T08:53:03Z",
+          "updatedAt": "2026-04-27T08:53:03Z"
+        }
+      ]
     },
     {
       "number": 353,
@@ -8828,9 +8895,55 @@
       "labels": [],
       "body": "\n_**Discuss**_ (2026-04-10) \n\n# IETF Review with Expert Review\n\nCURRENT:\n  All assignments according to \"IETF Review with Expert Review\" are made on a \"IETF Review\" basis per {{Section 4.8 of [RFC8126](https://datatracker.ietf.org/doc/rfc8126/)}} with \"Expert Review\" additionally required per {{Section 4.5 of [RFC8126](https://datatracker.ietf.org/doc/rfc8126/)}}. \n\nand\n\n the registration procedure is \"IETF Review with Expert Review\".\n\nI remember that Carsten edited [draft-bormann-gendispatch-with-expert-review](https://datatracker.ietf.org/doc/draft-bormann-gendispatch-with-expert-review/), but do we have a stable reference where such policy is defined?\n\n# The WG may be closed: not sure how this guidance will age\n\nCURRENT:\n  In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{[RFC7120](https://datatracker.ietf.org/doc/rfc7120/)}}.\n\n\n\n\n\n_**Comment**_ (2026-04-10)\n\n# Is this already deployed there or these are deployment targets?\n\nCURRENT:\n  C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS)\n\n\u201cis deployed\u201d won\u2019t age well in an RFC, btw.\n\n# Please consider adding a reference\n\nCURRENT :\n\n  the CBOR encoding can in many cases reduce the size of  [RFC7925](https://datatracker.ietf.org/doc/rfc7925/) profiled certificates by over 50%.\n\n# Any reason why this is repeated here?\n\nCURRENT:\n  The procedure for early IANA allocation of \"standards track code points\" defined in {{[RFC7120](https://datatracker.ietf.org/doc/rfc7120/)}} also applies.\n",
       "createdAt": "2026-04-17T13:33:20Z",
-      "updatedAt": "2026-04-17T13:33:20Z",
+      "updatedAt": "2026-04-27T08:53:28Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Med's follow-up mail (modulo ACKs):\nhttps://mailarchive.ietf.org/arch/msg/cose/TZWrH_8k2dTTc_Fkot-2w1SHBFU/\n\nHi G\u00f6ran,\n\nThank you for the follow-up and for the changes made in -18.\n\nPlease see inline.\n\nCheers,\nMed\n\nDe : G\u00f6ran Selander <goran.selander@ericsson.com>\nEnvoy\u00e9 : vendredi 17 avril 2026 17:07\n\u00c0 : BOUCADAIR Mohamed INNOV/NET <mohamed.boucadair@orange.com>; The IESG <iesg@ietf.org>\nCc : [cose-chairs@ietf.org](mailto:cose-chairs@ietf.org); [cose@ietf.org](mailto:cose@ietf.org); [draft-ietf-cose-cbor-encoded-cert@ietf.org](mailto:draft-ietf-cose-cbor-encoded-cert@ietf.org); [ivaylopetrov@google.com](mailto:ivaylopetrov@google.com)\nObjet : Re: Mohamed Boucadair's Discuss on draft-ietf-cose-cbor-encoded-cert-17: (with DISCUSS and COMMENT)\n\n\n\n---\n\n\n# IETF Review with Expert Review\n\nCURRENT:\n  All assignments according to \"IETF Review with Expert Review\" are made on a\n  \"IETF Review\" basis per {{Section 4.8 of RFC8126}} with \"Expert Review\"\n  additionally required per {{Section 4.5 of RFC8126}}.\n\nand\n\n the registration procedure is \"IETF Review with Expert Review\".\n\nI remember that Carsten edited draft-bormann-gendispatch-with-expert-review,\nbut do we have a stable reference where such policy is defined?\n\n# The WG may be closed: not sure how this guidance will age\n\nCURRENT:\n  In addition, working group chairs are encouraged to consult the expert(s)\n  early during the process outlined in Section 3.1 of {{RFC7120}}.\n\n\n<<GS: During the IESG evaluation of RFC 9668, John Scudder raised a DISCUSS [0] about the IANA considerations using these hybrid registration policies, which were not fully specifying their use in the context of the new registry and what it meant to use those with respect to the early allocation process. The result was text that we are consistently using in several drafts, see for example [1].\n\nSo, the paragraph which this DISCUSS is about is just following previous resolutions of IESG discussions.\nRegarding how this guidance will age, note that it the reference to working group chairs is not referring to potential closed WGs.\n\n[0] https://mailarchive.ietf.org/arch/msg/core/CaK5R4gq1wc3CN5-dTN3uRXoU2U/\n\n[1] https://www.ietf.org/rfc/rfc9668.html#section-8.3-3\n>>\n\n[Med] I went through that thread and I agree that we need to be consistent. I consider my main point closed. Note that I still prefer if we could avoid including text that smells like an update to rfc7120#section-3.1:\n\nCURRENT:\n In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section [3.1<https://rfc-editor.org/rfc/rfc7120#section-3.1>](http://3.1%3Chttps//rfc-editor.org/rfc/rfc7120#section-3.1%3E) of [[RFC7120<https://www.ietf.org/rfc/rfc9668.html#RFC7120>](http://rfc7120%3Chttps//www.ietf.org/rfc/rfc9668.html#RFC7120%3E)]\n\n\n---\n\n# Any reason why this is repeated here?\n\nCURRENT:\n  The procedure for early IANA allocation of \"standards track code points\"\n  defined in {{RFC7120}} also applies.\n\n<<GS: The same argument as in the DISCUSS applies here. >>\n[Med] Repeating this is an indication that we are not confident that this falls under:\n\n   a.  The code points must be from a space designated as \"RFC\n       Required\", \"IETF Review\", or \"Standards Action\".  Additionally,\n       requests for early assignment of code points from a\n       \"Specification Required\" registry are allowed if the\n       specification will be published as an RFC.\n\nand hence an explicit mention is needed ...which is an update to 7120!\n",
+          "createdAt": "2026-04-27T07:35:48Z",
+          "updatedAt": "2026-04-27T07:35:48Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander we are waiting for input",
+          "createdAt": "2026-04-27T08:53:28Z",
+          "updatedAt": "2026-04-27T08:53:28Z"
+        }
+      ]
+    },
+    {
+      "number": 358,
+      "id": "I_kwDOCpt5cM8AAAABAh2imA",
+      "title": "IANA issues",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/358",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Dear Authors/Chairs/ADs,\n\nI'm resending this message about IANA issues with draft-ietf-cose-cbor-encoded-cert.\n\nIt appears that item #3 has been taken care of, but we haven't seen a response to the other issues. For item #1, we don't know what we're meant to register, and the issue preventing approval by the CoAP Content-Format expert still hasn't been addressed.\n\nthanks,\n\nAmanda Baber\nIANA\n\nOn Wed Apr 08 01:26:12 2026, amanda.baber wrote:\n> Dear Authors,\n>\n> We have an outstanding expert issue that prevents this from being\n> marked IANA OK. Please see the message from the CoAP Content-Format\n> expert that was resent by my colleague David Dong today.\n>\n> In addition, we have these questions and notes:\n>\n> 1) Question about Section 9.5, value 8 in Figure 10: I'm seeing\n> different entries in the \"Identifiers\" field depending on document\n> format. In the text file, I'm seeing \"organizationName, o\"; in the\n> HTML version, the second string (?) is a circle character that I can't\n> copy; and in the XML file, I don't see a character after the comma at\n> all. What should IANA record in the registry's XML file?\n>\n> 2) Note: there's a line break between every word in the HTML version\n> of the document (and a text element for every word in the XML file).\n> In order to copy and paste text into XML records for the new\n> registries, we're going to have to use the plain-text version of the\n> draft, so we're liable to miss any special characters. If there are\n> any characters that need to be pulled from another version of the\n> document, please call our attention to them.\n>\n> 3) Questions about the first entry in the Figure 17 table: Are \"TBD90\"\n> and \"TBD91\" meant to be entered as written? They look like they're\n> meant to be taken from other registrations in other registries, but\n> \"TBD90\" and \"TBD91\" don't appear anywhere else in the document. Also,\n> the field that should be called \"GeneralNameValue\" is just called\n> \"Value\" in this row.\n>\n> 4) Note: it doesn't appear that any of these media type templates have\n> been sent to [media-types@ietf.org](mailto:media-types@ietf.org) for review. RFC 6838 doesn't require\n> this, but it does recommend it, and the CoAP Content-Formats expert\n> pointed out a possible issue that he thinks should be checked.\n>\n> 5) Note: we have a strong preference for removing \"Parameters\" from\n> \"CBOR Encoded X.509 (C509) Parameters,\" and unless there's a reason it\n> needs to be retained, we're going to remove the word \"Registry\" from\n> all the registry names that include it (e.g., \"C509 Extensions\n> Registry\").\n>\n> thanks,\n>\n> Amanda Baber\n> IANA",
+      "createdAt": "2026-04-26T08:55:10Z",
+      "updatedAt": "2026-04-27T15:41:26Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander will provide PR.",
+          "createdAt": "2026-04-27T08:59:47Z",
+          "updatedAt": "2026-04-27T08:59:47Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Removing the `aasvg` in the md-file shall resolve Problem 1 (word separation) and 2 (line-break) in the derived xml-file. See #360 ",
+          "createdAt": "2026-04-27T09:42:22Z",
+          "updatedAt": "2026-04-27T15:41:26Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -15098,6 +15211,174 @@
       "mergeCommit": {
         "oid": "c98b7f080e858341f1e32e920c0e4556ba31c2b5"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 359,
+      "id": "PR_kwDOCpt5cM7Vtcsy",
+      "title": "Usage in media types",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/359",
+      "state": "MERGED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-26T10:46:29Z",
+      "updatedAt": "2026-04-27T13:24:03Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "10d188648c448d862b38790e409d0fa05bc8a0bd",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "esko-iana-review",
+      "headRefOid": "9d8c043ad9036794a0aa6545d2c0336d4baab573",
+      "closedAt": "2026-04-27T13:24:03Z",
+      "mergedAt": "2026-04-27T13:24:03Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "5f5e22f475e6780d5eec198c88292850b1be937f"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Minor update; merging this to get a readable Editor's copy",
+          "createdAt": "2026-04-27T13:23:29Z",
+          "updatedAt": "2026-04-27T13:23:29Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 360,
+      "id": "PR_kwDOCpt5cM7V7XZJ",
+      "title": "Cleanup extensions and XKU enums, fix build error",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/360",
+      "state": "MERGED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-27T10:49:29Z",
+      "updatedAt": "2026-04-27T13:10:48Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "10d188648c448d862b38790e409d0fa05bc8a0bd",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "cleanup-extensions-n-xku",
+      "headRefOid": "ff199f6f1df97b399e2a1b21db2be0780fa59982",
+      "closedAt": "2026-04-27T13:10:48Z",
+      "mergedAt": "2026-04-27T13:10:48Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "a1b2a89444b5541f4bb4f1755d04155a3136bfb0"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixing refs, editorial and build; ready to merge.",
+          "createdAt": "2026-04-27T13:10:42Z",
+          "updatedAt": "2026-04-27T13:10:42Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 361,
+      "id": "PR_kwDOCpt5cM7V7jAZ",
+      "title": "fix build error",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/361",
+      "state": "CLOSED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- remove aasvg",
+      "createdAt": "2026-04-27T10:58:30Z",
+      "updatedAt": "2026-04-27T11:05:56Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "10d188648c448d862b38790e409d0fa05bc8a0bd",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "fix-build-error",
+      "headRefOid": "d6d0b83fdcf1188a42bd9f34ae0b5e2694392a71",
+      "closedAt": "2026-04-27T11:00:58Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Will be merged to #360",
+          "createdAt": "2026-04-27T11:00:59Z",
+          "updatedAt": "2026-04-27T11:05:56Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 362,
+      "id": "PR_kwDOCpt5cM7V9-FL",
+      "title": "IANA comments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/362",
+      "state": "MERGED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-27T12:58:49Z",
+      "updatedAt": "2026-04-27T13:13:18Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "10d188648c448d862b38790e409d0fa05bc8a0bd",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "iana-amanda",
+      "headRefOid": "0818f05dbbfedb195f97be0fa3af12fe91c50e9d",
+      "closedAt": "2026-04-27T13:13:17Z",
+      "mergedAt": "2026-04-27T13:13:17Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "687fc4e26fb97a35ac012740b1f637e53fa85b30"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Minor update; merge now to respond to IANA.",
+          "createdAt": "2026-04-27T13:13:10Z",
+          "updatedAt": "2026-04-27T13:13:10Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 363,
+      "id": "PR_kwDOCpt5cM7WBJFJ",
+      "title": "Fixed typo, use singular in IANA section, aligned table column text, polished text",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/363",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-27T15:23:04Z",
+      "updatedAt": "2026-04-27T20:12:21Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "5f5e22f475e6780d5eec198c88292850b1be937f",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "text-optimization",
+      "headRefOid": "e7eca8e0cc6cd775f8465db4cf01c861e5897b3d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
