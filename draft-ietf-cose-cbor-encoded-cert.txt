@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 29 October 2026                           University of Glasgow
+Expires: 30 October 2026                           University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                      NIO
-                                                           27 April 2026
+                                                           28 April 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 October 2026.
+   This Internet-Draft will expire on 30 October 2026.
 
 Copyright Notice
 
@@ -2978,7 +2978,7 @@ Table of Contents
 
    Required parameters: N/A
 
-   Optional parameters:
+   Optional parameters: N/A
 
    Encoding considerations: binary
 
@@ -3026,7 +3026,7 @@ Table of Contents
 
    Required parameters: N/A
 
-   Optional parameters:
+   Optional parameters: N/A
 
    Encoding considerations: binary
 
@@ -3151,7 +3151,7 @@ Table of Contents
    +----------------------+---------+-----------+-------+------------+
    | application/         |         | [[link    |       | [[this     |
    | cose-c509-cert;      | -       | to 8.18]] | TBD15 | document]] |
-   | usage = chain        |         |           |       |            |
+   | usage=chain          |         |           |       |            |
    +----------------------+---------+-----------+-------+------------+
    | application/         | -       | [[link    | TBD4  | [[this     |
    | cose-c509-pkcs10     |         | to 8.18]] |       | document]] |
@@ -3170,7 +3170,7 @@ Table of Contents
    +----------------------+---------+-----------+-------+------------+
    | application/         |         | [[link    |       | [[this     |
    | cose-certhash;       | -       | to 8.18]] | TBD17 | document]] |
-   | usage = c509         |         |           |       |            |
+   | usage=c509           |         |           |       |            |
    +----------------------+---------+-----------+-------+------------+
 
                      Figure 20: CoAP Content-Format IDs
