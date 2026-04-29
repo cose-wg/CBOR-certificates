@@ -1567,7 +1567,7 @@ Table of Contents
    initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
-   | Value | Private Key Types                                         |
+   | Value | Private Key                                               |
    +=======+===========================================================+
    |     0 | Comments:          Asymmetric Key Package (RFC 5958)      |
    |       | subjectPrivateKey: bytes                                  |
@@ -2196,7 +2196,7 @@ Table of Contents
    The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
-   | Value | Certificate Policy                                        |
+   | Value | Policy Qualifier                                          |
    +=======+===========================================================+
    |     1 | Name:            Certification Practice Statement         |
    |       | Identifiers:     id-qt-cps, cps                           |
@@ -2404,7 +2404,7 @@ Table of Contents
    is "Expert Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
-   | Value | General Names                                             |
+   | Value | General Name                                              |
    +=======+===========================================================+
    |    -3 | Name:             otherName with MACAddress               |
    |       | Comments:         TBD92(Use RFC I-D-lamps-macaddress-on)  |
@@ -2474,7 +2474,7 @@ Table of Contents
    initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
-   | Value | X.509 Signature Algorithms                                |
+   | Value | Signature Algorithm                                       |
    +=======+===========================================================+
    |  -256 | Name:        RSASSA-PKCS1-v1_5 with SHA-1                 |
    |       | Identifiers: sha1-with-rsa-signature,                     |
@@ -2669,7 +2669,7 @@ Table of Contents
    Review".  The initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
-   | Value | X.509 Public Key Algorithms                               |
+   | Value | Public Key Algorithm                                      |
    +=======+===========================================================+
    |     0 | Name:        RSA                                          |
    |       | Identifiers: rsaEncryption                                |
