@@ -34,11 +34,11 @@ Abstract
    certificates have the same semantics as X.509 and the same reduced
    size compared to X.509.
 
-   The document also specifies CBOR encoded data structures for
-   certificate (signing) requests and certification request templates,
-   new COSE headers, as well as a TLS certificate type and a file format
-   for C509.  This document updates RFC 6698; the TLSA selectors
-   registry is extended to include C509 certificates.
+   This document also specifies CBOR encoded data structures for
+   certification requests and certification request templates, new COSE
+   headers, as well as a TLS certificate type and a file format for
+   C509.  This document updates RFC 6698; the TLSA selectors registry is
+   extended to include C509 certificates.
 
 About This Document
 
@@ -226,7 +226,7 @@ Table of Contents
    2.  Natively signed C509 certificates, where the signature is
        calculated over the CBOR encoding instead of over the DER
        encoding.  This removes the need for ASN.1 and DER parsing and
-       the associated complexity but they are not backwards compatible
+       the associated complexity but they are not backward compatible
        with implementations requiring DER-encoded X.509.
 
    Natively signed C509 certificates can be applied in devices that are
@@ -265,7 +265,7 @@ Table of Contents
    and CAB Baseline [CAB-TLS] [CAB-Code].
 
    In the CBOR encoding, static fields are elided, elliptic curve points
-   and time values are compressed, OID are replaced with short integers
+   and time values are compressed, OIDs are replaced with short integers
    or complemented with CBOR OID encoding [RFC9090], and redundant
    encoding is removed.  Combining these different components reduces
    the certificate size significantly, which is not possible with
@@ -483,9 +483,9 @@ Table of Contents
       critical extensions are encoded with a positive sign.  If the CBOR
       array contains exactly two ints and the absolute value of the
       first int is 2 (corresponding to keyUsage, see Section 3.3), the
-      CBOR array is omitted and the extensions is encoded as a single
-      CBOR int with the absolute value of the second int and the sign of
-      the first int.
+      CBOR array is omitted and the 'extensions' field is encoded as a
+      single CBOR int with the absolute value of the second int and the
+      sign of the first int.
 
    *  If extensionID is encoded as an unwrapped CBOR OID tag, it is
       followed by the DER-encoded extnValue encoded in the following
@@ -521,7 +521,7 @@ Table of Contents
    byte is omitted.  For natively signed C509 certificates, the
    signatureValue is calculated over the CBOR sequence TBSCertificate.
    For ECDSA, the encoding of issuerSignatureValue is further optimized
-   as described in Section 3.2
+   as described in Section 3.2.
 
 3.2.  Encoding of subjectPublicKey and issuerSignatureValue
 
@@ -1136,7 +1136,7 @@ Table of Contents
    *  c509CertificationRequestType = 3.  This type indicates that the
       C509 Certification Request is a CBOR re-encoded [RFC2986]
       certification request, as defined in Section 4.  This encoding is
-      backwards compatible with legacy RFC 2986 certification requests,
+      backward compatible with legacy RFC 2986 certification requests,
       and enables a reduced transport overhead.
 
    The type of certificate issued after the request is decided by the
@@ -1467,7 +1467,7 @@ Table of Contents
    mechanism out of scope of this document.  Similar security
    considerations as x5bag, x5chain, x5t and x5u applies, see [RFC9360].
    Security considerations of the COSE protected and unprotected headers
-   is discussed in [RFC9052].
+   are discussed in [RFC9052].
 
 8.  IANA Considerations
 
@@ -1559,12 +1559,12 @@ Table of Contents
 
    IANA has created a new registry titled "C509 Private Key Types" in
    the new registry group "CBOR Encoded X.509 (C509)".  The fields of
-   the registry are Value, Comments, and subjectPrivateKey, and
-   Reference, where Value is an integer, and the other columns are text
-   strings.  All columns are mandatory.  For values in the interval
-   [-24, 23] the registration procedure is "IETF Review with Expert
-   Review".  For all other values the registration procedure is "Expert
-   Review".  The initial contents of the registry are:
+   the registry are Value, Comments, subjectPrivateKey, and Reference,
+   where Value is an integer, and the other columns are text strings.
+   All columns are mandatory.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review with Expert Review".  For all
+   other values the registration procedure is "Expert Review".  The
+   initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Private Key Types                                         |
@@ -3453,7 +3453,7 @@ Table of Contents
               SGP.14-v2.2.pdf>.
 
    [GSMA-SGP.22]
-              "GSMA RSP Technial Specification Version 3.1 Final",
+              "GSMA RSP Technical Specification Version 3.1 Final",
               December 2023, <https://www.gsma.com/solutions-and-
               impact/technologies/esim/wp-content/uploads/2023/12/
               SGP.22-v3.1.pdf>.
@@ -3614,7 +3614,8 @@ Appendix A.  C509 Certificate Examples
 
 A.1.  Example: RFC 7925 profiled X.509 Certificate
 
-   Example of [RFC7925] profiled X.509 certificate parsed with OpenSSL.
+   Example of an [RFC7925] profiled X.509 certificate parsed with
+   OpenSSL.
 
    Certificate:
        Data:
@@ -3795,7 +3796,7 @@ A.1.4.  Example: Additional Keys for the Example Certificates
 
 A.1.5.  Examples: C509Certificate and C509CertData
 
-   This section examplifies other CBOR objects defined in this
+   This section exemplifies other CBOR objects defined in this
    specification, based on the natively signed C509 certificate in
    Appendix A.1.2.
 
