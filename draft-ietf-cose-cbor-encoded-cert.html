@@ -1497,7 +1497,7 @@ tag = #6
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
 <p id="section-3.1.4-1">In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR encoded as (type, value) either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-attrtype" class="auto internal xref">Figure 11</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-rdnattrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. serialNumber <span class="bcp14">SHALL</span> only contain the 74-character subset of ASCII allowed by printableString and countryName <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
@@ -1510,7 +1510,7 @@ tag = #6
               <p id="section-3.1.4-4.3.1">Otherwise, it is encoded as a CBOR text string.<a href="#section-3.1.4-4.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.4-5">The final encoding of the extension value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-5">The final encoding of the attribute value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 </section>
@@ -1528,7 +1528,7 @@ tag = #6
           <h4 id="name-subject">
 <a href="#section-3.1.6" class="section-number selfRef">3.1.6. </a><a href="#name-subject" class="section-name selfRef">subject</a>
           </h4>
-<p id="section-3.1.6-1">The 'subject' field is encoded exactly like issuer, except that the CBOR simple value is not a valid value.<a href="#section-3.1.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.6-1">The 'subject' field is encoded exactly like issuer, except that the CBOR simple value null is not a valid value.<a href="#section-3.1.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="subjectpublickeyinfo">
@@ -1772,108 +1772,113 @@ As specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>,
             <p id="section-3.3-21.3.1">TLS Features (id-pe-tlsfeature). The extensionValue is encoded as an array of integers, where each integer represents a TLS extension.<a href="#section-3.3-21.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.3-22">CBOR encoding of the following extension values are partly supported:<a href="#section-3.3-22" class="pilcrow">¶</a></p>
+<div class="lang-cddl sourcecode" id="section-3.3-22">
+<pre>
+   TLSFeatures = [* feature: uint]
+</pre><a href="#section-3.3-22" class="pilcrow">¶</a>
+</div>
+<p id="section-3.3-23">CBOR encoding of the following extension values are partly supported:<a href="#section-3.3-23" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3-23.1">
-            <p id="section-3.3-23.1.1">Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in <a href="#GN" class="auto internal xref">Section 8.13</a> the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see <a href="#GN" class="auto internal xref">Section 8.13</a>). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress have been given their own ints; such otherName are encoded as follows:<a href="#section-3.3-23.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-24.1">
+            <p id="section-3.3-24.1.1">Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in <a href="#GN" class="auto internal xref">Section 8.13</a> the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see <a href="#GN" class="auto internal xref">Section 8.13</a>). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, the otherName with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress have been given their own ints; such otherName are encoded as follows:<a href="#section-3.3-24.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3-23.1.2.1">
-                <p id="section-3.3-23.1.2.1.1">For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in <span>[<a href="#RFC4108" class="cite xref">RFC4108</a>]</span>.<a href="#section-3.3-23.1.2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-24.1.2.1">
+                <p id="section-3.3-24.1.2.1.1">For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in <span>[<a href="#RFC4108" class="cite xref">RFC4108</a>]</span>.<a href="#section-3.3-24.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.3-23.1.2.2">
-                <p id="section-3.3-23.1.2.2.1">For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in <span>[<a href="#RFC9598" class="cite xref">RFC9598</a>]</span>.<a href="#section-3.3-23.1.2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.3-24.1.2.2">
+                <p id="section-3.3-24.1.2.2.1">For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in <span>[<a href="#RFC9598" class="cite xref">RFC9598</a>]</span>.<a href="#section-3.3-24.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-3.3-23.1.2.3">
-                <p id="section-3.3-23.1.2.3.1">For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in <span>[<a href="#I-D.ietf-lamps-macaddress-on" class="cite xref">I-D.ietf-lamps-macaddress-on</a>]</span>.<a href="#section-3.3-23.1.2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-3.3-24.1.2.3">
+                <p id="section-3.3-24.1.2.3.1">For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in <span>[<a href="#I-D.ietf-lamps-macaddress-on" class="cite xref">I-D.ietf-lamps-macaddress-on</a>]</span>.<a href="#section-3.3-24.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-24">
+<div class="lang-cddl sourcecode" id="section-3.3-25">
 <pre>
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
    GeneralNames = [ + GeneralName ]
    SubjectAltName = GeneralNames / text
-</pre><a href="#section-3.3-24" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-25" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-25.1">
-            <p id="section-3.3-25.1.1">Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.<a href="#section-3.3-25.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-26.1">
+            <p id="section-3.3-26.1.1">Issuer Alternative Name (issuerAltName). extensionValue is encoded exactly like subjectAltName.<a href="#section-3.3-26.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-26">
+<div class="lang-cddl sourcecode" id="section-3.3-27">
 <pre>
    IssuerAltName  = GeneralNames / text
-</pre><a href="#section-3.3-26" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-27" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-27.1">
-            <p id="section-3.3-27.1.1">CRL Distribution Points (cRLDistributionPoints). If all DistributionPoint elements contain the distributionPoint with fullName choice of uniformResourceIdentifier, optional reasons, and optional cRLIssuer with one directoryName, the extension value can be CBOR encoded. The 'reasons' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR uint. If the CRLDistributionPoints consists of only one DistributionPointName, which in turn has only the fullName field of type CBOR text, it shall be encoded as CBOR text, otherwise as CBOR array.<a href="#section-3.3-27.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-28.1">
+            <p id="section-3.3-28.1.1">CRL Distribution Points (cRLDistributionPoints). If all DistributionPoint elements contain the distributionPoint with fullName choice of uniformResourceIdentifier, optional reasons, and optional cRLIssuer with one directoryName, the extension value can be CBOR encoded. The 'reasons' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR uint. If the CRLDistributionPoints consists of only one DistributionPointName, which in turn has only the fullName field of type CBOR text, it shall be encoded as CBOR text, otherwise as CBOR array.<a href="#section-3.3-28.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-28">
+<div class="lang-cddl sourcecode" id="section-3.3-29">
 <pre>
    DistributionPointName = [
-     fullName  [ 2 * text ] / text,
-     reasons   uint / null,
-     cRLIssuer Name / null,
+     fullName:  [ 2 * text ] / text,
+     reasons:   uint / null,
+     cRLIssuer: Name / null,
    ]
 
    CRLDistributionPoints = [ + DistributionPointName ] / text
-</pre><a href="#section-3.3-28" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-29" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-29.1">
-            <p id="section-3.3-29.1.1">Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.<a href="#section-3.3-29.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-30.1">
+            <p id="section-3.3-30.1.1">Freshest CRL (freshestCRL). extensionValue is encoded exactly like cRLDistributionPoints.<a href="#section-3.3-30.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-30">
+<div class="lang-cddl sourcecode" id="section-3.3-31">
 <pre>
    FreshestCRL = CRLDistributionPoints
-</pre><a href="#section-3.3-30" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-31" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-31.1">
-            <p id="section-3.3-31.1.1">Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as a CBOR int (see <a href="#IA" class="auto internal xref">Section 8.11</a>) or an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>. The uniformResourceIdentifiers are encoded as CBOR text strings.<a href="#section-3.3-31.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-32.1">
+            <p id="section-3.3-32.1.1">Authority Information Access (authorityInfoAccess). If all the GeneralNames in authorityInfoAccess are of type uniformResourceIdentifier, the extension value can be CBOR encoded. Each accessMethod is encoded as a CBOR int (see <a href="#IA" class="auto internal xref">Section 8.11</a>) or an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>. The uniformResourceIdentifiers are encoded as CBOR text strings.<a href="#section-3.3-32.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-32">
+<div class="lang-cddl sourcecode" id="section-3.3-33">
 <pre>
    AccessDescription = ( accessMethod: int / ~oid , uri: text )
    AuthorityInfoAccessSyntax = [ + AccessDescription ]
-</pre><a href="#section-3.3-32" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-33" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-33.1">
-            <p id="section-3.3-33.1.1">Subject Information Access (subjectInfoAccess). Encoded exactly like authorityInfoAccess.<a href="#section-3.3-33.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-34.1">
+            <p id="section-3.3-34.1.1">Subject Information Access (subjectInfoAccess). Encoded exactly like authorityInfoAccess.<a href="#section-3.3-34.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-34">
+<div class="lang-cddl sourcecode" id="section-3.3-35">
 <pre>
    SubjectInfoAccessSyntax = AuthorityInfoAccessSyntax
-</pre><a href="#section-3.3-34" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-35" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-35.1">
-            <p id="section-3.3-35.1.1">Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present, the array is omitted:<a href="#section-3.3-35.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-36.1">
+            <p id="section-3.3-36.1.1">Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber or if only keyIdentifier is present the extension value can be CBOR encoded. If all three are present a CBOR array is used, if only keyIdentifier is present, the array is omitted:<a href="#section-3.3-36.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-36">
+<div class="lang-cddl sourcecode" id="section-3.3-37">
 <pre>
    KeyIdentifierArray = [
      keyIdentifier: KeyIdentifier,
      authorityCertIssuer: GeneralNames,
-     authorityCertSerialNumber: CertificateSerialNumber
+     authorityCertSerialNumber: CertificateSerialNumber,
    ]
    AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
-</pre><a href="#section-3.3-36" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-37" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-37.1">
-            <p id="section-3.3-37.1.1">Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in <a href="#CP" class="auto internal xref">Section 8.9</a> are encoded as an int. The policyQualifierId is encoded as an CBOR int (see <a href="#PQ" class="auto internal xref">Section 8.10</a>) or an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>.<a href="#section-3.3-37.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-38.1">
+            <p id="section-3.3-38.1.1">Certificate Policies (certificatePolicies). If noticeRef is not used and any explicitText are encoded as UTF8String, the extension value can be CBOR encoded. OIDs registered in <a href="#CP" class="auto internal xref">Section 8.9</a> are encoded as an int. The policyQualifierId is encoded as an CBOR int (see <a href="#PQ" class="auto internal xref">Section 8.10</a>) or an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>.<a href="#section-3.3-38.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-38">
+<div class="lang-cddl sourcecode" id="section-3.3-39">
 <pre>
    PolicyIdentifier = int / ~oid
    PolicyQualifierInfo = (
@@ -1883,57 +1888,52 @@ As specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>,
    CertificatePolicies = [
      + ( PolicyIdentifier, [ * PolicyQualifierInfo ] )
    ]
-</pre><a href="#section-3.3-38" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-39" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-39.1">
-            <p id="section-3.3-39.1.1">Name Constraints (nameConstraints). If the name constraints only contain general names registered in <a href="#GN" class="auto internal xref">Section 8.13</a> the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in <span><a href="https://rfc-editor.org/rfc/rfc9549#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9549" class="cite xref">RFC9549</a>]</span>. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field <span class="bcp14">MUST</span> contain five octets and for IPv6 addresses, the field <span class="bcp14">MUST</span> contain 17 octets, where the last octet indicates the number of bits in the prefix. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.<a href="#section-3.3-39.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-40.1">
+            <p id="section-3.3-40.1.1">Name Constraints (nameConstraints). If the name constraints only contain general names registered in <a href="#GN" class="auto internal xref">Section 8.13</a> the extension value can be CBOR encoded. C509 uses the same additions and restrictions as defined in <span><a href="https://rfc-editor.org/rfc/rfc9549#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9549" class="cite xref">RFC9549</a>]</span>. Note that the minimum and maximum fields are not used and therefore omitted. For IPv4 addresses, the iPAddress field <span class="bcp14">MUST</span> contain five octets and for IPv6 addresses, the field <span class="bcp14">MUST</span> contain 17 octets, where the last octet indicates the number of bits in the prefix. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.<a href="#section-3.3-40.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-40">
+<div class="lang-cddl sourcecode" id="section-3.3-41">
 <pre>
    GeneralSubtrees = [ + GeneralName ]
    NameConstraints = [
      permittedSubtrees: GeneralSubtrees / null,
      excludedSubtrees: GeneralSubtrees / null,
    ]
-</pre><a href="#section-3.3-40" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-41" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-41.1">
-            <p id="section-3.3-41.1.1">Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.<a href="#section-3.3-41.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-42.1">
+            <p id="section-3.3-42.1.1">Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-42">
+<div class="lang-cddl sourcecode" id="section-3.3-43">
 <pre>
-RDNAttributes = (
-    ( attributeType: int, attributeValue: [ + SpecialText] ) //
-    ( attributeType: ~oid, attributeValue: [+ bytes] )
-)
+   RDNAttributes = (
+     ( attributeType: int, attributeValue: [ + SpecialText] ) //
+     ( attributeType: ~oid, attributeValue: [+ bytes] )
+   )
    SubjectDirectoryAttributes = [ + RDNAttributes ]
-</pre><a href="#section-3.3-42" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-43" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-43.1">
-            <p id="section-3.3-43.1.1">AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.<a href="#section-3.3-43.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-44.1">
+            <p id="section-3.3-44.1.1">AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>. If rdi is not present, the extension value can be CBOR encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, the ASid is encoded as the difference to the previous ASid.<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-44">
+<div class="lang-cddl sourcecode" id="section-3.3-45">
 <pre>
    ASIdOrRange = uint / [min:uint, max:uint]
    ASIdentifiers = [ + ASIdOrRange ] / null
-</pre><a href="#section-3.3-44" class="pilcrow">¶</a>
+</pre><a href="#section-3.3-45" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
-<li class="normal" id="section-3.3-45.1">
-            <p id="section-3.3-45.1.1">AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in <span>[<a href="#RFC8360" class="cite xref">RFC8360</a>]</span>. The extension value is encoded exactly like in the extension "AS Identifiers".<a href="#section-3.3-45.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3-46.1">
+            <p id="section-3.3-46.1.1">AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in <span>[<a href="#RFC8360" class="cite xref">RFC8360</a>]</span>. The extension value is encoded exactly like in the extension "AS Identifiers".<a href="#section-3.3-46.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-46">
-<pre>
-   TLSFeatures = [* feature: uint]
-</pre><a href="#section-3.3-46" class="pilcrow">¶</a>
-</div>
 <div id="example-encoding-of-extensions">
 <section id="section-3.3.1">
           <h4 id="name-example-encoding-of-extensi">
@@ -2215,8 +2215,8 @@ MessageDigest = bytes
 
 DhSigStaticType = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber
-  hashValue: MessageDigest
+  serialNumber: CertificateSerialNumber,
+  hashValue: MessageDigest,
 ]
 </pre><a href="#section-4.2-2" class="pilcrow">¶</a>
 </div>
@@ -2317,7 +2317,7 @@ ExtensionTemplate = (
 <p id="section-4.4-5">Except as specified in this section, the fields have the same encoding as the corresponding fields of the TBSCertificationRequest, see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. The specification of the template makes use of the CBOR simple value undefined (0xf7) to indicate fields to fill in. Consistent with this rule, note that the subjectPublicKey field always has the value undefined in the template.<a href="#section-4.4-5" class="pilcrow">¶</a></p>
 <p id="section-4.4-6">Different types of Certification Request Templates can be defined (see <a href="#temp-type" class="auto internal xref">Section 8.5</a>), distinguished by the c509CertificationRequestTemplateType integer. Each type may have its own CDDL structure.<a href="#section-4.4-6" class="pilcrow">¶</a></p>
 <p id="section-4.4-7">The presence of a Defined (non-undefined) value in a C509CertificationRequestTemplate indicates that the server expects the client to use that value in the certification request. If multiple AlgorithmIdentifier or c509CertificationRequestType values are present, the server expects the client to select one of them for use in the Certification Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client <span class="bcp14">SHOULD</span> fill in a corresponding GeneralNameValue.<a href="#section-4.4-7" class="pilcrow">¶</a></p>
-<p id="section-4.4-8">For AttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.<a href="#section-4.4-8" class="pilcrow">¶</a></p>
+<p id="section-4.4-8">For RDNAttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.<a href="#section-4.4-8" class="pilcrow">¶</a></p>
 <p id="section-4.4-9">For ExtensionTemplate, the field "optional" specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.<a href="#section-4.4-9" class="pilcrow">¶</a></p>
 <p id="section-4.4-10">The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see <a href="#c509-crtemplate" class="auto internal xref">Section 8.18.3</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4.4-10" class="pilcrow">¶</a></p>
 </section>
@@ -2512,7 +2512,7 @@ ExtensionTemplate = (
 <a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-c509-private-key-types-regi" class="section-name selfRef">C509 Private Key Types Registry</a>
         </h3>
 <p id="section-8.4-1">IANA has created a new registry titled "C509 Private Key Types" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Comments, subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
-<span id="name-c509-private-key-types"></span><div id="fig-rivkeys">
+<span id="name-c509-private-key-types"></span><div id="fig-privkeys">
 <figure id="figure-8">
           <div class="alignCenter art-text artwork" id="section-8.4-2.1">
 <pre>
@@ -2538,7 +2538,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-certification-request-te">
 <a href="#section-8.5" class="section-number selfRef">8.5. </a><a href="#name-c509-certification-request-te" class="section-name selfRef">C509 Certification Request Templates Types Registry</a>
         </h3>
-<p id="section-8.5-1">IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509)". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review" and "Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.5-1" class="pilcrow">¶</a></p>
+<p id="section-8.5-1">IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509)". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.5-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certification-request-tem"></span><div id="fig-temp-types">
 <figure id="figure-9">
           <div class="alignCenter art-text artwork" id="section-8.5-2.1">
@@ -2741,7 +2741,7 @@ ExtensionTemplate = (
 |    30 | Name:            Unstructured Address                     |
 |       | Identifiers:     unstructuredAddress                      |
 |       | OID:             1.2.840.113549.1.9.8                     |
-|       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
+|       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08         |
 |       | Comments:        RFC 2985                                 |
 +-------+-----------------------------------------------------------+
 </pre>
@@ -2759,7 +2759,7 @@ ExtensionTemplate = (
         </h3>
 <p id="section-8.7-1">IANA has created a new registry titled "C509 CR Attributes" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-8.7-1" class="pilcrow">¶</a></p>
 <p id="section-8.7-2">The initial contents of the registry are:<a href="#section-8.7-2" class="pilcrow">¶</a></p>
-<span id="name-c509-crattributes"></span><div id="fig-attrtype">
+<span id="name-c509-crattributes"></span><div id="fig-crattrtype">
 <figure id="figure-11">
           <div class="alignCenter art-text artwork" id="section-8.7-3.1">
 <pre>
@@ -2820,7 +2820,7 @@ ExtensionTemplate = (
 |       | OID:             2.5.29.15                                |
 |       | DER:             06 03 55 1D 0F                           |
 |       | Comments:        RFC 5280                                 |
-|       | AttributeValue:  KeyUsage                                 |
+|       | extensionValue:  KeyUsage                                 |
 +-------+-----------------------------------------------------------+
 |     3 | Name:            Subject Alternative Name                 |
 |       | Identifiers:     subjectAltName                           |

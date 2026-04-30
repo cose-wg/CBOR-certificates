@@ -385,7 +385,7 @@ Table of Contents
    either as a (int, SpecialText) pair, or a (~oid, bytes) tuple.
 
    In the former case, the absolute value of the int encodes the
-   attribute type (see Figure 11) and the sign is used to represent the
+   attribute type (see Figure 10) and the sign is used to represent the
    character string type in the X.509 certificate; positive for
    utf8String, negative for printableString.  Attribute values which are
    always of type IA5String are unambiguously represented using a non-
@@ -414,7 +414,7 @@ Table of Contents
 
    *  Otherwise, it is encoded as a CBOR text string.
 
-   The final encoding of the extension value may therefore be text,
+   The final encoding of the attribute value may therefore be text,
    bytes, or tag, i.e., SpecialText.  If Name contains a single 'common
    name' attribute with attributeType = +1, it is for compactness
    encoded as just the SpecialText containing the single attribute
@@ -443,7 +443,7 @@ Table of Contents
 3.1.6.  subject
 
    The 'subject' field is encoded exactly like issuer, except that the
-   CBOR simple value is not a valid value.
+   CBOR simple value null is not a valid value.
 
 3.1.7.  subjectPublicKeyInfo
 
@@ -693,6 +693,8 @@ Table of Contents
       an array of integers, where each integer represents a TLS
       extension.
 
+      TLSFeatures = [* feature: uint]
+
    CBOR encoding of the following extension values are partly supported:
 
    *  Subject Alternative Name (subjectAltName).  If the subject
@@ -738,9 +740,9 @@ Table of Contents
       CBOR array.
 
       DistributionPointName = [
-        fullName  [ 2 * text ] / text,
-        reasons   uint / null,
-        cRLIssuer Name / null,
+        fullName:  [ 2 * text ] / text,
+        reasons:   uint / null,
+        cRLIssuer: Name / null,
       ]
 
       CRLDistributionPoints = [ + DistributionPointName ] / text
@@ -775,7 +777,7 @@ Table of Contents
       KeyIdentifierArray = [
         keyIdentifier: KeyIdentifier,
         authorityCertIssuer: GeneralNames,
-        authorityCertSerialNumber: CertificateSerialNumber
+        authorityCertSerialNumber: CertificateSerialNumber,
       ]
       AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
 
@@ -815,10 +817,10 @@ Table of Contents
       Encoded as attributes in issuer and subject with the difference
       that there can be more than one attributeValue.
 
-   RDNAttributes = (
-       ( attributeType: int, attributeValue: [ + SpecialText] ) //
-       ( attributeType: ~oid, attributeValue: [+ bytes] )
-   )
+      RDNAttributes = (
+        ( attributeType: int, attributeValue: [ + SpecialText] ) //
+        ( attributeType: ~oid, attributeValue: [+ bytes] )
+      )
       SubjectDirectoryAttributes = [ + RDNAttributes ]
 
    *  AS Identifiers (id-pe-autonomousSysIds).  The X.509 extension AS
@@ -834,8 +836,6 @@ Table of Contents
       extension AS Identifiers v2 is specified in [RFC8360].  The
       extension value is encoded exactly like in the extension "AS
       Identifiers".
-
-      TLSFeatures = [* feature: uint]
 
 3.3.1.  Example Encoding of Extensions
 
@@ -1165,8 +1165,8 @@ Table of Contents
 
    DhSigStaticType = [
      issuer: Name,
-     serialNumber: CertificateSerialNumber
-     hashValue: MessageDigest
+     serialNumber: CertificateSerialNumber,
+     hashValue: MessageDigest,
    ]
 
    Note that a key agreement key pair may be used with a signature
@@ -1284,8 +1284,8 @@ Table of Contents
    string, this means that the client SHOULD fill in a corresponding
    GeneralNameValue.
 
-   For AttributeTemplate, the minOccurs and maxOccurs fields specify the
-   minimal and maximal occurrences of attributes of the given
+   For RDNAttributeTemplate, the minOccurs and maxOccurs fields specify
+   the minimal and maximal occurrences of attributes of the given
    attributeType; maximal shall not be less than minimal, and maximal
    shall be positive.  Negative attributeType is not allowed.
 
@@ -1585,7 +1585,7 @@ Table of Contents
    (C509)".  The columns of the registry are Value, Description, and
    Reference, where Value is an integer, and the other columns are text
    strings.  All columns are mandatory.  For values in the interval
-   [-24, 23] the registration procedure is "IETF Review" and "Expert
+   [-24, 23] the registration procedure is "IETF Review with Expert
    Review".  For all other values the registration procedure is "Expert
    Review".  The initial contents of the registry are:
 
@@ -1788,7 +1788,7 @@ Table of Contents
    |    30 | Name:            Unstructured Address                     |
    |       | Identifiers:     unstructuredAddress                      |
    |       | OID:             1.2.840.113549.1.9.8                     |
-   |       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08 00      |
+   |       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08         |
    |       | Comments:        RFC 2985                                 |
    +-------+-----------------------------------------------------------+
 
@@ -1866,7 +1866,7 @@ Table of Contents
    |       | OID:             2.5.29.15                                |
    |       | DER:             06 03 55 1D 0F                           |
    |       | Comments:        RFC 5280                                 |
-   |       | AttributeValue:  KeyUsage                                 |
+   |       | extensionValue:  KeyUsage                                 |
    +-------+-----------------------------------------------------------+
    |     3 | Name:            Subject Alternative Name                 |
    |       | Identifiers:     subjectAltName                           |
