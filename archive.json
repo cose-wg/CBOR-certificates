@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-04-28T03:49:15.355425+00:00",
+  "timestamp": "2026-04-30T03:47:47.461309+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -6552,9 +6552,17 @@
       ],
       "body": "Low priority, but could be done when addressing WGLC comments.",
       "createdAt": "2025-06-19T05:58:57Z",
-      "updatedAt": "2025-06-19T05:59:55Z",
+      "updatedAt": "2026-04-28T10:38:48Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Done. Please close this issue.",
+          "createdAt": "2026-04-28T10:38:48Z",
+          "updatedAt": "2026-04-28T10:38:48Z"
+        }
+      ]
     },
     {
       "number": 248,
@@ -7356,11 +7364,11 @@
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [
-        "low priority for core spec"
+        "wontfix"
       ],
       "body": "The current language states that natively encoding SCTs with extensions is not supported. This is a reasonable choice for the current state of CT today, but the CT ecosystem will likely be moving to Sunlight/Static CT. The Static CT specification mandates the inclusion of the [`LeafIndex` SCT extension](https://github.com/C2SP/C2SP/blob/main/static-ct-api.md#sct-extension).\n\nIf the ability to CBOR encode SCTs is desired, then this extension should likely be accommodated in the specification.",
       "createdAt": "2025-07-21T08:24:18Z",
-      "updatedAt": "2026-03-11T12:46:19Z",
+      "updatedAt": "2026-04-28T11:09:33Z",
       "closedAt": null,
       "comments": [
         {
@@ -7439,6 +7447,13 @@
           "body": "@gselander This issue can be closed as \"Won't fix\"",
           "createdAt": "2026-03-11T12:42:58Z",
           "updatedAt": "2026-03-11T12:46:19Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Just reminder.",
+          "createdAt": "2026-04-28T10:39:27Z",
+          "updatedAt": "2026-04-28T10:39:27Z"
         }
       ]
     },
@@ -8464,22 +8479,24 @@
       "id": "I_kwDOCpt5cM7xfOKU",
       "title": "Editorial: Plural or singular in IANA section",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/330",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "emanjon",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "Should be aligned\n\n`   | Value | Private Key Types                                         |\n`\n`   | Value | RDN Attribute                                             |\n`",
       "createdAt": "2026-03-10T12:33:33Z",
-      "updatedAt": "2026-04-27T15:36:59Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-29T10:21:17Z",
+      "closedAt": "2026-04-29T10:21:17Z",
       "comments": [
         {
           "author": "xipki",
           "authorAssociation": "CONTRIBUTOR",
-          "body": "Fixed in #363 ",
+          "body": "Fixed in #365 ",
           "createdAt": "2026-04-27T15:36:59Z",
-          "updatedAt": "2026-04-27T15:36:59Z"
+          "updatedAt": "2026-04-28T12:03:51Z"
         }
       ]
     },
@@ -8632,17 +8649,19 @@
       "id": "I_kwDOCpt5cM7yI2L9",
       "title": "\"usage\" in media types",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/338",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [
         "gselander"
       ],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "\"Hello David & COSE WG,\n\nI've reviewed the request. One thing that surprised me was the presence\nof an optional parameter \"usage\" without any explanation for some of the\nmedia types defined.\nIs this a copy/paste error maybe? Has there been a media-types review of\nthese already?\n\nNote that for all the CoAP Content-Format requests that do include a\n\"usage\" parameter, the explanation is present! So this does not hamper\nthe present registration request.\n\nIf in Figure 20 the spaces in  \"usage = chain\" and \"usage = c509\" could\nbe removed, per RFC 9876 Section 4.1.4, and the new media types are\napproved, then this request can be approved.\n\nregards\n\nEsko\"\n\nI think It should say \"... and IF the new media types are\napproved, then this request can be approved.\"\n\n",
       "createdAt": "2026-03-12T06:01:40Z",
-      "updatedAt": "2026-04-27T19:30:16Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-28T10:03:13Z",
+      "closedAt": "2026-04-28T10:03:13Z",
       "comments": [
         {
           "author": "xipki",
@@ -8657,6 +8676,13 @@
           "body": "The white space in \"usage = xxx\" is fixed in https://github.com/cose-wg/CBOR-certificates/pull/363/changes/2cc59a20cc5e4ed4405b18ac1851357da043bf92.",
           "createdAt": "2026-04-27T19:30:16Z",
           "updatedAt": "2026-04-27T19:30:16Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed in #364",
+          "createdAt": "2026-04-28T10:03:13Z",
+          "updatedAt": "2026-04-28T10:03:13Z"
         }
       ]
     },
@@ -8757,15 +8783,15 @@
       "id": "I_kwDOCpt5cM78Kjxq",
       "title": "Gunter Van de Velde's No Objection on draft-ietf-cose-cbor-encoded-cert-17",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/345",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Link: https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/\n\n[COSE] Gunter Van de Velde's No Objection on draft-ietf-cose-cbor-encoded-cert-17: (with COMMENT)\nGunter Van de Velde via Datatracker <noreply@ietf.org> Wed, 08 April 2026 11:06 UTC[Show header](https://mailarchive.ietf.org/arch/msg/cose/wrAJhMBkIZ4zeSoS8imhICzlDag/#)\n\nGunter Van de Velde has entered the following ballot position for\ndraft-ietf-cose-cbor-encoded-cert-17: No Objection\n\nWhen responding, please keep the subject line intact and reply to all\nemail addresses included in the To and CC lines. (Feel free to cut this\nintroductory paragraph, however.)\n\n\nPlease refer to https://www.ietf.org/about/groups/iesg/statements/handling-ballot-positions/ \nfor more information about how to handle DISCUSS and COMMENT positions.\n\n\nThe document, along with other ballot positions, can be found here:\nhttps://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/\n\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nMany thanks for the write-up. Appreciated.\n\nMy observation is that while the shepherd writeup claims nothing noteworthy\nwhen running idnits, but when i run idnits\n([https://author-tools.ietf.org/api/idnits?url=https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-17.txt](https://author-tools.ietf.org/api/idnits?url=https%3A%2F%2Fwww.ietf.org%2Farchive%2Fid%2Fdraft-ietf-cose-cbor-encoded-cert-17.txt))\ni end up with a long laundry list of observations. Maybe worthwhile to run\nthrough the list and explain why they are deemed not meaningful/relevant and\nadd this context in the write-up?\n\nOne of those idnits observations is that there may only be v4 examples and no\nv6 examples?\n\nG/",
       "createdAt": "2026-04-09T08:15:28Z",
-      "updatedAt": "2026-04-27T15:39:34Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-28T09:34:23Z",
+      "closedAt": "2026-04-28T09:34:23Z",
       "comments": [
         {
           "author": "gselander",
@@ -8864,15 +8890,15 @@
       "id": "I_kwDOCpt5cM7-w2Gf",
       "title": "\u00c9ric Vyncke's review",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/350",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/cose/PR2QT5WGx6Eb3LtU6whdWYXHktI/\n\n\n----------------------------------------------------------------------\nDISCUSS:\n----------------------------------------------------------------------\n\n\n# \u00c9ric Vyncke INT AD comments for draft-ietf-cose-cbor-encoded-cert-17\nCC @evyncke\n\nThank you for the work put into this document.\n\nPlease find below some blocking DISCUSS points, some non-blocking COMMENT\npoints/nits (replies would be appreciated even if only for my own education).\n\nSpecial thanks to Ivaylo Petrov for the shepherd's write-up including the WG\nconsensus *BUT* it lacks the justification of the intended status.\n\nOther thanks to Ted Lemon, the DNS directorate reviewer:\nhttps://datatracker.ietf.org/doc/review-ietf-cose-cbor-encoded-cert-17-dnsdir-telechat-lemon-2026-03-30/\n(and I have read the previous email threads with the authors)\n\nI hope that this review helps to improve the document,\n\nRegards,\n\n-\u00e9ric\n\nNote: this ballot comments follow the Markdown syntax of\nhttps://github.com/mnot/ietf-comments/tree/main, i.e., they can be processed by\na tool to create github issues.\n\n## DISCUSS (blocking)\n\nAs noted in\nhttps://datatracker.ietf.org/doc/statement-iesg-handling-ballot-positions-20220121/,\na DISCUSS ballot is a request to have a discussion on the points below; I\nreally think that the document would be improved with a change here, but can be\nconvinced otherwise.\n\n### Section 3.3\n\nAbout \"IpAddrBlocks\", the whole text is a little unclear to me to be honest, so\nI may have misread the specification BUT the text `It should be noted that\nusing address differences for compactness prevents encoding an address range\nlarger than 2**64 - 1 corresponding to the CBOR integer max value.` seems\nreally a bad choice for IPv6 addresses as the usual prefix size if 64-bit long.\nI.e., the encoding cannot cope with 2001:db8::/63. There are no examples in the\nappendix about this encoding, and this does not help the reader.\n\nAlso very unclear to me (missing references and how to use): `IPAddressFamily =\n(AFI: uint, SAFI: uint / null, IPAddressChoice)`\n\nThe text `as specified in [I-D.ietf-lamps-macaddress-on]` makes the reference\nnormative.\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\n\n## COMMENTS (non-blocking)\n\n### Section 1\n\nPlease add a reference to `IEEE 802.1AR (DevID)`.\n\nAlso add references to `C509 is deployed in, e.g.,...``\n\n### Section 3.1.8 (and others)\n\nWhat does `Not supported.` mean in this case ? Should the text be explicit and\nstate that if this field exist in the X.509 then no C509 can be generated?\n(just to be clear)\n\n### Section 3.3\n\nAbout \"Name Constraints\" s/where the last octet indicates the number of bits in\nthe *netmask*/where the last octet indicates the number of bits in the *prefix*/\n\nAbout \"IPAddrBlocks\", just wondering why not using the 'number of used octets'\nas it is closer to the usual CIDR/IPv6 prefix notation in `Each AddressPrefix\nis encoded as a CBOR bytes string (without the unused bits octet) followed by\nthe number of unused bits encoded as a CBOR uint` ?\n\n`KeyIdentifier SHOULD be composed of the leftmost 160-bits of the SHA-256 hash\nof the CBOR encoded subjectPublicKey. Other methods of generating unique\nnumbers can be used.` why a SHOULD as other methods can be used ? This sentence\ndoes not seem to follow\nhttps://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/.\n\n### Section 9\n\nSuggest adding informative reference to the newly created IANA registries *AND*\nupdated existing registries.\n\nSomehow like Med Boucadair, I am puzzled by the last paragraph as it is\nconfusing at the best while trying to paraphrase RFC 8126. Let's rather delete\nit.\n\n### Section A.3.1\n\nPlease avoid using real FQDN (e.g., `sni.cloudflaressl.com`) in IETF documents,\nrather use \"example.org\"\n\n",
       "createdAt": "2026-04-16T08:22:35Z",
-      "updatedAt": "2026-04-27T08:53:03Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-28T07:40:08Z",
+      "closedAt": "2026-04-28T07:40:08Z",
       "comments": [
         {
           "author": "xipki",
@@ -8892,10 +8918,12 @@
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "waiting for input"
+      ],
       "body": "\n_**Discuss**_ (2026-04-10) \n\n# IETF Review with Expert Review\n\nCURRENT:\n  All assignments according to \"IETF Review with Expert Review\" are made on a \"IETF Review\" basis per {{Section 4.8 of [RFC8126](https://datatracker.ietf.org/doc/rfc8126/)}} with \"Expert Review\" additionally required per {{Section 4.5 of [RFC8126](https://datatracker.ietf.org/doc/rfc8126/)}}. \n\nand\n\n the registration procedure is \"IETF Review with Expert Review\".\n\nI remember that Carsten edited [draft-bormann-gendispatch-with-expert-review](https://datatracker.ietf.org/doc/draft-bormann-gendispatch-with-expert-review/), but do we have a stable reference where such policy is defined?\n\n# The WG may be closed: not sure how this guidance will age\n\nCURRENT:\n  In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{[RFC7120](https://datatracker.ietf.org/doc/rfc7120/)}}.\n\n\n\n\n\n_**Comment**_ (2026-04-10)\n\n# Is this already deployed there or these are deployment targets?\n\nCURRENT:\n  C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS)\n\n\u201cis deployed\u201d won\u2019t age well in an RFC, btw.\n\n# Please consider adding a reference\n\nCURRENT :\n\n  the CBOR encoding can in many cases reduce the size of  [RFC7925](https://datatracker.ietf.org/doc/rfc7925/) profiled certificates by over 50%.\n\n# Any reason why this is repeated here?\n\nCURRENT:\n  The procedure for early IANA allocation of \"standards track code points\" defined in {{[RFC7120](https://datatracker.ietf.org/doc/rfc7120/)}} also applies.\n",
       "createdAt": "2026-04-17T13:33:20Z",
-      "updatedAt": "2026-04-27T08:53:28Z",
+      "updatedAt": "2026-04-28T09:35:07Z",
       "closedAt": null,
       "comments": [
         {
@@ -8919,15 +8947,17 @@
       "id": "I_kwDOCpt5cM8AAAABAh2imA",
       "title": "IANA issues",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/358",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "PR exists"
+      ],
       "body": "Dear Authors/Chairs/ADs,\n\nI'm resending this message about IANA issues with draft-ietf-cose-cbor-encoded-cert.\n\nIt appears that item #3 has been taken care of, but we haven't seen a response to the other issues. For item #1, we don't know what we're meant to register, and the issue preventing approval by the CoAP Content-Format expert still hasn't been addressed.\n\nthanks,\n\nAmanda Baber\nIANA\n\nOn Wed Apr 08 01:26:12 2026, amanda.baber wrote:\n> Dear Authors,\n>\n> We have an outstanding expert issue that prevents this from being\n> marked IANA OK. Please see the message from the CoAP Content-Format\n> expert that was resent by my colleague David Dong today.\n>\n> In addition, we have these questions and notes:\n>\n> 1) Question about Section 9.5, value 8 in Figure 10: I'm seeing\n> different entries in the \"Identifiers\" field depending on document\n> format. In the text file, I'm seeing \"organizationName, o\"; in the\n> HTML version, the second string (?) is a circle character that I can't\n> copy; and in the XML file, I don't see a character after the comma at\n> all. What should IANA record in the registry's XML file?\n>\n> 2) Note: there's a line break between every word in the HTML version\n> of the document (and a text element for every word in the XML file).\n> In order to copy and paste text into XML records for the new\n> registries, we're going to have to use the plain-text version of the\n> draft, so we're liable to miss any special characters. If there are\n> any characters that need to be pulled from another version of the\n> document, please call our attention to them.\n>\n> 3) Questions about the first entry in the Figure 17 table: Are \"TBD90\"\n> and \"TBD91\" meant to be entered as written? They look like they're\n> meant to be taken from other registrations in other registries, but\n> \"TBD90\" and \"TBD91\" don't appear anywhere else in the document. Also,\n> the field that should be called \"GeneralNameValue\" is just called\n> \"Value\" in this row.\n>\n> 4) Note: it doesn't appear that any of these media type templates have\n> been sent to [media-types@ietf.org](mailto:media-types@ietf.org) for review. RFC 6838 doesn't require\n> this, but it does recommend it, and the CoAP Content-Formats expert\n> pointed out a possible issue that he thinks should be checked.\n>\n> 5) Note: we have a strong preference for removing \"Parameters\" from\n> \"CBOR Encoded X.509 (C509) Parameters,\" and unless there's a reason it\n> needs to be retained, we're going to remove the word \"Registry\" from\n> all the registry names that include it (e.g., \"C509 Extensions\n> Registry\").\n>\n> thanks,\n>\n> Amanda Baber\n> IANA",
       "createdAt": "2026-04-26T08:55:10Z",
-      "updatedAt": "2026-04-27T15:41:26Z",
-      "closedAt": null,
+      "updatedAt": "2026-04-28T10:04:10Z",
+      "closedAt": "2026-04-28T10:04:10Z",
       "comments": [
         {
           "author": "xipki",
@@ -8942,6 +8972,132 @@
           "body": "Removing the `aasvg` in the md-file shall resolve Problem 1 (word separation) and 2 (line-break) in the derived xml-file. See #360 ",
           "createdAt": "2026-04-27T09:42:22Z",
           "updatedAt": "2026-04-27T15:41:26Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Last comments fixed in #364",
+          "createdAt": "2026-04-28T10:04:00Z",
+          "updatedAt": "2026-04-28T10:04:00Z"
+        }
+      ]
+    },
+    {
+      "number": 366,
+      "id": "I_kwDOCpt5cM8AAAABAtTTzA",
+      "title": "Fix name and sort the names in Acknowledgments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/366",
+      "state": "CLOSED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-28T10:41:02Z",
+      "updatedAt": "2026-04-29T10:21:54Z",
+      "closedAt": "2026-04-29T10:21:54Z",
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fixed in #368 ",
+          "createdAt": "2026-04-28T12:04:19Z",
+          "updatedAt": "2026-04-28T12:04:19Z"
+        }
+      ]
+    },
+    {
+      "number": 369,
+      "id": "I_kwDOCpt5cM8AAAABAtckSg",
+      "title": "Fix text bugs",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/369",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- CDDL definition of TLSFeatures is not close to the extension text block *TLS Features\"\n- Line 355: \"extension value\" -> \"attribute value\"\n- Line 367: \"the CBOR simple value is not a valid value\" -> \"the CBOR simple value 'null' is not a valid value\"\n- Missing ':' in the CDDL definition DistributionPointName\n- Missing ',' in the CDDL definition DhSigStaticType\n- Missing 'sourcecode-name' line under the CDDL definition PrivateKeyPossessionStatement\n- Line 917: AttributeTemplate -> RDNAttributeTemplate\n- Section \"C509 Certification Request Templates Types Registry\": \"IETF Review\" and \"Expert Review\" -> \"IETF Review with Expert Review\" to have the same wording with other sections.\n- Figure \"C509 RDN Attributes\": removing the ending DER encoding '00' of OID unstructuredAddress\n- Figure \"C509 Extensions\": \"AttributeValue:  KeyUsage\" -> \"extensionValue:  KeyUsage\"",
+      "createdAt": "2026-04-28T11:05:19Z",
+      "updatedAt": "2026-04-28T11:05:19Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 372,
+      "id": "I_kwDOCpt5cM8AAAABAtrGqA",
+      "title": "Align the text in Figure \"C509 General Names\"",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/372",
+      "state": "CLOSED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-28T11:45:30Z",
+      "updatedAt": "2026-04-29T07:51:32Z",
+      "closedAt": "2026-04-29T07:51:32Z",
+      "comments": []
+    },
+    {
+      "number": 373,
+      "id": "I_kwDOCpt5cM8AAAABAttOjg",
+      "title": "Remove reference to CTLS",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/373",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This work is discontinued.",
+      "createdAt": "2026-04-28T11:51:01Z",
+      "updatedAt": "2026-04-28T11:51:01Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 375,
+      "id": "I_kwDOCpt5cM8AAAABAu_jNw",
+      "title": "Corey Bonnell's secdir review",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/375",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\nThis review of -16 slipped our attention.\n\nhttps://mailarchive.ietf.org/arch/msg/cose/hHtLxDY-n6Gu6osm30gOAzvBxIA/\n\n\nReviewer: Corey Bonnell\nReview result: Has Nits\n\nSection 3.1.4\ns/extension value/attribute value/\n\nSection 3.2.2\nThe ECDSA signature encoding process can reference RFC 9053, section 2.1.\n\nSection 3.3\n\nThe ASN.1 definition of id-pkix-ocsp-nocheck indicates the value will always be\nNULL, so \"If the extension value is NULL\" is not needed. Instead, the same text\nused for \"Precertificate Signing Certificate\" can be used.\n\n\"Precertificate Signing Certificate\" is not the name of the extension, but is\nrather a certificate for a signer of pre-certificates. I suggest using\n\"Precertificate Critical Poison\" instead.\n\nSection 8.\n\n\"The CBOR encoding of X.509 certificates does not change the security\nassumptions needed when deploying standard X.509 certificates but decreases the\nnumber of fields transmitted, which reduces the risk for implementation\nerrors.\" Is this true? The number of fields in a C509 certificate appears to be\nthe same as a X.509 certificate. If anything, the C509 specification appears to\nbe more complex than ASN.1-based X.509 due to the variable encoding of elements\nin certain situations to minimize size.\n\n\"The gateway solution described in Section 6 requires unencrypted certificates\nand is not recommended.\" I think this needs to be fleshed out, because it\nassumes that certificates are secret information. In scenarios where\ncertificates are not secret, it is unclear whether this SHOULD NOT is relevant.\n\nIt would be good if there is an explicit MUST that certification path\nprocessing (as defined in RFC 5280, section 6) be performed on C509\ncertificates before they can be considered trusted.\n\nSection 9.13\n\nThe \"Compressed subjectPublicKey\" comment is potentially confusing, especially\nfor the EC Public Key types, as it might be read as a statement that compressed\npoint encoding is used for the coordinates.\n\n",
+      "createdAt": "2026-04-28T15:15:17Z",
+      "updatedAt": "2026-04-28T15:15:17Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 376,
+      "id": "I_kwDOCpt5cM8AAAABAwYXOg",
+      "title": "Use IP addresses for documentation in the examples",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/376",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "- IPv4: 192.0.2.0/24 (TEST-NET-1), 198.51.100.0/24 (TEST-NET-2), and 203.0.113.0/24 (TEST-NET-3) as defined in RFC5737/RFC3849\n- IPv6: 2001:DB8::/32 (RFC 3849), 3fff::/20 (RFC 9637)",
+      "createdAt": "2026-04-28T19:30:57Z",
+      "updatedAt": "2026-04-29T08:33:09Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Where does this change request come from?",
+          "createdAt": "2026-04-29T07:55:18Z",
+          "updatedAt": "2026-04-29T07:55:18Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Derived from the Comment of Mike Bishop on 2026-04-28:\n https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/ballot/",
+          "createdAt": "2026-04-29T08:33:09Z",
+          "updatedAt": "2026-04-29T08:33:09Z"
         }
       ]
     }
@@ -15226,7 +15382,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-04-26T10:46:29Z",
-      "updatedAt": "2026-04-27T13:24:03Z",
+      "updatedAt": "2026-04-28T08:31:53Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "10d188648c448d862b38790e409d0fa05bc8a0bd",
@@ -15248,7 +15404,48 @@
           "updatedAt": "2026-04-27T13:23:29Z"
         }
       ],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM75kTZ5",
+          "commit": {
+            "abbreviatedOid": "9d8c043"
+          },
+          "author": "EskoDijk",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-28T08:31:34Z",
+          "updatedAt": "2026-04-28T08:31:34Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "This should be:\n\n```suggestion\nOptional parameters: N/A\n```",
+              "createdAt": "2026-04-28T08:31:34Z",
+              "updatedAt": "2026-04-28T08:31:34Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM75kT7u",
+          "commit": {
+            "abbreviatedOid": "9d8c043"
+          },
+          "author": "EskoDijk",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-04-28T08:31:53Z",
+          "updatedAt": "2026-04-28T08:31:53Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "add N/A , same as above comment",
+              "createdAt": "2026-04-28T08:31:53Z",
+              "updatedAt": "2026-04-28T08:31:53Z"
+            }
+          ]
+        }
+      ]
     },
     {
       "number": 360,
@@ -15368,13 +15565,353 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-04-27T15:23:04Z",
-      "updatedAt": "2026-04-27T20:12:21Z",
+      "updatedAt": "2026-04-28T12:02:45Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "5f5e22f475e6780d5eec198c88292850b1be937f",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "text-optimization",
-      "headRefOid": "e7eca8e0cc6cd775f8465db4cf01c861e5897b3d",
+      "headRefOid": "69aea9cc21654b776abe8d59ca9ad9b48e517e64",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander OK. I will provide separate PRs once you merged #364 ",
+          "createdAt": "2026-04-28T09:48:03Z",
+          "updatedAt": "2026-04-28T09:48:03Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Maybe separate out #330 also.",
+          "createdAt": "2026-04-28T10:05:14Z",
+          "updatedAt": "2026-04-28T10:05:14Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander I have created PRs to cover all changes except \"polish text\": \r\n#365, #368, #370, #371, #374\r\n\r\nOnce you have merged above PRs, I will start the PR which polishes text.\r\n",
+          "createdAt": "2026-04-28T12:02:45Z",
+          "updatedAt": "2026-04-28T12:02:45Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM75l6TW",
+          "commit": {
+            "abbreviatedOid": "69aea9c"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "This is quite a big PR so I don't think we can merge it this week.\n\nI read the text changes in the introduction, and that looks good. But there are many details that need to be verified. And some changes are not just \"polished text\". \n\nE.g., you change \"shall\" to \"SHALL\". This is not an editorial change and would in principle require all members of IESG to review again.\n\nYou may want to separate the PR into several with one PR with spelling errors and reformulated text, which is easier to merge.\n",
+          "createdAt": "2026-04-28T09:32:53Z",
+          "updatedAt": "2026-04-28T09:32:53Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 364,
+      "id": "PR_kwDOCpt5cM7WRFzW",
+      "title": "Esko's IANA nits",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/364",
+      "state": "MERGED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-28T09:06:45Z",
+      "updatedAt": "2026-04-28T10:02:19Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "5f5e22f475e6780d5eec198c88292850b1be937f",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "iana-nits",
+      "headRefOid": "3f216ed3e34d60f43308f7e87b98ebc484492a64",
+      "closedAt": "2026-04-28T10:02:19Z",
+      "mergedAt": "2026-04-28T10:02:19Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "294688af98043b29422c357033ee64c5928ec525"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I separated out the IANA nits so we can merge this one quickly.",
+          "createdAt": "2026-04-28T09:07:45Z",
+          "updatedAt": "2026-04-28T09:07:45Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki Please review.",
+          "createdAt": "2026-04-28T09:10:40Z",
+          "updatedAt": "2026-04-28T09:10:40Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Fine for me.",
+          "createdAt": "2026-04-28T09:46:52Z",
+          "updatedAt": "2026-04-28T09:46:52Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 365,
+      "id": "PR_kwDOCpt5cM7WS6Fj",
+      "title": "Editorial: fix pluralization and column description in IANA Considerations",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/365",
+      "state": "MERGED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #330 \r\n\r\n",
+      "createdAt": "2026-04-28T10:37:05Z",
+      "updatedAt": "2026-04-29T10:21:16Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "fix-pluralization-in-IANA-Considerations",
+      "headRefOid": "6eeef46fdc951f62175033de2cd9b60b37fb6393",
+      "closedAt": "2026-04-29T10:21:16Z",
+      "mergedAt": "2026-04-29T10:21:16Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "23cb2226204b5e0ae3ab115f5436f15a10291b0a"
+      },
+      "comments": [
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> s/Public Key Algorithm./Public Key Algorithm\r\n\r\n\r\n\r\n> s/Public Key Algorithm./Public Key Algorithm\r\n\r\nFixed.",
+          "createdAt": "2026-04-29T08:36:50Z",
+          "updatedAt": "2026-04-29T08:36:50Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM76CmRs",
+          "commit": {
+            "abbreviatedOid": "a350f08"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "s/Public Key Algorithm./Public Key Algorithm",
+          "createdAt": "2026-04-29T07:43:36Z",
+          "updatedAt": "2026-04-29T07:43:36Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 367,
+      "id": "PR_kwDOCpt5cM7WTE_Z",
+      "title": "Fix name and sorted names in acknowledgments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/367",
+      "state": "CLOSED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-28T10:44:49Z",
+      "updatedAt": "2026-04-28T10:46:35Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "sort-names-in-acknowledgments",
+      "headRefOid": "edfc82465213fd21df75ee91c698ad738a5198a7",
+      "closedAt": "2026-04-28T10:45:40Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 368,
+      "id": "PR_kwDOCpt5cM7WTMzL",
+      "title": "Editorial: Changed Hoffmann -> Hoffman, sorted name list in Acknowledgments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/368",
+      "state": "MERGED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #367 ",
+      "createdAt": "2026-04-28T10:50:31Z",
+      "updatedAt": "2026-04-29T07:53:36Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "sort-names-in-acknowledgments",
+      "headRefOid": "614d13c48eaadd6e9f030389c139e30f2424b83f",
+      "closedAt": "2026-04-29T07:53:36Z",
+      "mergedAt": "2026-04-29T07:53:36Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "bbbb8160e1f23e5443a3a5f030a028708a1f2de1"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM76Ckbq",
+          "commit": {
+            "abbreviatedOid": "614d13c"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-29T07:42:06Z",
+          "updatedAt": "2026-04-29T07:42:06Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 370,
+      "id": "PR_kwDOCpt5cM7WTzx9",
+      "title": "Editorial: fixed text bugs",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/370",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #369 \r\n- CDDL definition of TLSFeatures is not close to the extension text block *TLS Features\"\r\n- Line 355: \"extension value\" -> \"attribute value\"\r\n- Line 367: \"the CBOR simple value is not a valid value\" -> \"the CBOR simple value 'null' is not a valid value\"\r\n- Missing ':' in the CDDL definition DistributionPointName\r\n- Missing ',' in the CDDL definition DhSigStaticType\r\n- Missing 'sourcecode-name' line under the CDDL definition PrivateKeyPossessionStatement\r\n- Line 917: AttributeTemplate -> RDNAttributeTemplate\r\n- Section \"C509 Certification Request Templates Types Registry\": \"IETF Review\" and \"Expert Review\" -> \"IETF Review with - Expert Review\" to have the same wording with other sections.\r\n- Figure \"C509 RDN Attributes\": removing the ending DER encoding '00' of OID unstructuredAddress\r\n-  Figure \"C509 Extensions\": \"AttributeValue: KeyUsage\" -> \"extensionValue: KeyUsage\"",
+      "createdAt": "2026-04-28T11:20:32Z",
+      "updatedAt": "2026-04-28T12:17:34Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "issue369-fix-text-bugs",
+      "headRefOid": "fe7e356bfe071b8291c80756fec37f37479378d6",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 371,
+      "id": "PR_kwDOCpt5cM7WUGbL",
+      "title": "Editorial: Fixed typo and grammar.",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/371",
+      "state": "MERGED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-04-28T11:36:27Z",
+      "updatedAt": "2026-04-29T07:52:03Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "fix-typo",
+      "headRefOid": "137c2d3d49af54fbb3b4f0d073387cfec5dc9489",
+      "closedAt": "2026-04-29T07:52:03Z",
+      "mergedAt": "2026-04-29T07:52:03Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "0287515772e9536f8ae3cf014affaf1b8c3a9b09"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM76Cj1k",
+          "commit": {
+            "abbreviatedOid": "137c2d3"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-29T07:41:35Z",
+          "updatedAt": "2026-04-29T07:41:35Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 374,
+      "id": "PR_kwDOCpt5cM7WUiQm",
+      "title": "Editorial: aligned text in Figure \"C509 General Names\"",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/374",
+      "state": "MERGED",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #372 ",
+      "createdAt": "2026-04-28T11:57:52Z",
+      "updatedAt": "2026-04-29T07:51:31Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "align-text-in-figure-general-names",
+      "headRefOid": "db77dda2109ad59ad00ef69b325149306e928fc8",
+      "closedAt": "2026-04-29T07:51:31Z",
+      "mergedAt": "2026-04-29T07:51:31Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "5147b03af2c51359331cbd99a9119d55424cd5e2"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM76Chdn",
+          "commit": {
+            "abbreviatedOid": "db77dda"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-04-29T07:39:36Z",
+          "updatedAt": "2026-04-29T07:39:36Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 377,
+      "id": "PR_kwDOCpt5cM7WeBpg",
+      "title": "Use IP addresses for documentation in the examples",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/377",
+      "state": "OPEN",
+      "author": "xipki",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #376 ",
+      "createdAt": "2026-04-28T19:53:55Z",
+      "updatedAt": "2026-04-28T19:53:56Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "294688af98043b29422c357033ee64c5928ec525",
+      "headRepository": "xipki/CBOR-certificates",
+      "headRefName": "use-document-ipaddress",
+      "headRefOid": "0ae248b78dfbf1b1251ee9797d11111d6d0a6ff9",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
