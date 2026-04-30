@@ -1473,7 +1473,7 @@ Table of Contents
    paddings, or other security constructs applied in the encoding of a
    certificate.  In particular, an IANA registration does not imply a
    recommendation.  For example, some deprecated algorithms are assigned
-   code points only for backwards compatibility to enable CBOR encoding
+   code points only for backward compatibility to enable CBOR encoding
    of existing certificates.
 
 8.  IANA Considerations
@@ -1613,17 +1613,17 @@ Table of Contents
    Reference, where Value is a non-negative integer, and the other
    columns are text strings.  Name and Identifiers are informal
    descriptions.  The fields Name, OID, and DER are mandatory.  For RDN
-   Attributes specified only for CBOR encoding where no OID is defined,
-   the OID and DER fields are marked "N/A".  If there is an OID defined,
-   the OID is given in dotted decimal representation, and the DER column
-   contains the hex string of the DER-encoded OID [X.690].  If it is not
-   expected to be understood from the other information (e.g. the OID),
-   then the Comments field must contain a reference to where the
-   attribute is described.  For values in the interval [0, 23] the
-   registration procedure is "IETF Review with Expert Review".  Values ≥
-   32768 are reserved for Private Use. For all other values the
-   registration procedure is "Expert Review".  Name and Identifiers are
-   informal descriptions.
+   Attributes specified only for CBOR encoded certificates where no OID
+   is defined, the OID and DER fields are marked "N/A".  If there is an
+   OID defined, the OID is given in dotted decimal representation, and
+   the DER column contains the hex string of the DER-encoded OID
+   [X.690].  If it is not expected to be understood from the other
+   information (e.g. the OID), then the Comments field must contain a
+   reference to where the RDN Attribute is described.  For values in the
+   interval [0, 23] the registration procedure is "IETF Review with
+   Expert Review".  Values ≥ 32768 are reserved for Private Use. For all
+   other values the registration procedure is "Expert Review".  Name and
+   Identifiers are informal descriptions.
 
    The initial contents of the registry are:
 
@@ -1814,15 +1814,17 @@ Table of Contents
    registry are Value, Name, Identifiers, OID, DER, Comments,
    attributeValue, and Reference, where Value is an integer, and the
    other columns are text strings.  Name and Identifiers are informal
-   descriptions.  The fields Name, OID, and DER are mandatory.  If OID
-   is present, the OID is given in dotted decimal representation, and
-   the DER column contains the hex string of the DER-encoded OID
-   [X.690].  If it is not expected to be understood from the other
-   information (e.g. the OID), then the Comments field must contain a
-   reference to where the attribute is described.  For values in the
-   interval [-24, 23] the registration procedure is "IETF Review with
-   Expert Review".  Values ≥ 32768 are reserved for Private Use. For all
-   other values the registration procedure is "Expert Review".  Name and
+   descriptions.  The fields Name, OID, and DER are mandatory.  For CR
+   Attributes specified only for CBOR encoded certificates where no OID
+   is defined, the OID and DER fields are marked "N/A".  If OID is
+   present, the OID is given in dotted decimal representation, and the
+   DER column contains the hex string of the DER-encoded OID [X.690].
+   If it is not expected to be understood from the other information
+   (e.g. the OID), then the Comments field must contain a reference to
+   where the CR Attribute is described.  For values in the interval
+   [-24, 23] the registration procedure is "IETF Review with Expert
+   Review".  Values ≥ 32768 are reserved for Private Use. For all other
+   values the registration procedure is "Expert Review".  Name and
    Identifiers are informal descriptions.
 
    The initial contents of the registry are:
@@ -1862,12 +1864,13 @@ Table of Contents
    extensionValue, and Reference, where Value is a positive integer, and
    the other columns are text strings.  The fields Name, OID, DER, and
    extensionValue are mandatory.  For all other values the registration
-   procedure is "Expert Review".  If it is not expected to be understood
-   from the other information (e.g. the OID), then the Comments field
-   must contain a reference to where the extension is described.  For
-   values in the interval [1, 23] the registration procedure is "IETF
-   Review with Expert Review".  Values ≥ 32768 are reserved for Private
-   Use.
+   procedure is "Expert Review".  For Extensions specified only for CBOR
+   encoded certificates where no OID is defined, the OID and DER fields
+   are marked "N/A".  If it is not expected to be understood from the
+   other information (e.g. the OID), then the Comments field must
+   contain a reference to where the Extension is described.  For values
+   in the interval [1, 23] the registration procedure is "IETF Review
+   with Expert Review".  Values ≥ 32768 are reserved for Private Use.
 
    The initial contents of the registry are:
 
@@ -2045,12 +2048,14 @@ Table of Contents
    the registry are Value, Name, Identifiers, OID, DER, Comments, and
    Reference, where Value is an integer, and the other columns are text
    strings.  The fields Name, OID, and DER are mandatory.  For all other
-   values the registration procedure is "Expert Review".  If it is not
-   expected to be understood from the other information (e.g. the OID),
-   then the Comments field must contain a reference to where the policy
-   is described.  For values in the interval [-24, 23] the registration
-   procedure is "IETF Review with Expert Review".  Values ≥ 32768 are
-   reserved for Private Use.
+   values the registration procedure is "Expert Review".  For
+   Certificate Policies specified only for CBOR encoded certificates
+   where no OID is defined, the OID and DER fields are marked "N/A".  If
+   it is not expected to be understood from the other information (e.g.
+   the OID), then the Comments field must contain a reference to where
+   the Certificate Policy is described.  For values in the interval
+   [-24, 23] the registration procedure is "IETF Review with Expert
+   Review".  Values ≥ 32768 are reserved for Private Use.
 
    The initial contents of the registry are:
 
@@ -2215,8 +2220,8 @@ Table of Contents
    Reference, where Value is an integer, and the other columns are text
    strings.  The fields Name, OID, and DER are mandatory.  If it is not
    expected to be understood from the other information (e.g. the OID),
-   then the Comments field must contain a reference to where the policy
-   qualifier is described.  For values in the interval [-24, 23] the
+   then the Comments field must contain a reference to where the Policy
+   Qualifier is described.  For values in the interval [-24, 23] the
    registration procedure is "IETF Review with Expert Review".  Values ≥
    32768 are reserved for Private Use. For all other values the
    registration procedure is "Expert Review".
@@ -2250,7 +2255,7 @@ Table of Contents
    strings.  The fields Name, OID, and DER are mandatory.  If it is not
    expected to be understood from the other information (e.g. the OID),
    then the Comments field must contain a reference to where the
-   information access is described.  For values in the interval [-24,
+   Information Access is described.  For values in the interval [-24,
    23] the registration procedure is "IETF Review with Expert Review".
    For all other values the registration procedure is "Expert Review".
 
@@ -2310,10 +2315,12 @@ Table of Contents
    under the registry group "CBOR Encoded X.509 (C509)".  The fields of
    the registry are Value, Name, Identifiers, OID, DER, Comments, and
    Reference, where Value is an integer, and the other columns are text
-   strings.  The fields Name, OID, and DER are mandatory.  If it is not
+   strings.  The fields Name, OID, and DER are mandatory.  For Extended
+   Key Usage specified only for CBOR encoded certificates where no OID
+   is defined, the OID and DER fields are marked "N/A".  If it is not
    expected to be understood from the other information (e.g. the OID),
    then the Comments field must contain a reference to where the
-   extended key usage is described.  For values in the interval [-24,
+   Extended Key Usage is described.  For values in the interval [-24,
    23] the registration procedure is "IETF Review with Expert Review".
    Values ≥ 32768 are reserved for Private Use. For all other values the
    registration procedure is "Expert Review".
@@ -2436,10 +2443,10 @@ Table of Contents
    where Value is an integer, and the other columns are text strings.
    The fields Name and GeneralNameValue are mandatory.  If it is not
    expected to be understood from the other information (e.g. the OID),
-   then the Comments field must contain a reference to where the name is
-   described.  For values in the interval [-24, 23] the registration
-   procedure is "IETF Review with Expert Review".  For all other values
-   the registration procedure is "Expert Review".
+   then the Comments field must contain a reference to where the General
+   Name is described.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review with Expert Review".  For all
+   other values the registration procedure is "Expert Review".
 
    The initial contents of the registry are:
 
@@ -2510,10 +2517,11 @@ Table of Contents
    the value of public key algorithm must be considered, see instruction
    in Section 8.15.  If it is not expected to be understood from the
    other information (e.g. the OID), then the Comments field must
-   contain a reference to where the algorithm is described.  For values
-   in the interval [-24, 23] the registration procedure is "IETF Review
-   with Expert Review".  For all other values the registration procedure
-   is "Expert Review".  The initial contents of the registry are:
+   contain a reference to where the Signature Algorithm is described.
+   For values in the interval [-24, 23] the registration procedure is
+   "IETF Review with Expert Review".  For all other values the
+   registration procedure is "Expert Review".  The initial contents of
+   the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Signature Algorithm                                       |
@@ -2707,11 +2715,11 @@ Table of Contents
    signature algorithm, then the value must be chosen equal to the value
    of signature algorithm, see Section 8.14.  If it is not expected to
    be understood from the other information (e.g. the OID), then the
-   Comments field must contain a reference to where the algorithm is
-   described.  For values in the interval [-24, 23] the registration
-   procedure is "IETF Review with Expert Review".  For all other values
-   the registration procedure is "Expert Review".  The initial contents
-   of the registry are:
+   Comments field must contain a reference to where the Public Key
+   Algorithm is described.  For values in the interval [-24, 23] the
+   registration procedure is "IETF Review with Expert Review".  For all
+   other values the registration procedure is "Expert Review".  The
+   initial contents of the registry are:
 
    +-------+-----------------------------------------------------------+
    | Value | Public Key Algorithm                                      |
