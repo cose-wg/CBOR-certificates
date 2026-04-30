@@ -2430,6 +2430,7 @@ ExtensionTemplate = (
 <p id="section-7-4">The mechanism in this document does not reveal any additional information compared to X.509. Because of the difference in size, it will be possible to detect that this profile is used. The gateway solution described in <a href="#dep-set" class="auto internal xref">Section 6.1</a> requires unencrypted certificates and is not recommended.<a href="#section-7-4" class="pilcrow">¶</a></p>
 <p id="section-7-5">Any issues with decoding or parsing a C509 certificate should be handled exactly as how such errors would be handled for the corresponding X.509 certificate. For example, a non-critical extension <span class="bcp14">MAY</span> be ignored if it is not recognized, see <span><a href="https://rfc-editor.org/rfc/rfc5280#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>.<a href="#section-7-5" class="pilcrow">¶</a></p>
 <p id="section-7-6">As stated in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>, the contents of the COSE Header Parameters c5b, c5c, c5t, c5u is untrusted input that potentially may be verified using existing trust anchors or other trust establishment mechanism out of scope of this document. Similar security considerations as x5bag, x5chain, x5t and x5u applies, see <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>. Security considerations of the COSE protected and unprotected headers are discussed in <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>.<a href="#section-7-6" class="pilcrow">¶</a></p>
+<p id="section-7-7">The specification makes no recommendations on the use of algorithms, paddings, or other security constructs applied in the encoding of a certificate. In particular, an IANA registration does not imply a recommendation. For example, some deprecated algorithms are assigned code points only for backwards compatibility to enable CBOR encoding of existing certificates.<a href="#section-7-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana">
@@ -2511,7 +2512,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-private-key-types-regi">
 <a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-c509-private-key-types-regi" class="section-name selfRef">C509 Private Key Types Registry</a>
         </h3>
-<p id="section-8.4-1">IANA has created a new registry titled "C509 Private Key Types" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Comments, subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. The subjectPrivateKey describes the encoding of the subject private key, see examples in <a href="#private-key-structures" class="auto internal xref">Section 3.6</a>. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+<p id="section-8.4-1">IANA has created a new registry titled "C509 Private Key Types" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Comments, subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. The subjectPrivateKey describes the encoding of the subject private key, see <a href="#private-key-structures" class="auto internal xref">Section 3.6</a>. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <span id="name-c509-private-key-types"></span><div id="fig-privkeys">
 <figure id="figure-8">
           <div class="alignCenter art-text artwork" id="section-8.4-2.1">
@@ -2561,7 +2562,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-rdn-attributes-registr">
 <a href="#section-8.6" class="section-number selfRef">8.6. </a><a href="#name-c509-rdn-attributes-registr" class="section-name selfRef">C509 RDN Attributes Registry</a>
         </h3>
-<p id="section-8.6-1">IANA has created a new registry titled "C509 RDN Attributes" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and Reference, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval [0, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-8.6-1" class="pilcrow">¶</a></p>
+<p id="section-8.6-1">IANA has created a new registry titled "C509 RDN Attributes" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and Reference, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For RDN Attributes specified only for CBOR encoding where no OID is defined, the OID and DER fields are marked "N/A". If there is an OID defined, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the attribute is described. For values in the interval [0, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions.<a href="#section-8.6-1" class="pilcrow">¶</a></p>
 <p id="section-8.6-2">The initial contents of the registry are:<a href="#section-8.6-2" class="pilcrow">¶</a></p>
 <span id="name-c509-rdn-attributes"></span><div id="fig-rdnattrtype">
 <figure id="figure-10">
@@ -2757,7 +2758,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-cr-attributes-registry">
 <a href="#section-8.7" class="section-number selfRef">8.7. </a><a href="#name-c509-cr-attributes-registry" class="section-name selfRef">C509 CR Attributes Registry</a>
         </h3>
-<p id="section-8.7-1">IANA has created a new registry titled "C509 CR Attributes" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>.<a href="#section-8.7-1" class="pilcrow">¶</a></p>
+<p id="section-8.7-1">IANA has created a new registry titled "C509 CR Attributes" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the attribute is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". Name and Identifiers are informal descriptions.<a href="#section-8.7-1" class="pilcrow">¶</a></p>
 <p id="section-8.7-2">The initial contents of the registry are:<a href="#section-8.7-2" class="pilcrow">¶</a></p>
 <span id="name-c509-crattributes"></span><div id="fig-crattrtype">
 <figure id="figure-11">
@@ -2800,10 +2801,11 @@ ExtensionTemplate = (
         <h3 id="name-c509-extensions-registry">
 <a href="#section-8.8" class="section-number selfRef">8.8. </a><a href="#name-c509-extensions-registry" class="section-name selfRef">C509 Extensions Registry</a>
         </h3>
-<p id="section-8.8-1">IANA has created a new registry titled "C509 Extensions" under the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For values in the interval [1, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.8-1" class="pilcrow">¶</a></p>
+<p id="section-8.8-1">IANA has created a new registry titled "C509 Extensions" under the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For all other values the registration procedure is "Expert Review". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the extension is described. For values in the interval [1, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use.<a href="#section-8.8-1" class="pilcrow">¶</a></p>
+<p id="section-8.8-2">The initial contents of the registry are:<a href="#section-8.8-2" class="pilcrow">¶</a></p>
 <span id="name-c509-extensions"></span><div id="fig-extype">
 <figure id="figure-12">
-          <div class="alignCenter art-text artwork" id="section-8.8-2.1">
+          <div class="alignCenter art-text artwork" id="section-8.8-3.1">
 <pre>
 +-------+-----------------------------------------------------------+
 | Value | Extension                                                 |
@@ -2982,10 +2984,11 @@ ExtensionTemplate = (
         <h3 id="name-c509-certificate-policies-r">
 <a href="#section-8.9" class="section-number selfRef">8.9. </a><a href="#name-c509-certificate-policies-r" class="section-name selfRef">C509 Certificate Policies Registry</a>
         </h3>
-<p id="section-8.9-1">IANA has created a new registry titled "C509 Certificate Policies" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.9-1" class="pilcrow">¶</a></p>
+<p id="section-8.9-1">IANA has created a new registry titled "C509 Certificate Policies" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For all other values the registration procedure is "Expert Review". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the policy is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use.<a href="#section-8.9-1" class="pilcrow">¶</a></p>
+<p id="section-8.9-2">The initial contents of the registry are:<a href="#section-8.9-2" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-policies"></span><div id="fig-cp">
 <figure id="figure-13">
-          <div class="alignCenter art-text artwork" id="section-8.9-2.1">
+          <div class="alignCenter art-text artwork" id="section-8.9-3.1">
 <pre>
 +-------+-----------------------------------------------------------+
 | Value | Certificate Policy                                        |
@@ -3150,10 +3153,11 @@ ExtensionTemplate = (
         <h3 id="name-c509-policies-qualifiers-re">
 <a href="#section-8.10" class="section-number selfRef">8.10. </a><a href="#name-c509-policies-qualifiers-re" class="section-name selfRef">C509 Policies Qualifiers Registry</a>
         </h3>
-<p id="section-8.10-1">IANA has created a new registry titled "C509 Policies Qualifiers" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.10-1" class="pilcrow">¶</a></p>
+<p id="section-8.10-1">IANA has created a new registry titled "C509 Policies Qualifiers" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the policy qualifier is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review".<a href="#section-8.10-1" class="pilcrow">¶</a></p>
+<p id="section-8.10-2">The initial contents of the registry are:<a href="#section-8.10-2" class="pilcrow">¶</a></p>
 <span id="name-c509-policies-qualifiers"></span><div id="fig-pq">
 <figure id="figure-14">
-          <div class="alignCenter art-text artwork" id="section-8.10-2.1">
+          <div class="alignCenter art-text artwork" id="section-8.10-3.1">
 <pre>
 +-------+-----------------------------------------------------------+
 | Value | Policy Qualifier                                          |
@@ -3183,10 +3187,11 @@ ExtensionTemplate = (
         <h3 id="name-c509-information-access-reg">
 <a href="#section-8.11" class="section-number selfRef">8.11. </a><a href="#name-c509-information-access-reg" class="section-name selfRef">C509 Information Access Registry</a>
         </h3>
-<p id="section-8.11-1">IANA has created a new registry titled "C509 Information Access" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.11-1" class="pilcrow">¶</a></p>
+<p id="section-8.11-1">IANA has created a new registry titled "C509 Information Access" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory.  If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the information access is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".<a href="#section-8.11-1" class="pilcrow">¶</a></p>
+<p id="section-8.11-2">The initial contents of the registry are:<a href="#section-8.11-2" class="pilcrow">¶</a></p>
 <span id="name-c509-information-accesses"></span><div id="fig-ia">
 <figure id="figure-15">
-          <div class="alignCenter art-text artwork" id="section-8.11-2.1">
+          <div class="alignCenter art-text artwork" id="section-8.11-3.1">
 <pre>
 +-------+-----------------------------------------------------------+
 | Value | Information Access                                        |
@@ -3246,10 +3251,11 @@ ExtensionTemplate = (
         <h3 id="name-c509-extended-key-usages-re">
 <a href="#section-8.12" class="section-number selfRef">8.12. </a><a href="#name-c509-extended-key-usages-re" class="section-name selfRef">C509 Extended Key Usages Registry</a>
         </h3>
-<p id="section-8.12-1">IANA has created a new registry titled "C509 Extended Key Usages" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.12-1" class="pilcrow">¶</a></p>
+<p id="section-8.12-1">IANA has created a new registry titled "C509 Extended Key Usages" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the extended key usage is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review".<a href="#section-8.12-1" class="pilcrow">¶</a></p>
+<p id="section-8.12-2">The initial contents of the registry are:<a href="#section-8.12-2" class="pilcrow">¶</a></p>
 <span id="name-c509-extended-key-usages"></span><div id="fig-eku">
 <figure id="figure-16">
-          <div class="alignCenter art-text artwork" id="section-8.12-2.1">
+          <div class="alignCenter art-text artwork" id="section-8.12-3.1">
 <pre>
 +-------+---------------------------------------------------------+
 | Value | Extended Key Usage                                      |
@@ -3369,10 +3375,11 @@ ExtensionTemplate = (
         <h3 id="name-c509-general-names-registry">
 <a href="#section-8.13" class="section-number selfRef">8.13. </a><a href="#name-c509-general-names-registry" class="section-name selfRef">C509 General Names Registry</a>
         </h3>
-<p id="section-8.13-1">IANA has created a new registry titled "C509 General Names" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.13-1" class="pilcrow">¶</a></p>
+<p id="section-8.13-1">IANA has created a new registry titled "C509 General Names" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the name is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".<a href="#section-8.13-1" class="pilcrow">¶</a></p>
+<p id="section-8.13-2">The initial contents of the registry are:<a href="#section-8.13-2" class="pilcrow">¶</a></p>
 <span id="name-c509-general-names"></span><div id="fig-gn">
 <figure id="figure-17">
-          <div class="alignCenter art-text artwork" id="section-8.13-2.1">
+          <div class="alignCenter art-text artwork" id="section-8.13-3.1">
 <pre>
 +-------+-----------------------------------------------------------+
 | Value | General Name                                              |
@@ -3439,7 +3446,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-signature-algorithms-r">
 <a href="#section-8.14" class="section-number selfRef">8.14. </a><a href="#name-c509-signature-algorithms-r" class="section-name selfRef">C509 Signature Algorithms Registry</a>
         </h3>
-<p id="section-8.14-1">IANA has created a new registry titled "C509 Signature Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm must be considered, see instruction in <a href="#pkalg" class="auto internal xref">Section 8.15</a>. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.14-1" class="pilcrow">¶</a></p>
+<p id="section-8.14-1">IANA has created a new registry titled "C509 Signature Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm must be considered, see instruction in <a href="#pkalg" class="auto internal xref">Section 8.15</a>.  If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the algorithm is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.14-1" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
 <figure id="figure-18">
           <div class="alignCenter art-text artwork" id="section-8.14-2.1">
@@ -3454,14 +3461,14 @@ ExtensionTemplate = (
 |       | OID:         1.2.840.113549.1.1.5                         |
 |       | Parameters:  NULL                                         |
 |       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00 |
-|       | Comments:    Don't use                                    |
+|       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |  -255 | Name:        ECDSA with SHA-1                             |
 |       | Identifiers: ecdsa-with-SHA1                              |
 |       | OID:         1.2.840.10045.4.1                            |
 |       | Parameters:  Absent                                       |
 |       | DER:         30 09 06 07 2A 86 48 CE 3D 04 01             |
-|       | Comments:    Don't use. See Section 3.2.2.                |
+|       | Comments:    See Section 3.2.2.                           |
 +-------+-----------------------------------------------------------+
 |     0 | Name:        ECDSA with SHA-256                           |
 |       | Identifiers: ecdsa-with-SHA256                            |
@@ -3634,7 +3641,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-public-key-algorithms-">
 <a href="#section-8.15" class="section-number selfRef">8.15. </a><a href="#name-c509-public-key-algorithms-" class="section-name selfRef">C509 Public Key Algorithms Registry</a>
         </h3>
-<p id="section-8.15-1">IANA has created a new registry titled "C509 Public Key Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value must be chosen equal to the value of signature algorithm, see <a href="#sigalg" class="auto internal xref">Section 8.14</a>. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.15-1" class="pilcrow">¶</a></p>
+<p id="section-8.15-1">IANA has created a new registry titled "C509 Public Key Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value must be chosen equal to the value of signature algorithm, see <a href="#sigalg" class="auto internal xref">Section 8.14</a>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the algorithm is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.15-1" class="pilcrow">¶</a></p>
 <span id="name-c509-public-key-algorithms"></span><div id="fig-pkalgs">
 <figure id="figure-19">
           <div class="alignCenter art-text artwork" id="section-8.15-2.1">
