@@ -198,10 +198,9 @@ Table of Contents
    CAB Baseline Requirements [CAB-TLS], [RFC7925], [IEEE-802.1AR], and
    CNSA 1.0 [RFC8603] specify certificate profiles which can be applied
    to certificate-based authentication with, e.g., TLS [RFC8446], QUIC
-   [RFC9000], DTLS [RFC9147], COSE [RFC9052], EDHOC [RFC9528], or
-   Compact TLS 1.3 [I-D.ietf-tls-ctls].  [RFC7925], RFC7925bis
-   [I-D.ietf-uta-tls13-iot-profile], and IEEE 802.1AR [IEEE-802.1AR]
-   specifically target IoT deployments.
+   [RFC9000], DTLS [RFC9147], COSE [RFC9052], or EDHOC [RFC9528].
+   [RFC7925], RFC7925bis [I-D.ietf-uta-tls13-iot-profile], and IEEE
+   802.1AR [IEEE-802.1AR] specifically target IoT deployments.
 
    At the time of publishing there are several implementations of C509
    targeting, e.g., in-vehicle and vehicle-to-cloud communication,
@@ -3519,13 +3518,6 @@ Table of Contents
               lamps-rfc7030-csrattrs-23, 28 June 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
               rfc7030-csrattrs-23>.
-
-   [I-D.ietf-tls-ctls]
-              Rescorla, E., Barnes, R., Tschofenig, H., and B. M.
-              Schwartz, "Compact TLS 1.3", Work in Progress, Internet-
-              Draft, draft-ietf-tls-ctls-10, 17 April 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-tls-
-              ctls-10>.
 
    [I-D.ietf-uta-tls13-iot-profile]
               Tschofenig, H., Fossati, T., Richardson, M., and D.
