@@ -399,8 +399,9 @@ Table of Contents
 
    The text strings are further optimized as follows:
 
-   *  If the text string has an even length ≥ 2 and contains only the
-      symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
+   *  If the text string has an even length of at least 2 and contains
+      only the symbols '0'-'9' or 'a'-'f', it is encoded as a CBOR byte
+      string.
 
    *  If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-
       HH-HH-HH" where each 'H' is one of the symbols '0'-'9' or 'A'-'F',
