@@ -543,14 +543,10 @@ Table of Contents
 
 3.2.2.  Encoding of issuerSignatureValue
 
-   For ECDSA signatures, the SEQUENCE and INTEGER type and length fields
-   as well as any leading 0x00 byte (to indicate that the number is not
-   negative) are omitted.  Each of the two INTEGER value fields are then
-   padded with leading zeroes to the same fixed length, given by the
-   number of bytes needed to represent the order n of the cyclic
-   subgroup used with the algorithm.  For example, for P-256, the number
-   of bytes for each integer is 32.  The resulting byte string is
-   encoded as a CBOR byte string.
+   ECDSA signatures are encoded in the same way as in Section 2.1 of
+   [RFC9053].  For example, for P-256, the number of bytes for each
+   integer is 32.  The resulting byte string is encoded as a CBOR byte
+   string.
 
 3.3.  Encoding of Extensions
 
@@ -682,9 +678,11 @@ Table of Contents
       IPAddrBlocks v2 is specified in [RFC8360].  The extension value is
       encoded exactly like in the extension "IPAddrBlocks".
 
-   *  OCSP No Check (id-pkix-ocsp-nocheck).  If the extension value is
-      NULL, it can be CBOR-encoded.  The CBOR-encoded extensionValue is
-      the value null.
+   <<<<<<< coreys-review * OCSP No Check (id-pkix-ocsp-nocheck).  The
+   CBOR encoded extensionValue is the value null. ======= * OCSP No
+   Check (id-pkix-ocsp-nocheck).  If the extension value is NULL, it can
+   be CBOR-encoded.  The CBOR-encoded extensionValue is the value null.
+   >>>>>>> master
 
    *  TLS Features (id-pe-tlsfeature).  The extensionValue is encoded as
       an array of integers, where each integer represents a TLS
@@ -1439,10 +1437,11 @@ Table of Contents
 7.  Security Considerations
 
    The CBOR encoding of X.509 certificates does not change the security
-   assumptions needed when deploying standard X.509 certificates but
-   decreases the number of fields transmitted, which reduces the risk
-   for implementation errors.  The security considerations of [RFC5280]
-   apply.
+   assumptions needed when deploying standard X.509 certificates.  The
+   same security procedures applies as for X.509.  For example the same
+   certificate path validation as defined in Section 6 of [RFC5280] MUST
+   be performed on C509 certificates before they can be considered
+   trusted.  The security considerations of [RFC5280] apply.
 
    The use of natively signed C509 certificates removes the need for
    ASN.1 encoding, which is a rich source of security vulnerabilities.
@@ -1454,7 +1453,7 @@ Table of Contents
    information compared to X.509.  Because of the difference in size, it
    will be possible to detect that this profile is used.  The gateway
    solution described in Section 6.1 requires unencrypted certificates
-   and is not recommended.
+   which may violate identity protection and is not recommended.
 
    Any issues with decoding or parsing a C509 certificate should be
    handled exactly as how such errors would be handled for the
@@ -2728,8 +2727,13 @@ Table of Contents
    |       | Identifiers: rsaEncryption                                |
    |       | OID:         1.2.840.113549.1.1.1                         |
    |       | Parameters:  NULL                                         |
+   <<<<<<< coreys-review
+   |       | DER:         30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
+   =======
    |       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 01 05 00 |
    |       | Comments:    Compressed subjectPublicKey                  |
+   >>>>>>> master
    +-------+-----------------------------------------------------------+
    |     1 | Name:        EC Public Key (Weierstrass) with secp256r1   |
    |       | Identifiers: ecPublicKey, id-ecPublicKey                  |
@@ -2737,7 +2741,7 @@ Table of Contents
    |       | Parameters:  namedCurve = secp256r1 (1.2.840.10045.3.1.7) |
    |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 86 |
    |       |              48 CE 3D 03 01 07                            |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    |       |              Also known as P-256, ansip256r1, prime256v1  |
    +-------+-----------------------------------------------------------+
    |     2 | Name:        EC Public Key (Weierstrass) with secp384r1   |
@@ -2746,7 +2750,7 @@ Table of Contents
    |       | Parameters:  namedCurve = secp384r1 (1.3.132.0.34)        |
    |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
    |       |              04 00 22                                     |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    |       |              Also known as P-384, ansip384r1              |
    +-------+-----------------------------------------------------------+
    |     3 | Name:        EC Public Key (Weierstrass) with secp521r1   |
@@ -2755,7 +2759,7 @@ Table of Contents
    |       | Parameters:  namedCurve = secp521r1 (1.3.132.0.35)        |
    |       | DER:         30 10 06 07 2A 86 48 CE 3D 02 01 06 05 2B 81 |
    |       |              04 00 23                                     |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    |       |              Also known as P-521, ansip521r1              |
    +-------+-----------------------------------------------------------+
    |     6 | Name:        EC Public Key (Weierstrass) with             |
@@ -2766,7 +2770,7 @@ Table of Contents
    |       |              (1.2.156.10197.1.301)                        |
    |       | DER:         30 13 06 07 2A 86 48 CE 3D 02 01 06 08 2A 81 |
    |       |              1C CF 55 01 82 2D                            |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    +-------+-----------------------------------------------------------+
    |     8 | Name:        X25519 (Montgomery)                          |
    |       | Identifiers: id-X25519                                    |
@@ -2804,7 +2808,7 @@ Table of Contents
    |       |              (1.3.36.3.3.2.8.1.1.7)                       |
    |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
    |       |              03 03 02 08 01 01 07                         |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    +-------+-----------------------------------------------------------+
    |    25 | Name:        EC Public Key (Weierstrass) with             |
    |       |              brainpoolP384r1                              |
@@ -2814,7 +2818,7 @@ Table of Contents
    |       |              (1.3.36.3.3.2.8.1.1.11)                      |
    |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
    |       |              03 03 02 08 01 01 0B                         |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    +-------+-----------------------------------------------------------+
    |    26 | Name:        EC Public Key (Weierstrass) with             |
    |       |              brainpoolP512r1                              |
@@ -2824,7 +2828,7 @@ Table of Contents
    |       |              (1.3.36.3.3.2.8.1.1.13)                      |
    |       | DER:         30 14 06 07 2A 86 48 CE 3D 02 01 06 09 2B 24 |
    |       |              03 03 02 08 01 01 0D                         |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    +-------+-----------------------------------------------------------+
    |    27 | Name:        EC Public Key (Weierstrass) with             |
    |       |              FRP256v1                                     |
@@ -2834,7 +2838,7 @@ Table of Contents
    |       |              (1.2.250.1.223.101.256.1)                    |
    |       | DER:         30 15 06 07 2A 86 48 CE 3D 02 01 06 0A 2A 81 |
    |       |              7A 01 81 5F 65 82 00 01                      |
-   |       | Comments:    Compressed subjectPublicKey                  |
+   |       | Comments:    subjectPublicKey encoded as in Section 3.2.1 |
    +-------+-----------------------------------------------------------+
 
                    Figure 19: C509 Public Key Algorithms
@@ -3422,6 +3426,10 @@ Table of Contents
               Structures and Process", STD 96, RFC 9052,
               DOI 10.17487/RFC9052, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9052>.
+
+   [RFC9053]  Schaad, J., "CBOR Object Signing and Encryption (COSE):
+              Initial Algorithms", RFC 9053, DOI 10.17487/RFC9053,
+              August 2022, <https://www.rfc-editor.org/rfc/rfc9053>.
 
    [RFC9090]  Bormann, C., "Concise Binary Object Representation (CBOR)
               Tags for Object Identifiers", RFC 9090,
