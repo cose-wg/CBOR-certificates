@@ -420,7 +420,7 @@ The 'extensions' field is encoded as specified in {{ext-field}} with further det
 
 For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension MUST be encoded using the unwrapped CBOR OID tag encoded extensionID.
 
-A note on extensionID naming: in existing OID databases, most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
+A note on extensionID naming: in existing OID databases, the same OID can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
 
 CBOR encoding of the following extension values is fully supported:
 
