@@ -1518,7 +1518,7 @@ tag = #6
           <h4 id="name-validity">
 <a href="#section-3.1.5" class="section-number selfRef">3.1.5. </a><a href="#name-validity" class="section-name selfRef">validity</a>
           </h4>
-<p id="section-3.1.5-1">The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.5-1">The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time <span>[<a href="#POSIX" class="cite xref">POSIX</a>]</span>, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.<a href="#section-3.1.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="subject">
@@ -4177,6 +4177,10 @@ case C509:
 <dt id="I-D.ietf-lamps-macaddress-on">[I-D.ietf-lamps-macaddress-on]</dt>
         <dd>
 <span class="refAuthor">Housley, R.</span>, <span class="refAuthor">Bonnell, C.</span>, <span class="refAuthor">Mandel, J.</span>, <span class="refAuthor">Okubo, T.</span>, and <span class="refAuthor">M. StJohns</span>, <span class="refTitle">"Media Access Control (MAC) Addresses in X.509 Certificates"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-macaddress-on-07</span>, <time datetime="2026-03-12" class="refDate">12 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-macaddress-on-07">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-macaddress-on-07</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="POSIX">[POSIX]</dt>
+        <dd>
+<span class="refTitle">"IEEE Standard for Information Technology--Portable Operating System Interface (POSIX(TM)) Base Specifications, Issue 7"</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://pubs.opengroup.org/onlinepubs/9699919799/">https://pubs.opengroup.org/onlinepubs/9699919799/</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
