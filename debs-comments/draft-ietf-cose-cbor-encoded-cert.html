@@ -1631,7 +1631,7 @@ tag = #6
         </h3>
 <p id="section-3.3-1">The 'extensions' field is encoded as specified in <a href="#ext-field" class="auto internal xref">Section 3.1.10</a> with further details provided in this section.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2">For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension <span class="bcp14">MUST</span> be encoded using the unwrapped CBOR OID tag encoded extensionID.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">A note on extensionID naming: in existing OID databases, most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> and included them for extensions defined elsewhere.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">A note on extensionID naming: in existing OID databases, the same OID can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> and included them for extensions defined elsewhere.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
 <p id="section-3.3-4">CBOR encoding of the following extension values is fully supported:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-5.1">
