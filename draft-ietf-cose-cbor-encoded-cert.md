@@ -594,7 +594,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:
+* Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, authorityCertIssuer, and authorityCertSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:
 
 ~~~~~~~~~~~ cddl
    KeyIdentifierArray = [
@@ -825,7 +825,7 @@ MessageDigest = bytes
 
 DhSigStaticType = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber,
+  certificateSerialNumber: CertificateSerialNumber,
   hashValue: MessageDigest,
 ]
 ~~~~~~~~~~~
@@ -859,7 +859,7 @@ The X.509 attribute "Statement of Possession of a Private Key" is defined in {{R
 ~~~~~~~~~~~ cddl
 PrivateKeyPossessionStatement = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber,
+  certificateSerialNumber: CertificateSerialNumber,
   cert: C509Certificate / null,
 ]
 ~~~~~~~~~~~
