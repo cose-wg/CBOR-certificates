@@ -331,9 +331,9 @@ C509 certificates are defined in terms of DER-encoded X.509 certificates {{RFC52
 
 The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Two types are defined in this document: natively signed C509 certificates, following X.509 v3 (c509CertificateType = 2); and CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}. The number of elements in TBSCertificate is fixed and determined by the type. Additional types may be added in the future.
 
-### serialNumber
+### certificateSerialNumber
 
-The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
+The 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
 ### signature
 
@@ -343,8 +343,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.
 
-In the former case, the absolute value of the int encodes the attribute type (see {{fig-rdnattrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
-
+In the former case, the absolute value of the int encodes the attribute type (see {{fig-rdnattrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. The value of the attributes serialNumber and countryName SHALL contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
 The text strings are further optimized as follows:
 
@@ -2662,7 +2661,7 @@ This section shows the C509 encoding of the X.509 certificate in the previous se
 /This defines a CBOR Sequence (RFC 8742):/
 
   3,                   / version and certificate type /
-  h'01f50d',           / serialNumber /
+  h'01f50d',           / certificateSerialNumber /
   0,                   / signatureAlgorithm /
   "RFC test CA",       / issuer /
   1672531200,          / notBefore /
