@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 6 November 2026                           University of Glasgow
+Expires: 7 November 2026                           University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                      NIO
-                                                              5 May 2026
+                                                              6 May 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 November 2026.
+   This Internet-Draft will expire on 7 November 2026.
 
 Copyright Notice
 
@@ -356,12 +356,12 @@ Table of Contents
    and determined by the type.  Additional types may be added in the
    future.
 
-3.1.2.  serialNumber
+3.1.2.  certificateSerialNumber
 
-   The 'serialNumber' INTEGER value field is encoded as the unwrapped
-   CBOR unsigned bignum (~biguint) 'certificateSerialNumber'.  Any
-   leading 0x00 byte (to indicate that the number is not negative) is
-   therefore omitted.
+   The 'certificateSerialNumber' INTEGER value field is encoded as the
+   unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'.
+   Any leading 0x00 byte (to indicate that the number is not negative)
+   is therefore omitted.
 
 3.1.3.  signature
 
@@ -387,12 +387,13 @@ Table of Contents
    [RFC5280]).  In CBOR, all text strings are UTF-8 encoded and in
    natively signed C509 certificates all CBOR ints SHALL be non-
    negative.  Text strings SHALL still adhere to any [RFC5280]
-   restrictions. serialNumber SHALL only contain the 74-character subset
-   of ASCII allowed by printableString and countryName SHALL have length
-   2.  CBOR encoding is allowed for IA5String (if this is the only
-   allowed type, e.g., emailAddress), printableString and utf8String,
-   whereas the string types teletexString, universalString, and
-   bmpString are not supported.
+   restrictions.  The value of the attributes serialNumber and
+   countryName SHALL contain only characters from the 74-character ASCII
+   subset permitted by PrintableString.  Additionally, the value of the
+   countryName attribute SHALL have length 2.  CBOR encoding is allowed
+   for IA5String (if this is the only allowed type, e.g., emailAddress),
+   printableString and utf8String, whereas the string types
+   teletexString, universalString, and bmpString are not supported.
 
    The text strings are further optimized as follows:
 
@@ -3707,7 +3708,7 @@ A.1.1.  Example: C509 Certificate Encoding
    /This defines a CBOR Sequence (RFC 8742):/
 
      3,                   / version and certificate type /
-     h'01f50d',           / serialNumber /
+     h'01f50d',           / certificateSerialNumber /
      0,                   / signatureAlgorithm /
      "RFC test CA",       / issuer /
      1672531200,          / notBefore /
