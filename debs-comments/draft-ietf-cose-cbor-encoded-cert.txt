@@ -762,10 +762,10 @@ Table of Contents
 
    *  Authority Key Identifier (authorityKeyIdentifier).  If the
       authority key identifier contains all of keyIdentifier,
-      certIssuer, and certSerialNumber, or if only keyIdentifier is
-      present, the extension value can be CBOR-encoded.  If all three
-      are present, a CBOR array is used.  If only keyIdentifier is
-      present, the array is omitted:
+      authorityCertIssuer, and authorityCertSerialNumber, or if only
+      keyIdentifier is present, the extension value can be CBOR-encoded.
+      If all three are present, a CBOR array is used.  If only
+      keyIdentifier is present, the array is omitted:
 
       KeyIdentifierArray = [
         keyIdentifier: KeyIdentifier,
@@ -1161,7 +1161,7 @@ Table of Contents
 
    DhSigStaticType = [
      issuer: Name,
-     serialNumber: CertificateSerialNumber,
+     certificateSerialNumber: CertificateSerialNumber,
      hashValue: MessageDigest,
    ]
 
@@ -1202,7 +1202,7 @@ Table of Contents
 
    PrivateKeyPossessionStatement = [
      issuer: Name,
-     serialNumber: CertificateSerialNumber,
+     certificateSerialNumber: CertificateSerialNumber,
      cert: C509Certificate / null,
    ]
 

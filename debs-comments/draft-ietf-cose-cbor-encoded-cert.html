@@ -1858,7 +1858,7 @@ As specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>,
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-36.1">
-            <p id="section-3.3-36.1.1">Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:<a href="#section-3.3-36.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-36.1.1">Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, authorityCertIssuer, and authorityCertSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:<a href="#section-3.3-36.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-37">
@@ -2211,7 +2211,7 @@ MessageDigest = bytes
 
 DhSigStaticType = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber,
+  certificateSerialNumber: CertificateSerialNumber,
   hashValue: MessageDigest,
 ]
 </pre><a href="#section-4.2-2" class="pilcrow">¶</a>
@@ -2257,7 +2257,7 @@ ChallengePassword = text / #6.121(text)
 <pre>
 PrivateKeyPossessionStatement = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber,
+  certificateSerialNumber: CertificateSerialNumber,
   cert: C509Certificate / null,
 ]
 </pre><a href="#section-4.3.3-2" class="pilcrow">¶</a>
