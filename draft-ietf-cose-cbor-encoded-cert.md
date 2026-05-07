@@ -3376,4 +3376,4 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Deb Cooley, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
+The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Deb Cooley, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
