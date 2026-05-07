@@ -798,10 +798,10 @@ Table of Contents
       the minimum and maximum fields are not used and are therefore
       omitted.  For IPv4 addresses, the iPAddress field MUST contain
       five octets, and for IPv6 addresses, the field MUST contain 17
-      octets, where the last octet indicates the number of bits in the
-      prefix.  As an example, the address block 192.0.2.0/24 is encoded
-      as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER
-      encoding.
+      octets.  In both cases the last octet indicates the number of bits
+      in the prefix.  As an example, the address block 192.0.2.0/24 is
+      encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in
+      the DER encoding.
 
       GeneralSubtrees = [ + GeneralName ]
       NameConstraints = [
@@ -885,7 +885,7 @@ Table of Contents
 
    The value type of c5t is the COSE_CertHash structure defined in
    [RFC9360], which contains the hash value of the C509 certificate
-   calculated over ~C509Certificate.  Thus C509CertData contains all
+   calculated over ~C509Certificate.  Thus, C509CertData contains all
    data necessary to calculate the thumbprint c5t.
 
    c5u provides an alternative way to identify an untrusted certificate
@@ -1497,7 +1497,7 @@ Table of Contents
    65535] have a 3-byte encoding.
 
    All assignments according to "IETF Review with Expert Review" are
-   made on a "IETF Review" basis per Section 4.8 of [RFC8126] with
+   made on an "IETF Review" basis per Section 4.8 of [RFC8126] with
    "Expert Review" additionally required per Section 4.5 of [RFC8126].
    The procedure for early IANA allocation of "standards track code
    points" defined in [RFC7120] also applies.  When such a procedure is
