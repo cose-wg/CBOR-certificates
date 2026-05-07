@@ -101,9 +101,8 @@ normative:
     target: https://wi-sun.org
 
 informative:
-  RFC1274:
-  RFC2247:
   RFC3161:
+  RFC4524:
   RFC6487:
   RFC6955:
   RFC6960:
@@ -120,8 +119,8 @@ informative:
   RFC9190:
   RFC9191:
   RFC9528: edhoc
+  RFC9908:
   I-D.ietf-uta-tls13-iot-profile:
-  I-D.ietf-lamps-rfc7030-csrattrs:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
@@ -348,7 +347,7 @@ In the former case, the absolute value of the int encodes the attribute type (se
 
 The text strings are further optimized as follows:
 
-  * If the text string has an even length {{{≥}}} 2 and contains only the symbols '0'–'9' or 'a'–'f', it is encoded as a CBOR byte string.
+  * If the text string has an even length of at least 2 and contains only the symbols '0'-'9' or 'a'-'f', it is encoded as a CBOR byte string.
   * If the text string contains an EUI-64 of the form "HH-HH-HH-HH-HH-HH-HH-HH" where each 'H' is one of the symbols '0'-'9' or 'A'-'F', it is encoded as a CBOR tagged MAC address using the CBOR tag 48, see {{Section 2.4 of RFC9542}}. If of the form "HH-HH-HH-FF-FE-HH-HH-HH", it is encoded as a 48-bit MAC address, otherwise as a 64-bit MAC address. See example in {{rfc7925-prof}}.
   * Otherwise, it is encoded as a CBOR text string.
 
@@ -868,7 +867,7 @@ PrivateKeyPossessionStatement = [
 
 ## Certification Request Template {#CRT}
 
-Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{I-D.ietf-lamps-rfc7030-csrattrs}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certification Request. Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certification Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns a Certification Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
+Enrollment over Secure Transport (EST, {{RFC7030}}) defines, and {{RFC9908}} clarifies, how an EST server can specify what it expects the EST client to include in a subsequent Certification Request. Alternatively to the unstructured mechanism specified in {{RFC7030}}, {{Appendix B of RFC8295}} describes an approach using a Certification Request Template in response to a GET /csrattrs request by the EST client. The EST server thus returns a Certification Request-like object with various fields filled out, and other fields waiting to be filled in and a signature to be added by the EST client.
 
 The approach of {{RFC8295}} is also followed for C509. The C509CertificationRequestTemplate is based on TBSCertificationRequest of the C509CertificationRequest, see {{fig-C509CSRCDDL}}, but excludes the subjectSignatureValue field from the template since that needs no further specification.
 
@@ -1239,7 +1238,7 @@ The initial contents of the registry are:
 |       | Identifiers:     domainComponent, dc                      |
 |       | OID:             0.9.2342.19200300.100.1.25               |
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 19      |
-|       | Comments:        RFC 1274                                 |
+|       | Comments:        RFC 4524                                 |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Name                                     |
 |       | Identifiers:     name                                     |
@@ -1263,7 +1262,7 @@ The initial contents of the registry are:
 |       | Identifiers:     uid                                      |
 |       | OID:             0.9.2342.19200300.100.1.1                |
 |       | DER:             06 0A 09 92 26 89 93 F2 2C 64 01 01      |
-|       | Comments:        RFC 1274                                 |
+|       | Comments:        RFC 4524                                 |
 +-------+-----------------------------------------------------------+
 |    29 | Name:            Unstructured Name                        |
 |       | Identifiers:     unstructuredName                         |
@@ -2225,10 +2224,6 @@ IANA has created a new registry titled "C509 Public Key Algorithms" under the re
 ~~~~~~~~~~~
 {: #fig-pkalgs title="C509 Public Key Algorithms"}
 {: artwork-align="center"}
-
-### Suitability of different public key algorithms for use within IoT scenarios
-
-The public key algorithms registry {{pkalg}} specifies a number of algorithms, not all of which are suitable for usage with constrained devices. RSA requires large keys and large signature sizes compared to elliptic curve cryptography (ECC), which together with resource-efficient implementations of named elliptic curves (Montgomery, Edwards and Weierstrass curves) make them suitable candidates for IoT public key usage.
 
 ## COSE Header Parameters Registry {#cose}
 
@@ -3381,4 +3376,4 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Mike Bishop, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
+The authors want to thank Henk Birkholz, Mike Bishop, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
