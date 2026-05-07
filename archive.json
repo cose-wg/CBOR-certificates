@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-05T03:33:16.030779+00:00",
+  "timestamp": "2026-05-07T03:46:58.247529+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -16501,6 +16501,68 @@
         "oid": "ecad13499244296d5fd466738c98e7ae0ba6846c"
       },
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 392,
+      "id": "PR_kwDOCpt5cM7YcZYu",
+      "title": "Deb Cooley's comments",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/392",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addressing #390",
+      "createdAt": "2026-05-05T15:00:44Z",
+      "updatedAt": "2026-05-06T18:13:58Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "ecad13499244296d5fd466738c98e7ae0ba6846c",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "debs-comments",
+      "headRefOid": "8f6465638701f75e749b1ea422bb2e70018978ad",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Now done with PR. I have drafted a response mail. The only remaining comment which I didn't have time to check is:\r\n\r\nSection 3.1.4, para 2: Why is the construction of serialNumber in this section\r\nvice Section 3.1.2?",
+          "createdAt": "2026-05-05T15:42:40Z",
+          "updatedAt": "2026-05-05T15:42:40Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Section 3.1.2: It is serialNumber field of the certificate\r\nSection 3.1.4 para 2: It is the RDN of type serialNumber in a Name (e.g. issuer and subject)",
+          "createdAt": "2026-05-06T07:39:25Z",
+          "updatedAt": "2026-05-06T07:39:25Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We need to change (Section 3.1.2)\r\n\r\n```\r\n### serialNumber\r\n\r\nThe 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.\r\n```\r\n\r\nto\r\n\r\n```\r\n### certificateSerialNumber\r\n\r\nThe 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.\r\n```\r\n\r\nAnd in the Figure \"CBOR diagnostic notation of ~C509Certificate\":\r\n\r\n- `/ version and certificate type /` --> `/ certificate type /`\r\n- `/ serialNumber /` --> `/ certificateSerialNumber /` \r\n\r\nAnd optionally (3.1.4):\r\n```\r\nserialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2.\r\n```\r\nto \r\n```\r\nThe value of the attributes serialNumber and countryName SHALL contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute SHALL be exactly two characters in length.\r\n```\r\n",
+          "createdAt": "2026-05-06T07:52:36Z",
+          "updatedAt": "2026-05-06T08:04:12Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Fixed, except  `/ version and certificate type /` which is correct; this field also encodes X.509 version (3).",
+          "createdAt": "2026-05-06T17:39:18Z",
+          "updatedAt": "2026-05-06T17:39:18Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "There are other occurrences of serialNumber to consider:\r\n\r\n---\r\n\r\n>  * Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:\r\n\r\n~~~~~~~~~~~ cddl\r\n   KeyIdentifierArray = [\r\n     keyIdentifier: KeyIdentifier,\r\n     authorityCertIssuer: GeneralNames,\r\n     authorityCertSerialNumber: CertificateSerialNumber,\r\n   ]\r\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier\r\n~~~~~~~~~~~\r\nshould be \"... keyIdentifier, authorityCertIssuer, and authorityCertSerialNumber ...\"\r\n\r\n---\r\n\r\n~~~~~~~~~~~ cddl\r\nDhSigStatic = MessageDigest / DhSigStaticType\r\n\r\nMessageDigest = bytes\r\n\r\nDhSigStaticType = [\r\n  issuer: Name,\r\n  serialNumber: CertificateSerialNumber,\r\n  hashValue: MessageDigest,\r\n]\r\n~~~~~~~~~~~\r\nshould  be \r\n~~~~~~~~~~~\r\n...  \r\ncertificateSerialNumber: CertificateSerialNumber, ...\"\r\n...\r\n~~~~~~~~~~~\r\n\r\n---\r\n\r\n~~~~~~~~~~~ cddl\r\nPrivateKeyPossessionStatement = [\r\n  issuer: Name,\r\n  serialNumber: CertificateSerialNumber,\r\n  cert: C509Certificate / null,\r\n]\r\n~~~~~~~~~~~\r\nshould  be \r\n~~~~~~~~~~~\r\n...  \r\ncertificateSerialNumber: CertificateSerialNumber, ...\"\r\n...\r\n~~~~~~~~~~~\r\n",
+          "createdAt": "2026-05-06T17:53:23Z",
+          "updatedAt": "2026-05-06T17:53:23Z"
+        }
+      ],
       "reviews": []
     }
   ]
