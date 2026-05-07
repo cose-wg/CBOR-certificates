@@ -620,7 +620,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}}, the extension value can be CBOR-encoded. C509 uses the same additions and restrictions as defined in {{Section 2.2 of RFC9549}}. Note that the minimum and maximum fields are not used and are therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets, and for IPv6 addresses, the field MUST contain 17 octets, where the last octet indicates the number of bits in the prefix. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
+* Name Constraints (nameConstraints). If the name constraints only contain general names registered in {{GN}}, the extension value can be CBOR-encoded. C509 uses the same additions and restrictions as defined in {{Section 2.2 of RFC9549}}. Note that the minimum and maximum fields are not used and are therefore omitted. For IPv4 addresses, the iPAddress field MUST contain five octets, and for IPv6 addresses, the field MUST contain 17 octets. In both cases the last octet indicates the number of bits in the prefix. As an example, the address block 192.0.2.0/24 is encoded as C0 00 02 00 18 instead of C0 00 02 00 FF FF FF 00 as in the DER encoding.
 
 ~~~~~~~~~~~ cddl
    GeneralSubtrees = [ + GeneralName ]
@@ -682,7 +682,7 @@ C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate. The by
 
 The COSE_C509 item has media type application/cose-c509-cert, see {{c509-cert}}. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see {{content-format}}.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in {{Section 2.2 of RFC9277}}.
 
-The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus C509CertData contains all data necessary to calculate the thumbprint c5t.
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.
 
 c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), as described above.
 
@@ -1017,7 +1017,7 @@ Editor's note: Add informative reference to the newly created IANA registries an
 
 Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. Experts should take into account the expected usage of entries when approving point assignment. The length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval \[-24, 23\] have a 1-byte encoding, other values in the interval \[-256, 255\] have a 2-byte encoding, and the remaining values in the interval \[-65536, 65535\] have a 3-byte encoding.
 
-All assignments according to "IETF Review with Expert Review" are made on a "IETF Review" basis per {{Section 4.8 of RFC8126}} with "Expert Review" additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of "standards track code points" defined in {{RFC7120}} also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{RFC7120}}.
+All assignments according to "IETF Review with Expert Review" are made on an "IETF Review" basis per {{Section 4.8 of RFC8126}} with "Expert Review" additionally required per {{Section 4.5 of RFC8126}}. The procedure for early IANA allocation of "standards track code points" defined in {{RFC7120}} also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{RFC7120}}.
 
 ## C509 Certificate Types Registry {#type}
 
