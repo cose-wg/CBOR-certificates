@@ -4433,9 +4433,9 @@ Acknowledgments
    Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson,
    Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade,
    Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan
-   Santesson, Jim Schaad, Brian Sipos, Rene Struik, Fraser Tweedale,
-   Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and
-   commenting on intermediate versions of the draft.
+   Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar,
+   Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters
+   for reviewing and commenting on intermediate versions of the draft.
 
 Authors' Addresses
 
