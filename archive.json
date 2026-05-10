@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-07T03:46:58.247529+00:00",
+  "timestamp": "2026-05-10T03:55:48.822599+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -16453,13 +16453,13 @@
       "labels": [],
       "body": "First commit addressing #388",
       "createdAt": "2026-05-04T12:29:20Z",
-      "updatedAt": "2026-05-04T13:45:32Z",
+      "updatedAt": "2026-05-07T10:01:58Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "e3dd8cfce6458a16c82d6f8456803517c0c2a9ac",
+      "baseRefOid": "bd6e023a21e00903d771d619cff84c8419d19ba4",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "mikes-review",
-      "headRefOid": "22cf955bf255140273f134e0d056255dbd9a8e67",
+      "headRefOid": "8f64dca6328b2daf26b816d273d0ffa74a2f399a",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -16515,13 +16515,13 @@
       "labels": [],
       "body": "Addressing #390",
       "createdAt": "2026-05-05T15:00:44Z",
-      "updatedAt": "2026-05-06T18:13:58Z",
+      "updatedAt": "2026-05-08T09:59:37Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "ecad13499244296d5fd466738c98e7ae0ba6846c",
+      "baseRefOid": "bd6e023a21e00903d771d619cff84c8419d19ba4",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "debs-comments",
-      "headRefOid": "8f6465638701f75e749b1ea422bb2e70018978ad",
+      "headRefOid": "6684a0b38d1907f74ebadf73305876425304235e",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -16561,6 +16561,20 @@
           "body": "There are other occurrences of serialNumber to consider:\r\n\r\n---\r\n\r\n>  * Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:\r\n\r\n~~~~~~~~~~~ cddl\r\n   KeyIdentifierArray = [\r\n     keyIdentifier: KeyIdentifier,\r\n     authorityCertIssuer: GeneralNames,\r\n     authorityCertSerialNumber: CertificateSerialNumber,\r\n   ]\r\n   AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier\r\n~~~~~~~~~~~\r\nshould be \"... keyIdentifier, authorityCertIssuer, and authorityCertSerialNumber ...\"\r\n\r\n---\r\n\r\n~~~~~~~~~~~ cddl\r\nDhSigStatic = MessageDigest / DhSigStaticType\r\n\r\nMessageDigest = bytes\r\n\r\nDhSigStaticType = [\r\n  issuer: Name,\r\n  serialNumber: CertificateSerialNumber,\r\n  hashValue: MessageDigest,\r\n]\r\n~~~~~~~~~~~\r\nshould  be \r\n~~~~~~~~~~~\r\n...  \r\ncertificateSerialNumber: CertificateSerialNumber, ...\"\r\n...\r\n~~~~~~~~~~~\r\n\r\n---\r\n\r\n~~~~~~~~~~~ cddl\r\nPrivateKeyPossessionStatement = [\r\n  issuer: Name,\r\n  serialNumber: CertificateSerialNumber,\r\n  cert: C509Certificate / null,\r\n]\r\n~~~~~~~~~~~\r\nshould  be \r\n~~~~~~~~~~~\r\n...  \r\ncertificateSerialNumber: CertificateSerialNumber, ...\"\r\n...\r\n~~~~~~~~~~~\r\n",
           "createdAt": "2026-05-06T17:53:23Z",
           "updatedAt": "2026-05-06T17:53:23Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Looks fine for me.\r\n",
+          "createdAt": "2026-05-07T09:03:27Z",
+          "updatedAt": "2026-05-07T09:03:27Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Looks good!",
+          "createdAt": "2026-05-08T09:59:37Z",
+          "updatedAt": "2026-05-08T09:59:37Z"
         }
       ],
       "reviews": []
