@@ -1,7 +1,7 @@
 ---
 v: 3
 title: "CBOR Encoded X.509 Certificates (C509 Certificates)"
-docname: draft-ietf-cose-cbor-encoded-cert-latest
+docname: draft-ietf-cose-cbor-encoded-cert-19
 abbrev: C509 Certificates
 
 v3xml2rfc:
@@ -125,7 +125,6 @@ informative:
   RFC9191:
   RFC9528: edhoc
   RFC9908:
-  I-D.ietf-uta-tls13-iot-profile:
 
   CAB-TLS:
     target: https://cabforum.org/baseline-requirements-documents/
