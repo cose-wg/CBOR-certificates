@@ -198,12 +198,12 @@ Table of Contents
    [RFC9147], COSE [RFC9052] and EDHOC [RFC9528].  This document does
    not specify a certificate profile.
 
-   At the time of publication, there are several C509 implementations,
-   for example, targeting in-vehicle and vehicle-to-cloud communication,
-   Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite
-   System (GNSS) deployments.  When used to re-encode DER-encoded X.509
-   certificates, the CBOR encoding can reduce the size of [RFC7925]-
-   profiled certificates by more than 50%; see Appendix A.
+   At the time of publication, there are several C509 implementations
+   targeting, for example, in-vehicle and vehicle-to-cloud
+   communication, Uncrewed Aircraft Systems (UAS), and Global Navigation
+   Satellite System (GNSS) deployments.  When used to re-encode DER-
+   encoded X.509 certificates, the CBOR encoding can reduce the size of
+   [RFC7925]-profiled certificates by more than 50%; see Appendix A.
 
    C509 is designed to be extensible to additional X.509 features, for
    example, support for new algorithms, including new Post-Quantum (PQ)
