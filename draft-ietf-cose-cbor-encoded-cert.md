@@ -243,7 +243,7 @@ CBOR is a data format designed for small code size and small message size in sys
 
 The C509 encoding supports a large subset of {{RFC5280}} and all certificates profiled for {{RFC7925}}, IEEE 802.1AR (DevID) {{IEEE-802.1AR}}, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, and eUICC {{GSMA-eUICC}}. C509 is designed for small code size and compact encoding of certificates in constrained environments including certificates profiled specifically for IoT deployments, but can be applied to certificate-based authentication in general, for example, using TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}} and EDHOC {{-edhoc}}. This document does not specify a certificate profile.
 
-At the time of publication, there are several C509 implementations, for example, targeting in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS) deployments. When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can reduce the size of {{RFC7925}}-profiled certificates by more than 50%; see {{appA}}.
+At the time of publication, there are several C509 implementations targeting, for example, in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS) deployments. When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can reduce the size of {{RFC7925}}-profiled certificates by more than 50%; see {{appA}}.
 
 C509 is designed to be extensible to additional X.509 features, for example, support for new algorithms, including new Post-Quantum (PQ) algorithms, which can be registered in the IANA registry as they are specified; see {{sigalg}}.
 
