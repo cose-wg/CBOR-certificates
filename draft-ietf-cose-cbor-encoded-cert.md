@@ -77,6 +77,11 @@ normative:
   RFC9883:
   I-D.ietf-lamps-macaddress-on:
 
+  POSIX:
+    title: IEEE Standard for Information Technology--Portable Operating System Interface (POSIX(TM)) Base Specifications, Issue 7
+    target: https://pubs.opengroup.org/onlinepubs/9699919799/
+    date: January 2018
+
   SECG:
     title: Elliptic Curve Cryptography, Standards for Efficient Cryptography Group, ver. 2
     target: https://secg.org/sec1-v2.pdf
@@ -236,9 +241,7 @@ X.509 certificates are defined using Abstract Syntax Notation One (ASN.1) and en
 
 CBOR is a data format designed for small code size and small message size in systems with very limited memory, processor power, and instruction sets. CBOR builds on the JSON data model but extends it by, for example, encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is human-readable and editable, which simplifies development and debugging. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. {{RFC8610}} also extends the diagnostic notation. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. Implementers can become familiar with CBOR by using the CBOR playground {{CborMe}}.
 
-The C509 encoding supports a large subset of {{RFC5280}} and all certificates profiled for {{RFC7925}}, IEEE 802.1AR (DevID) {{IEEE-802.1AR}}, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, and eUICC {{GSMA-eUICC}}, and is designed to provide a compact encoding for certificates used in constrained environments. This document does not specify a certificate profile.
-
-CAB Baseline Requirements {{CAB-TLS}}, {{RFC7925}}, {{IEEE-802.1AR}}, and CNSA 1.0 {{RFC8603}} specify certificate profiles that can be applied to certificate-based authentication with, for example, TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}}, EDHOC {{-edhoc}}. {{RFC7925}}, RFC7925bis {{I-D.ietf-uta-tls13-iot-profile}}, and IEEE 802.1AR {{IEEE-802.1AR}} specifically target IoT deployments.
+The C509 encoding supports a large subset of {{RFC5280}} and all certificates profiled for {{RFC7925}}, IEEE 802.1AR (DevID) {{IEEE-802.1AR}}, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, and eUICC {{GSMA-eUICC}}. C509 is designed for small code size and compact encoding of certificates in constrained environments including certificates profiled specifically for IoT deployments, but can be applied to certificate-based authentication in general, for example, using TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}} and EDHOC {{-edhoc}}. This document does not specify a certificate profile.
 
 At the time of publication, several C509 implementations target, for example, in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS) deployments. When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can reduce the size of {{RFC7925}}-profiled certificates by more than 50%; see {{appA}}.
 
@@ -246,11 +249,9 @@ C509 is designed to be extensible to additional X.509 features, for example, sup
 
 This document defines two types of C509 using the same CBOR encoding and differing only in what is being signed:
 
-1. An invertible CBOR re-encoding of DER-encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER-encoded X.509 certificate. Due to the widespread deployment of X.509, it is necessary to allow backward compatibility.
+1. An invertible CBOR re-encoding of DER-encoded X.509 certificates {{RFC5280}}, which can be reversed to obtain the original DER-encoded X.509 certificate, which can be verified using legacy certificate software. Due to the widespread deployment of X.509, it is necessary to allow backward compatibility.
 
-2. Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of the DER encoding. This removes the need for ASN.1 and DER parsing and the associated complexity, but such certificates are not backward compatible with implementations requiring DER-encoded X.509.
-
-Natively signed C509 certificates can be used in devices that are only required to authenticate to servers compatible with natively signed C509 certificates. This is not a major restriction in many IoT deployments in which the parties that issue and verify certificates are part of a restricted ecosystem.
+2. Natively signed C509 certificates, where the signature is calculated over the CBOR encoding instead of the DER encoding. This removes the need for ASN.1 and DER parsing and the associated complexity, but such certificates are not backward compatible with implementations requiring DER-encoded X.509. Natively signed C509 certificates can be used in devices that are only required to authenticate to servers compatible with natively signed C509 certificates. This is not a major restriction in many IoT deployments in which the parties that issue and verify certificates are part of a restricted ecosystem.
 
 This document also specifies C509 Certification Requests; see {{CSR}}. It further specifies COSE headers for use with C509 certificates in COSE; see {{cose}}; a TLS certificate type for use with C509 certificates in TLS and QUIC, with or without additional TLS certificate compression; see {{tls}}; and a C509 file format. By extending the TLSA selectors registry to include C509 certificates, this document updates {{RFC6698}}.
 
@@ -330,9 +331,9 @@ C509 certificates are defined in terms of DER-encoded X.509 certificates {{RFC52
 
 The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Two types are defined in this document: natively signed C509 certificates, following X.509 v3 (c509CertificateType = 2); and CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}. The number of elements in TBSCertificate is fixed and determined by the type. Additional types may be added in the future.
 
-### serialNumber
+### certificateSerialNumber
 
-The 'serialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'certificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
+The 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.
 
 ### signature
 
@@ -342,8 +343,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.
 
-In the former case, the absolute value of the int encodes the attribute type (see {{fig-rdnattrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. serialNumber SHALL only contain the 74-character subset of ASCII allowed by printableString and countryName SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
-
+In the former case, the absolute value of the int encodes the attribute type (see {{fig-rdnattrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. The value of the attributes serialNumber and countryName SHALL contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
 The text strings are further optimized as follows:
 
@@ -359,7 +359,7 @@ If the 'issuer' field is identical to the 'subject' field, e.g., in case of self
 
 ### validity
 
-The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.
+The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR epoch-based date/time (~time) where the tag content is an unsigned integer. In POSIX time {{POSIX}}, leap seconds are ignored, with a leap second having the same POSIX time as the second before it. Compression of X.509 certificates with the time 23:59:60 UTC is therefore not supported. Note that RFC 5280 mandates encoding of dates through the year 2049 as UTCTime, and later dates as GeneralizedTime. The value "99991231235959Z" (no expiration date) is encoded as the CBOR simple value null.
 
 ### subject {#subject}
 
@@ -424,7 +424,7 @@ The 'extensions' field is encoded as specified in {{ext-field}} with further det
 
 For some extensions, the CBOR int encoded extensionID is only supported for commonly used values of the extension. In case of extension values for which the CBOR int encoded extensionID is not supported, the extension MUST be encoded using the unwrapped CBOR OID tag encoded extensionID.
 
-A note on extensionID naming: in existing OID databases, most IDs can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
+A note on extensionID naming: in existing OID databases, the same OID can be found in versions with and without an 'id-pe' or 'id-ce' prefix. We have excluded the prefix for the commonly used extensions defined in {{RFC5280}} and included them for extensions defined elsewhere.
 
 CBOR encoding of the following extension values is fully supported:
 
@@ -594,7 +594,7 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, certIssuer, and certSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:
+* Authority Key Identifier (authorityKeyIdentifier). If the authority key identifier contains all of keyIdentifier, authorityCertIssuer, and authorityCertSerialNumber, or if only keyIdentifier is present, the extension value can be CBOR-encoded. If all three are present, a CBOR array is used. If only keyIdentifier is present, the array is omitted:
 
 ~~~~~~~~~~~ cddl
    KeyIdentifierArray = [
@@ -825,7 +825,7 @@ MessageDigest = bytes
 
 DhSigStaticType = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber,
+  certificateSerialNumber: CertificateSerialNumber,
   hashValue: MessageDigest,
 ]
 ~~~~~~~~~~~
@@ -859,7 +859,7 @@ The X.509 attribute "Statement of Possession of a Private Key" is defined in {{R
 ~~~~~~~~~~~ cddl
 PrivateKeyPossessionStatement = [
   issuer: Name,
-  serialNumber: CertificateSerialNumber,
+  certificateSerialNumber: CertificateSerialNumber,
   cert: C509Certificate / null,
 ]
 ~~~~~~~~~~~
@@ -2661,7 +2661,7 @@ This section shows the C509 encoding of the X.509 certificate in the previous se
 /This defines a CBOR Sequence (RFC 8742):/
 
   3,                   / version and certificate type /
-  h'01f50d',           / serialNumber /
+  h'01f50d',           / certificateSerialNumber /
   0,                   / signatureAlgorithm /
   "RFC test CA",       / issuer /
   1672531200,          / notBefore /
@@ -3376,4 +3376,4 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
 # Acknowledgments
 {: numbered="no"}
 
-The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
+The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Deb Cooley, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.
