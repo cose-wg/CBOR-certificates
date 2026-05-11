@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 8 November 2026                           University of Glasgow
+Expires: 12 November 2026                          University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                      NIO
-                                                              7 May 2026
+                                                             11 May 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 November 2026.
+   This Internet-Draft will expire on 12 November 2026.
 
 Copyright Notice
 
@@ -190,16 +190,13 @@ Table of Contents
    The C509 encoding supports a large subset of [RFC5280] and all
    certificates profiled for [RFC7925], IEEE 802.1AR (DevID)
    [IEEE-802.1AR], CAB Baseline [CAB-TLS], [CAB-Code], RPKI [RFC6487],
-   Wi-SUN [Wi-SUN], and eUICC [GSMA-eUICC], and is designed to provide a
-   compact encoding for certificates used in constrained environments.
-   This document does not specify a certificate profile.
-
-   CAB Baseline Requirements [CAB-TLS], [RFC7925], [IEEE-802.1AR], and
-   CNSA 1.0 [RFC8603] specify certificate profiles that can be applied
-   to certificate-based authentication with, for example, TLS [RFC8446],
-   QUIC [RFC9000], DTLS [RFC9147], COSE [RFC9052], EDHOC [RFC9528].
-   [RFC7925], RFC7925bis [I-D.ietf-uta-tls13-iot-profile], and IEEE
-   802.1AR [IEEE-802.1AR] specifically target IoT deployments.
+   Wi-SUN [Wi-SUN], and eUICC [GSMA-eUICC].  C509 is designed for small
+   code size and compact encoding of certificates in constrained
+   environments including certificates profiled specifically for IoT
+   deployments, but can be applied to certificate-based authentication
+   in general, for example, using TLS [RFC8446], QUIC [RFC9000], DTLS
+   [RFC9147], COSE [RFC9052] and EDHOC [RFC9528].  This document does
+   not specify a certificate profile.
 
    At the time of publication, several C509 implementations target, for
    example, in-vehicle and vehicle-to-cloud communication, Uncrewed
@@ -218,20 +215,20 @@ Table of Contents
 
    1.  An invertible CBOR re-encoding of DER-encoded X.509 certificates
        [RFC5280], which can be reversed to obtain the original DER-
-       encoded X.509 certificate.  Due to the widespread deployment of
-       X.509, it is necessary to allow backward compatibility.
+       encoded X.509 certificate, which can be verified using legacy
+       certificate software.  Due to the widespread deployment of X.509,
+       it is necessary to allow backward compatibility.
 
    2.  Natively signed C509 certificates, where the signature is
        calculated over the CBOR encoding instead of the DER encoding.
        This removes the need for ASN.1 and DER parsing and the
        associated complexity, but such certificates are not backward
        compatible with implementations requiring DER-encoded X.509.
-
-   Natively signed C509 certificates can be used in devices that are
-   only required to authenticate to servers compatible with natively
-   signed C509 certificates.  This is not a major restriction in many
-   IoT deployments in which the parties that issue and verify
-   certificates are part of a restricted ecosystem.
+       Natively signed C509 certificates can be used in devices that are
+       only required to authenticate to servers compatible with natively
+       signed C509 certificates.  This is not a major restriction in
+       many IoT deployments in which the parties that issue and verify
+       certificates are part of a restricted ecosystem.
 
    This document also specifies C509 Certification Requests; see
    Section 4.  It further specifies COSE headers for use with C509
@@ -359,12 +356,12 @@ Table of Contents
    and determined by the type.  Additional types may be added in the
    future.
 
-3.1.2.  serialNumber
+3.1.2.  certificateSerialNumber
 
-   The 'serialNumber' INTEGER value field is encoded as the unwrapped
-   CBOR unsigned bignum (~biguint) 'certificateSerialNumber'.  Any
-   leading 0x00 byte (to indicate that the number is not negative) is
-   therefore omitted.
+   The 'certificateSerialNumber' INTEGER value field is encoded as the
+   unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'.
+   Any leading 0x00 byte (to indicate that the number is not negative)
+   is therefore omitted.
 
 3.1.3.  signature
 
@@ -390,12 +387,13 @@ Table of Contents
    [RFC5280]).  In CBOR, all text strings are UTF-8 encoded and in
    natively signed C509 certificates all CBOR ints SHALL be non-
    negative.  Text strings SHALL still adhere to any [RFC5280]
-   restrictions. serialNumber SHALL only contain the 74-character subset
-   of ASCII allowed by printableString and countryName SHALL have length
-   2.  CBOR encoding is allowed for IA5String (if this is the only
-   allowed type, e.g., emailAddress), printableString and utf8String,
-   whereas the string types teletexString, universalString, and
-   bmpString are not supported.
+   restrictions.  The value of the attributes serialNumber and
+   countryName SHALL contain only characters from the 74-character ASCII
+   subset permitted by PrintableString.  Additionally, the value of the
+   countryName attribute SHALL have length 2.  CBOR encoding is allowed
+   for IA5String (if this is the only allowed type, e.g., emailAddress),
+   printableString and utf8String, whereas the string types
+   teletexString, universalString, and bmpString are not supported.
 
    The text strings are further optimized as follows:
 
@@ -430,13 +428,13 @@ Table of Contents
 
    The 'notBefore' and 'notAfter' fields are encoded as unwrapped CBOR
    epoch-based date/time (~time) where the tag content is an unsigned
-   integer.  In POSIX time, leap seconds are ignored, with a leap second
-   having the same POSIX time as the second before it.  Compression of
-   X.509 certificates with the time 23:59:60 UTC is therefore not
-   supported.  Note that RFC 5280 mandates encoding of dates through the
-   year 2049 as UTCTime, and later dates as GeneralizedTime.  The value
-   "99991231235959Z" (no expiration date) is encoded as the CBOR simple
-   value null.
+   integer.  In POSIX time [POSIX], leap seconds are ignored, with a
+   leap second having the same POSIX time as the second before it.
+   Compression of X.509 certificates with the time 23:59:60 UTC is
+   therefore not supported.  Note that RFC 5280 mandates encoding of
+   dates through the year 2049 as UTCTime, and later dates as
+   GeneralizedTime.  The value "99991231235959Z" (no expiration date) is
+   encoded as the CBOR simple value null.
 
 3.1.6.  subject
 
@@ -560,10 +558,11 @@ Table of Contents
    supported, the extension MUST be encoded using the unwrapped CBOR OID
    tag encoded extensionID.
 
-   A note on extensionID naming: in existing OID databases, most IDs can
-   be found in versions with and without an 'id-pe' or 'id-ce' prefix.
-   We have excluded the prefix for the commonly used extensions defined
-   in [RFC5280] and included them for extensions defined elsewhere.
+   A note on extensionID naming: in existing OID databases, the same OID
+   can be found in versions with and without an 'id-pe' or 'id-ce'
+   prefix.  We have excluded the prefix for the commonly used extensions
+   defined in [RFC5280] and included them for extensions defined
+   elsewhere.
 
    CBOR encoding of the following extension values is fully supported:
 
@@ -763,10 +762,10 @@ Table of Contents
 
    *  Authority Key Identifier (authorityKeyIdentifier).  If the
       authority key identifier contains all of keyIdentifier,
-      certIssuer, and certSerialNumber, or if only keyIdentifier is
-      present, the extension value can be CBOR-encoded.  If all three
-      are present, a CBOR array is used.  If only keyIdentifier is
-      present, the array is omitted:
+      authorityCertIssuer, and authorityCertSerialNumber, or if only
+      keyIdentifier is present, the extension value can be CBOR-encoded.
+      If all three are present, a CBOR array is used.  If only
+      keyIdentifier is present, the array is omitted:
 
       KeyIdentifierArray = [
         keyIdentifier: KeyIdentifier,
@@ -1162,7 +1161,7 @@ Table of Contents
 
    DhSigStaticType = [
      issuer: Name,
-     serialNumber: CertificateSerialNumber,
+     certificateSerialNumber: CertificateSerialNumber,
      hashValue: MessageDigest,
    ]
 
@@ -1203,7 +1202,7 @@ Table of Contents
 
    PrivateKeyPossessionStatement = [
      issuer: Name,
-     serialNumber: CertificateSerialNumber,
+     certificateSerialNumber: CertificateSerialNumber,
      cert: C509Certificate / null,
    ]
 
@@ -3295,6 +3294,11 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
               macaddress-on-07>.
 
+   [POSIX]    "IEEE Standard for Information Technology--Portable
+              Operating System Interface (POSIX(TM)) Base
+              Specifications, Issue 7", January 2018,
+              <https://pubs.opengroup.org/onlinepubs/9699919799/>.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
@@ -3704,7 +3708,7 @@ A.1.1.  Example: C509 Certificate Encoding
    /This defines a CBOR Sequence (RFC 8742):/
 
      3,                   / version and certificate type /
-     h'01f50d',           / serialNumber /
+     h'01f50d',           / certificateSerialNumber /
      0,                   / signatureAlgorithm /
      "RFC test CA",       / issuer /
      1672531200,          / notBefore /
@@ -4425,13 +4429,13 @@ A.5.1.  Example: C509 Certificate Encoding
 Acknowledgments
 
    The authors want to thank Henk Birkholz, Mohamed Boucadair, Corey
-   Bonnell, Carsten Bormann, Roman Danyliw, Viktor Dukhovni, Paul
-   Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin
-   Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade, Francesca
-   Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim
-   Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale,
-   Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and
-   commenting on intermediate versions of the draft.
+   Bonnell, Carsten Bormann, Deb Cooley, Roman Danyliw, Viktor Dukhovni,
+   Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson,
+   Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence Lundblade,
+   Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan
+   Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar,
+   Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters
+   for reviewing and commenting on intermediate versions of the draft.
 
 Authors' Addresses
 
