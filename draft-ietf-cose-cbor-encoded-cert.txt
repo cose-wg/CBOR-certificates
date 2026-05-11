@@ -184,8 +184,9 @@ Table of Contents
    Language (CDDL) [RFC8610] provides a way to express structures for
    protocol messages and APIs that use CBOR.  [RFC8610] also extends the
    diagnostic notation.  For a complete specification and examples, see
-   [RFC8949], [RFC8610], and [RFC8742].  Implementers can become
-   familiar with CBOR by using the CBOR playground [CborMe].
+   [RFC8949], [RFC8610], and [RFC8742].  A tool for becoming familiar
+   with CBOR, used at the time of publication, is the CBOR playground
+   [CborMe].
 
    The C509 encoding supports a large subset of [RFC5280] and all
    certificates profiled for [RFC7925], IEEE 802.1AR (DevID)
