@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-10T03:55:48.822599+00:00",
+  "timestamp": "2026-05-12T03:50:21.239473+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9059,15 +9059,15 @@
       "id": "I_kwDOCpt5cM8AAAABAu_jNw",
       "title": "Corey Bonnell's secdir review",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/375",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "\nThis review of -16 slipped our attention.\n\nhttps://mailarchive.ietf.org/arch/msg/cose/hHtLxDY-n6Gu6osm30gOAzvBxIA/\n\n\nReviewer: Corey Bonnell\nReview result: Has Nits\n\nSection 3.1.4\ns/extension value/attribute value/\n\nSection 3.2.2\nThe ECDSA signature encoding process can reference RFC 9053, section 2.1.\n\nSection 3.3\n\nThe ASN.1 definition of id-pkix-ocsp-nocheck indicates the value will always be\nNULL, so \"If the extension value is NULL\" is not needed. Instead, the same text\nused for \"Precertificate Signing Certificate\" can be used.\n\n\"Precertificate Signing Certificate\" is not the name of the extension, but is\nrather a certificate for a signer of pre-certificates. I suggest using\n\"Precertificate Critical Poison\" instead.\n\nSection 8.\n\n\"The CBOR encoding of X.509 certificates does not change the security\nassumptions needed when deploying standard X.509 certificates but decreases the\nnumber of fields transmitted, which reduces the risk for implementation\nerrors.\" Is this true? The number of fields in a C509 certificate appears to be\nthe same as a X.509 certificate. If anything, the C509 specification appears to\nbe more complex than ASN.1-based X.509 due to the variable encoding of elements\nin certain situations to minimize size.\n\n\"The gateway solution described in Section 6 requires unencrypted certificates\nand is not recommended.\" I think this needs to be fleshed out, because it\nassumes that certificates are secret information. In scenarios where\ncertificates are not secret, it is unclear whether this SHOULD NOT is relevant.\n\nIt would be good if there is an explicit MUST that certification path\nprocessing (as defined in RFC 5280, section 6) be performed on C509\ncertificates before they can be considered trusted.\n\nSection 9.13\n\nThe \"Compressed subjectPublicKey\" comment is potentially confusing, especially\nfor the EC Public Key types, as it might be read as a statement that compressed\npoint encoding is used for the coordinates.\n\n",
       "createdAt": "2026-04-28T15:15:17Z",
-      "updatedAt": "2026-04-28T15:15:17Z",
-      "closedAt": null,
+      "updatedAt": "2026-05-11T09:27:51Z",
+      "closedAt": "2026-05-11T09:27:51Z",
       "comments": []
     },
     {
@@ -9113,9 +9113,17 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/cose/XacHMJcPvoazvhbjnlAkem2wiWE/\n\n----------------------------------------------------------------------\nDISCUSS:\n----------------------------------------------------------------------\n\n** Section 8.4\n   The\n   fields of the registry are Value, Comments, and subjectPrivateKey,\n   and Reference, where Value is an integer, and the other columns are\n   text strings.\n\nThe value of subjectPrivateKey seems to be underspecified.  Yes, it is text\nstring.  However, what are the valid values?  What does this field describe?\n\n** Section 8.6, 8.7\n   The fields Name, OID, and DER are mandatory.\n\u2026\n   If\n   OID is present, the OID is given in dotted decimal representation,\n   and the DER column contains the hex string of the DER-encoded OID\n   [X.690].\n\n-- Per sentence one, the OID field is mandatory.  Per sentence two, there\nappears to be conditionality to whether the OID might be present.  Which is it?\n\n-- Where are the OID and DER fields defined?\n\n** Section 8.8.  Where are OID, DER, and AttributeValue defined?\n\n** Section 8.9. Where are the OID and DER fields defined?\n\n** Section 8.9, 8.10\n   The fields Name,\n   OID, and DER are mandatory.\n\nIs it desirable to register a field with no comment (reference)?\n\n** Section 8.11.  8.12. Where are the OID and DER fields defined?  Is it\ndesirable to register a code point with no comment (reference)?\n\n** Section 8.13.  Where are the OID and DER fields defined?  Is it desirable to\nregister a code point with no comment (reference)?\n\n** Section 8.14 and 8.15.  Do not use BCP14 keywords in IANA considerations. \nSee\nhttps://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/.\n\n** Section 8.14.  What does the comment field text that says \u201cDon\u2019t use\u201d mean. \nWhere is it explained that the comment field has recommendations on usage?\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nThank you to Russ Housley for the GENART review.\n\n** Section 1.  Editorial.\n\n   Implementors can get familiar\n   with CBOR by using the CBOR playground [CborMe].\n\nIt is not clear what the value of this text for an archival document.\n\n** Section 8.15.1.  What does this section have to do with IANA actions?\n",
       "createdAt": "2026-04-30T06:39:02Z",
-      "updatedAt": "2026-04-30T06:39:02Z",
+      "updatedAt": "2026-05-11T09:29:02Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Keeping it open pending Roman's DISCUSS.",
+          "createdAt": "2026-05-11T09:29:02Z",
+          "updatedAt": "2026-05-11T09:29:02Z"
+        }
+      ]
     },
     {
       "number": 387,
@@ -9138,15 +9146,15 @@
       "id": "I_kwDOCpt5cM8AAAABBNQ_0A",
       "title": "Mike's review",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/388",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/cose/ovP7nAMuuwLuzb2kaZBPFdB8vMM/\n\n\n\n\n## Comments\n\n### IANA\n\nThis document seems to have unresolved IANA issues. Have next steps\nbeen determined?\n\n### Section 8.1, paragraph 1\n```\n     The expert reviewers for the registries defined in this document are\n     expected to ensure that the usage solves a valid use case that could\n     not be solved better in a different way, that it is not going to\n     duplicate an entry that is already registered, and that the\n     registered point is likely to be used in deployments.  They are\n```\nThese things are vague enough to give me concern; not quite DISCUSS-level, but I\nworry that we're inviting appeals from registrants who disagree with the\nreviewer on the \"best\" preferred solution.\n\n### Section 8.6, paragraph 1\n\nHow does \"If OID is present\" reconcile with \"OID [is] mandatory\"?\n\n### Section 8.6, paragraph 1\n\nIs the goal that all elements of some existing registry are assigned\nmapped values here? If so, synchronization becomes a concern, and adding a\ncolumn to that registry might be preferable. If it's independent and just linked\nto that other registry by OID, this is probably the best we can do.\n\n### Too many authors\n\nThe document has six authors, which exceeds the recommended author limit. Has\nthe sponsoring AD agreed that this is appropriate?\n\n### Missing references\n\nNo reference entries found for these items, which were mentioned in the text:\n`[bytes]`.\n\n### DOWNREFs\n\nDOWNREF `[RFC7299]` from this Proposed Standard to Informational `RFC7299`.\n(For IESG discussion. It seems this DOWNREF was not mentioned in the Last Call\nand also seems to not appear in the DOWNREF registry. Reference only appears to\nbe for a registry reference.)\n\n### IP addresses\n\nFound IP blocks or addresses not inside RFC5737/RFC3849 example ranges:\n`23.106.104.0`, `2.5.29.15`, `2.5.29.37`, `2.5.4.41`, `2.5.4.11`, `2.5.4.8`,\n`23.109.0.0/16`, `2001:7f9:ffff:ffff:ffff:ffff:ffff:ffff`, `2.5.4.12`,\n`2.5.29.30`, `2.5.4.20`, `23.111.63.255`, `2.5.29.14`, `2.5.4.43`, `2.5.29.32`,\n`2.5.4.4`, `2.5.4.6`, `2.5.29.54`, `2.5.29.31`, `23.106.119.255`,\n`22.82.0.0/16`, `2.5.4.15`, `2.5.29.35`, `2.5.29.46`, `1.3.101.113`,\n`2.5.4.97`, `2002:8:0:ffff:ffff:ffff:ffff:ffff`, `2.5.4.17`,\n`2001:bff:ffff:ffff:ffff:ffff:ffff:ffff`, `23.111.16.0`, `2.5.4.42`,\n`2.5.4.65`, `1.3.101.111`, `1.3.101.110`, `2.5.29.18`, `2.5.4.3`, `2.5.4.7`,\n`2.5.4.44`, `2.5.4.5`, `2.5.29.19`, `2.5.4.46`, `2.5.4.9`, `2.5.29.9`,\n`2.5.29.36`, `2.5.4.54`, `23.83.112.0/20`, `1.3.101.112`, `2.5.29.17`,\n`2.5.29.33`, and `2.5.4.10`.\n\n## Nits\n\nAll comments below are about very minor potential issues that you may choose to\naddress in some way - or ignore - as you see fit. Some were flagged by\nautomated tools (via https://github.com/larseggert/ietf-reviewtool) so there\nwill likely be some false positives. There is no need to let me know what you\ndid with these suggestions.\n\n### Typos\n\n#### Section 3.3, paragraph 42\n```\n-       CBOR uint.  With the exception of the first ASId, the ASid is\n-                                                               ^\n-       encoded as the difference to the previous ASid.\n-                                                   ^\n+       CBOR uint.  With the exception of the first ASId, the ASId is\n+                                                               ^\n+       encoded as the difference to the previous ASId.\n+                                                   ^\n```\n\n#### Section 3.8, paragraph 1\n```\n-    In TLS and DTLS, the subject of trusted authory may be sent to the\n+    In TLS and DTLS, the subject of a trusted authority may be sent to the\n+                                    ++              ++\n```\n\n#### Section 7, paragraph 5\n```\n-    handled exactly as how such errors would be handled for the\n-                      ----\n```\n\n### Section 8.23, paragraph 1\n```\n   This document registers the following entry in the \"SMI Security for\n                       ^^\n```\n\n### Uncited references\n\nUncited references: `[RFC2247]`, `[RFC1274]`, `[RFC6960]`, `[X.520]`,\n`[RFC6962]`, `[RFC3161]`, and `[GSMA-SGP.22]`.\n\n### Outdated references\n\nReference `[RFC6962]` to `RFC6962`, which was obsoleted by `RFC9162` (this may\nbe on purpose).\n\nReference `[RFC8398]` to `RFC8398`, which was obsoleted by `RFC9598` (this may\nbe on purpose).\n\nReference `[RFC5246]` to `RFC5246`, which was obsoleted by `RFC8446` (this may\nbe on purpose).\n\nReference `[RFC1274]` to `RFC1274`, which was obsoleted by `RFC4524` (this may\nbe on purpose).\n\nDocument references `draft-ietf-lamps-RFC7030-csrattrs`, but that has been\npublished as `RFC9908`.\n\n### Grammar/style\n\n#### Section 3.3, paragraph 26\n```\n      encoded as an int.  The policyQualifierId is encoded as an CBOR\n                                                              ^^\n```\nUse \"a\" instead of \"an\" if the following word doesn't start with a vowel sound,\ne.g. \"a sentence\", \"a university\".\n\n#### Section 3.3, paragraph 38\n```\n        and for IPv6 addresses, the field MUST contain 17 octets, where\n        the last octet indicates the number of bits in the prefix.  As an\n```\nWhile it's clear after a moment how to parse, consider ending the sentence after\n\"17 octets\" and starting a new sentence, \"In both cases, the last....\"\n\n#### Section 3.3, paragraph 55\n```\ne calculated over ~C509Certificate. Thus C509CertData contains all data neces\n                                    ^^^^\n```\nA comma may be missing after the conjunctive/linking adverb \"Thus\".\n\n#### Section 3.5, paragraph 5\n```\nay be sent to the peer to help it selecting the certificate chain, as in the\n                                  ^^^^^^^^^\n```\nThe verb \"help\" is used with an infinitive.\n\n#### Section 4.4, paragraph 12\n```\nthe remaining text strings are minimal in size. Therefore, the further size r\n                               ^^^^^^^^^^^^^^^\n```\nThis wording could be more concise.\n\n#### Section 6.2, paragraph 2\n```\nt could not be solved better in a different way, that it is not going to dup\n                             ^^^^^^^^^^^^^^^^^^\n```\nConsider replacing this phrase with the adverb \"differently\" to avoid\nwordiness.\n\n#### Section 6.2, paragraph 3\n```\neview with Expert Review\" are made on a \"IETF Review\" basis per Section 4.8 o\n                                      ^\n```\nUse \"an\" instead of \"a\" if the following word starts with a vowel sound, e.g.\n\"an article\", \"an hour\".\n\n#### Section 8.20, paragraph 3\n```\nerences [CAB-Code] CA/Browser Forum, \"CA/Browser Forum, \"Baseline Requiremen\n                                     ^\n```\nUnpaired symbol: \"\"\" seems to be missing.\n\n#### Section 8.20, paragraph 3\n```\ngning/>. [CAB-TLS] CA/Browser Forum, \"CA/Browser Forum, \"Baseline Requirement\n                                     ^\n```\nUnpaired symbol: \"\"\" seems to be missing.\n\n",
       "createdAt": "2026-05-04T11:01:31Z",
-      "updatedAt": "2026-05-04T11:01:31Z",
-      "closedAt": null,
+      "updatedAt": "2026-05-11T09:26:07Z",
+      "closedAt": "2026-05-11T09:26:07Z",
       "comments": []
     },
     {
@@ -9154,15 +9162,15 @@
       "id": "I_kwDOCpt5cM8AAAABBOI5Mg",
       "title": "Deb's non-general comments",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/390",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Deb's whole review is here:\nhttps://www.mail-archive.com/cose@ietf.org/msg05357.html\n\n\nDeb's general comments were addressed here:\nhttps://www.mail-archive.com/cose@ietf.org/msg05359.html\n\nThe remaining comments are quoted below.\n\n\"Section 1, para 5:  This could easily be deleted as it is repetitive with the\npara above.  If it is left in the specification, please look at the sentence\nconstruction (it is indeed only a single sentence) that makes little sense\nafter the 'e.g,' and then 'or' and then 'and'.\n\nSection 1, #1:  Please add a note to say that validating the signature on the\ncertificate first requires that it is reverted back to the original X.509\ncertificate.\n\nSection 1, second to last para:  I would incorporate this information in #2\nabove it. (again, a paragraph with a single sentence)\n\nSection 3.1.4, para 2:  Why is the construction of serialNumber in this section\nvice Section 3.1.2?\n\nSection 3.1.4, para 4:  Is this 'extension' part of the issuer name, or part of\nwhat is described in Section 3.1.10?\n\nSection 3.1.5:  Do you need a reference for 'POSIX time'?\n\nSection 3.1.6:  Should 'CBOR simple value' be 'CBOR simple value null'?  (it is\nphrased that way in Section 3.1.4 and 3.1.5.\n\nSection 3.1.8 & 3.1.9: Where do these fields originate?\n\nSection 3.3, para 3:  Does this mean that the actual OID is the same regardless\nof the name?  Or that there are multiple registered OIDs for the same\nextension?  Please clarify if it is the former.  If it is the latter, then\nspecifying which OID is expected will make implementation less complex.\n\nSection 3.3.1, key usage:  Isn't key usage normally critical?  Wouldn't an\nexample of that be more useful?\n\nSection 8.1, para 1:  I wonder how a DE will determine if a request can be\nsolved in a 'better in a different way'.  'Better' being very subjective.\n\nSection 8.14:  Why are SHA-1 algorithms being registered (even if they are\nmarked as 'deprecated')?\"\n\n\n",
       "createdAt": "2026-05-04T13:20:42Z",
-      "updatedAt": "2026-05-04T13:20:42Z",
-      "closedAt": null,
+      "updatedAt": "2026-05-11T09:25:47Z",
+      "closedAt": "2026-05-11T09:25:47Z",
       "comments": []
     }
   ],
@@ -16446,24 +16454,26 @@
       "id": "PR_kwDOCpt5cM7YAfYP",
       "title": "Mike Bishop's comments",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/389",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "First commit addressing #388",
       "createdAt": "2026-05-04T12:29:20Z",
-      "updatedAt": "2026-05-07T10:01:58Z",
+      "updatedAt": "2026-05-11T09:24:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "bd6e023a21e00903d771d619cff84c8419d19ba4",
+      "baseRefOid": "08302bc470c7344471a9efeab50458ef57fabea6",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "mikes-review",
-      "headRefOid": "8f64dca6328b2daf26b816d273d0ffa74a2f399a",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "451bcb2c3c21238b2692db7dcbe705c5c88775e2",
+      "closedAt": "2026-05-11T09:24:50Z",
+      "mergedAt": "2026-05-11T09:24:49Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "0587fb676c674e0e4255b9772b2c5b93cf57ef5e"
+      },
       "comments": [
         {
           "author": "highlunder",
@@ -16508,24 +16518,26 @@
       "id": "PR_kwDOCpt5cM7YcZYu",
       "title": "Deb Cooley's comments",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/392",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing #390",
       "createdAt": "2026-05-05T15:00:44Z",
-      "updatedAt": "2026-05-08T09:59:37Z",
+      "updatedAt": "2026-05-11T09:21:59Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "bd6e023a21e00903d771d619cff84c8419d19ba4",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "debs-comments",
       "headRefOid": "6684a0b38d1907f74ebadf73305876425304235e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-05-11T09:21:59Z",
+      "mergedAt": "2026-05-11T09:21:59Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "08302bc470c7344471a9efeab50458ef57fabea6"
+      },
       "comments": [
         {
           "author": "gselander",
