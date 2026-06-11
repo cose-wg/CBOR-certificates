@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-05-12T03:50:21.239473+00:00",
+  "timestamp": "2026-06-11T04:42:05.549607+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9113,7 +9113,7 @@
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/cose/XacHMJcPvoazvhbjnlAkem2wiWE/\n\n----------------------------------------------------------------------\nDISCUSS:\n----------------------------------------------------------------------\n\n** Section 8.4\n   The\n   fields of the registry are Value, Comments, and subjectPrivateKey,\n   and Reference, where Value is an integer, and the other columns are\n   text strings.\n\nThe value of subjectPrivateKey seems to be underspecified.  Yes, it is text\nstring.  However, what are the valid values?  What does this field describe?\n\n** Section 8.6, 8.7\n   The fields Name, OID, and DER are mandatory.\n\u2026\n   If\n   OID is present, the OID is given in dotted decimal representation,\n   and the DER column contains the hex string of the DER-encoded OID\n   [X.690].\n\n-- Per sentence one, the OID field is mandatory.  Per sentence two, there\nappears to be conditionality to whether the OID might be present.  Which is it?\n\n-- Where are the OID and DER fields defined?\n\n** Section 8.8.  Where are OID, DER, and AttributeValue defined?\n\n** Section 8.9. Where are the OID and DER fields defined?\n\n** Section 8.9, 8.10\n   The fields Name,\n   OID, and DER are mandatory.\n\nIs it desirable to register a field with no comment (reference)?\n\n** Section 8.11.  8.12. Where are the OID and DER fields defined?  Is it\ndesirable to register a code point with no comment (reference)?\n\n** Section 8.13.  Where are the OID and DER fields defined?  Is it desirable to\nregister a code point with no comment (reference)?\n\n** Section 8.14 and 8.15.  Do not use BCP14 keywords in IANA considerations. \nSee\nhttps://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/.\n\n** Section 8.14.  What does the comment field text that says \u201cDon\u2019t use\u201d mean. \nWhere is it explained that the comment field has recommendations on usage?\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nThank you to Russ Housley for the GENART review.\n\n** Section 1.  Editorial.\n\n   Implementors can get familiar\n   with CBOR by using the CBOR playground [CborMe].\n\nIt is not clear what the value of this text for an archival document.\n\n** Section 8.15.1.  What does this section have to do with IANA actions?\n",
       "createdAt": "2026-04-30T06:39:02Z",
-      "updatedAt": "2026-05-11T09:29:02Z",
+      "updatedAt": "2026-06-09T19:38:47Z",
       "closedAt": null,
       "comments": [
         {
@@ -9122,6 +9122,13 @@
           "body": "Keeping it open pending Roman's DISCUSS.",
           "createdAt": "2026-05-11T09:29:02Z",
           "updatedAt": "2026-05-11T09:29:02Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Now the state has been changed from DISCUSS to \"No objection\". This issue could be closed.",
+          "createdAt": "2026-06-09T19:38:47Z",
+          "updatedAt": "2026-06-09T19:38:47Z"
         }
       ]
     },
