@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-11T04:42:05.549607+00:00",
+  "timestamp": "2026-06-25T04:09:20.024165+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -3953,7 +3953,7 @@
       "id": "I_kwDOCpt5cM576SiY",
       "title": "draft-cose-cbor-revocation-management: optimizaion of fields in C509CertificateRevocationList",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/152",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -3962,8 +3962,8 @@
       ],
       "body": "In the file `draft-cose-cbor-revocation-management.md`:\r\n\r\nThe `C509CertificateRevocationList` is defined as follows\r\n\r\n```\r\n -- Not a mistake, but a typo in the original document, shall be C509CertificateRevocationList\r\nTBSCertificateSigningRequest = (\r\n   C509CertificateRevocationListType: int,\r\n   issuer: Name,\r\n   thisUpdate: Time,\r\n   nextUpdate: Time,\r\n   revokedCertificates: RevokedCertificates,\r\n   crlExtensions: Extensions,\r\n   issuerSignatureAlgorithm: AlgorithmIdentifier,\r\n)\r\n```\r\n\r\nAs discussed in #149,  `issuerSignatureAlgorithm` field shall be before `issuer`. And since `revokedCertificates` may be very large, and `crlExtensions` may be required before parsing the whole `revokedCertificates`, I prefer to have `crlExtensions` before `revokedCertificates`.\r\n\r\nFinally, we shall have the following structure\r\n```\r\nC509CertificateRevocationList = (\r\n   C509CertificateRevocationListType: int,\r\n   *** issuerSignatureAlgorithm: AlgorithmIdentifier, ***\r\n   issuer: Name,\r\n   thisUpdate: Time,\r\n   nextUpdate: Time,\r\n   *** crlExtensions: Extensions,***\r\n   revokedCertificates: RevokedCertificates,\r\n)\r\n```\r\n",
       "createdAt": "2024-01-12T13:41:40Z",
-      "updatedAt": "2026-03-11T12:44:17Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T11:58:57Z",
+      "closedAt": "2026-06-23T11:58:57Z",
       "comments": [
         {
           "author": "xipki",
@@ -5354,18 +5354,18 @@
       "id": "I_kwDOCpt5cM6HmNd8",
       "title": "Extend \"Figure 9: C509 Certificate Policies\" to support Certificate Policy Identifiers defined in EN 319 411-2.",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/192",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
         "waiting for input",
-        "less priority"
+        "low priority for core spec"
       ],
       "body": "Please consider whether to add registries for the Certificate Policy Identifiers defined in ETSI EN 319 411-2 and ETSI TS 119 495:\r\n\r\n- ETSI EN 319 411-2\r\n\r\n  - a) QCP-n: certificate policy for EU qualified certificates issued to natural persons;\r\n    ```\r\n     itu-t(0) identified-organization(4) etsi(0) qualified-certificate-policies(194112)\r\n     policy-identifiers(1) qcp-natural (0)\r\n    ```\r\n\r\n  - b) QCP-l: certificate policy for EU qualified certificates issued to legal persons;\r\n    ```\r\n    itu-t(0) identified-organization(4) etsi(0) qualified-certificate-policies(194112).\r\n    policy-identifiers(1) qcp-legal (1)\r\n    ```\r\n\r\n  - c) QCP-n-qscd: certificate policy for EU qualified certificates issued to natural persons with private key related\r\nto the certified public key in a QSCD;\r\n    ```\r\n    itu-t(0) identified-organization(4) etsi(0) qualified-certificate-policies(194112)\r\n    policy-identifiers(1) qcp-natural-qscd (2)\r\n    ```\r\n\r\n  - d) QCP-l-qscd: certificate policy for EU qualified certificates issued to legal persons with private key related to\r\nthe certified public key in a QSCD;\r\n    ```\r\n    itu-t(0) identified-organization(4) etsi(0) qualified-certificate-policies(194112)\r\n    policy-identifiers(1) qcp-legal-qscd (3)\r\n    ```\r\n\r\n  - e) QCP-w: certificate policy for EU qualified website authentication certificates;\r\n    ```\r\n    itu-t(0) identified-organization(4) etsi(0) qualified-certificate-policies(194112)\r\n    policy-identifiers(1) qcp-web (4)\r\n    ```\r\n\r\n- ETSI TS 119 495\r\n  - QCP-w-psd2: certificate policy for EU PSD2 qualified website authentication certificates;\r\n   ```\r\n   qcp-web-psd2 OBJECT IDENTIFIER ::=\r\n   { itu-t(0) identified-organization(4) etsi(0) psd2(19495) policy-identifiers(3) 1}\r\n   ```\r\n\r\n- Reference:\r\n  - ETSI EN 319 411-2, Electronic Signatures and Infrastructures (ESI); Policy and security requirements for Trust Service Providers issuing certificates; Part 2: Requirements for trust service providers issuing EU qualified certificates. Available under  https://www.etsi.org/deliver/etsi_en/319400_319499/31941102/02.03.01_60/en_31941102v020301p.pdf\r\n  - ETSI TS 119 495, Electronic Signatures and Infrastructures (ESI); Sector Specific Requirements; Certificate Profiles and TSP Policy Requirements for Open Banking. Availabler under https://www.etsi.org/deliver/etsi_ts/119400_119499/119495/01.06.01_60/ts_119495v010601p.pdf",
       "createdAt": "2024-05-02T08:42:40Z",
-      "updatedAt": "2024-12-13T10:53:23Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T11:59:48Z",
+      "closedAt": "2026-06-23T11:59:41Z",
       "comments": [
         {
           "author": "highlunder",
@@ -5373,6 +5373,13 @@
           "body": "This is pending the outcome of determining if we think #193 is relevant!",
           "createdAt": "2024-06-03T08:57:52Z",
           "updatedAt": "2024-06-03T08:57:52Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Not part of core spec.",
+          "createdAt": "2026-06-23T11:59:41Z",
+          "updatedAt": "2026-06-23T11:59:41Z"
         }
       ]
     },
@@ -5381,18 +5388,18 @@
       "id": "I_kwDOCpt5cM6Hu0pd",
       "title": "Syntax for the extnesion value QCStatements",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/193",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [
         "waiting for input",
-        "less priority"
+        "low priority for core spec"
       ],
       "body": "The ASN.1 syntax:\r\n\r\n- RFC 3739\r\n  ```\r\n  QCStatements ::= SEQUENCE OF QCStatement\r\n\r\n   QCStatement ::= SEQUENCE {\r\n       statementId        OBJECT IDENTIFIER,\r\n       statementInfo      ANY DEFINED BY statementId OPTIONAL}\r\n\r\n   SemanticsInformation  ::= SEQUENCE {\r\n       semanticsIndentifier        OBJECT IDENTIFIER OPTIONAL,\r\n       nameRegistrationAuthorities NameRegistrationAuthorities OPTIONAL\r\n       } -- At least one field shall be present\r\n \r\n   NameRegistrationAuthorities ::= SEQUENCE SIZE (1..MAX) OF GeneralName\r\n\r\n   id-qcs-pkixQCSyntax-v1   OBJECT IDENTIFIER ::= { id-qcs 1 } -- 1.3.6.1.5.5.7.11.1\r\n   id-qcs-pkixQCSyntax-v2   OBJECT IDENTIFIER ::= { id-qcs 2 } -- 1.3.6.1.5.5.7.11.2\r\n   ```\r\n\r\n- ETSI EN 319 412-5\r\n  ```\r\n  -- EU qualified certificate declaration\r\n  esi4-qcStatement-1 QC-STATEMENT ::= { IDENTIFIED BY id-etsi-qcs-QcCompliance }\r\n\r\n  id-etsi-qcs-QcCompliance OBJECT IDENTIFIER ::= { id-etsi-qcs 1 }\r\n\r\n  -- Declaration of limit value\r\n  esi4-qcStatement-2 QC-STATEMENT ::= { SYNTAX QcEuLimitValue IDENTIFIED\r\n     BY id-etsi-qcs-QcLimitValue }\r\n\r\n  QcEuLimitValue ::= MonetaryValue\r\n\r\n  MonetaryValue::= SEQUENCE {\r\n      currency Iso4217CurrencyCode,\r\n      amount INTEGER,\r\n      exponent INTEGER}\r\n      -- value = amount * 10^exponent\r\n\r\n  Iso4217CurrencyCode ::= CHOICE {\r\n     alphabetic PrintableString (SIZE (3)), -- Recommended\r\n     numeric INTEGER (1..999) }\r\n     -- Alphabetic or numeric currency code as defined in ISO 4217\r\n     -- It is recommended that the Alphabetic form is used\r\n\r\n  -- Retention period declaration\r\n  esi4-qcStatement-3 QC-STATEMENT ::= { SYNTAX QcEuRetentionPeriod IDENTIFIED\r\n      BY id-etsi-qcs-QcRetentionPeriod }\r\n\r\n  QcEuRetentionPeriod ::= INTEGER \r\n\r\n  -- SSCD and QSCD declaration\r\n  esi4-qcStatement-4 QC-STATEMENT ::= { IDENTIFIED BY id-etsi-qcs-QcSSCD }\r\n\r\n  -- PKI Disclosure statements\r\n  esi4-qcStatement-5 QC-STATEMENT ::= { SYNTAX QcEuPDS IDENTIFIED\r\n      BY id-etsi-qcs-QcPDS }\r\n\r\n  QcEuPDS ::= PdsLocations\r\n\r\n  PdsLocations ::= SEQUENCE SIZE (1..MAX) OF PdsLocation\r\n  PdsLocation::= SEQUENCE {\r\n      url IA5String,\r\n     language PrintableString (SIZE(2))} --ISO 639-1 language code\r\n\r\n  -- Certificate type\r\n  esi4-qcStatement-6 QC-STATEMENT ::= { SYNTAX QcType IDENTIFIED\r\n      BY id-etsi-qcs-QcType }\r\n\r\n  QcType::= SEQUENCE OF OBJECT IDENTIFIER (id-etsi-qct-esign | id-etsi-qct-eseal |\r\n      id-etsi-qct-web, ...)\r\n\r\n  -- country or set of countries under the legislation of which the certificate is issued as a\r\n  -- qualified certificate\r\n  esi4-qcStatement-7 QC-STATEMENT ::= { SYNTAX QcCClegislation IDENTIFIED\r\n      BY id-etsi-qcs-QcCClegislation } \r\n\r\n  QcCClegislation ::= SEQUENCE OF CountryName\r\n  CountryName ::= PrintableString (SIZE (2)) (CONSTRAINED BY { -- ISO 3166 alpha-2 codes only -- })\r\n\r\n  -- object identifiers\r\n  id-etsi-qcs OBJECT IDENTIFIER ::= { itu-t(0) identified-organization(4) etsi(0)\r\n      id-qc-profile(1862) 1 }\r\n  id-etsi-qcs-QcCompliance OBJECT IDENTIFIER ::= { id-etsi-qcs 1 }\r\n\r\n  id-etsi-qcs-QcLimitValue OBJECT IDENTIFIER ::= { id-etsi-qcs 2 }\r\n\r\n  id-etsi-qcs-QcRetentionPeriod OBJECT IDENTIFIER ::= { id-etsi-qcs 3 }\r\n\r\n  id-etsi-qcs-QcSSCD OBJECT IDENTIFIER ::= { id-etsi-qcs 4 }\r\n\r\n  id-etsi-qcs-QcPDS OBJECT IDENTIFIER ::= { id-etsi-qcs 5 }\r\n\r\n  id-etsi-qcs-QcType OBJECT IDENTIFIER ::= { id-etsi-qcs 6 }\r\n\r\n  id-etsi-qcs-QcCClegislation OBJECT IDENTIFIER ::= { id-etsi-qcs 7 }\r\n  ```\r\n\r\n- ETSI TS 119 495\r\n  ```\r\n  etsi-psd2-qcStatement QC-STATEMENT ::= {SYNTAX PSD2QcType IDENTIFIED BY id-etsi-psd2-qcStatement }\r\n\r\n  id-etsi-psd2-qcStatement OBJECT IDENTIFIER ::=\r\n      { itu-t(0) identified-organization(4) etsi(0) psd2(19495) qcstatement(2) }\r\n\r\n  PSD2QcType ::= SEQUENCE{\r\n      rolesOfPSP RolesOfPSP,\r\n      nCAName NCAName,\r\n      nCAId NCAId }\r\n\r\n  NCAName ::= UTF8String (SIZE (1..256))\r\n\r\n  NCAId ::= UTF8String (SIZE (1..256))\r\n\r\n  RolesOfPSP ::= SEQUENCE OF RoleOfPSP\r\n\r\n  RoleOfPSP ::= SEQUENCE{\r\n      roleOfPspOid RoleOfPspOid,\r\n      roleOfPspName RoleOfPspName}\r\n\r\n  RoleOfPspOid ::= OBJECT IDENTIFIER \r\n  ```\r\n\r\n- CBOR: below is my proposed suggestion:\r\n\r\n  We need a new \"Figure X: C509 Statement Identifiers\", and the following syntax:\r\n\r\n  ```\r\n  QCStatements = [* QCStatement ]\r\n\r\n  QCStatement = (statementId: int, statementInfo : any) /\r\n                (statementId: ~oid/pen, statementInfo : bstr/null) -- statementInfo may be not present.\r\n\r\n  -- For qcs-pkixQCSyntax-v1  and qcs-pkixQCSyntax-v2\r\n  SemanticsInformation = [semanticsIdentifier:~oid/pen/null, nameRegistrationAuthorities:GeneralNames/null]\r\n\r\n  -- For esi4-qcStatement-1\r\n  The statementInfo is `null`.\r\n\r\n  -- For  esi4-qcStatement-2\r\n  MonetaryValue = [currency: Iso4217CurrencyCode, amount: uint, exponent: uint]\r\n\r\n  Iso4217CurrencyCode = tstr / uint\r\n\r\n  -- For  esi4-qcStatement-3\r\n  The statementInfo is uint (or int if negative value is allowed).\r\n\r\n  -- For esi4-qcStatement-4\r\n  The statementInfo is `null`.\r\n\r\n  -- For  esi4-qcStatement-5\r\n  PdsLocations = [ + PdsLocation ]\r\n\r\n  PdsLocation = (url:tstr, language:tstr)\r\n\r\n  -- For  esi4-qcStatement-6\r\n  QcType = [ * ~oid/pen ]\r\n\r\n  -- For  esi4-qcStatement-7\r\n  QcCClegislation = [*tstr]\r\n\r\n  -- For etsi-psd2-qcStatement\r\n  RoleOfPSP = (~oid/pen, tstr)\r\n\r\n  RolesOfPSP = [* RoleOfPSP]\r\n\r\n  PSD2QcType = [RolesOfPSP, tstr, tstr]\r\n  ```",
       "createdAt": "2024-05-03T08:34:46Z",
-      "updatedAt": "2024-12-13T10:53:23Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T12:00:30Z",
+      "closedAt": "2026-06-23T12:00:30Z",
       "comments": [
         {
           "author": "highlunder",
@@ -5407,6 +5414,20 @@
           "body": "*we agree to include this in the upcoming COSE presentation to ask for input*",
           "createdAt": "2024-06-24T08:44:28Z",
           "updatedAt": "2024-06-24T08:44:28Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Change label to \"separate from core spec\".",
+          "createdAt": "2026-06-23T11:57:52Z",
+          "updatedAt": "2026-06-23T11:57:52Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Out-of-scope of the core spec",
+          "createdAt": "2026-06-23T12:00:30Z",
+          "updatedAt": "2026-06-23T12:00:30Z"
         }
       ]
     },
@@ -5650,7 +5671,7 @@
       "id": "I_kwDOCpt5cM6H6-MA",
       "title": "Public Key Value of XMSS, XMSSMT, and HSS-LMS",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/199",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -5659,8 +5680,8 @@
       ],
       "body": "As specified in https://datatracker.ietf.org/doc/html/draft-ietf-lamps-x509-shbs-00:\r\n\r\n```\r\npk-XMSS-HashSig PUBLIC-KEY ::= {\r\n   IDENTIFIER id-alg-xmss-hashsig\r\n   KEY XMSS-HashSig-PublicKey\r\n   PARAMS ARE absent\r\n   CERT-KEY-USAGE\r\n      { digitalSignature, nonRepudiation, keyCertSign, cRLSign } }\r\n\r\nXMSS-HashSig-PublicKey ::= OCTET STRING\r\n```\r\n\r\nAnd here the definition of SubjectPublicKeyInfo in RFC 5280\r\n```\r\n   SubjectPublicKeyInfo  ::=  SEQUENCE  {\r\n        algorithm            AlgorithmIdentifier,\r\n        subjectPublicKey     BIT STRING  }\r\n```\r\n\r\nShall the XMSS public key be an OCTET-STRING(public key bytes), or just the \"public key bytes\"?\r\n\r\nThis applies also to the XMSS-MT, HSS-LMS.\r\n\r\n",
       "createdAt": "2024-05-06T08:58:08Z",
-      "updatedAt": "2025-08-17T06:35:12Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T12:01:05Z",
+      "closedAt": "2026-06-23T12:01:04Z",
       "comments": [
         {
           "author": "gselander",
@@ -5710,6 +5731,13 @@
           "body": "Merged to main",
           "createdAt": "2025-08-17T06:34:13Z",
           "updatedAt": "2025-08-17T06:34:13Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Out-of-scope of the core spec",
+          "createdAt": "2026-06-23T12:01:05Z",
+          "updatedAt": "2026-06-23T12:01:05Z"
         }
       ]
     },
@@ -5718,7 +5746,7 @@
       "id": "I_kwDOCpt5cM6I4cQK",
       "title": "Support the extensions in CCC Digital Key Specification",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/201",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -5728,8 +5756,8 @@
       ],
       "body": "CCC defines in its [Digital Key Specification ](https://carconnectivity.org/digital-key/) 10 extensions, most of them have simple extension value:\r\n\r\n```\r\nExternalCACertificateExtensionSchema ::= SEQUENCE\r\n{\r\n  extension_version INTEGER (1..255)\r\n}\r\n```\r\n\r\nBelow is the complete list of extension OIDs:\r\n\r\nB.2.2 OID Assignment\r\n\r\nEach certificate shall be identifiable by the following OID values:\r\n\r\n- Vehicle Public Key Certificates (leaf) [K]\r\n  1.3.6.1.4.1.41577.5.1\r\n- External CA Certificates (intermediate)[F]\r\n  1.3.6.1.4.1.41577.5.2\r\n- Instance CA Certificates (intermediate) [E]\r\n  1.3.6.1.4.1.41577.5.3\r\n- Endpoint Certificates (leaf)[H]\r\n  1.3.6.1.4.1.41577.5.4\r\n- Vehicle OEM Encryption Certificate (VehicleOEM.Enc.Cert)\r\n  1.3.6.1.4.1.41577.5.5\r\n- Vehicle OEM Signature Certificate (VehicleOEM.Sig.Cert)\r\n  1.3.6.1.4.1.41577.5.6\r\n- Device.Enc.Cert (optional as only the PK is sent in the trackKey request)\r\n  1.3.6.1.4.1.41577.5.7\r\n- Vehicle Intermediate Certificate\r\n  1.3.6.1.4.1.41577.5.8\r\n- Vehicle OEM CA Certificate [J]\r\n  1.3.6.1.4.1.41577.5.9\r\n- Vehicle OEM CA Certificate (Signed by Device OEM CA) [M] (optional as only used by some 4 implemenation)\r\n  1.3.6.1.4.1.41577.5.10\r\n\r\nExtensions with the above OIDs shall be marked as critical.\r\n\r\nCCC digital key is widely adopted in automotive, and I think Automotive is one of the most important application areas of C509, please add the support if possible. If the authors decide to support it, I can propose the syntax of the extension value.",
       "createdAt": "2024-05-14T22:14:34Z",
-      "updatedAt": "2025-06-22T18:25:22Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T12:01:24Z",
+      "closedAt": "2026-06-23T12:01:24Z",
       "comments": [
         {
           "author": "gselander",
@@ -5744,6 +5772,13 @@
           "body": "> If any of these are important to use with C509 then we should prioritize to add them. Is C509 relevant for automotive industry?\n> \n>     * Is this relevant for CCC Digital Key Specification (grant access to car e.g. from smart phone)? (Joel, Shahid, Lijun checks)\n>\nSince C509 has not been standardized yet, it is not used in the automotive industry. But due to the small size and small code footprint, it could be a good chance to be used as a lightweight profile compared to the X509.\n\n>     * Is this relevant for V2G (plug and charge)? (Martin checks)\nSame as above in the automotive industry. And additionally, since V2G uses also certificates for the TLS connection, we need also to standardize the usage of C509 in TLS.\n\n> \n> ( V2X probably not, based on IEEE )\n\n",
           "createdAt": "2025-06-22T18:25:22Z",
           "updatedAt": "2025-06-22T18:25:22Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Out-of-scope of the core spec",
+          "createdAt": "2026-06-23T12:01:24Z",
+          "updatedAt": "2026-06-23T12:01:24Z"
         }
       ]
     },
@@ -6552,7 +6587,7 @@
       ],
       "body": "Low priority, but could be done when addressing WGLC comments.",
       "createdAt": "2025-06-19T05:58:57Z",
-      "updatedAt": "2026-04-28T10:38:48Z",
+      "updatedAt": "2026-06-23T12:02:44Z",
       "closedAt": null,
       "comments": [
         {
@@ -6561,6 +6596,13 @@
           "body": "@gselander Done. Please close this issue.",
           "createdAt": "2026-04-28T10:38:48Z",
           "updatedAt": "2026-04-28T10:38:48Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Please close this issue. Just reminder",
+          "createdAt": "2026-06-23T12:02:44Z",
+          "updatedAt": "2026-06-23T12:02:44Z"
         }
       ]
     },
@@ -6848,7 +6890,7 @@
       ],
       "body": "As defined in ITU-T X.520 (10/2019):\n```\npostalAddress ATTRIBUTE ::= {\n    WITH SYNTAX PostalAddress\n    EQUALITY MATCHING RULE caseIgnoreListMatch\n    SUBSTRINGS MATCHING RULE caseIgnoreListSubstringsMatch\n    LDAP-SYNTAX postalAddr.&id\n    LDAP-NAME {\"postalAddress\"}\n    ID id-at-postalAddress }\n\nPostalAddress ::= SEQUENCE SIZE (1..MAX) OF UnboundedDirectoryString\n\nUnboundedDirectoryString ::= CHOICE {\n    teletexString TeletexString(SIZE (1..MAX)),\n    printableString PrintableString(SIZE (1..MAX)),\n    bmpString BMPString(SIZE (1..MAX)),\n    universalString UniversalString(SIZE (1..MAX)),\n    uTF8String UTF8String(SIZE (1..MAX)) }\n```\npostal address is a sequence of multiple strings. We need to add text block to cover the postalAddress with multiple lines (each line is an `UnboundedDirectoryString`). My suggestion is to use the `\\n`to separate the lines, as as the limitation, the line is not allowed to have `\\r` and `\\n`, and in re-encoded certificate, lines must be all `UTF8 String` or be all `Printable String`.\n",
       "createdAt": "2025-06-29T18:05:40Z",
-      "updatedAt": "2025-07-19T14:06:18Z",
+      "updatedAt": "2026-06-23T11:56:48Z",
       "closedAt": null,
       "comments": [
         {
@@ -6857,6 +6899,13 @@
           "body": "Good comment. We need to either specify this or remove this attribute. Unless there is a proposal for specification we propose to remove it as part of processing WGLC comments.",
           "createdAt": "2025-07-19T11:53:42Z",
           "updatedAt": "2025-07-19T11:53:42Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander Change label to \"separate from core spec\".",
+          "createdAt": "2026-06-23T11:56:48Z",
+          "updatedAt": "2026-06-23T11:56:48Z"
         }
       ]
     },
@@ -6865,7 +6914,7 @@
       "id": "I_kwDOCpt5cM697SaD",
       "title": "Need to register COSE constants used in this draft",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/256",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -6874,8 +6923,8 @@
       ],
       "body": "When adding the support of a public key algorithm, we should make sure that the corresponding private key can also be stored in CBOR/COSE container `C509PrivateKey` defined in Section `3.5.  Private Key Structures`.\n\n```\n   C509PrivateKey = [\n      C509PrivateKeyType: int,\n      subjectPrivateKeyAlgorithm: AlgorithmIdentifier,\n      subjectPrivateKey: any,\n   ]\n```\n\nAs stated in https://www.iana.org/assignments/cose/cose.xhtml#key-type, there are still no `COSE Elliptic Curves` constants for the weierstra\u00df curve FRP256V1 and SM2P256V1.",
       "createdAt": "2025-06-29T18:22:42Z",
-      "updatedAt": "2025-07-24T07:22:31Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T11:55:15Z",
+      "closedAt": "2026-06-23T11:55:15Z",
       "comments": [
         {
           "author": "emanjon",
@@ -8043,7 +8092,7 @@
       "id": "I_kwDOCpt5cM7WAB7E",
       "title": "Missing C509 type for public key",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/297",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
@@ -8052,8 +8101,8 @@
       ],
       "body": "In draft -15, there is no syntax to save / transport the public key. A straightforward idea is to define it as follows:\n\n```\nC509PublicKey = [\n   C509PublicKeyType: int,\n   subjectPublicKeyAlgorithm: AlgorithmIdentifier,\n   subjectPublicKey: Defined,\n]\n```\n\nAnd we also need a media type for this.",
       "createdAt": "2025-11-05T10:29:48Z",
-      "updatedAt": "2026-03-09T10:07:07Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T12:04:00Z",
+      "closedAt": "2026-06-23T12:04:00Z",
       "comments": [
         {
           "author": "gselander",
@@ -8061,6 +8110,13 @@
           "body": "Not urgent for main spec.",
           "createdAt": "2026-03-09T09:59:31Z",
           "updatedAt": "2026-03-09T09:59:31Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Out-of-scope of the core spec",
+          "createdAt": "2026-06-23T12:04:00Z",
+          "updatedAt": "2026-06-23T12:04:00Z"
         }
       ]
     },
@@ -8914,7 +8970,7 @@
       "id": "I_kwDOCpt5cM7_STJX",
       "title": "Med Boucadair's review",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/353",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -8923,8 +8979,8 @@
       ],
       "body": "\n_**Discuss**_ (2026-04-10) \n\n# IETF Review with Expert Review\n\nCURRENT:\n  All assignments according to \"IETF Review with Expert Review\" are made on a \"IETF Review\" basis per {{Section 4.8 of [RFC8126](https://datatracker.ietf.org/doc/rfc8126/)}} with \"Expert Review\" additionally required per {{Section 4.5 of [RFC8126](https://datatracker.ietf.org/doc/rfc8126/)}}. \n\nand\n\n the registration procedure is \"IETF Review with Expert Review\".\n\nI remember that Carsten edited [draft-bormann-gendispatch-with-expert-review](https://datatracker.ietf.org/doc/draft-bormann-gendispatch-with-expert-review/), but do we have a stable reference where such policy is defined?\n\n# The WG may be closed: not sure how this guidance will age\n\nCURRENT:\n  In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of {{[RFC7120](https://datatracker.ietf.org/doc/rfc7120/)}}.\n\n\n\n\n\n_**Comment**_ (2026-04-10)\n\n# Is this already deployed there or these are deployment targets?\n\nCURRENT:\n  C509 is deployed in, e.g., in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS)\n\n\u201cis deployed\u201d won\u2019t age well in an RFC, btw.\n\n# Please consider adding a reference\n\nCURRENT :\n\n  the CBOR encoding can in many cases reduce the size of  [RFC7925](https://datatracker.ietf.org/doc/rfc7925/) profiled certificates by over 50%.\n\n# Any reason why this is repeated here?\n\nCURRENT:\n  The procedure for early IANA allocation of \"standards track code points\" defined in {{[RFC7120](https://datatracker.ietf.org/doc/rfc7120/)}} also applies.\n",
       "createdAt": "2026-04-17T13:33:20Z",
-      "updatedAt": "2026-04-28T09:35:07Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T07:28:08Z",
+      "closedAt": "2026-06-23T07:28:08Z",
       "comments": [
         {
           "author": "gselander",
@@ -8939,6 +8995,13 @@
           "body": "@gselander we are waiting for input",
           "createdAt": "2026-04-27T08:53:28Z",
           "updatedAt": "2026-04-27T08:53:28Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Resolved in -18",
+          "createdAt": "2026-06-23T07:28:08Z",
+          "updatedAt": "2026-06-23T07:28:08Z"
         }
       ]
     },
@@ -9106,15 +9169,15 @@
       "id": "I_kwDOCpt5cM8AAAABA6GVTQ",
       "title": "Roman Danyliw's review",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/378",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "https://mailarchive.ietf.org/arch/msg/cose/XacHMJcPvoazvhbjnlAkem2wiWE/\n\n----------------------------------------------------------------------\nDISCUSS:\n----------------------------------------------------------------------\n\n** Section 8.4\n   The\n   fields of the registry are Value, Comments, and subjectPrivateKey,\n   and Reference, where Value is an integer, and the other columns are\n   text strings.\n\nThe value of subjectPrivateKey seems to be underspecified.  Yes, it is text\nstring.  However, what are the valid values?  What does this field describe?\n\n** Section 8.6, 8.7\n   The fields Name, OID, and DER are mandatory.\n\u2026\n   If\n   OID is present, the OID is given in dotted decimal representation,\n   and the DER column contains the hex string of the DER-encoded OID\n   [X.690].\n\n-- Per sentence one, the OID field is mandatory.  Per sentence two, there\nappears to be conditionality to whether the OID might be present.  Which is it?\n\n-- Where are the OID and DER fields defined?\n\n** Section 8.8.  Where are OID, DER, and AttributeValue defined?\n\n** Section 8.9. Where are the OID and DER fields defined?\n\n** Section 8.9, 8.10\n   The fields Name,\n   OID, and DER are mandatory.\n\nIs it desirable to register a field with no comment (reference)?\n\n** Section 8.11.  8.12. Where are the OID and DER fields defined?  Is it\ndesirable to register a code point with no comment (reference)?\n\n** Section 8.13.  Where are the OID and DER fields defined?  Is it desirable to\nregister a code point with no comment (reference)?\n\n** Section 8.14 and 8.15.  Do not use BCP14 keywords in IANA considerations. \nSee\nhttps://datatracker.ietf.org/doc/statement-iesg-statement-on-clarifying-the-use-of-bcp-14-key-words/.\n\n** Section 8.14.  What does the comment field text that says \u201cDon\u2019t use\u201d mean. \nWhere is it explained that the comment field has recommendations on usage?\n\n\n----------------------------------------------------------------------\nCOMMENT:\n----------------------------------------------------------------------\n\nThank you to Russ Housley for the GENART review.\n\n** Section 1.  Editorial.\n\n   Implementors can get familiar\n   with CBOR by using the CBOR playground [CborMe].\n\nIt is not clear what the value of this text for an archival document.\n\n** Section 8.15.1.  What does this section have to do with IANA actions?\n",
       "createdAt": "2026-04-30T06:39:02Z",
-      "updatedAt": "2026-06-09T19:38:47Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-23T07:28:21Z",
+      "closedAt": "2026-06-23T07:28:21Z",
       "comments": [
         {
           "author": "gselander",
