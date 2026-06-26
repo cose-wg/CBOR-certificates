@@ -2776,8 +2776,6 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 
 This section exemplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in {{example-native}}.
 
-{{fig-C509Certificate}} shows the encoding of the corresponding C509Certificate, see {{message-fields}}.
-
 ~~~~~~~~~~~
 58 8D
 8B
