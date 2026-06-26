@@ -685,7 +685,14 @@ The COSE_C509 item has media type application/cose-c509, see {{cose-c509}}. Diff
 
 The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.
 
-c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509 media type ("usage" = "chain"), as described above.
+c5u provides the ability to identify a C509 certificate by a URI {{RFC3986}}.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:
+
+   *  application/cose-c509-cert ({{cose-c509-cert}})
+   *  application/cose-c509 ({{cose-c509}})
+   *  application/cose-c509; usage=chain ({{cose-c509}})
+
+ When the application/cose-c509 media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "bytes").  If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+
 
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without appropriate authorization.
 
@@ -693,7 +700,7 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | c5b | 24 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
 | c5t | 22 | COSE_CertHash | Hash of a C509Certificate |
-| c5u | 23 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+| c5u | 23 | uri | URI pointing to a C509 certificate |
 {: #iana-header title="C509 COSE Header Parameters" cols="r l l l"}
 
 Certificates can also be identified with a 'kid' header parameter by storing the 'kid' value and the associated bag or chain in a dictionary.
@@ -709,7 +716,7 @@ This section defines the COSE header parameters used for identifying or transpor
 | Name | Algorithm | Label | Type | Description |
 | c5c-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -30 (suggested) | COSE_C509 | An ordered chain of C509 certificates |
 | c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a C509Certificate |
-| c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+| c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a C509 certificate |
 {: #iana-sender title="Static ECDH Algorithm Values" cols="r l l l l"}
 
 
