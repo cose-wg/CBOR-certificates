@@ -2708,7 +2708,7 @@ This section shows the C509 encoding of the X.509 certificate in the previous se
 {{fig-CBOR-diagnostic-7925}} shows the diagnostic notation of the C509Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~
-/This defines a CBOR array (RFC 8742):/
+/This defines a CBOR array:/
 [
   3,                   / version and certificate type /
   h'01f50d',           / certificateSerialNumber /
@@ -2758,7 +2758,7 @@ This section shows the natively signed C509 certificate corresponding to the cer
 {{fig-CBOR-diagnostic-native}} shows the diagnostic notation of the natively signed C509Certificate.
 
 ~~~~~~~~~~~
-/This defines a CBOR array (RFC 8742):/
+/This defines a CBOR array:/
 [
   2,
   h'01f50d',
@@ -2939,7 +2939,7 @@ F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F
 The CBOR encoding (C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR array (RFC 8742):/
+/This defines a CBOR array:/
 
 [
  3,
@@ -3062,7 +3062,7 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 The CBOR encoding (C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR array (RFC 8742):/
+/This defines a CBOR array:/
 
 [
 3,
@@ -3203,7 +3203,7 @@ ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 The CBOR encoding (C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR array (RFC 8742):/
+/This defines a CBOR array:/
 [
 3,
 h'A6A55C870E39B40E',
@@ -3365,7 +3365,7 @@ c9 92 91 9b 49 c4 8f d9 31 d0 5c 49 7d 38 65 e6 08 4c 91 df 3a 4c 7e
 The CBOR encoding (C509Certificate) of the X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR array (RFC 8742):/
+/This defines a CBOR array:/
 [
 3,
 h'1234',
