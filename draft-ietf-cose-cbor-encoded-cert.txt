@@ -1218,7 +1218,7 @@ Table of Contents
    PrivateKeyPossessionStatement = [
      issuer: Name,
      certificateSerialNumber: CertificateSerialNumber,
-     cert: C509Certificate / null,
+     cert: C509CertData / null,
    ]
 
 4.4.  Certification Request Template
