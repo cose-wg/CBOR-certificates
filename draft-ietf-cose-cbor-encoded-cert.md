@@ -274,7 +274,7 @@ In the encoding described below, the elements in arrays are always encoded in th
 
 This section describes the X.509 fields and their CBOR encodings and uses them in the definition of C509 certificates; see {{fig-CBORCertCDDL}}. While many of {{RFC5280}} encodings are supported, there are a few instances marked "not supported" for which no alternative is provided and, therefore, no C509 encoding can be generated.
 
-The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore have documentary value only. Applications that do not require a CBOR item MAY represent C509 certificates using the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices; see, for example, {{rfc7925-prof}}.
+The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore have documentary value only. Examples are given in the appendices; see, for example, {{rfc7925-prof}}.
 
 ~~~~~~~~~~~ cddl
 C509Certificate = [
@@ -323,6 +323,8 @@ tag = #6
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 {: #fig-CBORCertCDDL title="CDDL for C509Certificate."}
+
+The media type of C509Certificate is application/cose-c509-cert, see {{cose-c509-cert}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD20 is defined using the reserved CBOR tag 55799 and the Content-Format TBD21, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 C509 certificates are defined in terms of DER-encoded X.509 certificates {{RFC5280}} as detailed in the following subsections.
 
@@ -673,25 +675,32 @@ The COSE_C509 structure used in c5b, c5c, and c5u is defined as:
 
 ~~~~~~~~~~~ cddl
 COSE_C509 = C509CertData / [ 2* C509CertData ]
-C509CertData = bytes .cborseq C509Certificate
+C509CertData = bytes .cbor C509Certificate
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate. The byte string encoding includes the length of each certificate, which simplifies parsing. See {{other-examples}} for an example.
+C509CertData content thus includes the CBOR-encoded C509Certificate. The byte string encoding includes the length of each certificate, which simplifies parsing. See {{other-examples}} for an example.
 
-The COSE_C509 item has media type application/cose-c509-cert, see {{c509-cert}}. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see {{content-format}}.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in {{Section 2.2 of RFC9277}}.
+The COSE_C509 item has media type application/cose-c509, see {{cose-c509}}. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see {{content-format}}.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in {{Section 2.2 of RFC9277}}.
 
-The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.
 
-c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI {{RFC3986}}, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), as described above.
+c5u, analogously to x5u in {{RFC9360}}, provides the ability to identify a C509 certificate by a URI {{RFC3986}}.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:
+
+   *  application/cose-c509-cert ({{cose-c509-cert}})
+   *  application/cose-c509 ({{cose-c509}})
+   *  application/cose-c509; usage=chain ({{cose-c509}})
+
+When the application/cose-c509 media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "bytes").  If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+
 
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without appropriate authorization.
 
 | Name | Label | Value Type | Description |
 | c5b | 24 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t | 22 | COSE_CertHash | Hash of a ~C509Certificate |
-| c5u | 23 | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+| c5t | 22 | COSE_CertHash | Hash of a C509Certificate |
+| c5u | 23 | uri | URI pointing to a C509 certificate |
 {: #iana-header title="C509 COSE Header Parameters" cols="r l l l"}
 
 Certificates can also be identified with a 'kid' header parameter by storing the 'kid' value and the associated bag or chain in a dictionary.
@@ -702,12 +711,12 @@ This section defines the COSE header parameters used for identifying or transpor
 
 * c5c-sender contains the chain of certificates starting with the sender's key exchange certificate. The structure is the same as 'c5c'.
 * c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.
-* c5u-sender contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.
+* c5u-sender, analogously to x5u-sender in {{RFC9360}}, contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.
 
 | Name | Algorithm | Label | Type | Description |
 | c5c-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -30 (suggested) | COSE_C509 | An ordered chain of C509 certificates |
-| c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a ~C509Certificate |
-| c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a COSE_C509 containing an ordered chain of certificates |
+| c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a C509Certificate |
+| c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a C509 certificate |
 {: #iana-sender title="Static ECDH Algorithm Values" cols="r l l l l"}
 
 
@@ -726,7 +735,7 @@ C509PrivateKey = [
 
 The field 'C509PrivateKeyType' indicates the type of the C509 private key. Different types of C509 Private Key Structures can be defined, see {{privkeys}}. Currently, two types are defined. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in {{RFC5958}}. When C509PrivateKeyType = 1, the subjectPrivateKey is a COSE_KEY structure containing a private key as defined in {{RFC9052}}. Note that COSE_KEY might not be possible to use with all algorithms that have a C509 AlgorithmIdentifier defined.
 
-The C509PrivateKey item is served with the application/cose-c509-privkey media type, see {{c509-privkey}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined with "magic number" TBD12 using the reserved CBOR tag 55799 and the Content-Format TBD10, enveloped as described in {{Section 2.2 of RFC9277}}.
+The C509PrivateKey item is served with the application/cose-c509-privkey media type, see {{cose-c509-privkey}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined with "magic number" TBD12 using the reserved CBOR tag 55799 and the Content-Format TBD10, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 ~~~~~~~~~~~ cddl
 C509PEM = [
@@ -736,7 +745,7 @@ C509PEM = [
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-The C509PEM item is served with the application/cose-c509-pem media type, see {{c509-pem}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined with "magic number" TBD13 using the reserved CBOR tag 55799 and the Content-Format TBD11, enveloped as described in {{Section 2.2 of RFC9277}}.
+The C509PEM item is served with the application/cose-c509-pem media type, see {{cose-c509-pem}}, with corresponding CoAP Content-Format defined in {{content-format}}. A stored file format is defined with "magic number" TBD13 using the reserved CBOR tag 55799 and the Content-Format TBD11, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 ## Deterministic Encoding
 
@@ -797,7 +806,7 @@ CRAttribute = (( attributeType: int, attributeValue: Defined ) //
 
 After verifying subjectSignatureValue, the Certification Authority (CA) MAY transform the C509CertificationRequest into a {{RFC2986}} CertificationRequestInfo for compatibility with existing procedures and implementations.
 
-The media type of C509CertificationRequest is application/cose-c509-pkcs10, see {{c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in {{Section 2.2 of RFC9277}}.
+The media type of C509CertificationRequest is application/cose-c509-pkcs10, see {{cose-c509-pkcs10}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 
 ## Certification Request Types
@@ -913,7 +922,7 @@ For RDNAttributeTemplate, the minOccurs and maxOccurs fields specify the minimal
 
 For ExtensionTemplate, the field "optional" specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.
 
-The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see {{c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
+The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see {{cose-c509-crtemplate}}, with corresponding CoAP Content-Format defined in {{content-format}}. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in {{Section 2.2 of RFC9277}}.
 
 # C509 Processing and Certificate Issuance
 
@@ -947,17 +956,17 @@ In the examples using FN-DSA and ML-DSA certificate chains, the largest portion 
 +----------------------------------------+-----------+-----------+
 | Description (number of certs)          | COSE_X509 | COSE_C509 |
 +----------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1)  |       319 |       142 |
+| RFC 7925 profiled IoT Certificate (1)  |       319 |       143 |
 +----------------------------------------+-----------+-----------+
-| RPKI Certificate (1)                   |     20981 |     11523 |
+| RPKI Certificate (1)                   |     20981 |     11524 |
 +----------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain (2)      |      1644 |      1012 |
+| ECDSA HTTPS Certificate Chain (2)      |      1644 |      1014 |
 +----------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain (2)        |      2909 |      2240 |
+| RSA HTTPS Certificate Chain (2)        |      2649 |      2066 |
 +----------------------------------------+-----------+-----------+
-| FN-DSA-512 HTTPS Certificate Chain (2) |      4417 |      3897 |
+| FN-DSA-512 HTTPS Certificate Chain (2) |      4421 |      3903 |
 +----------------------------------------+-----------+-----------+
-| ML-DSA-65 HTTPS Certificate Chain (2)  |     11863 |     11318 |
+| ML-DSA-65 HTTPS Certificate Chain (2)  |     11862 |     11320 |
 +----------------------------------------+-----------+-----------+
 
 ~~~~~~~~~~~
@@ -969,21 +978,21 @@ In the examples using FN-DSA and ML-DSA certificate chains, the largest portion 
 | Description           | X.509 | X.509 + | C509  | C509 + |
 | (number of certs)     |       | Brotli  |       | Brotli |
 +-----------------------+-------+---------+-------+--------+
-| RFC 7925 profiled     |   325 |     317 |  149  |    158 |
+| RFC 7925 profiled     |   325 |     317 |  150  |    159 |
 | IoT Certificate (1)   |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| RPKI Certificate (1)  | 20987 |    9109 | 11529 |   7020 |
+| RPKI Certificate (1)  | 20987 |    9109 | 11530 |   7023 |
 +-----------------------+-------+---------+-------+--------+
-| ECDSA HTTPS           |  1651 |    1181 |  1019 |    930 |
+| ECDSA HTTPS           |  1651 |    1181 |  1021 |    953 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| RSA HTTPS             |  2656 |    2195 |  2071 |   1913 |
+| RSA HTTPS             |  2656 |    2195 |  2073 |   1915 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| FN-DSA-512 HTTPS      |  4437 |    4026 |  3917 |   3776 |
+| FN-DSA-512 HTTPS      |  4428 |    4011 |  3910 |   3753 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| ML-DSA-65 HTTPS       | 11869 |   11420 | 11325 |  11148 |
+| ML-DSA-65 HTTPS       | 11869 |   11396 | 11327 |  11127 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
 ~~~~~~~~~~~
@@ -2236,12 +2245,52 @@ IANA is requested to assign the entries in {{iana-sender}} to the "COSE Header A
 
 IANA is requested to assign the following entries into the "application" registry in the registry group "Media Types" with this document as reference.
 
-### Media Type application/cose-c509-cert {#c509-cert}
-When the application/cose-c509-cert media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+### Media Type application/cose-c509-cert {#cose-c509-cert}
+When the application/cose-c509-cert media type is used, the data is a C509Certificate structure.
 
 Type name: application
 
 Subtype name: cose-c509-cert
+
+Required parameters: N/A
+
+Optional parameters: N/A
+
+Encoding considerations: binary
+
+Security considerations: See the Security Considerations section of [[this document]].
+
+Interoperability considerations: N/A
+
+Published specification: [[this document]]
+
+Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.
+
+Fragment identifier considerations: N/A
+
+Additional information:
+
+* Deprecated alias names for this type: N/A
+* Magic number(s): TBD20
+* File extension(s): .c509
+* Macintosh file type code(s): N/A
+
+Person & email address to contact for further information: iesg@ietf.org
+
+Intended usage: COMMON
+
+Restrictions on usage: N/A
+
+Author: COSE WG
+
+Change controller: IETF
+
+### Media Type application/cose-c509 {#cose-c509}
+When the application/cose-c509 media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+
+Type name: application
+
+Subtype name: cose-c509
 
 Required parameters: N/A
 
@@ -2282,8 +2331,7 @@ Author: COSE WG
 
 Change controller: IETF
 
-
-### Media Type application/cose-c509-pkcs10 {#c509-pkcs10}
+### Media Type application/cose-c509-pkcs10 {#cose-c509-pkcs10}
 When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificationRequest structure.
 
 Type name: application
@@ -2323,7 +2371,7 @@ Author: COSE WG
 
 Change controller: IETF
 
-### Media Type application/cose-c509-crtemplate {#c509-crtemplate}
+### Media Type application/cose-c509-crtemplate {#cose-c509-crtemplate}
 When the application/cose-c509-crtemplate media type is used, the data is a C509CertificationRequestTemplate structure.
 
 Type name: application
@@ -2363,7 +2411,7 @@ Author: COSE WG
 
 Change controller: IETF
 
-### Media Type application/cose-c509-privkey {#c509-privkey}
+### Media Type application/cose-c509-privkey {#cose-c509-privkey}
 When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.
 
 Type name: application
@@ -2403,7 +2451,7 @@ Author: COSE WG
 
 Change controller: IETF
 
-### Media Type application/cose-c509-pem {#c509-pem}
+### Media Type application/cose-c509-pem {#cose-c509-pem}
 When the application/cose-c509-pem media type is used, the data is a C509PEM structure.
 
 Type name: application
@@ -2489,8 +2537,8 @@ Change controller: IETF
 
 ## CoAP Content-Formats Registry {#content-format}
 
-IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-crtemplate", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters".
-A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see {{c509-cert}}.
+IANA is requested to add entries for application/cose-c509-cert", "application/cose-c509", "application/cose-c509-pkcs10", "application/cose-c509-crtemplate", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters".
+A dedicated Content-Format ID is requested for the "application/cose-c509" media type in the case when the parameter "usage" is set to "chain", see {{cose-c509}}.
 
 IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see {{cose-certhash}}.
 
@@ -2502,11 +2550,14 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 | Content              | Content | Media     | ID    | Reference  |
 | Format               | Coding  | Type      |       |            |
 +======================+=========+===========+=======+============+
-| application/         | -       | [[link    | TBD3  | [[this     |
+| application/         | -       | [[link    | TBD21 | [[this     |
 | cose-c509-cert       |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD3  | [[this     |
+| cose-c509            |         | to 8.18]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-c509-cert;      | -       | to 8.18]] | TBD15 | document]] |
+| cose-c509;           | -       | to 8.18]] | TBD15 | document]] |
 | usage=chain          |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD4  | [[this     |
@@ -2540,7 +2591,7 @@ This document registers the following entry in the "TLS Certificate Types" regis
 case C509:
   opaque c509_data<1..2^24-1>;
 ~~~~~~~~~~~
-where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in {{Section 7.4.2 of RFC5246}}. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
+where c509_data is the CBOR-encoded C509Certificate. For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in {{Section 7.4.2 of RFC5246}}. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type {{RFC7250}} are used to negotiate the use of C509.
 
 
 ~~~~~~~~~~~
@@ -2654,11 +2705,11 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 
 This section shows the C509 encoding of the X.509 certificate in the previous section. The point-compressed public key is represented as described in {{subpubkey-alg-encoding}}.
 
-{{fig-CBOR-diagnostic-7925}} shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see {{message-fields}}.
+{{fig-CBOR-diagnostic-7925}} shows the diagnostic notation of the C509Certificate, see {{message-fields}}.
 
 ~~~~~~~~~~~
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
   3,                   / version and certificate type /
   h'01f50d',           / certificateSerialNumber /
   0,                   / signatureAlgorithm /
@@ -2675,13 +2726,14 @@ This section shows the C509 encoding of the X.509 certificate in the previous se
   h'D4320B1D6849E309219D30037E138166F2508247DDDAE76CCE
     EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
     3314EA19191E8B607DA5AE3BDA16'
+]
+~~~~~~~~~~~
+{: #fig-CBOR-diagnostic-7925 title="CBOR diagnostic notation of C509Certificate"}
+
+{{fig-CBOR-plain-hex-7925}} shows the plain hex format of the CBOR array. The size is 141 bytes.
 
 ~~~~~~~~~~~
-{: #fig-CBOR-diagnostic-7925 title="CBOR diagnostic notation of ~C509Certificate"}
-
-{{fig-CBOR-plain-hex-7925}} shows the plain hex format of the unwrapped CBOR sequence. The size is 140 bytes.
-
-~~~~~~~~~~~
+8B
 03
 43 01 F5 0D
 00
@@ -2697,17 +2749,17 @@ D8 30 46 01 23 45 67 89 AB
 DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 62 56 C1 78 E4 AC 33 14 EA 19 19 1E 8B 60 7D A5 AE 3B DA 16
 ~~~~~~~~~~~
-{: #fig-CBOR-plain-hex-7925 title="CBOR plain hex format of ~C509Certificate."}
+{: #fig-CBOR-plain-hex-7925 title="CBOR plain hex format of C509Certificate."}
 
 ### Example: Natively Signed C509 Certificate {#example-native}
 
 This section shows the natively signed C509 certificate corresponding to the certificate in the previous section. It is identical except for c509CertificateType, the encoding of point compression (see {{subpubkey-alg-encoding}}), and signatureValue.
 
-{{fig-CBOR-diagnostic-native}} shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.
+{{fig-CBOR-diagnostic-native}} shows the diagnostic notation of the natively signed C509Certificate.
 
 ~~~~~~~~~~~
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
   2,
   h'01f50d',
   0,
@@ -2722,12 +2774,14 @@ This section shows the natively signed C509 certificate corresponding to the cer
   h'EB0D472731F689BC00F5880B12C68B3F9FD38B23FADFCA2095
     0F3F241B60A202579CAC28CD3B7494D5FA5D8BBAB4600357E5
     50AB9FA9A65D9BA2B3B82E668CC6'
+]
 ~~~~~~~~~~~
-{: #fig-CBOR-diagnostic-native title="CBOR diagnostic notation of ~C509Certificate"}
+{: #fig-CBOR-diagnostic-native title="CBOR diagnostic notation of C509Certificate"}
 
-{{fig-CBOR-plain-hex-native}} shows the plain hex format of the natively signed unwrapped CBOR sequence. The size is 140 bytes.
+{{fig-CBOR-plain-hex-native}} shows the plain hex format of the natively signed C509Certificate. The size is 141 bytes.
 
 ~~~~~~~~~~~
+8B
 02
 43 01 F5 0D
 00
@@ -2743,7 +2797,7 @@ D8 30 46 01 23 45 67 89 AB
 DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 ~~~~~~~~~~~
-{: #fig-CBOR-plain-hex-native title="CBOR plain hex format of ~C509Certificate."}
+{: #fig-CBOR-plain-hex-native title="CBOR plain hex format of C509Certificate."}
 
 ### C509 for Diffie-Hellman keys {#app-DH-keys}
 
@@ -2769,13 +2823,12 @@ subjectPrivateKey :
 h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 ~~~~~~~~~~~
 
-### Examples: C509Certificate and C509CertData {#other-examples}
+### Examples: C509CertData {#other-examples}
 
 This section exemplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in {{example-native}}.
 
-{{fig-C509Certificate}} shows the encoding of the corresponding C509Certificate, i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate, see {{message-fields}}.
-
 ~~~~~~~~~~~
+58 8D
 8B
 02
 43 01 F5 0D
@@ -2792,32 +2845,9 @@ D8 30 46 01 23 45 67 89 AB
 DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
 BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 ~~~~~~~~~~~
-{: #fig-C509Certificate title="C509Certificate: The CBOR array wrapping of ~C509Certificate"}
+{: #fig-C509CertData title="C509CertData: CBOR byte string wrapping of C509Certificate."}
 
-Note that C509Certificate is identical to ~C509Certificate in {{example-native}} except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).
-
-{{fig-C509CertData}} shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see {{cose-header-params}}.
-
-~~~~~~~~~~~
-58 8C
-02
-43 01 F5 0D
-00
-6B 52 46 43 20 74 65 73 74 20 43 41
-1A 63 B0 CD 00
-1A 69 55 B9 00
-D8 30 46 01 23 45 67 89 AB
-01
-58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
-5E D4 44 50 B1 01 9C 2D FD 38 38 AB
-01
-58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
-DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
-BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
-~~~~~~~~~~~
-{: #fig-C509CertData title="C509CertData: CBOR byte string wrapping of ~C509Certificate."}
-
-Note that C509CertData is identical to ~C509Certificate in {{example-native}} except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).
+Note that C509CertData is identical to C509Certificate in {{example-native}} except for the prefix 58 8D (which indicates that it is a CBOR byte string of 141 bytes).
 
 
 ## Example: IEEE 802.1AR profiled X.509 Certificate
@@ -2906,11 +2936,12 @@ F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F
 
 ### Example: C509 Certificate Encoding
 
-The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR Sequence (RFC 8742):/
+/This defines a CBOR array:/
 
+[
  3,
  h'7E7661D7B54E4632',
  0,
@@ -2944,11 +2975,13 @@ The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown belo
  ],
  h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86
    A774989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
+]
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 275 bytes:
+The size of the CBOR encoding is 276 bytes:
 
 ~~~~~~~~~~~
+8B
 03 48 7E 76 61 D7 B5 4E 46 32 00 8A 23 62 55 53 06 62 43 41 08 6B 45
 78 61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69
 6F 6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62
@@ -3026,11 +3059,12 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
 
 ### Example: C509 Certificate Encoding
 
-The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR Sequence (RFC 8742):/
+/This defines a CBOR array:/
 
+[
 3,
 h'047FA1E31928EE403BA0B83A395673FC',
 0,
@@ -3080,9 +3114,10 @@ h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E
 ],
 h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
   B5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
+]
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 835 bytes.
+The size of the CBOR encoding is 836 bytes.
 
 ## Example: CAB Baseline RSA HTTPS X.509 Certificate
 
@@ -3165,11 +3200,11 @@ ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
 
 ### Example: C509 Certificate Encoding
 
-The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
 3,
 h'A6A55C870E39B40E',
 23,
@@ -3229,9 +3264,10 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
   FA672DB0C7DB3D250A414A85D37F4946373CF4B175D052F3DDC766F14BFDAA00
   EDBFE47EED01EC7BE4F646FC31FD72FE03D2F265AF4D7EE2819B7AFD303CF552
   F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D'
+]
 ~~~~~~~~~~~
 
-The size of the CBOR encoding (CBOR sequence) is 1295 bytes.
+The size of the CBOR encoding (CBOR array) is 1296 bytes.
 
 ## Example: Certificate with Extensions IPAddrBlocks and IPAddrBlocksV2
 
@@ -3326,11 +3362,11 @@ c9 92 91 9b 49 c4 8f d9 31 d0 5c 49 7d 38 65 e6 08 4c 91 df 3a 4c 7e
 
 ### Example: C509 Certificate Encoding
 
-The CBOR encoding (~C509Certificate) of the X.509 certificate is shown below in CBOR diagnostic format.
+The CBOR encoding (C509Certificate) of the X.509 certificate is shown below in CBOR diagnostic format.
 
 ~~~~~~~~~~~
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
 3,
 h'1234',
 1,
@@ -3369,6 +3405,7 @@ h'046709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B0
 h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
   D59E8BF25D133FB1A094E9D42C8FA6ED20ED9FDB5A309B2C8704DDA5F144F17B
   B316B98C291124FBA5CFEC6EF97F2688069AE6C52E2B3CE223128DD10C2AA730'
+]
 ~~~~~~~~~~~
 
 
