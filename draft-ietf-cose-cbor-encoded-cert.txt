@@ -341,8 +341,8 @@ Table of Contents
 
                     Figure 1: CDDL for C509Certificate.
 
-   The media type of C509Certificate is application/cose-c509-cert, see
-   Section 8.18.1, with corresponding CoAP Content-Format defined in
+   The media type of C509Certificate is application/cose-c509-cert+cbor,
+   see Section 8.18.1, with corresponding CoAP Content-Format defined in
    Section 8.19.  The "magic number" TBD20 is defined using the reserved
    CBOR tag 55799 and the Content-Format TBD21, enveloped as described
    in Section 2.2 of [RFC9277].
@@ -878,7 +878,7 @@ Table of Contents
    The byte string encoding includes the length of each certificate,
    which simplifies parsing.  See Appendix A.1.5 for an example.
 
-   The COSE_C509 item has media type application/cose-c509, see
+   The COSE_C509 item has media type application/cose-c509+cbor, see
    Section 8.18.2.  Different CoAP Content-Formats are defined depending
    on "usage" = "chain" or not, see Section 8.19.  Stored file formats
    are defined for the cases with/without ("usage" = "chain") with
@@ -896,16 +896,16 @@ Table of Contents
    text string (media type application/cbor and CoAP Content-Format 60).
    The referenced resource can be any of the following media types:
 
-   *  application/cose-c509-cert (Section 8.18.1)
+   *  application/cose-c509-cert+cbor (Section 8.18.1)
 
-   *  application/cose-c509 (Section 8.18.2)
+   *  application/cose-c509+cbor (Section 8.18.2)
 
-   *  application/cose-c509; usage=chain (Section 8.18.2)
+   *  application/cose-c509+cbor; usage=chain (Section 8.18.2)
 
-   When the application/cose-c509 media type is used, the data is a CBOR
-   sequence of single-entry COSE_C509 structures (encoding "bytes").  If
-   the parameter "usage" is set to "chain", this sequence indicates a
-   certificate chain.
+   When the application/cose-c509+cbor media type is used, the data is a
+   CBOR sequence of single-entry COSE_C509 structures (encoding
+   "bytes").  If the parameter "usage" is set to "chain", this sequence
+   indicates a certificate chain.
 
    As the contents of c5b, c5c, c5t, and c5u are untrusted input, the
    header parameters can be in either the protected or unprotected
@@ -1015,8 +1015,8 @@ Table of Contents
    that have a C509 AlgorithmIdentifier defined.
 
    The C509PrivateKey item is served with the application/cose-
-   c509-privkey media type, see Section 8.18.5, with corresponding CoAP
-   Content-Format defined in Section 8.19.  A stored file format is
+   c509-privkey+cbor media type, see Section 8.18.5, with corresponding
+   CoAP Content-Format defined in Section 8.19.  A stored file format is
    defined with "magic number" TBD12 using the reserved CBOR tag 55799
    and the Content-Format TBD10, enveloped as described in Section 2.2
    of [RFC9277].
@@ -1026,11 +1026,12 @@ Table of Contents
       COSE_C509 / null,
    ]
 
-   The C509PEM item is served with the application/cose-c509-pem media
-   type, see Section 8.18.6, with corresponding CoAP Content-Format
-   defined in Section 8.19.  A stored file format is defined with "magic
-   number" TBD13 using the reserved CBOR tag 55799 and the Content-
-   Format TBD11, enveloped as described in Section 2.2 of [RFC9277].
+   The C509PEM item is served with the application/cose-c509-pem+cbor
+   media type, see Section 8.18.6, with corresponding CoAP Content-
+   Format defined in Section 8.19.  A stored file format is defined with
+   "magic number" TBD13 using the reserved CBOR tag 55799 and the
+   Content-Format TBD11, enveloped as described in Section 2.2 of
+   [RFC9277].
 
 3.7.  Deterministic Encoding
 
@@ -1123,10 +1124,10 @@ Table of Contents
    and implementations.
 
    The media type of C509CertificationRequest is application/cose-
-   c509-pkcs10, see Section 8.18.3, with corresponding CoAP Content-
-   Format defined in Section 8.19.  The "magic number" TBD9 is defined
-   using the reserved CBOR tag 55799 and the Content-Format TBD4,
-   enveloped as described in Section 2.2 of [RFC9277].
+   c509-pkcs10+cbor, see Section 8.18.3, with corresponding CoAP
+   Content-Format defined in Section 8.19.  The "magic number" TBD9 is
+   defined using the reserved CBOR tag 55799 and the Content-Format
+   TBD4, enveloped as described in Section 2.2 of [RFC9277].
 
 4.1.  Certification Request Types
 
@@ -1304,10 +1305,10 @@ Table of Contents
    is not allowed.
 
    The media type of C509CertificationRequestTemplate is application/
-   cose-c509-crtemplate, see Section 8.18.4, with corresponding CoAP
-   Content-Format defined in Section 8.19.  The "magic number" TBD18 is
-   defined using the reserved CBOR tag 55799 and the Content-Format
-   TBD19, enveloped as described in Section 2.2 of [RFC9277].
+   cose-c509-crtemplate+cbor, see Section 8.18.4, with corresponding
+   CoAP Content-Format defined in Section 8.19.  The "magic number"
+   TBD18 is defined using the reserved CBOR tag 55799 and the Content-
+   Format TBD19, enveloped as described in Section 2.2 of [RFC9277].
 
 5.  C509 Processing and Certificate Issuance
 
@@ -2865,14 +2866,14 @@ Table of Contents
    "application" registry in the registry group "Media Types" with this
    document as reference.
 
-8.18.1.  Media Type application/cose-c509-cert
+8.18.1.  Media Type application/cose-c509-cert+cbor
 
-   When the application/cose-c509-cert media type is used, the data is a
-   C509Certificate structure.
+   When the application/cose-c509-cert+cbor media type is used, the data
+   is a C509Certificate structure.
 
    Type name: application
 
-   Subtype name: cose-c509-cert
+   Subtype name: cose-c509-cert+cbor
 
    Required parameters: N/A
 
@@ -2913,15 +2914,15 @@ Table of Contents
 
    Change controller: IETF
 
-8.18.2.  Media Type application/cose-c509
+8.18.2.  Media Type application/cose-c509+cbor
 
-   When the application/cose-c509 media type is used, the data is a
+   When the application/cose-c509+cbor media type is used, the data is a
    COSE_C509 structure.  If the parameter "usage" is set to "chain",
    this sequence indicates a certificate chain.
 
    Type name: application
 
-   Subtype name: cose-c509
+   Subtype name: cose-c509+cbor
 
    Required parameters: N/A
 
@@ -2968,14 +2969,14 @@ Table of Contents
 
    Change controller: IETF
 
-8.18.3.  Media Type application/cose-c509-pkcs10
+8.18.3.  Media Type application/cose-c509-pkcs10+cbor
 
-   When the application/cose-c509-pkcs10 media type is used, the data is
-   a C509CertificationRequest structure.
+   When the application/cose-c509-pkcs10+cbor media type is used, the
+   data is a C509CertificationRequest structure.
 
    Type name: application
 
-   Subtype name: cose-c509-pkcs10
+   Subtype name: cose-c509-pkcs10+cbor
 
    Required parameters: N/A
 
@@ -3016,14 +3017,14 @@ Table of Contents
 
    Change controller: IETF
 
-8.18.4.  Media Type application/cose-c509-crtemplate
+8.18.4.  Media Type application/cose-c509-crtemplate+cbor
 
    When the application/cose-c509-crtemplate media type is used, the
    data is a C509CertificationRequestTemplate structure.
 
    Type name: application
 
-   Subtype name: cose-c509-crtemplate
+   Subtype name: cose-c509-crtemplate+cbor
 
    Required parameters: N/A
 
@@ -3064,14 +3065,14 @@ Table of Contents
 
    Change controller: IETF
 
-8.18.5.  Media Type application/cose-c509-privkey
+8.18.5.  Media Type application/cose-c509-privkey+cbor
 
-   When the application/cose-c509-privkey media type is used, the data
-   is a C509PrivateKey structure.
+   When the application/cose-c509-privkey+cbor media type is used, the
+   data is a C509PrivateKey structure.
 
    Type name: application
 
-   Subtype name: cose-c509-privkey
+   Subtype name: cose-c509-privkey+cbor
 
    Required parameters: N/A
 
@@ -3112,14 +3113,14 @@ Table of Contents
 
    Change controller: IETF
 
-8.18.6.  Media Type application/cose-c509-pem
+8.18.6.  Media Type application/cose-c509-pem+cbor
 
    When the application/cose-c509-pem media type is used, the data is a
    C509PEM structure.
 
    Type name: application
 
-   Subtype name: cose-c509-pem
+   Subtype name: cose-c509-pem+cbor
 
    Required parameters: N/A
 
@@ -3160,7 +3161,7 @@ Table of Contents
 
    Change controller: IETF
 
-8.18.7.  Media Type application/cose-certhash
+8.18.7.  Media Type application/cose-certhash+cbor
 
    When the application/cose-certhash media type is used, the data is a
    COSE_CertHash structure as defined in [RFC9360].  If the parameter
@@ -3169,7 +3170,7 @@ Table of Contents
 
    Type name: application
 
-   Subtype name: cose-certhash
+   Subtype name: cose-certhash+cbor
 
    Required parameters: N/A
 
@@ -3219,17 +3220,18 @@ Table of Contents
 
 8.19.  CoAP Content-Formats Registry
 
-   IANA is requested to add entries for application/cose-c509-cert",
-   "application/cose-c509", "application/cose-c509-pkcs10",
-   "application/cose-c509-crtemplate", "application/cose-c509-privkey"
-   and "application/cose-c509-pem" to the "CoAP Content-Formats"
-   registry in the registry group "Constrained RESTful Environments
-   (CoRE) Parameters".  A dedicated Content-Format ID is requested for
-   the "application/cose-c509" media type in the case when the parameter
-   "usage" is set to "chain", see Section 8.18.2.
+   IANA is requested to add entries for application/cose-
+   c509-cert+cbor", "application/cose-c509+cbor", "application/cose-
+   c509-pkcs10+cbor", "application/cose-c509-crtemplate+cbor",
+   "application/cose-c509-privkey+cbor" and "application/cose-
+   c509-pem+cbor" to the "CoAP Content-Formats" registry in the registry
+   group "Constrained RESTful Environments (CoRE) Parameters".  A
+   dedicated Content-Format ID is requested for the "application/cose-
+   c509+cbor" media type in the case when the parameter "usage" is set
+   to "chain", see Section 8.18.2.
 
-   IANA is requested to add entries for "application/cose-certhash" to
-   the "CoAP Content-Formats" registry in the registry group
+   IANA is requested to add entries for "application/cose-certhash+cbor"
+   to the "CoAP Content-Formats" registry in the registry group
    "Constrained RESTful Environments (CoRE) Parameters".  A dedicated
    Content-Format ID is requested in the case when the parameter "usage"
    is set to "c509", see Section 8.18.7.
@@ -3239,41 +3241,41 @@ Table of Contents
    Environments (CoRE) Parameters", in the case when the encoding is a
    CBOR text string containing a URI, see [RFC3986].
 
-   +----------------------+---------+-----------+-------+------------+
-   | Content              | Content | Media     | ID    | Reference  |
-   | Format               | Coding  | Type      |       |            |
-   +======================+=========+===========+=======+============+
-   | application/         | -       | [[link    | TBD21 | [[this     |
-   | cose-c509-cert       |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         | -       | [[link    | TBD3  | [[this     |
-   | cose-c509            |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         |         | [[link    |       | [[this     |
-   | cose-c509;           | -       | to 8.18]] | TBD15 | document]] |
-   | usage=chain          |         |           |       |            |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         | -       | [[link    | TBD4  | [[this     |
-   | cose-c509-pkcs10     |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         | -       | [[link    | TBD19 | [[this     |
-   | cose-c509-crtemplate |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         | -       | [[link    | TBD10 | [[this     |
-   | cose-c509-privkey    |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         | -       | [[link    | TBD11 | [[this     |
-   | cose-c509-pem        |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         | -       | [[link    | TBD16 | [[this     |
-   | cose-certhash        |         | to 8.18]] |       | document]] |
-   +----------------------+---------+-----------+-------+------------+
-   | application/         |         | [[link    |       | [[this     |
-   | cose-certhash;       | -       | to 8.18]] | TBD17 | document]] |
-   | usage=c509           |         |           |       |            |
-   +----------------------+---------+-----------+-------+------------+
++---------------------------+---------+-----------+-------+------------+
+| Content                   | Content | Media     | ID    | Reference  |
+| Format                    | Coding  | Type      |       |            |
++===========================+=========+===========+=======+============+
+| application/              | -       | [[link    | TBD21 | [[this     |
+| cose-c509-cert+cbor       |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              | -       | [[link    | TBD3  | [[this     |
+| cose-c509+cbor            |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              |         | [[link    |       | [[this     |
+| cose-c509+cbor;           | -       | to 8.18]] | TBD15 | document]] |
+| usage=chain               |         |           |       |            |
++---------------------------+---------+-----------+-------+------------+
+| application/              | -       | [[link    | TBD4  | [[this     |
+| cose-c509-pkcs10+cbor     |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              | -       | [[link    | TBD19 | [[this     |
+| cose-c509-crtemplate+cbor |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              | -       | [[link    | TBD10 | [[this     |
+| cose-c509-privkey+cbor    |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              | -       | [[link    | TBD11 | [[this     |
+| cose-c509-pem+cbor        |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              | -       | [[link    | TBD16 | [[this     |
+| cose-certhash+cbor        |         | to 8.18]] |       | document]] |
++---------------------------+---------+-----------+-------+------------+
+| application/              |         | [[link    |       | [[this     |
+| cose-certhash+cbor;       | -       | to 8.18]] | TBD17 | document]] |
+| usage=c509                |         |           |       |            |
++---------------------------+---------+-----------+-------+------------+
 
-                     Figure 20: CoAP Content-Format IDs
+                  Figure 20: CoAP Content-Format IDs
 
 8.20.  TLS Certificate Types Registry
 
