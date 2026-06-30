@@ -16,21 +16,22 @@
        Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER-encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is computed over the CBOR encoding instead of the DER encoding, thereby avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 while providing comparable size reduction. 
        This document also specifies CBOR-encoded data structures for certification requests and certification request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698 by extending the TLSA selectors registry to include C509 certificates. 
     " name="description">
-<meta content="xml2rfc 3.33.0" name="generator">
+<meta content="xml2rfc 3.34.0" name="generator">
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.33.0
-    Python 3.12.13
-    ConfigArgParse 1.7
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 6.0.2
-    platformdirs 4.9.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.0
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.7.0
+    wcwidth 0.8.1
 -->
 <link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -297,16 +298,19 @@ h1, h2, h3, h4, h5, h6 {
   font-size-adjust: 0.5;
   color: var(--title-color);
 }
-h1#title {
-  font-size: 32px;
-  line-height: 40px;
-  clear: both;
-}
-h1#title, h1#rfcnum {
-  margin: 1.5em 0 0.2em;
-}
-h1#rfcnum + h1#title {
-  margin: 0.2em 0;
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
 }
 
 h1, h2, h3 {
@@ -326,10 +330,10 @@ h4, h5, h6 {
 #abstract+p {
   font-size: 18px;
   line-height: 24px;
-}
-#abstract+p code, #abstract+p samp, #abstract+p tt {
-  font-size: 16px;
-  line-height: 0;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
 }
 
 p {
@@ -340,59 +344,59 @@ p {
 div {
   margin: 0;
 }
-.alignRight.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignRight.art-text pre {
-  padding: 0;
-  width: auto;
-}
 .alignRight {
   margin: 1em 0;
-}
-.alignRight > *:first-child {
-  border: none;
-  margin: 0;
-  float: right;
-  clear: both;
-}
-.alignRight > *:nth-child(2) {
-  clear: both;
-  display: block;
-  border: none;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
 }
 svg {
   display: block;
-}
-/* font-family isn't space-separated, but =~ will have to do */
-svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
-  font-family: var(--font-mono);
-}
-.alignCenter.art-text {
-  background-color: var(--highlight-color);
-  border: 1px solid var(--line-color);
-  border-radius: 3px;
-  padding: 0.5em 1em 0;
-  margin-bottom: 0.5em;
-}
-.alignCenter.art-text pre {
-  padding: 0;
-  width: auto;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
 }
 .alignCenter {
   margin: 1em 0;
-}
-.alignCenter > *:first-child {
-  border: none;
-  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
-     support flexbox yet.
-  */
-  display: table;
-  margin: 0 auto;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
 }
 
 /* lists */
@@ -430,26 +434,25 @@ dl {
     --indent: 5ch;
     & > dt {
       min-width: calc(var(--indent) - 2ch);
+      float: none;
     }
-  }
-  &.olPercent > dt {
-    float: none;
   }
 
   dl > dd > & {
     margin-top: 0.5em;
     margin-bottom: 0;
   }
-}
-dl:not(.dlNewline) > dt {
-  float: left;
-  margin-right: 2ch;
-  min-width: 8ch;
-}
-dl > dd {
-  margin-bottom: .8em;
-  margin-left: var(--indent) !important; /* stupid element overrides */
-  min-height: 2ex;
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
 }
 :is(dl.compact, .dlCompact) > dd {
   margin-bottom: 0;
@@ -465,20 +468,22 @@ dl > dd {
 }
 
 /* links */
-a, a[href].selfRef:hover {
+a {
   text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
 }
-a[href] {
-  color: var(--link-color);
-}
-a[href].selfRef, .iref + a[href].internal {
+.iref + a[href].internal {
   color: var(--text-color);
-}
-a[href]:hover {
-  text-decoration: underline;
-}
-a[href].selfRef:hover {
-  background-color: var(--highlight-color);
 }
 a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
   white-space: nowrap;
@@ -514,9 +519,9 @@ img {
 figure {
   margin: 0.5em 0;
   padding: 0;
-}
-figure blockquote {
-  margin: 0.8em 0.4em 0.4em;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
 }
 figcaption, caption {
   font-style: italic;
@@ -526,17 +531,19 @@ figcaption, caption {
 }
 @media screen {
   /* Auto-collapse boilerplate. */
-  :is(#status-of-memo, #copyright) p {
-    margin: -2px 0;
-    max-height: 0;
-    transition: max-height 2s ease, margin 0.5s ease 0.5s;
-    overflow: hidden;
-  }
-  :is(#status-of-memo, #copyright):hover p,
-  :is(#status-of-memo, #copyright) h2:target ~ p {
-    margin: 0.5em 0;
-    max-height: 500px;
-    overflow: auto;
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
   }
   pre, svg {
     display: inline-block;
@@ -586,25 +593,17 @@ table {
   max-width: 100%;
   margin: 0 0 1em;
   border-collapse: collapse;
-}
-table.right {
-  margin-left: auto;
-}
-table.center {
-  margin-left: auto;
-  margin-right: auto;
-}
-table.left {
-  margin-right: auto;
-}
-table .text-left {
-  text-align: left;
-}
-table .text-center {
-  text-align: center;
-}
-table .text-right {
-  text-align: right;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
 }
 
 thead, tbody {
@@ -624,13 +623,6 @@ th {
 :is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
   background-color: var(--highlight-color);
 }
-table caption {
-  margin: 0;
-  padding: 3px 0 3px 1em;
-}
-table p {
-  margin: 0;
-}
 
 /* pilcrow */
 a.pilcrow {
@@ -641,18 +633,16 @@ a.pilcrow {
     color: var(--pilcrow-weak);
     &:hover { text-decoration: none; }
   }
-}
-@media not print {
-  :hover > a.pilcrow, a.pilcrow:focus {
-    opacity: 1;
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
   }
-  a.pilcrow[href]:hover {
-    color: var(--pilcrow-strong);
-    background-color: transparent;
-  }
-}
-@media print {
-  a.pilcrow {
+  @media print {
     display: none;
   }
 }
@@ -711,9 +701,9 @@ sub, sup {
   font-size: 0.9em;
   font-style: italic;
   margin-top: 2em;
-}
-.docInfo .prepared {
-  float: right;
+  & .prepared {
+    float: right;
+  }
 }
 
 /* table of contents */
@@ -803,23 +793,27 @@ hr.addr {
   max-width: calc(100% - 16px);
 }
 @media (min-width: 500px) {
-  #authors-addresses > section {
-    column-count: 2;
-    column-gap: 20px;
-  }
-  #authors-addresses > section > h2 {
-    column-span: all;
-  }
-  /* hack for break-inside: avoid-column */
-  #authors-addresses address {
-    display: inline-block;
-    break-inside: avoid-column;
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
   }
 }
 
 /* Comments */
-.rfcEditorRemove p:first-of-type {
-  font-style: italic;
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
 }
 .cref {
   background-color: rgba(249, 232, 105, 0.3);
@@ -830,19 +824,21 @@ hr.addr {
 }
 
 @media screen {
-  #toc nav {
-    font-family: var(--font-title);
-    font-weight: 360;
-    & > ul { margin-bottom: 2em; }
-    & ul {
-      margin: 0 0 0 4px;
-      & :is(p, li) {
-        margin: 2px 0;
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
       }
     }
-  }
-  #toc a.toplink {
-    float: right;
+    & a.toplink {
+      float: right;
+    }
   }
 }
 @media not screen {
@@ -863,54 +859,54 @@ hr.addr {
     margin: 0;
     border-bottom: 1px solid #ccc;
     opacity: 0.6;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 2px 0 2px 6px;
-    padding-right: 1em;
-    font-size: 18px;
-    line-height: 24px;
-    min-width: 190px;
-    text-align: right;
-    background-color: #444;
-    color: white;
-    cursor: pointer;
-    &::before { /* css hamburger */
-      float: right;
-      position: relative;
-      width: 1em;
-      height: 1px;
-      left: -164px;
-      margin: 8px 0 0 0;
-      background: white none repeat scroll 0 0;
-      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
-      content: "";
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
     }
-  }
-  #toc nav {
-    display: none;
-    background-color: var(--background-color);
-    padding: 0.5em 1em 1em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - 48px);
-    border-left: 1px solid #ddd;
-  }
-  #toc.active {
-    opacity: 1;
-    & nav { display: block; }
-  }
-  /* Make the collapsed ToC header render white on gray also when it's a link */
-  #toc h2 a,
-  #toc h2 a:is(:link, :focus, :hover),
-  #toc a.toplink,
-  #toc a.toplink:hover {
-    color: white;
-    background-color: #444;
-    text-decoration: none;
-  }
-  #toc a.toplink {
-    margin: 2px 0.5em 0;
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
   }
 }
 
@@ -929,26 +925,26 @@ hr.addr {
     margin: 0;
     padding: 0;
     z-index: 1;
-  }
-  #toc h2 {
-    margin: 0;
-    padding: 0.25em 1em 1em 0;
-  }
-  #toc nav {
-    display: block;
-    height: calc(90vh - 84px);
-    bottom: 0;
-    padding: 0.5em 0 2em;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
   }
   img { /* future proofing */
     max-width: 100%;
     height: auto;
-  }
-  #toc a.toplink {
-    margin: 8px 0.5em 0;
   }
 }
 
@@ -964,12 +960,13 @@ hr.addr {
   #n-copyright-notice {
     border-bottom: none;
   }
-  #toc, #n-introduction {
-    page-break-before: always;
-  }
   #toc {
+    page-break-before: always;
     border-top: none;
     padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
   }
   figure, pre, .vcard {
     page-break-inside: avoid;
@@ -1031,17 +1028,19 @@ hr.addr {
 }
 
 /* SVG Trick: a prefix match works because only black and white are allowed */
-svg :is([stroke="black"], [stroke^="#000"]) {
-  stroke: var(--text-color);
-}
-svg :is([stroke="white"], [stroke^="#fff"]) {
-  stroke: var(--background-color);
-}
-svg :is([fill="black"], [fill^="#000"], :not([fill])) {
-  fill: var(--text-color);
-}
-svg :is([fill="white"], [fill^="#fff"]) {
-  fill: var(--background-color);
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
 }
 </style>
 
@@ -1051,11 +1050,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">C509 Certificates</td>
-<td class="right">May 2026</td>
+<td class="right">June 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 12 November 2026</td>
+<td class="center">Expires 1 January 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1071,12 +1070,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-05-11" class="published">11 May 2026</time>
+<time datetime="2026-06-30" class="published">30 June 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-11-12">12 November 2026</time></dd>
+<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1147,7 +1146,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 12 November 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1410,7 +1409,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-message-fields" class="section-name selfRef">Message Fields</a>
         </h3>
 <p id="section-3.1-1">This section describes the X.509 fields and their CBOR encodings and uses them in the definition of C509 certificates; see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>. While many of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> encodings are supported, there are a few instances marked "not supported" for which no alternative is provided and, therefore, no C509 encoding can be generated.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore have documentary value only. Applications that do not require a CBOR item <span class="bcp14">MAY</span> represent C509 certificates using the CBOR sequence ~C509Certificate (unwrapped C509Certificate). Examples are given in the appendices; see, for example, <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore have documentary value only. Examples are given in the appendices; see, for example, <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificate"></span><div id="fig-CBORCertCDDL">
 <figure id="figure-1">
           <div class="lang-cddl sourcecode" id="section-3.1-3.1">
@@ -1464,7 +1463,8 @@ tag = #6
 <a href="#name-cddl-for-c509certificate" class="selfRef">CDDL for C509Certificate.</a>
           </figcaption></figure>
 </div>
-<p id="section-3.1-4">C509 certificates are defined in terms of DER-encoded X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> as detailed in the following subsections.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">The media type of C509Certificate is application/cose-c509-cert, see <a href="#cose-c509-cert" class="auto internal xref">Section 8.18.1</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. The "magic number" TBD20 is defined using the reserved CBOR tag 55799 and the Content-Format TBD21, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">C509 certificates are defined in terms of DER-encoded X.509 certificates <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> as detailed in the following subsections.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <div id="version">
 <section id="section-3.1.1">
           <h4 id="name-version">
@@ -1967,14 +1967,26 @@ As specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>,
 <div class="lang-cddl sourcecode" id="section-3.4-3">
 <pre>
 COSE_C509 = C509CertData / [ 2* C509CertData ]
-C509CertData = bytes .cborseq C509Certificate
+C509CertData = bytes .cbor C509Certificate
 </pre><a href="#section-3.4-3" class="pilcrow">¶</a>
 </div>
-<p id="section-3.4-4">C509CertData thus includes the unwrapped CBOR sequence, ~C509Certificate. The byte string encoding includes the length of each certificate, which simplifies parsing. See <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
-<p id="section-3.4-5">The COSE_C509 item has media type application/cose-c509-cert, see <a href="#c509-cert" class="auto internal xref">Section 8.18.1</a>. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see <a href="#content-format" class="auto internal xref">Section 8.19</a>.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.4-6">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over ~C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.4-7">c5u provides an alternative way to identify an untrusted certificate chain by reference with a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>, encoded as a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource is a COSE_C509 item served with the application/cose-c509-cert media type ("usage" = "chain"), as described above.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
-<p id="section-3.4-8">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without appropriate authorization.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">C509CertData content thus includes the CBOR-encoded C509Certificate. The byte string encoding includes the length of each certificate, which simplifies parsing. See <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5">The COSE_C509 item has media type application/cose-c509, see <a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see <a href="#content-format" class="auto internal xref">Section 8.19</a>.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-7">c5u, analogously to x5u in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, provides the ability to identify a C509 certificate by a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.4-8.1">
+            <p id="section-3.4-8.1.1">application/cose-c509-cert (<a href="#cose-c509-cert" class="auto internal xref">Section 8.18.1</a>)<a href="#section-3.4-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.4-8.2">
+            <p id="section-3.4-8.2.1">application/cose-c509 (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.4-8.3">
+            <p id="section-3.4-8.3.1">application/cose-c509; usage=chain (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.4-9">When the application/cose-c509 media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "bytes").  If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
+<p id="section-3.4-10">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without appropriate authorization.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
 <span id="name-c509-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">
           <caption>
@@ -2006,18 +2018,18 @@ C509CertData = bytes .cborseq C509Certificate
               <td class="text-right" rowspan="1" colspan="1">c5t</td>
               <td class="text-left" rowspan="1" colspan="1">22</td>
               <td class="text-left" rowspan="1" colspan="1">COSE_CertHash</td>
-              <td class="text-left" rowspan="1" colspan="1">Hash of a ~C509Certificate</td>
+              <td class="text-left" rowspan="1" colspan="1">Hash of a C509Certificate</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5u</td>
               <td class="text-left" rowspan="1" colspan="1">23</td>
               <td class="text-left" rowspan="1" colspan="1">uri</td>
-              <td class="text-left" rowspan="1" colspan="1">URI pointing to a COSE_C509 containing an ordered chain of certificates</td>
+              <td class="text-left" rowspan="1" colspan="1">URI pointing to a C509 certificate</td>
             </tr>
           </tbody>
         </table>
 </div>
-<p id="section-3.4-10">Certificates can also be identified with a 'kid' header parameter by storing the 'kid' value and the associated bag or chain in a dictionary.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
+<p id="section-3.4-12">Certificates can also be identified with a 'kid' header parameter by storing the 'kid' value and the associated bag or chain in a dictionary.<a href="#section-3.4-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="cose-header-alg-params">
@@ -2034,7 +2046,7 @@ C509CertData = bytes .cborseq C509Certificate
             <p id="section-3.5-2.2.1">c5t-sender contains the hash value for the sender's key exchange certificate. The structure is the same as 'c5t'.<a href="#section-3.5-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-2.3">
-            <p id="section-3.5-2.3.1">c5u-sender contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.<a href="#section-3.5-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-2.3.1">c5u-sender, analogously to x5u-sender in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, contains a URI for the sender's key exchange certificate. The structure and processing are the same as 'c5u'.<a href="#section-3.5-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <span id="name-static-ecdh-algorithm-value"></span><div id="iana-sender">
@@ -2065,14 +2077,14 @@ C509CertData = bytes .cborseq C509Certificate
               <td class="text-left" rowspan="1" colspan="1">ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW</td>
               <td class="text-left" rowspan="1" colspan="1">-31 (suggested)</td>
               <td class="text-left" rowspan="1" colspan="1">COSE_CertHash</td>
-              <td class="text-left" rowspan="1" colspan="1">Hash of a ~C509Certificate</td>
+              <td class="text-left" rowspan="1" colspan="1">Hash of a C509Certificate</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">c5u-sender</td>
               <td class="text-left" rowspan="1" colspan="1">ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW</td>
               <td class="text-left" rowspan="1" colspan="1">-32 (suggested)</td>
               <td class="text-left" rowspan="1" colspan="1">uri</td>
-              <td class="text-left" rowspan="1" colspan="1">URI pointing to a COSE_C509 containing an ordered chain of certificates</td>
+              <td class="text-left" rowspan="1" colspan="1">URI pointing to a C509 certificate</td>
             </tr>
           </tbody>
         </table>
@@ -2095,7 +2107,7 @@ C509PrivateKey = [
 </pre><a href="#section-3.6-2" class="pilcrow">¶</a>
 </div>
 <p id="section-3.6-3">The field 'C509PrivateKeyType' indicates the type of the C509 private key. Different types of C509 Private Key Structures can be defined, see <a href="#privkeys" class="auto internal xref">Section 8.4</a>. Currently, two types are defined. When C509PrivateKeyType = 0, the subjectPrivateKey is the CBOR byte string encoding of the PrivateKey OCTET STRING value field defined in <span>[<a href="#RFC5958" class="cite xref">RFC5958</a>]</span>. When C509PrivateKeyType = 1, the subjectPrivateKey is a COSE_KEY structure containing a private key as defined in <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span>. Note that COSE_KEY might not be possible to use with all algorithms that have a C509 AlgorithmIdentifier defined.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">The C509PrivateKey item is served with the application/cose-c509-privkey media type, see <a href="#c509-privkey" class="auto internal xref">Section 8.18.4</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. A stored file format is defined with "magic number" TBD12 using the reserved CBOR tag 55799 and the Content-Format TBD10, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-4">The C509PrivateKey item is served with the application/cose-c509-privkey media type, see <a href="#cose-c509-privkey" class="auto internal xref">Section 8.18.5</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. A stored file format is defined with "magic number" TBD12 using the reserved CBOR tag 55799 and the Content-Format TBD10, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 <div class="lang-cddl sourcecode" id="section-3.6-5">
 <pre>
 C509PEM = [
@@ -2104,7 +2116,7 @@ C509PEM = [
 ]
 </pre><a href="#section-3.6-5" class="pilcrow">¶</a>
 </div>
-<p id="section-3.6-6">The C509PEM item is served with the application/cose-c509-pem media type, see <a href="#c509-pem" class="auto internal xref">Section 8.18.5</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. A stored file format is defined with "magic number" TBD13 using the reserved CBOR tag 55799 and the Content-Format TBD11, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.6-6" class="pilcrow">¶</a></p>
+<p id="section-3.6-6">The C509PEM item is served with the application/cose-c509-pem media type, see <a href="#cose-c509-pem" class="auto internal xref">Section 8.18.6</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. A stored file format is defined with "magic number" TBD13 using the reserved CBOR tag 55799 and the Content-Format TBD11, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deterministic-encoding">
@@ -2178,7 +2190,7 @@ CRAttribute = (( attributeType: int, attributeValue: Defined ) //
         </figcaption></figure>
 </div>
 <p id="section-4-4">After verifying subjectSignatureValue, the Certification Authority (CA) <span class="bcp14">MAY</span> transform the C509CertificationRequest into a <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span> CertificationRequestInfo for compatibility with existing procedures and implementations.<a href="#section-4-4" class="pilcrow">¶</a></p>
-<p id="section-4-5">The media type of C509CertificationRequest is application/cose-c509-pkcs10, see <a href="#c509-pkcs10" class="auto internal xref">Section 8.18.2</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4-5" class="pilcrow">¶</a></p>
+<p id="section-4-5">The media type of C509CertificationRequest is application/cose-c509-pkcs10, see <a href="#cose-c509-pkcs10" class="auto internal xref">Section 8.18.3</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. The "magic number" TBD9 is defined using the reserved CBOR tag 55799 and the Content-Format TBD4, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4-5" class="pilcrow">¶</a></p>
 <div id="certification-request-types">
 <section id="section-4.1">
         <h3 id="name-certification-request-types">
@@ -2315,7 +2327,7 @@ ExtensionTemplate = (
 <p id="section-4.4-7">The presence of a Defined (non-undefined) value in a C509CertificationRequestTemplate indicates that the server expects the client to use that value in the certification request. If multiple AlgorithmIdentifier or c509CertificationRequestType values are present, the server expects the client to select one of them for use in the Certification Request. The presence of an undefined value indicates that the client is expected to provide an appropriate value for that field. For example, if the server includes a subjectAltName with a GeneralNameType iPAddress and a GeneralNameValue empty byte string, this means that the client <span class="bcp14">SHOULD</span> fill in a corresponding GeneralNameValue.<a href="#section-4.4-7" class="pilcrow">¶</a></p>
 <p id="section-4.4-8">For RDNAttributeTemplate, the minOccurs and maxOccurs fields specify the minimal and maximal occurrences of attributes of the given attributeType; maximal shall not be less than minimal, and maximal shall be positive. Negative attributeType is not allowed.<a href="#section-4.4-8" class="pilcrow">¶</a></p>
 <p id="section-4.4-9">For ExtensionTemplate, the field "optional" specifies whether an extension of the given extensionID is optional. Negative extensionID is not allowed.<a href="#section-4.4-9" class="pilcrow">¶</a></p>
-<p id="section-4.4-10">The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see <a href="#c509-crtemplate" class="auto internal xref">Section 8.18.3</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4.4-10" class="pilcrow">¶</a></p>
+<p id="section-4.4-10">The media type of C509CertificationRequestTemplate is application/cose-c509-crtemplate, see <a href="#cose-c509-crtemplate" class="auto internal xref">Section 8.18.4</a>, with corresponding CoAP Content-Format defined in <a href="#content-format" class="auto internal xref">Section 8.19</a>. The "magic number" TBD18 is defined using the reserved CBOR tag 55799 and the Content-Format TBD19, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-4.4-10" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2361,17 +2373,17 @@ ExtensionTemplate = (
 +----------------------------------------+-----------+-----------+
 | Description (number of certs)          | COSE_X509 | COSE_C509 |
 +----------------------------------------+-----------+-----------+
-| RFC 7925 profiled IoT Certificate (1)  |       319 |       142 |
+| RFC 7925 profiled IoT Certificate (1)  |       319 |       143 |
 +----------------------------------------+-----------+-----------+
-| RPKI Certificate (1)                   |     20981 |     11523 |
+| RPKI Certificate (1)                   |     20981 |     11524 |
 +----------------------------------------+-----------+-----------+
-| ECDSA HTTPS Certificate Chain (2)      |      1644 |      1012 |
+| ECDSA HTTPS Certificate Chain (2)      |      1644 |      1014 |
 +----------------------------------------+-----------+-----------+
-| RSA HTTPS Certificate Chain (2)        |      2909 |      2240 |
+| RSA HTTPS Certificate Chain (2)        |      2649 |      2066 |
 +----------------------------------------+-----------+-----------+
-| FN-DSA-512 HTTPS Certificate Chain (2) |      4417 |      3897 |
+| FN-DSA-512 HTTPS Certificate Chain (2) |      4421 |      3903 |
 +----------------------------------------+-----------+-----------+
-| ML-DSA-65 HTTPS Certificate Chain (2)  |     11863 |     11318 |
+| ML-DSA-65 HTTPS Certificate Chain (2)  |     11862 |     11320 |
 +----------------------------------------+-----------+-----------+
 
 </pre>
@@ -2388,21 +2400,21 @@ ExtensionTemplate = (
 | Description           | X.509 | X.509 + | C509  | C509 + |
 | (number of certs)     |       | Brotli  |       | Brotli |
 +-----------------------+-------+---------+-------+--------+
-| RFC 7925 profiled     |   325 |     317 |  149  |    158 |
+| RFC 7925 profiled     |   325 |     317 |  150  |    159 |
 | IoT Certificate (1)   |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| RPKI Certificate (1)  | 20987 |    9109 | 11529 |   7020 |
+| RPKI Certificate (1)  | 20987 |    9109 | 11530 |   7023 |
 +-----------------------+-------+---------+-------+--------+
-| ECDSA HTTPS           |  1651 |    1181 |  1019 |    930 |
+| ECDSA HTTPS           |  1651 |    1181 |  1021 |    953 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| RSA HTTPS             |  2656 |    2195 |  2071 |   1913 |
+| RSA HTTPS             |  2656 |    2195 |  2073 |   1915 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| FN-DSA-512 HTTPS      |  4437 |    4026 |  3917 |   3776 |
+| FN-DSA-512 HTTPS      |  4428 |    4011 |  3910 |   3753 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
-| ML-DSA-65 HTTPS       | 11869 |   11420 | 11325 |  11148 |
+| ML-DSA-65 HTTPS       | 11869 |   11396 | 11327 |  11127 |
 | Certificate Chain (2) |       |         |       |        |
 +-----------------------+-------+---------+-------+--------+
 </pre>
@@ -3788,98 +3800,98 @@ ExtensionTemplate = (
 <a href="#section-8.18" class="section-number selfRef">8.18. </a><a href="#name-media-type-application-regi" class="section-name selfRef">Media Type Application Registry</a>
         </h3>
 <p id="section-8.18-1">IANA is requested to assign the following entries into the "application" registry in the registry group "Media Types" with this document as reference.<a href="#section-8.18-1" class="pilcrow">¶</a></p>
-<div id="c509-cert">
+<div id="cose-c509-cert">
 <section id="section-8.18.1">
           <h4 id="name-media-type-application-cose">
 <a href="#section-8.18.1" class="section-number selfRef">8.18.1. </a><a href="#name-media-type-application-cose" class="section-name selfRef">Media Type application/cose-c509-cert</a>
           </h4>
-<p id="section-8.18.1-1">When the application/cose-c509-cert media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.<a href="#section-8.18.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-1">When the application/cose-c509-cert media type is used, the data is a C509Certificate structure.<a href="#section-8.18.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.1-2">Type name: application<a href="#section-8.18.1-2" class="pilcrow">¶</a></p>
 <p id="section-8.18.1-3">Subtype name: cose-c509-cert<a href="#section-8.18.1-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.1-4">Required parameters: N/A<a href="#section-8.18.1-4" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-5">Optional parameters: usage<a href="#section-8.18.1-5" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-5">Optional parameters: N/A<a href="#section-8.18.1-5" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-6">Encoding considerations: binary<a href="#section-8.18.1-6" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-7">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.1-7" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-8">Interoperability considerations: N/A<a href="#section-8.18.1-8" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-9">Published specification: [[this document]]<a href="#section-8.18.1-9" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-10">Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.<a href="#section-8.18.1-10" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-11">Fragment identifier considerations: N/A<a href="#section-8.18.1-11" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-12">Additional information:<a href="#section-8.18.1-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.18.1-6.1">
-              <p id="section-8.18.1-6.1.1">Can be absent to provide no further information about the intended meaning of the order in the CBOR sequence of certificates.<a href="#section-8.18.1-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.18.1-13.1">
+              <p id="section-8.18.1-13.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.1-13.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.18.1-6.2">
-              <p id="section-8.18.1-6.2.1">Can be set to "chain" to indicate that the sequence of data items is to be interpreted as a certificate chain.<a href="#section-8.18.1-6.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-8.18.1-13.2">
+              <p id="section-8.18.1-13.2.1">Magic number(s): TBD20<a href="#section-8.18.1-13.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.1-13.3">
+              <p id="section-8.18.1-13.3.1">File extension(s): .c509<a href="#section-8.18.1-13.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.1-13.4">
+              <p id="section-8.18.1-13.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.1-13.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-8.18.1-7">Encoding considerations: binary<a href="#section-8.18.1-7" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-8">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.1-8" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-9">Interoperability considerations: N/A<a href="#section-8.18.1-9" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-10">Published specification: [[this document]]<a href="#section-8.18.1-10" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-11">Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.<a href="#section-8.18.1-11" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-12">Fragment identifier considerations: N/A<a href="#section-8.18.1-12" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-13">Additional information:<a href="#section-8.18.1-13" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-8.18.1-14.1">
-              <p id="section-8.18.1-14.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.1-14.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.1-14.2">
-              <p id="section-8.18.1-14.2.1">Magic number(s): TBD8, TBD6<a href="#section-8.18.1-14.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.1-14.3">
-              <p id="section-8.18.1-14.3.1">File extension(s): .c509<a href="#section-8.18.1-14.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.1-14.4">
-              <p id="section-8.18.1-14.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.1-14.4.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-8.18.1-15">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.1-15" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-16">Intended usage: COMMON<a href="#section-8.18.1-16" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-17">Restrictions on usage: N/A<a href="#section-8.18.1-17" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-18">Author: COSE WG<a href="#section-8.18.1-18" class="pilcrow">¶</a></p>
-<p id="section-8.18.1-19">Change controller: IETF<a href="#section-8.18.1-19" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-14">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.1-14" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-15">Intended usage: COMMON<a href="#section-8.18.1-15" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-16">Restrictions on usage: N/A<a href="#section-8.18.1-16" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-17">Author: COSE WG<a href="#section-8.18.1-17" class="pilcrow">¶</a></p>
+<p id="section-8.18.1-18">Change controller: IETF<a href="#section-8.18.1-18" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="c509-pkcs10">
+<div id="cose-c509">
 <section id="section-8.18.2">
           <h4 id="name-media-type-application-cose-">
-<a href="#section-8.18.2" class="section-number selfRef">8.18.2. </a><a href="#name-media-type-application-cose-" class="section-name selfRef">Media Type application/cose-c509-pkcs10</a>
+<a href="#section-8.18.2" class="section-number selfRef">8.18.2. </a><a href="#name-media-type-application-cose-" class="section-name selfRef">Media Type application/cose-c509</a>
           </h4>
-<p id="section-8.18.2-1">When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificationRequest structure.<a href="#section-8.18.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-1">When the application/cose-c509 media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.<a href="#section-8.18.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.2-2">Type name: application<a href="#section-8.18.2-2" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-3">Subtype name: cose-c509-pkcs10<a href="#section-8.18.2-3" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-3">Subtype name: cose-c509<a href="#section-8.18.2-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.2-4">Required parameters: N/A<a href="#section-8.18.2-4" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-5">Optional parameters: N/A<a href="#section-8.18.2-5" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-6">Encoding considerations: binary<a href="#section-8.18.2-6" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-7">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.2-7" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-8">Interoperability considerations: N/A<a href="#section-8.18.2-8" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-9">Published specification: [[this document]]<a href="#section-8.18.2-9" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-10">Applications that use this media type: Applications that employ COSE and C509 Certification Request.<a href="#section-8.18.2-10" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-11">Fragment identifier considerations: N/A<a href="#section-8.18.2-11" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-12">Additional information:<a href="#section-8.18.2-12" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-5">Optional parameters: usage<a href="#section-8.18.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.18.2-13.1">
-              <p id="section-8.18.2-13.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.2-13.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.18.2-6.1">
+              <p id="section-8.18.2-6.1.1">Can be absent to provide no further information about the intended meaning of the order in the CBOR sequence of certificates.<a href="#section-8.18.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.18.2-13.2">
-              <p id="section-8.18.2-13.2.1">Magic number(s): TBD9<a href="#section-8.18.2-13.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.2-13.3">
-              <p id="section-8.18.2-13.3.1">File extension(s): .c509<a href="#section-8.18.2-13.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.2-13.4">
-              <p id="section-8.18.2-13.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.2-13.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-8.18.2-6.2">
+              <p id="section-8.18.2-6.2.1">Can be set to "chain" to indicate that the sequence of data items is to be interpreted as a certificate chain.<a href="#section-8.18.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-8.18.2-14">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.2-14" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-15">Intended usage: COMMON<a href="#section-8.18.2-15" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-16">Restrictions on usage: N/A<a href="#section-8.18.2-16" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-17">Author: COSE WG<a href="#section-8.18.2-17" class="pilcrow">¶</a></p>
-<p id="section-8.18.2-18">Change controller: IETF<a href="#section-8.18.2-18" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-7">Encoding considerations: binary<a href="#section-8.18.2-7" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-8">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.2-8" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-9">Interoperability considerations: N/A<a href="#section-8.18.2-9" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-10">Published specification: [[this document]]<a href="#section-8.18.2-10" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-11">Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.<a href="#section-8.18.2-11" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-12">Fragment identifier considerations: N/A<a href="#section-8.18.2-12" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-13">Additional information:<a href="#section-8.18.2-13" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8.18.2-14.1">
+              <p id="section-8.18.2-14.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.2-14.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.2-14.2">
+              <p id="section-8.18.2-14.2.1">Magic number(s): TBD8, TBD6<a href="#section-8.18.2-14.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.2-14.3">
+              <p id="section-8.18.2-14.3.1">File extension(s): .c509<a href="#section-8.18.2-14.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.2-14.4">
+              <p id="section-8.18.2-14.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.2-14.4.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-8.18.2-15">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.2-15" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-16">Intended usage: COMMON<a href="#section-8.18.2-16" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-17">Restrictions on usage: N/A<a href="#section-8.18.2-17" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-18">Author: COSE WG<a href="#section-8.18.2-18" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-19">Change controller: IETF<a href="#section-8.18.2-19" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="c509-crtemplate">
+<div id="cose-c509-pkcs10">
 <section id="section-8.18.3">
           <h4 id="name-media-type-application-cose-c">
-<a href="#section-8.18.3" class="section-number selfRef">8.18.3. </a><a href="#name-media-type-application-cose-c" class="section-name selfRef">Media Type application/cose-c509-crtemplate</a>
+<a href="#section-8.18.3" class="section-number selfRef">8.18.3. </a><a href="#name-media-type-application-cose-c" class="section-name selfRef">Media Type application/cose-c509-pkcs10</a>
           </h4>
-<p id="section-8.18.3-1">When the application/cose-c509-crtemplate media type is used, the data is a C509CertificationRequestTemplate structure.<a href="#section-8.18.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.3-1">When the application/cose-c509-pkcs10 media type is used, the data is a C509CertificationRequest structure.<a href="#section-8.18.3-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.3-2">Type name: application<a href="#section-8.18.3-2" class="pilcrow">¶</a></p>
-<p id="section-8.18.3-3">Subtype name: cose-c509-crtemplate<a href="#section-8.18.3-3" class="pilcrow">¶</a></p>
+<p id="section-8.18.3-3">Subtype name: cose-c509-pkcs10<a href="#section-8.18.3-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.3-4">Required parameters: N/A<a href="#section-8.18.3-4" class="pilcrow">¶</a></p>
 <p id="section-8.18.3-5">Optional parameters: N/A<a href="#section-8.18.3-5" class="pilcrow">¶</a></p>
 <p id="section-8.18.3-6">Encoding considerations: binary<a href="#section-8.18.3-6" class="pilcrow">¶</a></p>
@@ -3894,7 +3906,7 @@ ExtensionTemplate = (
               <p id="section-8.18.3-13.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.3-13.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.3-13.2">
-              <p id="section-8.18.3-13.2.1">Magic number(s): TBD18<a href="#section-8.18.3-13.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.3-13.2.1">Magic number(s): TBD9<a href="#section-8.18.3-13.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.3-13.3">
               <p id="section-8.18.3-13.3.1">File extension(s): .c509<a href="#section-8.18.3-13.3.1" class="pilcrow">¶</a></p>
@@ -3910,21 +3922,21 @@ ExtensionTemplate = (
 <p id="section-8.18.3-18">Change controller: IETF<a href="#section-8.18.3-18" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="c509-privkey">
+<div id="cose-c509-crtemplate">
 <section id="section-8.18.4">
           <h4 id="name-media-type-application-cose-c5">
-<a href="#section-8.18.4" class="section-number selfRef">8.18.4. </a><a href="#name-media-type-application-cose-c5" class="section-name selfRef">Media Type application/cose-c509-privkey</a>
+<a href="#section-8.18.4" class="section-number selfRef">8.18.4. </a><a href="#name-media-type-application-cose-c5" class="section-name selfRef">Media Type application/cose-c509-crtemplate</a>
           </h4>
-<p id="section-8.18.4-1">When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.<a href="#section-8.18.4-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.4-1">When the application/cose-c509-crtemplate media type is used, the data is a C509CertificationRequestTemplate structure.<a href="#section-8.18.4-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-2">Type name: application<a href="#section-8.18.4-2" class="pilcrow">¶</a></p>
-<p id="section-8.18.4-3">Subtype name: cose-c509-privkey<a href="#section-8.18.4-3" class="pilcrow">¶</a></p>
+<p id="section-8.18.4-3">Subtype name: cose-c509-crtemplate<a href="#section-8.18.4-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-4">Required parameters: N/A<a href="#section-8.18.4-4" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-5">Optional parameters: N/A<a href="#section-8.18.4-5" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-6">Encoding considerations: binary<a href="#section-8.18.4-6" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-7">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.4-7" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-8">Interoperability considerations: N/A<a href="#section-8.18.4-8" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-9">Published specification: [[this document]]<a href="#section-8.18.4-9" class="pilcrow">¶</a></p>
-<p id="section-8.18.4-10">Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.<a href="#section-8.18.4-10" class="pilcrow">¶</a></p>
+<p id="section-8.18.4-10">Applications that use this media type: Applications that employ COSE and C509 Certification Request.<a href="#section-8.18.4-10" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-11">Fragment identifier considerations: N/A<a href="#section-8.18.4-11" class="pilcrow">¶</a></p>
 <p id="section-8.18.4-12">Additional information:<a href="#section-8.18.4-12" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -3932,7 +3944,7 @@ ExtensionTemplate = (
               <p id="section-8.18.4-13.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.4-13.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.4-13.2">
-              <p id="section-8.18.4-13.2.1">Magic number(s): TBD12<a href="#section-8.18.4-13.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.4-13.2.1">Magic number(s): TBD18<a href="#section-8.18.4-13.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.4-13.3">
               <p id="section-8.18.4-13.3.1">File extension(s): .c509<a href="#section-8.18.4-13.3.1" class="pilcrow">¶</a></p>
@@ -3948,14 +3960,14 @@ ExtensionTemplate = (
 <p id="section-8.18.4-18">Change controller: IETF<a href="#section-8.18.4-18" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="c509-pem">
+<div id="cose-c509-privkey">
 <section id="section-8.18.5">
           <h4 id="name-media-type-application-cose-c50">
-<a href="#section-8.18.5" class="section-number selfRef">8.18.5. </a><a href="#name-media-type-application-cose-c50" class="section-name selfRef">Media Type application/cose-c509-pem</a>
+<a href="#section-8.18.5" class="section-number selfRef">8.18.5. </a><a href="#name-media-type-application-cose-c50" class="section-name selfRef">Media Type application/cose-c509-privkey</a>
           </h4>
-<p id="section-8.18.5-1">When the application/cose-c509-pem media type is used, the data is a C509PEM structure.<a href="#section-8.18.5-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.5-1">When the application/cose-c509-privkey media type is used, the data is a C509PrivateKey structure.<a href="#section-8.18.5-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-2">Type name: application<a href="#section-8.18.5-2" class="pilcrow">¶</a></p>
-<p id="section-8.18.5-3">Subtype name: cose-c509-pem<a href="#section-8.18.5-3" class="pilcrow">¶</a></p>
+<p id="section-8.18.5-3">Subtype name: cose-c509-privkey<a href="#section-8.18.5-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-4">Required parameters: N/A<a href="#section-8.18.5-4" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-5">Optional parameters: N/A<a href="#section-8.18.5-5" class="pilcrow">¶</a></p>
 <p id="section-8.18.5-6">Encoding considerations: binary<a href="#section-8.18.5-6" class="pilcrow">¶</a></p>
@@ -3970,7 +3982,7 @@ ExtensionTemplate = (
               <p id="section-8.18.5-13.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.5-13.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.5-13.2">
-              <p id="section-8.18.5-13.2.1">Magic number(s): TBD13<a href="#section-8.18.5-13.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.5-13.2.1">Magic number(s): TBD12<a href="#section-8.18.5-13.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.5-13.3">
               <p id="section-8.18.5-13.3.1">File extension(s): .c509<a href="#section-8.18.5-13.3.1" class="pilcrow">¶</a></p>
@@ -3986,50 +3998,88 @@ ExtensionTemplate = (
 <p id="section-8.18.5-18">Change controller: IETF<a href="#section-8.18.5-18" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="cose-certhash">
+<div id="cose-c509-pem">
 <section id="section-8.18.6">
-          <h4 id="name-media-type-application-cose-ce">
-<a href="#section-8.18.6" class="section-number selfRef">8.18.6. </a><a href="#name-media-type-application-cose-ce" class="section-name selfRef">Media Type application/cose-certhash</a>
+          <h4 id="name-media-type-application-cose-c509">
+<a href="#section-8.18.6" class="section-number selfRef">8.18.6. </a><a href="#name-media-type-application-cose-c509" class="section-name selfRef">Media Type application/cose-c509-pem</a>
           </h4>
-<p id="section-8.18.6-1">When the application/cose-certhash media type is used, the data is a COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>. If the parameter "usage" is set to "c509", the hash value is calculated over a C509 certificate.<a href="#section-8.18.6-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-1">When the application/cose-c509-pem media type is used, the data is a C509PEM structure.<a href="#section-8.18.6-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.6-2">Type name: application<a href="#section-8.18.6-2" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-3">Subtype name: cose-certhash<a href="#section-8.18.6-3" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-3">Subtype name: cose-c509-pem<a href="#section-8.18.6-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.6-4">Required parameters: N/A<a href="#section-8.18.6-4" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-5">Optional parameters: usage<a href="#section-8.18.6-5" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-5">Optional parameters: N/A<a href="#section-8.18.6-5" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-6">Encoding considerations: binary<a href="#section-8.18.6-6" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-7">Security considerations: See the Security Considerations section of [[this document]].<a href="#section-8.18.6-7" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-8">Interoperability considerations: N/A<a href="#section-8.18.6-8" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-9">Published specification: [[this document]]<a href="#section-8.18.6-9" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-10">Applications that use this media type: Applications that employ COSE and use C509 as a certificate type.<a href="#section-8.18.6-10" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-11">Fragment identifier considerations: N/A<a href="#section-8.18.6-11" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-12">Additional information:<a href="#section-8.18.6-12" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.18.6-6.1">
-              <p id="section-8.18.6-6.1.1">Can be absent to provide no further information about what the hash value is calculated over.<a href="#section-8.18.6-6.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.18.6-13.1">
+              <p id="section-8.18.6-13.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.6-13.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.18.6-6.2">
-              <p id="section-8.18.6-6.2.1">Can be set to "c509" to indicate that the COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> is used, with hashValue calculated over a C509 certificate as defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.18.6-6.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-8.18.6-13.2">
+              <p id="section-8.18.6-13.2.1">Magic number(s): TBD13<a href="#section-8.18.6-13.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.6-13.3">
+              <p id="section-8.18.6-13.3.1">File extension(s): .c509<a href="#section-8.18.6-13.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.6-13.4">
+              <p id="section-8.18.6-13.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.6-13.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-8.18.6-7">Encoding considerations: binary<a href="#section-8.18.6-7" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-8">Security considerations: See the Security Considerations section of <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>.<a href="#section-8.18.6-8" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-9">Interoperability considerations: N/A<a href="#section-8.18.6-9" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-10">Published specification: [[this document]]<a href="#section-8.18.6-10" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-11">Applications that use this media type: Applications that employ COSE and use X.509 or C509 as certificate type.<a href="#section-8.18.6-11" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-12">Fragment identifier considerations: N/A<a href="#section-8.18.6-12" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-13">Additional information:<a href="#section-8.18.6-13" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-14">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.6-14" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-15">Intended usage: COMMON<a href="#section-8.18.6-15" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-16">Restrictions on usage: N/A<a href="#section-8.18.6-16" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-17">Author: COSE WG<a href="#section-8.18.6-17" class="pilcrow">¶</a></p>
+<p id="section-8.18.6-18">Change controller: IETF<a href="#section-8.18.6-18" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cose-certhash">
+<section id="section-8.18.7">
+          <h4 id="name-media-type-application-cose-ce">
+<a href="#section-8.18.7" class="section-number selfRef">8.18.7. </a><a href="#name-media-type-application-cose-ce" class="section-name selfRef">Media Type application/cose-certhash</a>
+          </h4>
+<p id="section-8.18.7-1">When the application/cose-certhash media type is used, the data is a COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>. If the parameter "usage" is set to "c509", the hash value is calculated over a C509 certificate.<a href="#section-8.18.7-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-2">Type name: application<a href="#section-8.18.7-2" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-3">Subtype name: cose-certhash<a href="#section-8.18.7-3" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-4">Required parameters: N/A<a href="#section-8.18.7-4" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-5">Optional parameters: usage<a href="#section-8.18.7-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8.18.6-14.1">
-              <p id="section-8.18.6-14.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.6-14.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-8.18.7-6.1">
+              <p id="section-8.18.7-6.1.1">Can be absent to provide no further information about what the hash value is calculated over.<a href="#section-8.18.7-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-8.18.6-14.2">
-              <p id="section-8.18.6-14.2.1">Magic number(s): N/A<a href="#section-8.18.6-14.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.6-14.3">
-              <p id="section-8.18.6-14.3.1">File extension(s): N/A<a href="#section-8.18.6-14.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-8.18.6-14.4">
-              <p id="section-8.18.6-14.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.6-14.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-8.18.7-6.2">
+              <p id="section-8.18.7-6.2.1">Can be set to "c509" to indicate that the COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> is used, with hashValue calculated over a C509 certificate as defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.18.7-6.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-8.18.6-15">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.6-15" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-16">Intended usage: COMMON<a href="#section-8.18.6-16" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-17">Restrictions on usage: N/A<a href="#section-8.18.6-17" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-18">Author: COSE WG<a href="#section-8.18.6-18" class="pilcrow">¶</a></p>
-<p id="section-8.18.6-19">Change controller: IETF<a href="#section-8.18.6-19" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-7">Encoding considerations: binary<a href="#section-8.18.7-7" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-8">Security considerations: See the Security Considerations section of <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>.<a href="#section-8.18.7-8" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-9">Interoperability considerations: N/A<a href="#section-8.18.7-9" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-10">Published specification: [[this document]]<a href="#section-8.18.7-10" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-11">Applications that use this media type: Applications that employ COSE and use X.509 or C509 as certificate type.<a href="#section-8.18.7-11" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-12">Fragment identifier considerations: N/A<a href="#section-8.18.7-12" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-13">Additional information:<a href="#section-8.18.7-13" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-8.18.7-14.1">
+              <p id="section-8.18.7-14.1.1">Deprecated alias names for this type: N/A<a href="#section-8.18.7-14.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.7-14.2">
+              <p id="section-8.18.7-14.2.1">Magic number(s): N/A<a href="#section-8.18.7-14.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.7-14.3">
+              <p id="section-8.18.7-14.3.1">File extension(s): N/A<a href="#section-8.18.7-14.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-8.18.7-14.4">
+              <p id="section-8.18.7-14.4.1">Macintosh file type code(s): N/A<a href="#section-8.18.7-14.4.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-8.18.7-15">Person &amp; email address to contact for further information: iesg@ietf.org<a href="#section-8.18.7-15" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-16">Intended usage: COMMON<a href="#section-8.18.7-16" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-17">Restrictions on usage: N/A<a href="#section-8.18.7-17" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-18">Author: COSE WG<a href="#section-8.18.7-18" class="pilcrow">¶</a></p>
+<p id="section-8.18.7-19">Change controller: IETF<a href="#section-8.18.7-19" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4039,9 +4089,9 @@ ExtensionTemplate = (
         <h3 id="name-coap-content-formats-regist">
 <a href="#section-8.19" class="section-number selfRef">8.19. </a><a href="#name-coap-content-formats-regist" class="section-name selfRef">CoAP Content-Formats Registry</a>
         </h3>
-<p id="section-8.19-1">IANA is requested to add entries for "application/cose-c509-cert", "application/cose-c509-pkcs10", "application/cose-c509-crtemplate", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters".
-A dedicated Content-Format ID is requested for the "application/cose-c509-cert" media type in the case when the parameter "usage" is set to "chain", see <a href="#c509-cert" class="auto internal xref">Section 8.18.1</a>.<a href="#section-8.19-1" class="pilcrow">¶</a></p>
-<p id="section-8.19-2">IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see <a href="#cose-certhash" class="auto internal xref">Section 8.18.6</a>.<a href="#section-8.19-2" class="pilcrow">¶</a></p>
+<p id="section-8.19-1">IANA is requested to add entries for application/cose-c509-cert", "application/cose-c509", "application/cose-c509-pkcs10", "application/cose-c509-crtemplate", "application/cose-c509-privkey" and "application/cose-c509-pem" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters".
+A dedicated Content-Format ID is requested for the "application/cose-c509" media type in the case when the parameter "usage" is set to "chain", see <a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>.<a href="#section-8.19-1" class="pilcrow">¶</a></p>
+<p id="section-8.19-2">IANA is requested to add entries for "application/cose-certhash" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters". A dedicated Content-Format ID is requested  in the case when the parameter "usage" is set to "c509", see <a href="#cose-certhash" class="auto internal xref">Section 8.18.7</a>.<a href="#section-8.19-2" class="pilcrow">¶</a></p>
 <p id="section-8.19-3">IANA is requested to add entries for "application/cbor" to the "CoAP Content-Formats" registry in the registry group "Constrained RESTful Environments (CoRE) Parameters", in the case when the encoding is a CBOR text string containing a URI, see <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.<a href="#section-8.19-3" class="pilcrow">¶</a></p>
 <span id="name-coap-content-format-ids"></span><div id="fig-format-ids">
 <figure id="figure-20">
@@ -4051,11 +4101,14 @@ A dedicated Content-Format ID is requested for the "application/cose-c509-cert" 
 | Content              | Content | Media     | ID    | Reference  |
 | Format               | Coding  | Type      |       |            |
 +======================+=========+===========+=======+============+
-| application/         | -       | [[link    | TBD3  | [[this     |
+| application/         | -       | [[link    | TBD21 | [[this     |
 | cose-c509-cert       |         | to 8.18]] |       | document]] |
 +----------------------+---------+-----------+-------+------------+
+| application/         | -       | [[link    | TBD3  | [[this     |
+| cose-c509            |         | to 8.18]] |       | document]] |
++----------------------+---------+-----------+-------+------------+
 | application/         |         | [[link    |       | [[this     |
-| cose-c509-cert;      | -       | to 8.18]] | TBD15 | document]] |
+| cose-c509;           | -       | to 8.18]] | TBD15 | document]] |
 | usage=chain          |         |           |       |            |
 +----------------------+---------+-----------+-------+------------+
 | application/         | -       | [[link    | TBD4  | [[this     |
@@ -4097,7 +4150,7 @@ case C509:
   opaque c509_data&lt;1..2^24-1&gt;;
 </pre><a href="#section-8.20-2" class="pilcrow">¶</a>
 </div>
-<p id="section-8.20-3">where c509_data is the CBOR sequence ~C509Certificate (an unwrapped C509Certificate). For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in <span><a href="https://rfc-editor.org/rfc/rfc5246#section-7.4.2" class="relref">Section 7.4.2</a> of [<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-8.20-3" class="pilcrow">¶</a></p>
+<p id="section-8.20-3">where c509_data is the CBOR-encoded C509Certificate. For TLS 1.2 the same construction is applied with a similar union type defined for the Certificate struct in <span><a href="https://rfc-editor.org/rfc/rfc5246#section-7.4.2" class="relref">Section 7.4.2</a> of [<a href="#RFC5246" class="cite xref">RFC5246</a>]</span>. Note that, similar to COSE_C509, the TLS handshake contains the length of each certificate. The TLS extensions client_certificate_type and server_certificate_type <span>[<a href="#RFC7250" class="cite xref">RFC7250</a>]</span> are used to negotiate the use of C509.<a href="#section-8.20-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.20-4">
 <pre>
 +-------+------------------+-------------+--------------------------+
@@ -4533,13 +4586,13 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
 <a href="#appendix-A.1.1" class="section-number selfRef">A.1.1. </a><a href="#name-example-c509-certificate-en" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
 <p id="appendix-A.1.1-1">This section shows the C509 encoding of the X.509 certificate in the previous section. The point-compressed public key is represented as described in <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>.<a href="#appendix-A.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.1-2"><a href="#fig-CBOR-diagnostic-7925" class="auto internal xref">Figure 21</a> shows the diagnostic notation of the unwrapped CBOR sequence, ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.1-2"><a href="#fig-CBOR-diagnostic-7925" class="auto internal xref">Figure 21</a> shows the diagnostic notation of the C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.1-2" class="pilcrow">¶</a></p>
 <span id="name-cbor-diagnostic-notation-of"></span><div id="fig-CBOR-diagnostic-7925">
 <figure id="figure-21">
             <div class="alignLeft art-text artwork" id="appendix-A.1.1-3.1">
 <pre>
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
   3,                   / version and certificate type /
   h'01f50d',           / certificateSerialNumber /
   0,                   / signatureAlgorithm /
@@ -4556,18 +4609,19 @@ f7 79 2a c2 06 a3 0f 30 0d 30 0b 06 03 55 1d 0f 04 04 03 02 07 80 30
   h'D4320B1D6849E309219D30037E138166F2508247DDDAE76CCE
     EA55053C108E90D551F6D60106F1ABB484CFBE6256C178E4AC
     3314EA19191E8B607DA5AE3BDA16'
-
+]
 </pre>
 </div>
 <figcaption><a href="#figure-21" class="selfRef">Figure 21</a>:
-<a href="#name-cbor-diagnostic-notation-of" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
+<a href="#name-cbor-diagnostic-notation-of" class="selfRef">CBOR diagnostic notation of C509Certificate</a>
             </figcaption></figure>
 </div>
-<p id="appendix-A.1.1-4"><a href="#fig-CBOR-plain-hex-7925" class="auto internal xref">Figure 22</a> shows the plain hex format of the unwrapped CBOR sequence. The size is 140 bytes.<a href="#appendix-A.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.1-4"><a href="#fig-CBOR-plain-hex-7925" class="auto internal xref">Figure 22</a> shows the plain hex format of the CBOR array. The size is 141 bytes.<a href="#appendix-A.1.1-4" class="pilcrow">¶</a></p>
 <span id="name-cbor-plain-hex-format-of-c5"></span><div id="fig-CBOR-plain-hex-7925">
 <figure id="figure-22">
             <div class="alignLeft art-text artwork" id="appendix-A.1.1-5.1">
 <pre>
+8B
 03
 43 01 F5 0D
 00
@@ -4585,7 +4639,7 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 </pre>
 </div>
 <figcaption><a href="#figure-22" class="selfRef">Figure 22</a>:
-<a href="#name-cbor-plain-hex-format-of-c5" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
+<a href="#name-cbor-plain-hex-format-of-c5" class="selfRef">CBOR plain hex format of C509Certificate.</a>
             </figcaption></figure>
 </div>
 </section>
@@ -4596,13 +4650,13 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
 <a href="#appendix-A.1.2" class="section-number selfRef">A.1.2. </a><a href="#name-example-natively-signed-c50" class="section-name selfRef">Example: Natively Signed C509 Certificate</a>
           </h4>
 <p id="appendix-A.1.2-1">This section shows the natively signed C509 certificate corresponding to the certificate in the previous section. It is identical except for c509CertificateType, the encoding of point compression (see <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), and signatureValue.<a href="#appendix-A.1.2-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 23</a> shows the diagnostic notation of the natively signed unwrapped CBOR sequence, ~C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-2"><a href="#fig-CBOR-diagnostic-native" class="auto internal xref">Figure 23</a> shows the diagnostic notation of the natively signed C509Certificate.<a href="#appendix-A.1.2-2" class="pilcrow">¶</a></p>
 <span id="name-cbor-diagnostic-notation-of-"></span><div id="fig-CBOR-diagnostic-native">
 <figure id="figure-23">
             <div class="alignLeft art-text artwork" id="appendix-A.1.2-3.1">
 <pre>
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
   2,
   h'01f50d',
   0,
@@ -4617,17 +4671,19 @@ DA E7 6C CE EA 55 05 3C 10 8E 90 D5 51 F6 D6 01 06 F1 AB B4 84 CF BE
   h'EB0D472731F689BC00F5880B12C68B3F9FD38B23FADFCA2095
     0F3F241B60A202579CAC28CD3B7494D5FA5D8BBAB4600357E5
     50AB9FA9A65D9BA2B3B82E668CC6'
+]
 </pre>
 </div>
 <figcaption><a href="#figure-23" class="selfRef">Figure 23</a>:
-<a href="#name-cbor-diagnostic-notation-of-" class="selfRef">CBOR diagnostic notation of ~C509Certificate</a>
+<a href="#name-cbor-diagnostic-notation-of-" class="selfRef">CBOR diagnostic notation of C509Certificate</a>
             </figcaption></figure>
 </div>
-<p id="appendix-A.1.2-4"><a href="#fig-CBOR-plain-hex-native" class="auto internal xref">Figure 24</a> shows the plain hex format of the natively signed unwrapped CBOR sequence. The size is 140 bytes.<a href="#appendix-A.1.2-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.2-4"><a href="#fig-CBOR-plain-hex-native" class="auto internal xref">Figure 24</a> shows the plain hex format of the natively signed C509Certificate. The size is 141 bytes.<a href="#appendix-A.1.2-4" class="pilcrow">¶</a></p>
 <span id="name-cbor-plain-hex-format-of-c50"></span><div id="fig-CBOR-plain-hex-native">
 <figure id="figure-24">
             <div class="alignLeft art-text artwork" id="appendix-A.1.2-5.1">
 <pre>
+8B
 02
 43 01 F5 0D
 00
@@ -4645,7 +4701,7 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 </pre>
 </div>
 <figcaption><a href="#figure-24" class="selfRef">Figure 24</a>:
-<a href="#name-cbor-plain-hex-format-of-c50" class="selfRef">CBOR plain hex format of ~C509Certificate.</a>
+<a href="#name-cbor-plain-hex-format-of-c50" class="selfRef">CBOR plain hex format of C509Certificate.</a>
             </figcaption></figure>
 </div>
 </section>
@@ -4686,15 +4742,15 @@ h'D718111F3F9BD91B92FF6877F386BDBFCEA7154268FD7F2FB56EE17D99EA16D4'
 </div>
 <div id="other-examples">
 <section id="appendix-A.1.5">
-          <h4 id="name-examples-c509certificate-an">
-<a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-examples-c509certificate-an" class="section-name selfRef">Examples: C509Certificate and C509CertData</a>
+          <h4 id="name-examples-c509certdata">
+<a href="#appendix-A.1.5" class="section-number selfRef">A.1.5. </a><a href="#name-examples-c509certdata" class="section-name selfRef">Examples: C509CertData</a>
           </h4>
 <p id="appendix-A.1.5-1">This section exemplifies other CBOR objects defined in this specification, based on the natively signed C509 certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a>.<a href="#appendix-A.1.5-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5-2"><a href="#fig-C509Certificate" class="auto internal xref">Figure 25</a> shows the encoding of the corresponding C509Certificate, i.e., the CBOR array wrapping of the CBOR sequence ~C509Certificate, see <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#appendix-A.1.5-2" class="pilcrow">¶</a></p>
-<span id="name-c509certificate-the-cbor-ar"></span><div id="fig-C509Certificate">
+<span id="name-c509certdata-cbor-byte-stri"></span><div id="fig-C509CertData">
 <figure id="figure-25">
-            <div class="alignLeft art-text artwork" id="appendix-A.1.5-3.1">
+            <div class="alignLeft art-text artwork" id="appendix-A.1.5-2.1">
 <pre>
+58 8D
 8B
 02
 43 01 F5 0D
@@ -4713,37 +4769,10 @@ BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
 </pre>
 </div>
 <figcaption><a href="#figure-25" class="selfRef">Figure 25</a>:
-<a href="#name-c509certificate-the-cbor-ar" class="selfRef">C509Certificate: The CBOR array wrapping of ~C509Certificate</a>
+<a href="#name-c509certdata-cbor-byte-stri" class="selfRef">C509CertData: CBOR byte string wrapping of C509Certificate.</a>
             </figcaption></figure>
 </div>
-<p id="appendix-A.1.5-4">Note that C509Certificate is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 8B (which indicates that it is a CBOR array with 11 elements).<a href="#appendix-A.1.5-4" class="pilcrow">¶</a></p>
-<p id="appendix-A.1.5-5"><a href="#fig-C509CertData" class="auto internal xref">Figure 26</a> shows the encoding of the corresponding C509CertData, i.e., the CBOR byte string wrapping of the CBOR sequence ~C509Certificate, see <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.1.5-5" class="pilcrow">¶</a></p>
-<span id="name-c509certdata-cbor-byte-stri"></span><div id="fig-C509CertData">
-<figure id="figure-26">
-            <div class="alignLeft art-text artwork" id="appendix-A.1.5-6.1">
-<pre>
-58 8C
-02
-43 01 F5 0D
-00
-6B 52 46 43 20 74 65 73 74 20 43 41
-1A 63 B0 CD 00
-1A 69 55 B9 00
-D8 30 46 01 23 45 67 89 AB
-01
-58 21 02 B1 21 6A B9 6E 5B 3B 33 40 F5 BD F0 2E 69 3F 16 21 3A 04 52
-5E D4 44 50 B1 01 9C 2D FD 38 38 AB
-01
-58 40 EB 0D 47 27 31 F6 89 BC 00 F5 88 0B 12 C6 8B 3F 9F D3 8B 23 FA
-DF CA 20 95 0F 3F 24 1B 60 A2 02 57 9C AC 28 CD 3B 74 94 D5 FA 5D 8B
-BA B4 60 03 57 E5 50 AB 9F A9 A6 5D 9B A2 B3 B8 2E 66 8C C6
-</pre>
-</div>
-<figcaption><a href="#figure-26" class="selfRef">Figure 26</a>:
-<a href="#name-c509certdata-cbor-byte-stri" class="selfRef">C509CertData: CBOR byte string wrapping of ~C509Certificate.</a>
-            </figcaption></figure>
-</div>
-<p id="appendix-A.1.5-7">Note that C509CertData is identical to ~C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 58 8C (which indicates that it is a CBOR byte string of 140 bytes).<a href="#appendix-A.1.5-7" class="pilcrow">¶</a></p>
+<p id="appendix-A.1.5-3">Note that C509CertData is identical to C509Certificate in <a href="#example-native" class="auto internal xref">Appendix A.1.2</a> except for the prefix 58 8D (which indicates that it is a CBOR byte string of 141 bytes).<a href="#appendix-A.1.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -4838,11 +4867,12 @@ F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F
           <h4 id="name-example-c509-certificate-enc">
 <a href="#appendix-A.2.1" class="section-number selfRef">A.2.1. </a><a href="#name-example-c509-certificate-enc" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
-<p id="appendix-A.2.1-1">The CBOR encoding (~C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.2.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2.1-1">The CBOR encoding (C509Certificate) of the same X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.2.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2.1-2">
 <pre>
-/This defines a CBOR Sequence (RFC 8742):/
+/This defines a CBOR array:/
 
+[
  3,
  h'7E7661D7B54E4632',
  0,
@@ -4876,11 +4906,13 @@ F9 51 BF C8 2A 43 1D 0D 9F 08 BC 2D 20 5B 11 60 30 0E 06 03 55 1D 0F
  ],
  h'C0D81996D2507D693F3C48EAA5EE9491BDA6DB214099D98117C63B361374CD86
    A774989F4C321A5CF25D832A4D336A08AD67DF20F1506421188A0ADE6D349236'
+]
 </pre><a href="#appendix-A.2.1-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.2.1-3">The size of the CBOR encoding (CBOR sequence) is 275 bytes:<a href="#appendix-A.2.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.2.1-3">The size of the CBOR encoding is 276 bytes:<a href="#appendix-A.2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.2.1-4">
 <pre>
+8B
 03 48 7E 76 61 D7 B5 4E 46 32 00 8A 23 62 55 53 06 62 43 41 08 6B 45
 78 61 6D 70 6C 65 20 49 6E 63 09 6D 63 65 72 74 69 66 69 63 61 74 69
 6F 6E 01 6A 38 30 32 2E 31 41 52 20 43 41 1A 5C 52 DC 0C F6 8C 23 62
@@ -4967,11 +4999,12 @@ ea 02 21 00 b5 c0 6c c4 58 54 fa 30 b2 82 88 b1 d3 bb 9a 66 61 ed 50
           <h4 id="name-example-c509-certificate-enco">
 <a href="#appendix-A.3.1" class="section-number selfRef">A.3.1. </a><a href="#name-example-c509-certificate-enco" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
-<p id="appendix-A.3.1-1">The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.3.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.1-1">The CBOR encoding (C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.3.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.1-2">
 <pre>
-/This defines a CBOR Sequence (RFC 8742):/
+/This defines a CBOR array:/
 
+[
 3,
 h'047FA1E31928EE403BA0B83A395673FC',
 0,
@@ -5021,9 +5054,10 @@ h'FD963ECDD84DCD1B93A1CF432D1A7217D6C63BDE3355A02F8CFB5AD8994CD44E
 ],
 h'BD63CF4F7E5CFE6C29385EA71CFBFC1E3F7B1CD07251A221F77769C0F471DFEA
   B5C06CC45854FA30B28288B1D3BB9A6661ED5031725B1A8202E0DA5B59F95402'
+]
 </pre><a href="#appendix-A.3.1-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.1-3">The size of the CBOR encoding (CBOR sequence) is 835 bytes.<a href="#appendix-A.3.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.1-3">The size of the CBOR encoding is 836 bytes.<a href="#appendix-A.3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5115,11 +5149,11 @@ ec a5 77 75 fa 18 f7 d5 77 d5 31 cc c7 2d
           <h4 id="name-example-c509-certificate-encod">
 <a href="#appendix-A.4.1" class="section-number selfRef">A.4.1. </a><a href="#name-example-c509-certificate-encod" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
-<p id="appendix-A.4.1-1">The CBOR encoding (~C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.4.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.4.1-1">The CBOR encoding (C509Certificate) of the first X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.4.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.4.1-2">
 <pre>
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
 3,
 h'A6A55C870E39B40E',
 23,
@@ -5179,9 +5213,10 @@ h'14043FA0BED2EE3FA86E3A1F788EA04C35530F11061FFF60A16D0B83E9D92ADB
   FA672DB0C7DB3D250A414A85D37F4946373CF4B175D052F3DDC766F14BFDAA00
   EDBFE47EED01EC7BE4F646FC31FD72FE03D2F265AF4D7EE2819B7AFD303CF552
   F40534A08A3E194158C8A8E05171840915AEECA57775FA18F7D577D531CCC72D'
+]
 </pre><a href="#appendix-A.4.1-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.4.1-3">The size of the CBOR encoding (CBOR sequence) is 1295 bytes.<a href="#appendix-A.4.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.4.1-3">The size of the CBOR encoding (CBOR array) is 1296 bytes.<a href="#appendix-A.4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -5285,11 +5320,11 @@ c9 92 91 9b 49 c4 8f d9 31 d0 5c 49 7d 38 65 e6 08 4c 91 df 3a 4c 7e
           <h4 id="name-example-c509-certificate-encodi">
 <a href="#appendix-A.5.1" class="section-number selfRef">A.5.1. </a><a href="#name-example-c509-certificate-encodi" class="section-name selfRef">Example: C509 Certificate Encoding</a>
           </h4>
-<p id="appendix-A.5.1-1">The CBOR encoding (~C509Certificate) of the X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.5.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.5.1-1">The CBOR encoding (C509Certificate) of the X.509 certificate is shown below in CBOR diagnostic format.<a href="#appendix-A.5.1-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.5.1-2">
 <pre>
-/This defines a CBOR Sequence (RFC 8742):/
-
+/This defines a CBOR array:/
+[
 3,
 h'1234',
 1,
@@ -5328,6 +5363,7 @@ h'046709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B0
 h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
   D59E8BF25D133FB1A094E9D42C8FA6ED20ED9FDB5A309B2C8704DDA5F144F17B
   B316B98C291124FBA5CFEC6EF97F2688069AE6C52E2B3CE223128DD10C2AA730'
+]
 </pre><a href="#appendix-A.5.1-2" class="pilcrow">¶</a>
 </div>
 </section>
