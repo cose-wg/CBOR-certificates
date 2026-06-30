@@ -868,7 +868,7 @@ The X.509 attribute "Statement of Possession of a Private Key" is defined in {{R
 PrivateKeyPossessionStatement = [
   issuer: Name,
   certificateSerialNumber: CertificateSerialNumber,
-  cert: C509Certificate / null,
+  cert: C509CertData / null,
 ]
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
