@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-28T04:24:41.742977+00:00",
+  "timestamp": "2026-06-30T04:10:40.506771+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9255,7 +9255,7 @@
       "labels": [],
       "body": "This issue is based on proposals from Lijun to harmonize analogous definitions:\n\n(a) between X.509 (RFC 5280) and C509 (as specified in this draft)\n(b) between COSE with X.509 (RFC 9360) and COSE with C509 (as specified in this draft), and \n(c) between different C509 constructs (as specified in this and upcoming drafts).\n\nThese changes improves understanding and reduces complexity and risks for implementation errors.\n\nThe original issues and commits are referenced below together with a little background. (1., 2., and 3. below does not map 1-1 to (a), (b), and (c) above).\n\n1. Redefine COSE_C509 (actually, redefine C509CertData)\n\n(This is based on https://github.com/xipki/CBOR-certificates/issues/4)\n\nRecall that C509Certificate is a CBOR array containing a CBOR sequence, ~C509Certificate, of elements to be signed (TBSCertificate) and a signaturevalue (issuerSignatureValue) see\nhttps://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-19.html#figure-1\n\nTo define a more general structure including chains and bags of C509 certificates, we define COSE_C509 to be either a single C509CertData or an array of two or more C509CertData\n\nCOSE_C509 = C509CertData / [ 2* C509CertData ]\n\n(analogous to COSE_X509 = bstr / [ 2*certs: bstr ], see https://www.rfc-editor.org/rfc/rfc9360.html#name-x509-certificates-and-stati)\n\nwhere C509CertData contains the C509 certificate and is defined as an object that does not require CBOR parsing. Currently (-19) \nC509CertData is a byte string wrapping of the CBOR sequence ~C509Certificate.\n\nC509CertData = bytes .cborseq C509Certificate (*)\n\nThis is a minimal optimization in size but also avoids the double wrapping. On the flip side, there is complexity and possible confusion since there are now two basic concepts; C509Certificate as defined by the CDDL, and ~C509Certificate which is used to construct the C509CertData. This complexity was considered acceptable. \n\nHowever, for other certificate related objects to harmonize with this definition, for example, C509CertificationRequest, C509CertificationRequestTemplate and objects yet to be defined such as C509CRL, C509OCSPRequest, and C509OCSPResponse we would either have different constructs or those would also need to make use of the unwrapped objects, such as ~C509CertificationRequest, etc.\n\nWe propose instead to deprecate the use of ~C509Certificate and replace the definition (*) with byte string wrapping of the array C509Certificate.\n\nC509CertData = bytes .cbor C509Certificate\n\nThis is a simplification with only small impact on the specification, but is a change to certificate wrapping which of course impacts the examples, see commit:\nhttps://github.com/cose-wg/CBOR-certificates/compare/master...xipki:CBOR-certificates:0609-remove-tilde-C509Certiciate\n\n\n2. Redefine application/cose-c509-cert (and define the new application/cose-c509 as what application/cose-c509-cert used to be)\n\nThe background is already provided in https://github.com/xipki/CBOR-certificates/issues/5 (using C509Certificate instead of ~C509Certificate as changed in 1. above)\n\nAfter the proposed change:\n\n* application/cose-c509 is a new media type with content format COSE_C509 \n\n* application/cose-c509-cert is now media type for a single C509 certificate\n\nThis harmonizes the definitions of media types such that application/cose-c509-cert for C509 corresponds conceptually to application/pkix-cert for X.509.\n\nSee commit:\nhttps://github.com/cose-wg/CBOR-certificates/compare/master...xipki:CBOR-certificates:0610-fix-mediatype\n\n\n3. Redefine c5u and c5u-sender\n\nc5u and c5u-sender are the C509 analogue of x5u and x5u-sender for X.509 (RFC 9360), but the definitions are currently not analogous. x5u* provides the ability to identify an X.509 certificate using different media types, c5u* specifically references a chain.\n\nWith the harmonization of media type for COSE_C509 as in 2. above, we can now have the analogous content and terminology.\n\nSee commit:\nhttps://github.com/cose-wg/CBOR-certificates/compare/master...xipki:CBOR-certificates:0610-fix-c5u\n",
       "createdAt": "2026-06-26T10:48:10Z",
-      "updatedAt": "2026-06-27T08:08:06Z",
+      "updatedAt": "2026-06-30T01:15:30Z",
       "closedAt": null,
       "comments": [
         {
@@ -9278,6 +9278,55 @@
           "body": "IANA has registered following sub-types related to COSE / CBOR:\n- COSE objects: no suffix \"+cbor\"\n  - cose\n  - cose-key\n  - cose-key-set\n  - cose-x509\n- Part of objects with suffix \"+cbor\" \n  - ace-groupcomm+cbor\n  - ace-trl+cbor\n  - ace+cbor\n  - aif+cbor\n  - ce+cbor\n  - cid-edhoc+cbor-seq\n  -cmw+cbor\n  - concise-problem-details+cbor\n  - dots+cbor\n  - eat-bun+cbor\n  - eat-ucs+cbor\n  - measured-component+cbor\n  - issing-blocks+cbor-seq\n  - senml-etch+cbor\n  - senml+cbor\n  - sensml+cbor\n\n- In this I.D., \n  - we have the following new sub-types:\n    - cose-c509-cert\n    - cose-c509\n    - cose-c509-pkcs10\n    - cose-c509-crtemplate\n    - cose-c509-privkey\n    - cose-c509-pem\n    - cose-certhash\n\n  - Choice 1: Simply adding the suffix will result in\n    - cose-c509-cert+cbor\n    - cose-c509-pkcs10+cbor\n    - cose-c509-crtemplate+cbor\n    - cose-c509-privkey+cbor\n    - cose-c509-pem+cbor\n    - cose-c509+cbor\n    - cose-certhash+cbor\n\n    These look a bit too long.\n\n  - Choice 2: Or with short media-type plus suffix \"+cbor\"\n    - c509-cert+cbor\n    - c509-pkcs10+cbor\n    - c509-crtemplate+cbor\n    - c509-privkey+cbor\n    - c509-pem+cbor\n    - cose-c509+cbor\n    - cose-certhash+cbor",
           "createdAt": "2026-06-27T08:08:06Z",
           "updatedAt": "2026-06-27T08:08:06Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I think choice 2 is actually more meaningful because the first types are not actually uses of cose at all so should not have the cose prefix. The last two are directly used by cose so make more sense to have the prefix.",
+          "createdAt": "2026-06-29T01:45:55Z",
+          "updatedAt": "2026-06-29T01:45:55Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "It is unfortunate that the existing cose-registered, non-cose-message media types do not use the structured suffix, but that is already done and in use.",
+          "createdAt": "2026-06-29T01:49:02Z",
+          "updatedAt": "2026-06-29T01:49:02Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander What is your suggestion?",
+          "createdAt": "2026-06-29T08:09:44Z",
+          "updatedAt": "2026-06-29T08:09:44Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\n> Choice 2: Or with short media-type plus suffix \"+cbor\"\n> \n> c509-cert+cbor\n> c509-pkcs10+cbor\n> c509-crtemplate+cbor\n> c509-privkey+cbor\n> c509-pem+cbor\n> cose-c509+cbor\n> cose-certhash+cbor\n\n\nAbout the last two: \n\n> cose-c509+cbor\n\nI think for consistency this should be c509-cbor. Or does this preclude some future media type definition?\n\n\n> cose-certhash+cbor\n\nCOSE_CertHash is defined in RFC9360, but media type is registered here, so we can get it right, but should keep the \"cose-\" since it does not only apply to C509.\n\n\n\n\n\n> It is unfortunate that the existing cose-registered, non-cose-message media types do not use the structured suffix, but that is already done and in use.\n\nRight, not much to do there.\n\n\n",
+          "createdAt": "2026-06-29T09:14:02Z",
+          "updatedAt": "2026-06-29T09:14:02Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I think for consistency this should be c509-cbor. Or does this preclude some future media type definition?\n\nDo you mean c509+cbor?\n\nThe problem is the data type is 'COSE_C509' which is corresponding to 'COSE_X509' in RFC9360.\nAnd for 'COSE_X509' the sub type is 'cose-x509' or 'cose-x509;usage=chain'.\n\nSo I think here using 'cose-c509+cbor' is better, since I think 'COSE_C509' is an extension to COSE.",
+          "createdAt": "2026-06-29T09:43:08Z",
+          "updatedAt": "2026-06-29T09:43:08Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, I meant c509+cbor.\n\nSo, your argument is that since COSE_CertHash is already defined, and since we define COSE_C509 analogous to COSE_X509 we should keep that in the media type registration, whereas the others don't have a corresponding COSE registration.\n\nIf we strive for analogies, then I think we could keep the cose- prefix everywhere, i.e. choice 1. That is also easier to argue for in a very late change like this - we simply added +cbor to better describe the content. \n\n@BrianSipos Is that ok for you? If so, I propose we make that a separate issue and corresponding PR.",
+          "createdAt": "2026-06-29T10:06:37Z",
+          "updatedAt": "2026-06-29T10:06:37Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Either one is technically fine. I don't see any issue with \"long\" media types either, considering the context in which they would be used. Also any CoAP stuff gets a separate, very short code point.",
+          "createdAt": "2026-06-30T01:15:30Z",
+          "updatedAt": "2026-06-30T01:15:30Z"
         }
       ]
     },
@@ -16742,13 +16791,13 @@
       "labels": [],
       "body": "Fix #393 ",
       "createdAt": "2026-06-26T20:24:44Z",
-      "updatedAt": "2026-06-27T06:07:22Z",
+      "updatedAt": "2026-06-29T12:17:29Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "efd69a0b3fc90f47babca2c21d75df6962768c4b",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "harmonizing-definitions",
-      "headRefOid": "d770da559cada348675b4d018955003ad8e8facf",
+      "headRefOid": "87c9d1936e259d809da13dee05dbe44ed0c9d379",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -16812,6 +16861,46 @@
               "body": "cose-c509-cert: C509Certificate\ncose-c509: COSE_C509 (=C509CertData here) with single-entry\ncose-c509: COSE_C509 (=[2*C509CertData]) with certificate-chain. ",
               "createdAt": "2026-06-27T06:00:35Z",
               "updatedAt": "2026-06-27T06:00:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABEatwYg",
+          "commit": {
+            "abbreviatedOid": "d770da5"
+          },
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-29T11:32:06Z",
+          "updatedAt": "2026-06-29T11:32:06Z",
+          "comments": [
+            {
+              "originalPosition": 42,
+              "body": "RIght, I see now that this is verbatim from RFC9360, let's point to that so the analogy is explicit.\n\nOLD\nc5u provides the ability to identify a C509 certificate ...\nNEW\nc5u, analogously to x5u in {{RFC9360}}, provides the ability to identify a C509 certificate ...\n\nAlso, a nit, there is a space before \"When\":\n\nOLD\n When the application/cose-c509 media type is used, ...\nNEW\nWhen the application/cose-c509 media type is used, ...",
+              "createdAt": "2026-06-29T11:32:06Z",
+              "updatedAt": "2026-06-29T11:33:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABEbAkZQ",
+          "commit": {
+            "abbreviatedOid": "1e5e8ca"
+          },
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2026-06-29T12:17:28Z",
+          "updatedAt": "2026-06-29T12:17:29Z",
+          "comments": [
+            {
+              "originalPosition": 42,
+              "body": "Resolved in https://github.com/cose-wg/CBOR-certificates/pull/395/changes/87c9d1936e259d809da13dee05dbe44ed0c9d379",
+              "createdAt": "2026-06-29T12:17:28Z",
+              "updatedAt": "2026-06-29T12:17:29Z"
             }
           ]
         }
