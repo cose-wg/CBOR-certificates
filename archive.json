@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-06-30T04:10:40.506771+00:00",
+  "timestamp": "2026-07-02T04:06:04.777257+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9248,15 +9248,15 @@
       "id": "I_kwDOCpt5cM8AAAABGzQg-g",
       "title": "Harmonizing definitions",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/393",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This issue is based on proposals from Lijun to harmonize analogous definitions:\n\n(a) between X.509 (RFC 5280) and C509 (as specified in this draft)\n(b) between COSE with X.509 (RFC 9360) and COSE with C509 (as specified in this draft), and \n(c) between different C509 constructs (as specified in this and upcoming drafts).\n\nThese changes improves understanding and reduces complexity and risks for implementation errors.\n\nThe original issues and commits are referenced below together with a little background. (1., 2., and 3. below does not map 1-1 to (a), (b), and (c) above).\n\n1. Redefine COSE_C509 (actually, redefine C509CertData)\n\n(This is based on https://github.com/xipki/CBOR-certificates/issues/4)\n\nRecall that C509Certificate is a CBOR array containing a CBOR sequence, ~C509Certificate, of elements to be signed (TBSCertificate) and a signaturevalue (issuerSignatureValue) see\nhttps://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-19.html#figure-1\n\nTo define a more general structure including chains and bags of C509 certificates, we define COSE_C509 to be either a single C509CertData or an array of two or more C509CertData\n\nCOSE_C509 = C509CertData / [ 2* C509CertData ]\n\n(analogous to COSE_X509 = bstr / [ 2*certs: bstr ], see https://www.rfc-editor.org/rfc/rfc9360.html#name-x509-certificates-and-stati)\n\nwhere C509CertData contains the C509 certificate and is defined as an object that does not require CBOR parsing. Currently (-19) \nC509CertData is a byte string wrapping of the CBOR sequence ~C509Certificate.\n\nC509CertData = bytes .cborseq C509Certificate (*)\n\nThis is a minimal optimization in size but also avoids the double wrapping. On the flip side, there is complexity and possible confusion since there are now two basic concepts; C509Certificate as defined by the CDDL, and ~C509Certificate which is used to construct the C509CertData. This complexity was considered acceptable. \n\nHowever, for other certificate related objects to harmonize with this definition, for example, C509CertificationRequest, C509CertificationRequestTemplate and objects yet to be defined such as C509CRL, C509OCSPRequest, and C509OCSPResponse we would either have different constructs or those would also need to make use of the unwrapped objects, such as ~C509CertificationRequest, etc.\n\nWe propose instead to deprecate the use of ~C509Certificate and replace the definition (*) with byte string wrapping of the array C509Certificate.\n\nC509CertData = bytes .cbor C509Certificate\n\nThis is a simplification with only small impact on the specification, but is a change to certificate wrapping which of course impacts the examples, see commit:\nhttps://github.com/cose-wg/CBOR-certificates/compare/master...xipki:CBOR-certificates:0609-remove-tilde-C509Certiciate\n\n\n2. Redefine application/cose-c509-cert (and define the new application/cose-c509 as what application/cose-c509-cert used to be)\n\nThe background is already provided in https://github.com/xipki/CBOR-certificates/issues/5 (using C509Certificate instead of ~C509Certificate as changed in 1. above)\n\nAfter the proposed change:\n\n* application/cose-c509 is a new media type with content format COSE_C509 \n\n* application/cose-c509-cert is now media type for a single C509 certificate\n\nThis harmonizes the definitions of media types such that application/cose-c509-cert for C509 corresponds conceptually to application/pkix-cert for X.509.\n\nSee commit:\nhttps://github.com/cose-wg/CBOR-certificates/compare/master...xipki:CBOR-certificates:0610-fix-mediatype\n\n\n3. Redefine c5u and c5u-sender\n\nc5u and c5u-sender are the C509 analogue of x5u and x5u-sender for X.509 (RFC 9360), but the definitions are currently not analogous. x5u* provides the ability to identify an X.509 certificate using different media types, c5u* specifically references a chain.\n\nWith the harmonization of media type for COSE_C509 as in 2. above, we can now have the analogous content and terminology.\n\nSee commit:\nhttps://github.com/cose-wg/CBOR-certificates/compare/master...xipki:CBOR-certificates:0610-fix-c5u\n",
       "createdAt": "2026-06-26T10:48:10Z",
-      "updatedAt": "2026-06-30T01:15:30Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-30T06:34:58Z",
+      "closedAt": "2026-06-30T06:34:58Z",
       "comments": [
         {
           "author": "BrianSipos",
@@ -9327,6 +9327,13 @@
           "body": "Either one is technically fine. I don't see any issue with \"long\" media types either, considering the context in which they would be used. Also any CoAP stuff gets a separate, very short code point.",
           "createdAt": "2026-06-30T01:15:30Z",
           "updatedAt": "2026-06-30T01:15:30Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Moved this issue to #397. Then we are done with this issue.",
+          "createdAt": "2026-06-30T06:30:02Z",
+          "updatedAt": "2026-06-30T06:30:02Z"
         }
       ]
     },
@@ -9335,15 +9342,15 @@
       "id": "I_kwDOCpt5cM8AAAABGzWquQ",
       "title": "Fix definition of cert in private key possession statement attribute",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/394",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "\nThe cert used in the private key possession statement attribute is currently the CBOR array C509Certificate, but should for ease of handling rather be a byte string wrapped object.\n\nThis is based on https://github.com/xipki/CBOR-certificates/issues/1 which also provides the obvious solution to use C509CertData instead.\n",
       "createdAt": "2026-06-26T11:03:49Z",
-      "updatedAt": "2026-06-26T20:34:39Z",
-      "closedAt": null,
+      "updatedAt": "2026-06-30T06:37:54Z",
+      "closedAt": "2026-06-30T06:37:54Z",
       "comments": [
         {
           "author": "xipki",
@@ -9358,6 +9365,30 @@
           "body": "@gselander Brian and I have started discussion about the suffix \"+cbor\" in https://github.com/xipki/CBOR-certificates/issues/5, please comment there.",
           "createdAt": "2026-06-26T20:34:17Z",
           "updatedAt": "2026-06-26T20:34:39Z"
+        }
+      ]
+    },
+    {
+      "number": 397,
+      "id": "I_kwDOCpt5cM8AAAABHJGqMQ",
+      "title": "Use +cbor for media types based on CBOR",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/397",
+      "state": "CLOSED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Make use of the +cbor structured syntax suffix for CBOR data items as defined in\n[Section 9.5](https://rfc-editor.org/rfc/rfc8949#section-9.5) of [[RFC8949](https://cabo.github.io/cbor-media-types/draft-bormann-cbor-defining-media-types.html#RFC8949)].",
+      "createdAt": "2026-06-30T06:27:06Z",
+      "updatedAt": "2026-06-30T07:12:12Z",
+      "closedAt": "2026-06-30T07:12:12Z",
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "As agreed in #393, we the new media types should be:\n\ncose-c509-cert+cbor\ncose-c509-pkcs10+cbor\ncose-c509-crtemplate+cbor\ncose-c509-privkey+cbor\ncose-c509-pem+cbor\ncose-c509+cbor\ncose-certhash+cbor",
+          "createdAt": "2026-06-30T06:31:18Z",
+          "updatedAt": "2026-06-30T06:31:47Z"
         }
       ]
     }
@@ -13436,17 +13467,19 @@
       "title": "fix wrong otherName C509 to X509 encoding",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/290",
       "state": "OPEN",
-      "author": "smhmeier",
+      "author": "shmset",
       "authorAssociation": "NONE",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "Implementation issue"
+      ],
       "body": "Fix wrong encoding of the X509 extension of a `GeneralName` of type `otherName`.\r\n\r\nEdit: There does not seem to be a set of tests beside running it manually.\r\n\r\nFixes #289 ",
       "createdAt": "2025-11-03T12:31:48Z",
-      "updatedAt": "2025-11-03T12:36:00Z",
+      "updatedAt": "2026-06-30T07:12:49Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "7d35c1dfb1fd43c3eaf6443e21d758abf2236292",
-      "headRepository": "smhmeier/CBOR-certificates",
+      "headRepository": "shmset/CBOR-certificates",
       "headRefName": "fix-othername-decoding",
       "headRefOid": "d0e5a375c8337f88187f6c220e8c8209f2687b8d",
       "closedAt": null,
@@ -16784,24 +16817,26 @@
       "id": "PR_kwDOCpt5cM7rIDgf",
       "title": "Harmonizing definitions",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/395",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #393 ",
       "createdAt": "2026-06-26T20:24:44Z",
-      "updatedAt": "2026-06-29T12:17:29Z",
+      "updatedAt": "2026-06-30T06:34:57Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "efd69a0b3fc90f47babca2c21d75df6962768c4b",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "harmonizing-definitions",
       "headRefOid": "87c9d1936e259d809da13dee05dbe44ed0c9d379",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-06-30T06:34:57Z",
+      "mergedAt": "2026-06-30T06:34:57Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "9279f24da0751dc16755b486a14172aa23ab5afe"
+      },
       "comments": [],
       "reviews": [
         {
@@ -16911,25 +16946,78 @@
       "id": "PR_kwDOCpt5cM7rIFcw",
       "title": "Fix definition of cert in private key possession statement attribute",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/396",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #394",
       "createdAt": "2026-06-26T20:26:24Z",
-      "updatedAt": "2026-06-26T20:26:25Z",
+      "updatedAt": "2026-06-30T06:37:54Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "efd69a0b3fc90f47babca2c21d75df6962768c4b",
       "headRepository": "xipki/CBOR-certificates",
       "headRefName": "CertData-in-PrivateKeyPosessionStatement",
       "headRefOid": "04ab285b1c1df8fc808d9ac5519fe97928104a0b",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2026-06-30T06:37:54Z",
+      "mergedAt": "2026-06-30T06:37:54Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "81cb68085a0ee928e466446a9b48ad8f52a4e796"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This is a minor, merging now.",
+          "createdAt": "2026-06-30T06:37:47Z",
+          "updatedAt": "2026-06-30T06:37:47Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 398,
+      "id": "PR_kwDOCpt5cM7sGrjO",
+      "title": "Added +cbor suffix to media types",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/398",
+      "state": "MERGED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #397",
+      "createdAt": "2026-06-30T07:03:53Z",
+      "updatedAt": "2026-06-30T07:12:12Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "81cb68085a0ee928e466446a9b48ad8f52a4e796",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "cbor-suffix",
+      "headRefOid": "0e3d9b2847b27e6e0add44200ce572299a8416c5",
+      "closedAt": "2026-06-30T07:12:11Z",
+      "mergedAt": "2026-06-30T07:12:11Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "879055f323c3fa5a5a9e0a95defddeed8f73014f"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@xipki Please review.",
+          "createdAt": "2026-06-30T07:04:50Z",
+          "updatedAt": "2026-06-30T07:04:50Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @xipki Please review.\r\n\r\nLooks fine.",
+          "createdAt": "2026-06-30T07:09:34Z",
+          "updatedAt": "2026-06-30T07:09:34Z"
+        }
+      ],
       "reviews": []
     }
   ]
