@@ -274,7 +274,7 @@ In the encoding described below, the elements in arrays are always encoded in th
 
 This section describes the X.509 fields and their CBOR encodings and uses them in the definition of C509 certificates; see {{fig-CBORCertCDDL}}. While many of {{RFC5280}} encodings are supported, there are a few instances marked "not supported" for which no alternative is provided and, therefore, no C509 encoding can be generated.
 
-The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore have documentary value only. Examples are given in the appendices; see, for example, {{rfc7925-prof}}.
+The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate. The elements of a C509Certificate form a CBOR Sequence {{RFC8742}}. The subsequence of elements described as the group TBSCertificate with the issuerSignatureValue removed at the end form a CBOR Sequence. The member names have documentary value only. Examples are given in the appendices; see, for example, {{rfc7925-prof}}.
 
 ~~~~~~~~~~~ cddl
 C509Certificate = [
