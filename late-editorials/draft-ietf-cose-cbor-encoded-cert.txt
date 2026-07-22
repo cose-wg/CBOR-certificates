@@ -2933,7 +2933,7 @@ Table of Contents
    *  Can be absent to provide no further information about the intended
       meaning of the order of the certificates.
 
-   *  Can be set to "chain" to indicate that the data items is to be
+   *  Can be set to "chain" to indicate that the data items are to be
       interpreted as a certificate chain.
 
    Encoding considerations: binary
