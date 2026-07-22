@@ -2297,7 +2297,7 @@ Required parameters: N/A
 Optional parameters: usage
 
 * Can be absent to provide no further information about the intended meaning of the order of the certificates.
-* Can be set to "chain" to indicate that the data items is to be interpreted as a certificate chain.
+* Can be set to "chain" to indicate that the data items are to be interpreted as a certificate chain.
 
 Encoding considerations: binary
 
