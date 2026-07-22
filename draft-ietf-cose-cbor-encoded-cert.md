@@ -699,7 +699,7 @@ As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parame
 | Name | Label | Value Type | Description |
 | c5b | 24 | COSE_C509 | An unordered bag of C509 certificates |
 | c5c | 25 | COSE_C509 | An ordered chain of C509 certificates |
-| c5t | 22 | COSE_CertHash | Hash of a CBOR-encoded C509Certificate |
+| c5t | 22 | COSE_CertHash | Hash of a C509Certificate |
 | c5u | 23 | uri | URI pointing to a C509 certificate |
 {: #iana-header title="C509 COSE Header Parameters" cols="r l l l"}
 
@@ -715,7 +715,7 @@ This section defines the COSE header parameters used for identifying or transpor
 
 | Name | Algorithm | Label | Type | Description |
 | c5c-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -30 (suggested) | COSE_C509 | An ordered chain of C509 certificates |
-| c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a CBOR-encoded C509Certificate |
+| c5t-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -31 (suggested) | COSE_CertHash | Hash of a C509Certificate |
 | c5u-sender | ECDH-SS+HKDF-256, ECDH-SS+HKDF-512, ECDH-SS+A128KW, ECDH-SS+A192KW, ECDH-SS+A256KW | -32 (suggested) | uri | URI pointing to a C509 certificate |
 {: #iana-sender title="Static ECDH Algorithm Values" cols="r l l l l"}
 
@@ -2504,7 +2504,7 @@ Required parameters: N/A
 Optional parameters: usage
 
 * Can be absent to provide no further information about what the hash value is calculated over.
-* Can be set to "c509" to indicate that the COSE_CertHash structure as defined in {{RFC9360}} is used, with hashValue calculated over a CBOR-encoded C509Certificate as defined in {{cose-header-params}}.
+* Can be set to "c509" to indicate that the COSE_CertHash structure as defined in {{RFC9360}} is used, with hashValue calculated over a C509Certificate as defined in {{cose-header-params}}.
 
 Encoding considerations: binary
 
