@@ -916,23 +916,23 @@ Table of Contents
    a self-signed certificate in the parameter MUST NOT cause the update
    of the set of trust anchors without appropriate authorization.
 
-         +======+=======+===============+========================+
-         | Name | Label | Value Type    | Description            |
-         +======+=======+===============+========================+
-         |  c5b | 24    | COSE_C509     | An unordered bag of    |
-         |      |       |               | C509 certificates      |
-         +------+-------+---------------+------------------------+
-         |  c5c | 25    | COSE_C509     | An ordered chain of    |
-         |      |       |               | C509 certificates      |
-         +------+-------+---------------+------------------------+
-         |  c5t | 22    | COSE_CertHash | Hash of a CBOR-encoded |
-         |      |       |               | C509Certificate        |
-         +------+-------+---------------+------------------------+
-         |  c5u | 23    | uri           | URI pointing to a C509 |
-         |      |       |               | certificate            |
-         +------+-------+---------------+------------------------+
+          +======+=======+===============+=====================+
+          | Name | Label | Value Type    | Description         |
+          +======+=======+===============+=====================+
+          |  c5b | 24    | COSE_C509     | An unordered bag of |
+          |      |       |               | C509 certificates   |
+          +------+-------+---------------+---------------------+
+          |  c5c | 25    | COSE_C509     | An ordered chain of |
+          |      |       |               | C509 certificates   |
+          +------+-------+---------------+---------------------+
+          |  c5t | 22    | COSE_CertHash | Hash of a           |
+          |      |       |               | C509Certificate     |
+          +------+-------+---------------+---------------------+
+          |  c5u | 23    | uri           | URI pointing to a   |
+          |      |       |               | C509 certificate    |
+          +------+-------+---------------+---------------------+
 
-                    Table 1: C509 COSE Header Parameters
+                   Table 1: C509 COSE Header Parameters
 
    Certificates can also be identified with a 'kid' header parameter by
    storing the 'kid' value and the associated bag or chain in a
@@ -969,9 +969,9 @@ Table of Contents
     |      |ECDH-     |             |               |                 |
     |      |SS+A256KW |             |               |                 |
     +------+----------+-------------+---------------+-----------------+
-    |  c5t-|ECDH-     | -31         | COSE_CertHash | Hash of a CBOR- |
-    |sender|SS+HKDF-  | (suggested) |               | encoded         |
-    |      |256, ECDH-|             |               | C509Certificate |
+    |  c5t-|ECDH-     | -31         | COSE_CertHash | Hash of a       |
+    |sender|SS+HKDF-  | (suggested) |               | C509Certificate |
+    |      |256, ECDH-|             |               |                 |
     |      |SS+HKDF-  |             |               |                 |
     |      |512, ECDH-|             |               |                 |
     |      |SS+A128KW,|             |               |                 |
@@ -3183,7 +3183,7 @@ Table of Contents
 
    *  Can be set to "c509" to indicate that the COSE_CertHash structure
       as defined in [RFC9360] is used, with hashValue calculated over a
-      CBOR-encoded C509Certificate as defined in Section 3.4.
+      C509Certificate as defined in Section 3.4.
 
    Encoding considerations: binary
 
