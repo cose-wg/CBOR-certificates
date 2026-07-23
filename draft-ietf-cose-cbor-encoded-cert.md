@@ -683,7 +683,7 @@ C509CertData content thus includes the CBOR-encoded C509Certificate. The byte st
 
 The COSE_C509 item has media type application/cose-c509+cbor, see {{cose-c509}}. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see {{content-format}}.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in {{Section 2.2 of RFC9277}}.
 
-The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate.
 
 c5u, analogously to x5u in {{RFC9360}}, provides the ability to identify a C509 certificate by a URI {{RFC3986}}.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:
 
