@@ -336,7 +336,7 @@ The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 
 
 The 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte is therefore omitted.
 (As the numbers encoded this way are unsigned, there is no need to prepend a 00 byte to avoid a leading one bit being interpreted as the sign of a negative number.)
-Serial numbers are always encoded as CBOR byte string even if the number can fit in a CBOR integer. This deviates from deterministic CBOR encoding {{RFC 8949}}.
+Serial numbers are always encoded as CBOR byte string even if the number can fit in a CBOR integer. This deviates from deterministic CBOR encoding {{RFC8949}}.
 When converting back to X.509 format, in case ofC509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.
 
 ### signature
