@@ -41,7 +41,7 @@ author:
         org: IN Groupe
         email: martin.furuhed@ingroupe.com
       - name: Lijun Liao
-        org: NIO
+        org: NIO Inc.
         email: lijun.liao@nio.io
 
 normative:
@@ -274,7 +274,7 @@ In the encoding described below, the elements in arrays are always encoded in th
 
 This section describes the X.509 fields and their CBOR encodings and uses them in the definition of C509 certificates; see {{fig-CBORCertCDDL}}. While many of {{RFC5280}} encodings are supported, there are a few instances marked "not supported" for which no alternative is provided and, therefore, no C509 encoding can be generated.
 
-The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence {{RFC8742}} TBSCertificate. The member names therefore have documentary value only. Examples are given in the appendices; see, for example, {{rfc7925-prof}}.
+The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate. The elements of a C509Certificate form a CBOR Sequence {{RFC8742}}. The subsequence of elements described as the group TBSCertificate with the issuerSignatureValue removed at the end form a CBOR Sequence. The member names have documentary value only. Examples are given in the appendices; see, for example, {{rfc7925-prof}}.
 
 ~~~~~~~~~~~ cddl
 C509Certificate = [
@@ -342,7 +342,7 @@ The 'signature' field, containing the signature algorithm including parameters, 
 
 ### issuer {#issuer}
 
-In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.
+In the general case, the list of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.
 
 In the former case, the absolute value of the int encodes the attribute type (see {{fig-rdnattrtype}}) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see {{RFC5280}}). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. The value of the attributes serialNumber and countryName SHALL contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute SHALL have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.
 
@@ -404,7 +404,7 @@ The 'signatureAlgorithm' field is always the same as the 'signature' field and t
 
 ### signatureValue
 
-In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates, the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}.
+In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates, the signatureValue is calculated over the CBOR group TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in {{alg-encoding}}.
 
 
 ## Encoding of subjectPublicKey and issuerSignatureValue {#alg-encoding}
@@ -683,7 +683,7 @@ C509CertData content thus includes the CBOR-encoded C509Certificate. The byte st
 
 The COSE_C509 item has media type application/cose-c509+cbor, see {{cose-c509}}. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see {{content-format}}.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in {{Section 2.2 of RFC9277}}.
 
-The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.
+The value type of c5t is the COSE_CertHash structure defined in {{RFC9360}}, which contains the hash value of the C509 certificate calculated over C509Certificate.
 
 c5u, analogously to x5u in {{RFC9360}}, provides the ability to identify a C509 certificate by a URI {{RFC3986}}.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:
 
@@ -691,7 +691,7 @@ c5u, analogously to x5u in {{RFC9360}}, provides the ability to identify a C509 
    *  application/cose-c509+cbor ({{cose-c509}})
    *  application/cose-c509+cbor; usage=chain ({{cose-c509}})
 
-When the application/cose-c509+cbor media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "bytes").  If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+When the application/cose-c509+cbor media type is used, the data is a CBOR-encoded `COSE_X509` with only one `C509CertData` element.  If the parameter "usage" is set to "chain", this data is a CBOR-encoded `COSE_X509` with at least one `C509CertData` element.
 
 
 As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism MUST process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter MUST NOT cause the update of the set of trust anchors without appropriate authorization.
@@ -813,7 +813,7 @@ The media type of C509CertificationRequest is application/cose-c509-pkcs10+cbor,
 
 Two types of C509 Certification Requests are defined. Both use the same CBOR encoding and differ only in what is being signed; see {{csr-type}}. A C509 Certification Request is either an invertible CBOR re-encoding of a DER-encoded certification request {{RFC2986}} or a natively signed request in which the signature is calculated over the CBOR encoding instead of the DER encoding.
 
-* c509CertificationRequestType = 2. This type indicates that the C509 Certification Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence TBSCertificationRequest; see {{fig-C509CSRCDDL}}. This encoding removes the need for ASN.1 and DER parsing and for re-encoding by the requesting party.
+* c509CertificationRequestType = 2. This type indicates that the C509 Certification Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR group TBSCertificationRequest; see {{fig-C509CSRCDDL}}. This encoding removes the need for ASN.1 and DER parsing and for re-encoding by the requesting party.
 
 * c509CertificationRequestType = 3. This type indicates that the C509 Certification Request is a CBOR re-encoded {{RFC2986}} certification request, as defined in {{CSR}}. This encoding is backward compatible with legacy RFC 2986 certification requests and reduces transport overhead.
 
@@ -2286,7 +2286,7 @@ Author: COSE WG
 Change controller: IETF
 
 ### Media Type application/cose-c509+cbor {#cose-c509}
-When the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.
+When the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", the data is a certificate chain.
 
 Type name: application
 
@@ -2296,8 +2296,8 @@ Required parameters: N/A
 
 Optional parameters: usage
 
-* Can be absent to provide no further information about the intended meaning of the order in the CBOR sequence of certificates.
-* Can be set to "chain" to indicate that the sequence of data items is to be interpreted as a certificate chain.
+* Can be absent to provide no further information about the intended meaning of the order of the certificates.
+* Can be set to "chain" to indicate that the data items are to be interpreted as a certificate chain.
 
 Encoding considerations: binary
 
@@ -2504,7 +2504,7 @@ Required parameters: N/A
 Optional parameters: usage
 
 * Can be absent to provide no further information about what the hash value is calculated over.
-* Can be set to "c509" to indicate that the COSE_CertHash structure as defined in {{RFC9360}} is used, with hashValue calculated over a C509 certificate as defined in {{cose-header-params}}.
+* Can be set to "c509" to indicate that the COSE_CertHash structure as defined in {{RFC9360}} is used, with hashValue calculated over a C509Certificate as defined in {{cose-header-params}}.
 
 Encoding considerations: binary
 
