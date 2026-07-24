@@ -258,7 +258,7 @@ This document also specifies C509 Certification Requests; see {{CSR}}. It furthe
 
 {::boilerplate bcp14-tagged}
 
-This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. When referring to CBOR, this specification always refers to Deterministically Encoded CBOR as specified in {{Sections 4.2.1 and 4.2.2 of RFC8949}}.
+This specification makes use of the terminology in {{RFC2986}}, {{RFC5280}}, {{RFC7228}}, {{RFC8610}}, and {{RFC8949}}. Unless otherwise specified, when referring to CBOR this specification always refers to Deterministically Encoded CBOR as specified in {{Sections 4.2.1 and 4.2.2 of RFC8949}}.
 
 # C509 Certificate {#certificate}
 
@@ -332,11 +332,12 @@ C509 certificates are defined in terms of DER-encoded X.509 certificates {{RFC52
 
 The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Two types are defined in this document: natively signed C509 certificates, following X.509 v3 (c509CertificateType = 2); and CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see {{type}}. The number of elements in TBSCertificate is fixed and determined by the type. Additional types may be added in the future.
 
-### certificateSerialNumber
+### certificateSerialNumber {#csn}
 
-The 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte is therefore omitted.
-(As the numbers encoded this way are unsigned, there is no need to prepend a 00 byte to avoid a leading one bit being interpreted as the sign of a negative number.)
-Serial numbers are always encoded as CBOR byte string even if the number can fit in a CBOR integer. This deviates from deterministic CBOR encoding {{RFC8949}}.
+The 'certificateSerialNumber' positive INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'.
+Leading 0x00 bytes are omitted following the preferred serialization as specified in {{Section 3.4.3 of RFC8949}}.
+Serial numbers are always encoded as CBOR byte string even if the number can fit in an ordinary CBOR unsigned integer.
+This deviates from the preferred serialization of integers as specified in {{Section 3.4.3 of RFC8949}}, but provides an alternative deterministic encoding.
 When converting back to X.509 format, in case ofC509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.
 
 ### signature
@@ -759,6 +760,8 @@ Although this specification requires the use of Deterministically Encoded CBOR (
 Where both a specific and a generic CBOR encoding are supported, the specific CBOR encoding MUST be used. For example, when a specific CBOR encoding of an extension is defined in {{ext-encoding}} and the C509 Extensions Registry, that specific encoding MUST be used. In particular, when a specific otherName encoding is available, identified by a negative integer value in the C509 General Names Registry, it MUST be used.
 
 Native C509 certificates MUST use only specific CBOR-encoded fields. However, when decoding non-native C509 certificates, the decoder may need to support, for example, the (extensionID: ~oid, extensionValue: bytes / [bytes]) encoding of an extension for which an (extensionID: int, extensionValue: Defined) encoding exists. One reason is that the certificate might have been issued before the specific CBOR extension was registered.
+
+One specific case of deterministic but non-preferred serialization is CertificateSerialNumber, where byte string encoding is used also for small unsigned integers, see {{csn}}.
 
 ## C509 Name in TLS and DTLS
 
