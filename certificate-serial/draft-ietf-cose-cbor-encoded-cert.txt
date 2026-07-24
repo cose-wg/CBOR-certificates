@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 24 January 2027                           University of Glasgow
+Expires: 25 January 2027                           University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                      NIO
-                                                            23 July 2026
+                                                            24 July 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 January 2027.
+   This Internet-Draft will expire on 25 January 2027.
 
 Copyright Notice
 
@@ -248,9 +248,10 @@ Table of Contents
    capitals, as shown here.
 
    This specification makes use of the terminology in [RFC2986],
-   [RFC5280], [RFC7228], [RFC8610], and [RFC8949].  When referring to
-   CBOR, this specification always refers to Deterministically Encoded
-   CBOR as specified in Sections 4.2.1 and 4.2.2 of [RFC8949].
+   [RFC5280], [RFC7228], [RFC8610], and [RFC8949].  Unless otherwise
+   specified, when referring to CBOR this specification always refers to
+   Deterministically Encoded CBOR as specified in Sections 4.2.1 and
+   4.2.2 of [RFC8949].
 
 3.  C509 Certificate
 
@@ -363,17 +364,18 @@ Table of Contents
 
 3.1.2.  certificateSerialNumber
 
-   The 'certificateSerialNumber' INTEGER value field is encoded as the
-   unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'.
-   Any leading 0x00 byte is therefore omitted.  (As the numbers encoded
-   this way are unsigned, there is no need to prepend a 00 byte to avoid
-   a leading one bit being interpreted as the sign of a negative
-   number.)  Serial numbers are always encoded as CBOR byte string even
-   if the number can fit in a CBOR integer.  This deviates from
-   deterministic CBOR encoding [RFC8949].  When converting back to X.509
-   format, in case ofC509Certificate type 3 or C509CertificationRequest
-   type 3, if the highest bit in first byte is set, the leading 0x00
-   byte is put back to prepend to the byte string.
+   The 'certificateSerialNumber' positive INTEGER value field is encoded
+   as the unwrapped CBOR unsigned bignum (~biguint)
+   'CertificateSerialNumber'.  Leading 0x00 bytes are omitted following
+   the preferred serialization as specified in Section 3.4.3 of
+   [RFC8949].  Serial numbers are always encoded as CBOR byte string
+   even if the number can fit in an ordinary CBOR unsigned integer.
+   This deviates from the preferred serialization of integers as
+   specified in Section 3.4.3 of [RFC8949], but provides an alternative
+   deterministic encoding.  When converting back to X.509 format, in
+   case ofC509Certificate type 3 or C509CertificationRequest type 3, if
+   the highest bit in first byte is set, the leading 0x00 byte is put
+   back to prepend to the byte string.
 
 3.1.3.  signature
 
@@ -1067,6 +1069,10 @@ Table of Contents
    int, extensionValue: Defined) encoding exists.  One reason is that
    the certificate might have been issued before the specific CBOR
    extension was registered.
+
+   One specific case of deterministic but non-preferred serialization is
+   CertificateSerialNumber, where byte string encoding is used also for
+   small unsigned integers, see Section 3.1.2.
 
 3.8.  C509 Name in TLS and DTLS
 
