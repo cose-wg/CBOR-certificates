@@ -373,7 +373,7 @@ Table of Contents
    This deviates from the preferred serialization of integers as
    specified in Section 3.4.3 of [RFC8949], but provides an alternative
    deterministic encoding.  When converting back to X.509 format, in
-   case ofC509Certificate type 3 or C509CertificationRequest type 3, if
+   case of C509Certificate type 3 or C509CertificationRequest type 3, if
    the highest bit in first byte is set, the leading 0x00 byte is put
    back to prepend to the byte string.
 

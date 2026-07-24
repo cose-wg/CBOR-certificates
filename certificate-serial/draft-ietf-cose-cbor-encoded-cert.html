@@ -1482,7 +1482,7 @@ tag = #6
 Leading 0x00 bytes are omitted following the preferred serialization as specified in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.3" class="relref">Section 3.4.3</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>.
 Serial numbers are always encoded as CBOR byte string even if the number can fit in an ordinary CBOR unsigned integer.
 This deviates from the preferred serialization of integers as specified in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.3" class="relref">Section 3.4.3</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, but provides an alternative deterministic encoding.
-When converting back to X.509 format, in case ofC509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
+When converting back to X.509 format, in case of C509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signature">
