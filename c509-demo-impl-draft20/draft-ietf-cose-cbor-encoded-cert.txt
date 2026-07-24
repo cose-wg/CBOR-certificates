@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 24 January 2027                           University of Glasgow
+Expires: 25 January 2027                           University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                      NIO
-                                                            23 July 2026
+                                                            24 July 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 January 2027.
+   This Internet-Draft will expire on 25 January 2027.
 
 Copyright Notice
 
