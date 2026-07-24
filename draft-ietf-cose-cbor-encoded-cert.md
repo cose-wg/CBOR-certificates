@@ -338,7 +338,7 @@ The 'certificateSerialNumber' positive INTEGER value field is encoded as the unw
 Leading 0x00 bytes are omitted following the preferred serialization as specified in {{Section 3.4.3 of RFC8949}}.
 Serial numbers are always encoded as CBOR byte string even if the number can fit in an ordinary CBOR unsigned integer.
 This deviates from the preferred serialization of integers as specified in {{Section 3.4.3 of RFC8949}}, but provides an alternative deterministic encoding.
-When converting back to X.509 format, in case ofC509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.
+When converting back to X.509 format, in case of C509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.
 
 ### signature
 
