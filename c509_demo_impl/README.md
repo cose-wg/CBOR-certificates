@@ -37,12 +37,29 @@ summary.  See [Test Vectors](#test-vectors) for details.
 
 ## Prerequisites
 
+The quickest path is the bundled installer, which covers every non-Rust
+dependency below on Debian/Ubuntu, Fedora, Arch, and macOS:
+
+```bash
+./setup.sh
+```
+
+Then install Rust from <https://rustup.rs> if you don't have it, and build.
+
+To install manually instead (Debian/Ubuntu package names shown):
+
 | Tool | Purpose | Install |
 |------|---------|---------|
 | `cargo` / `rustc` | Build the Rust binary | <https://rustup.rs> |
-| `python3` + `lxml` | Extract XML test vectors | `pip3 install lxml` |
-| `curl` | Download XML draft | Usually pre-installed |
-| `openssl` | DER/PEM conversions in tests | Usually pre-installed |
+| C toolchain + `pkg-config` + OpenSSL **dev** library | The crate links native OpenSSL (via the `openssl` crate) for brainpoolP256r1/P384r1/P512r1 and Ed448 Type-2 signing, so `cargo build` needs these to compile and link — this is the usual cause of a *"could not find OpenSSL"* build error | `apt-get install build-essential pkg-config libssl-dev` |
+| `python3` + `lxml` | Extract XML test vectors (`fetch_test_vectors.sh`) | `apt-get install python3-lxml` |
+| `curl` | Download the draft XML | `apt-get install curl` |
+
+> Note: the `openssl` **binary** being present is not enough — the build needs
+> the OpenSSL **development** package (`libssl-dev` / `openssl-devel`) plus
+> `pkg-config`. On locked-down hosts, build a vendored OpenSSL from source
+> instead: `openssl = { version = "0.10", features = ["vendored"] }` in
+> `Cargo.toml` (needs a C compiler, `perl`, and `make`). See `setup.sh`.
 
 ## CLI Usage
 
