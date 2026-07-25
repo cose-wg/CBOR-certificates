@@ -187,6 +187,13 @@ type3_to_x509_section() {
 find_x509_crt_for_section() {
     local x509_sec="$1"
     X509_CRT_FILE=""
+    # Cross-reference sections that reuse another section's X.509 cert rather
+    # than publishing their own: draft §3.4 (compressed secp256r1) points its
+    # X.509 cert at §3.3 ("See x509-selfsign-secp256r1") — same cert, compressed
+    # only in the C509 encoding.
+    case "$x509_sec" in
+        3.4.2) x509_sec="3.3.2" ;;
+    esac
     for f in "${TV_DIR}/v${VERSION}_section_${x509_sec}_"*.crt; do
         [ -f "$f" ] && X509_CRT_FILE="$f" && return 0
     done
@@ -671,6 +678,15 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
     for _cf in "${TV_DIR}/v${VERSION}_section_${_base}.2_"*.crt; do
         [ -f "${_cf}" ] && cert_file="${_cf}" && break
     done
+    # §3.4 (compressed secp256r1) reuses §3.3's X.509 cert (draft cross-reference).
+    if [ -z "${cert_file}" ]; then
+        case "${_base}" in 3.4) _xref="3.3" ;; *) _xref="" ;; esac
+        if [ -n "${_xref}" ]; then
+            for _cf in "${TV_DIR}/v${VERSION}_section_${_xref}.2_"*.crt; do
+                [ -f "${_cf}" ] && cert_file="${_cf}" && break
+            done
+        fi
+    fi
     if [ -z "${cert_file}" ]; then
         log_skip "${bn}: no matching X.509 cert for section ${_base}.2"
         continue
