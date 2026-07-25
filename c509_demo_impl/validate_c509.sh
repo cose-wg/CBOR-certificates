@@ -91,7 +91,17 @@ fi
 # Step 1 – build
 # ---------------------------------------------------------------------------
 echo -e "${C_BOLD}>>> Step 1: Build${C_RST}"
-if [ "${DO_BUILD}" -eq 1 ] || [ ! -x "${BINARY}" ]; then
+# Rebuild when forced, when the binary is missing, OR when any source is newer
+# than the binary. The last case matters: a stale binary from an earlier commit
+# is otherwise reused silently, which e.g. runs a `c509` without the `v2` command
+# and turns Section 7b into a wall of confusing failures.
+NEED_BUILD=0
+if [ ! -x "${BINARY}" ]; then
+    NEED_BUILD=1
+elif [ -n "$(find "${SCRIPT_DIR}/src" "${SCRIPT_DIR}/Cargo.toml" -newer "${BINARY}" -print -quit 2>/dev/null)" ]; then
+    NEED_BUILD=1
+fi
+if [ "${DO_BUILD}" -eq 1 ] || [ "${NEED_BUILD}" -eq 1 ]; then
     echo "  cargo build --bin c509 ..."
     (cd "${SCRIPT_DIR}" && cargo build --bin c509)
 else
@@ -811,7 +821,16 @@ done
 echo ""
 echo -e "${C_BOLD}>>> Section 7b: Type-2 cryptographic signature verification (v2 command)${C_RST}"
 echo ""
+# Guard: an older c509 binary treats `v2` as an unknown command; probe once so
+# we emit a single clear "rebuild" note instead of a wall of empty-reason
+# failures. A binary that has v2 prints a VERIFY line even on empty input.
+# Capture (not pipe) the probe output: `v2` exits non-zero on the empty input,
+# and `set -o pipefail` would otherwise turn that into a false "no v2" result.
+V2_PROBE="$("${BINARY}" v2 /dev/null 2>&1 || true)"
+case "${V2_PROBE}" in *VERIFY*) V2_OK=1 ;; *) V2_OK=0 ;; esac
+[ "${V2_OK}" -eq 1 ] || log_skip "Section 7b: this c509 binary has no 'v2' command — rebuild it (cargo build --bin c509, or run with --build). Skipping cryptographic verification."
 for type2_hex in "${TV_DIR}/v${VERSION}_section_3."*.4_c509_selfsign_*.cbor.hex; do
+    [ "${V2_OK}" -eq 1 ] || break
     [ -f "${type2_hex}" ] || continue
     bn="$(basename "${type2_hex}")"
     case "${bn}" in *_1.cbor.hex) continue ;; esac
