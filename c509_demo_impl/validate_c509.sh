@@ -605,7 +605,7 @@ SECTION_KEY_OVERRIDE["4.22"]="${TV_DIR}/v${VERSION}_section_4.20.1_key_selfsign_
 # Ed25519: 66 B, empty placeholder: 1 B, etc.).
 # Arg $1: hex string (no whitespace, outer array wrapper already stripped).
 tbs_hex() {
-    python3 - "$1" <<'PYEOF' 2>/dev/null
+    python3 - "$1" "${2:-10}" <<'PYEOF' 2>/dev/null
 import sys
 
 def item_end(data, pos):
@@ -630,7 +630,7 @@ try:
     h = sys.argv[1]
     data = bytes.fromhex(h)
     pos = 0
-    for _ in range(10): pos = item_end(data, pos)
+    for _ in range(int(sys.argv[2])): pos = item_end(data, pos)
     print(h[:pos * 2], end='')
 except Exception:
     sys.exit(1)
@@ -752,7 +752,14 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
         actual_tbs="$(tbs_hex "${actual_full}")" || true
         if [ "${actual_tbs}" = "${ietf_tbs}" ]; then
             [ -z "${mode_flag}" ] && flag_label="(compressed)" || flag_label="(uncompressed, -nc)"
-            log_pass "${bn}: TBS fields 0–9 match IETF ${_sec} vector ${flag_label}"
+            # Deterministic signature algorithms (Ed25519/Ed448/RSA-PKCS#1v1.5)
+            # reproduce field 10 exactly, so the FULL object matches; ECDSA/PSS are
+            # randomised and only the TBS matches. Test the stronger claim first.
+            if [ "${actual_full}" = "${ietf_full}" ]; then
+                log_pass "${bn}: FULL match incl. signature (deterministic alg) — IETF ${_sec} ${flag_label}"
+            else
+                log_pass "${bn}: TBS fields 0–9 match IETF ${_sec} vector ${flag_label}"
+            fi
             matched=1
             break
         fi
@@ -773,6 +780,34 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
                 [ -n "${actual_full2}" ] && echo "    actual   TBS: $(tbs_hex "${actual_full2}" | head -c 40)..."
             fi
         fi
+    fi
+done
+
+# =============================================================================
+# Section 7b – Type-2 cryptographic signature verification (v2 command)
+#
+# For each self-signed Type-2 cert vector, cryptographically verify the draft's
+# published signature (field 10) against the subject public key over the CBOR TBS
+# — the check that upgrades Type-2 from "encoding reproduced" to "signature
+# valid". Covers ECDSA P-256/384/521 and Ed25519 (pure-Rust); brainpool / RSA /
+# SM2 / Ed448 / X25519 / X448 are reported not-yet-implemented (SKIP, not FAIL).
+# =============================================================================
+echo ""
+echo -e "${C_BOLD}>>> Section 7b: Type-2 cryptographic signature verification (v2 command)${C_RST}"
+echo ""
+for type2_hex in "${TV_DIR}/v${VERSION}_section_3."*.4_c509_selfsign_*.cbor.hex; do
+    [ -f "${type2_hex}" ] || continue
+    bn="$(basename "${type2_hex}")"
+    case "${bn}" in *_1.cbor.hex) continue ;; esac
+    vout="$("${BINARY}" v2 "${type2_hex}" 2>&1)" && vrc=0 || vrc=$?
+    if [ "${vrc}" -eq 0 ]; then
+        vdesc="$(echo "${vout}" | sed -n 's/.*VERIFY OK: //p')"
+        log_pass "${bn}: signature cryptographically VERIFIED (${vdesc})"
+    elif echo "${vout}" | grep -q "unsupported public-key algorithm"; then
+        log_skip "${bn}: v2 verify not yet implemented for this key type"
+    else
+        vreason="$(echo "${vout}" | sed -n 's/.*VERIFY FAIL: //p')"
+        log_fail "${bn}: cryptographic signature verification FAILED (${vreason})"
     fi
 done
 
@@ -817,6 +852,13 @@ DHSIG_PEER_CERT["10"]="${TV_DIR}/v${VERSION}_section_3.6.4_c509_selfsign_secp521
 declare -A EMBEDDED_CERT_KEY
 EMBEDDED_CERT_KEY["8.7"]="${TV_DIR}/v${VERSION}_section_3.14.1_private_key_10.key"
 
+# Subject-key override for CSR sections whose §x.1 "Private Key" is a
+# cross-reference to another section rather than an inline key. draft §8.1.1
+# ("See key-selfsign-secp256r1") points at the §3.3.1 secp256r1 key; without this
+# the §8.1 ECDSA-P256 CSR is skipped for lack of an inline §8.1.1 key file.
+declare -A CSR_SUBJ_KEY_OVERRIDE
+CSR_SUBJ_KEY_OVERRIDE["8.1"]="${TV_DIR}/v${VERSION}_section_3.3.1_key_selfsign_secp256r1.key"
+
 for type2_hex in "${TV_DIR}/v${VERSION}_section_8."*.cbor.hex; do
     [ -f "${type2_hex}" ] || continue
     bn="$(basename "${type2_hex}")"
@@ -838,8 +880,12 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_8."*.cbor.hex; do
     for _kf in "${TV_DIR}/v${VERSION}_section_${_base}.1_"*.key; do
         [ -f "${_kf}" ] && subj_key_file="${_kf}" && break
     done
+    # Fall back to the cross-reference override (e.g. §8.1.1 → §3.3.1 key).
     if [ -z "${subj_key_file}" ]; then
-        log_skip "${bn}: no subject private key at section ${_base}.1"
+        subj_key_file="${CSR_SUBJ_KEY_OVERRIDE[${_base}]:-}"
+    fi
+    if [ -z "${subj_key_file}" ] || [ ! -f "${subj_key_file}" ]; then
+        log_skip "${bn}: no subject private key at section ${_base}.1 (and no override)"
         continue
     fi
 
@@ -887,11 +933,25 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_8."*.cbor.hex; do
         # Compare on the bare sequence (strip the tool's draft-20 0x87 header) so
         # the check is version-agnostic vs. the normalised ietf_full above.
         [ "${actual:0:2}" = "87" ] && actual="${actual:2}"
-        if [ "${actual}" = "${ietf_full}" ]; then
-            [ -z "${mode_flag}" ] && flag_label="(compressed)" || flag_label="(uncompressed, -nc)"
-            log_pass "${bn}: full match ${flag_label}"
-            matched=1; break
-        fi
+        [ -z "${mode_flag}" ] && flag_label="(compressed)" || flag_label="(uncompressed, -nc)"
+        case "${sig_alg_byte}" in
+            00|01|02)
+                # ECDSA CSR (sig alg 0/1/2): field 6 signature is non-deterministic,
+                # so compare the TBS (first 6 of the 7 CSR fields) only, mirroring
+                # §7's TBS handling for ECDSA certs.
+                a_tbs="$(tbs_hex "${actual}" 6)"
+                if [ -n "${a_tbs}" ] && [ "${a_tbs}" = "$(tbs_hex "${ietf_full}" 6)" ]; then
+                    log_pass "${bn}: TBS (fields 0–5) match IETF vector — ECDSA CSR ${flag_label}"
+                    matched=1; break
+                fi
+                ;;
+            *)
+                if [ "${actual}" = "${ietf_full}" ]; then
+                    log_pass "${bn}: full match ${flag_label}"
+                    matched=1; break
+                fi
+                ;;
+        esac
     done
 
     if [ "${matched}" -eq 0 ]; then

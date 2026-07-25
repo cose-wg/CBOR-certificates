@@ -88,6 +88,8 @@ pub fn cbor_item_end(data: &[u8], pos: usize) -> usize {
         24 => (data[pos + 1] as usize, pos + 2),
         25 => (u16::from_be_bytes([data[pos + 1], data[pos + 2]]) as usize, pos + 3),
         26 => (u32::from_be_bytes([data[pos+1], data[pos+2], data[pos+3], data[pos+4]]) as usize, pos + 5),
+        27 => (u64::from_be_bytes([data[pos+1], data[pos+2], data[pos+3], data[pos+4],
+                                   data[pos+5], data[pos+6], data[pos+7], data[pos+8]]) as usize, pos + 9),
         _ => panic!("cbor_item_end: unsupported additional info {}", additional),
     };
     match major {

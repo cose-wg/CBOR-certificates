@@ -7,6 +7,7 @@ use c509::tester::*;
 use c509::help::*;
 use c509::type2::encode_x509_as_type2;
 use c509::type2_csr::encode_csr_as_type2;
+use c509::verify::verify_type2;
 use std::env::args;
 use env_logger::Env;
 use log::info;
@@ -36,6 +37,8 @@ Commands:
   r2 <csr.der> <subj_key.pem> <peer_key.pem> --peer-cert <cert.cbor.hex>  DhSigStatic (RFC 6955)
   r2 ... --embedded-cert-key <key.pem>     Re-sign embedded C509 certs in attrs as type-2
   r2 ... -nc                                Also store EC public keys uncompressed
+  v2 <c509.cbor.hex>                        Cryptographically verify a Type-2 signature (self-signed)
+  v2 <c509.cbor.hex> --issuer-point <hex>   Verify a CA-signed Type-2 against the issuer EC point
 ";
 
     let all_args: Vec<String> = args().collect();
@@ -47,6 +50,30 @@ Commands:
 
     let first_arg  = &all_args[1];
     let second_arg = &all_args[2];
+
+    // v2: cryptographically verify a Type-2 C509 signature. Handled early — it
+    // reads a hex file and exits, rather than flowing through the Cert pipeline.
+    if first_arg == "v2" {
+        let raw = std::fs::read_to_string(second_arg)
+            .unwrap_or_else(|e| panic!("v2: cannot read '{}': {}", second_arg, e));
+        let hexstr: String = raw.chars().filter(|c| c.is_ascii_hexdigit()).collect();
+        let cbor = hex::decode(&hexstr)
+            .unwrap_or_else(|e| panic!("v2: '{}' is not valid hex: {}", second_arg, e));
+        let mut issuer_point: Option<Vec<u8>> = None;
+        let mut it = all_args.iter().skip(3);
+        while let Some(a) = it.next() {
+            if a == "--issuer-point" {
+                if let Some(h) = it.next() {
+                    issuer_point = Some(hex::decode(h.trim())
+                        .unwrap_or_else(|e| panic!("v2: bad --issuer-point hex: {}", e)));
+                }
+            }
+        }
+        match verify_type2(&cbor, issuer_point.as_deref()) {
+            Ok(desc) => { println!("VERIFY OK: {}", desc); std::process::exit(0); }
+            Err(reason) => { eprintln!("VERIFY FAIL: {}", reason); std::process::exit(1); }
+        }
+    }
 
     let mut suppress_output = false;
     let mut write_output    = false;

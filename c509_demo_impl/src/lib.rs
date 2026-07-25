@@ -21,6 +21,7 @@ pub mod conversion;
 pub mod tester;
 pub mod type2;
 pub mod type2_csr;
+pub mod verify;
 
 /// Holds one certificate in both DER and C509 CBOR representations.
 ///
