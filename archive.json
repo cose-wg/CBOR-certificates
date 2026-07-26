@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-23T03:28:37.972997+00:00",
+  "timestamp": "2026-07-26T03:35:05.112908+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9404,9 +9404,48 @@
       "labels": [],
       "body": "Email from Laurence to the cose mailing-list.\n\n\"\nHere\u2019s text from C509:\n\n      The value type of c5t is the COSE_CertHash structure defined in [RFC9360], which contains the hash value\n       of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary\n       to calculate the thumbprint c5t.\n\nLater the table says:\n\n    c5t 22 COSE_CertHash Hash of a C509Certificate\n\nI think this means that the first byte input to the hash is 0x8B, not 0x59 (0x59 is the first byte of an encoded byte string of length 256..64K) because of the mention of C509CertData.\n\nSeems like the definition should be:\n\n   The input to the hash is a CBOR-encoded C509Certificate.\n\nNo need to mention C509CertData because it\u2019s not a factor in the c5t, only in c5b and c5c.\n\nLL\n\"",
       "createdAt": "2026-07-21T20:37:23Z",
-      "updatedAt": "2026-07-21T20:37:23Z",
+      "updatedAt": "2026-07-23T13:37:22Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "\n> The input to the hash is a CBOR-encoded C509Certificate.\n\nSince C509Certificate is a CBOR array, \"CBOR-encoded\" seems redundant.\n\n> No need to mention C509CertData because it\u2019s not a factor in the c5t, only in c5b and c5c.\n\nI added a commit to PR #401 removing a sentence mentioning of C509CertData in the context of c5t. \n\nDoes that address this issue?",
+          "createdAt": "2026-07-23T12:52:08Z",
+          "updatedAt": "2026-07-23T12:52:08Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Does that address this issue?\n\nYes",
+          "createdAt": "2026-07-23T13:37:22Z",
+          "updatedAt": "2026-07-23T13:37:22Z"
+        }
+      ]
+    },
+    {
+      "number": 403,
+      "id": "I_kwDOCpt5cM8AAAABJ5X6ww",
+      "title": "Encoding of certificate serial number",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/403",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Laurence provided some comments on 3.1.2  summarised below:\n\nOLD\n> 3.1.2. certificateSerialNumber\nThe 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.\n\n\n1. Deterministic CBOR encoding [RFC 8949] encode biguint as int when possible, but in this draft serial numbers are always encoded as byte strings.\n\n2. The text on negative integers is confusing.\n\n3. Not clear how to convert back to X.509 format in case leading 0x00 byte was omitted.\n\n",
+      "createdAt": "2026-07-23T13:06:54Z",
+      "updatedAt": "2026-07-23T13:08:08Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Proposed resolution to the comments above:\n\n1.  Laurence proposed to clarify that serial numbers are always encoded as CBOR byte string even if the number can fit in a CBOR integer and that this deviates from deterministic CBOR encoding [RFC 8949].\n\n2. Carsten proposed new text replacing the parenthesis:\n\nNEW\n> As the numbers encoded this way are unsigned, there is no need to prepend a 00 byte to avoid a leading one bit being interpreted as the sign of a negative number.\n\n\n3. The wired content of serial number in X509 certificates is deterministic. Only if the highest bit is set, an extra byte 0 is prepended to the byte string. That means there are only two cases:\n* First byte is 0, second byte with bit 7 set (in range 128 - 255)\n* First byte non-zero and bit 7 is clear (in range 1-127)\n\nThis leading zero will not be encoded in C509 certificates.  While recovering the serial number from C509 back to X509, the application does follows:\n* If bit 7 of the first byte is set, prepend a new byte 0\n* Otherwise, as is.\n\nProposed clarification:\nNEW\n> When converting back to X.509 format, in case of C509Certificate type 3, \nif the highest bit in first byte is set, the leading 0x00 byte is prepended to the byte string.\n\nThe same applies to C509CertificationRequest type 3.",
+          "createdAt": "2026-07-23T13:08:08Z",
+          "updatedAt": "2026-07-23T13:08:08Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -17082,13 +17121,13 @@
       "labels": [],
       "body": "Based on Lijun's PR",
       "createdAt": "2026-07-22T17:34:18Z",
-      "updatedAt": "2026-07-22T19:34:14Z",
+      "updatedAt": "2026-07-23T07:06:40Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "late-editorials",
-      "headRefOid": "443d93fc8e572a3d1b221cde99dbb3d84a153ef4",
+      "headRefOid": "1052f99ac818be1763d251336591cba1d2bd7168",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -17149,18 +17188,59 @@
       "labels": [],
       "body": "This reworks the Rust reference implementation (c509_demo_impl) to track draft-ietf-cose-cbor-encoded-cert-20, splits the single-file main.rs (~4.4k lines) into modules, and adds tools to validate the tool against the official IETF test vectors.\r\n\r\nAll changes are contained in c509_demo_impl/ (2 commits).\r\n\r\nWhat changed\r\n\r\nDraft-20 alignment\r\n- A C509 certificate is the full CBOR array C509Certificate (0x8B array(11) header included); the unwrapped ~C509Certificate sequence is gone. CSRs and CR templates carry the 0x87 array(7) header.\r\n- COSE and TLS wrappings use C509CertData = bytes .cbor C509Certificate, including the certificate embedded in a PrivateKeyPossessionStatement \"withcert\" CSR attribute (encode and decode).\r\n- Decoders auto-detect the CBOR array vs. the legacy sequence, so pre-20 inputs still parse.\r\n\r\nModularization (was one main.rs)\r\nconversion (X.509 \u2194 C509), extensions, keys, registry (OID \u2194 C509 IDs), lder/lcbor (DER/CBOR primitives), type2 / type2_csr (natively-signed cert/CSR encoding: ECDSA, RFC 6955 DhSig, unsigned, embedded-cert re-signing), tester (TLS client + batch round-trip), help/lib.\r\n\r\nCoverage: type 3 (DER-equivalent) and type 2 (natively signed); EC point compression; RFC 9090 OID fallback; SM2/SM3, FRP256v1, brainpool, and the 25519/448 families. New README.md and KNOWN_ISSUES.md; crate bumped to 0.6.0; the stale README_software_prototype.md removed.\r\n\r\nHow to verify (against the official test vectors)\r\n\r\nPrerequisites: Rust/cargo, python3 + lxml (pip3 install lxml), curl, openssl, and coreutils (od).\r\n\r\nOne command (recommended)\r\n\r\ncd c509_demo_impl\r\n./run_tests.sh\r\n\r\nThis (1) downloads draft-ietf-cose-c509-test-vectors-02.xml, (2) extracts every vector (named by draft section number), (3) runs cargo build, and (4) runs the validation suite. Expected summary when using the draft-02 test vectors:\r\n\r\nPASS:  117\r\nXFAIL:  68\r\nSKIP:    4\r\nFAIL:    0\r\n\r\nExit code is 0 when every test passes or is an expected failure. The 68 XFAILs are inherent: type-2 (natively signed) vectors and CRT templates have no X.509 DER equivalent to decode back to, and a few keys f2 cannot natively sign (id-alg-unsigned X25519/X448 end-entity, frp256v1). The full breakdown is in c509_demo_impl/KNOWN_ISSUES.md.\r\n\r\nStep by step (equivalent)\r\n\r\ncd c509_demo_impl\r\n./fetch_test_vectors.sh 02                 # download + extract the -02 vectors -> ../test_vectors/\r\ncargo build --bin c509\r\n./validate_c509.sh --version 02 --verbose  # per-vector encode/decode/round-trip/type-2/CSR/CRT checks\r\n\r\nvalidate_c509.sh is version-agnostic (it transparently handles the draft-20 0x8B/0x87 array header), so --version 01 also runs against the draft-19 vector set; that leaves one expected draft-19-vs-20 divergence (the \u00a78.7 withcert CSR), noted in KNOWN_ISSUES.md.\r\n\r\nAd-hoc / round-trip (no vectors needed)\r\n\r\ncargo run -- f cert.der      # X.509 DER  -> C509 hex\r\ncargo run -- c c509.hex    # C509 hex   -> X.509 DER/CSR\r\ncargo run -- l cert.der       # round-trip: X.509 -> C509 -> X.509, byte-compare\r\ncargo run -- ll example.com   # round-trip a live TLS certificate chain\r\n\r\nRound-trip mode is draft-independent and, over public TLS, is lossless on 4710/5000 sampled hosts (the one by-design exception is a BMPString explicitText that C509 normalises to UTF-8).\r\n\r\nSee c509_demo_impl/README.md for the full CLI, the library API, and per-section details of the validation suite.",
       "createdAt": "2026-07-23T02:53:34Z",
-      "updatedAt": "2026-07-23T02:53:34Z",
+      "updatedAt": "2026-07-25T02:20:54Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "c509-demo-impl-draft20",
-      "headRefOid": "c648c1204c88fadb9ed030c4affec7cdccd8af84",
+      "headRefOid": "bd0da3ef3e8ee597ab35283efa5f2cf2b9a6e23d",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 404,
+      "id": "PR_kwDOCpt5cM71Ys51",
+      "title": "Clarifying certificate serial number encoding",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/404",
+      "state": "OPEN",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Addressing #403",
+      "createdAt": "2026-07-23T13:22:46Z",
+      "updatedAt": "2026-07-24T10:34:49Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "certificate-serial",
+      "headRefOid": "a8c0737a56eb5396545e3c9d2396043fb7bae1f8",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Updates in the previous commit: \r\n* emphasized that X.509 serial number is a positive integer\r\n* removed the parenthesis regarding the case of negative numbers.\r\n* added text about preferred serialization. \r\n* rephrased the text about deterministic encoding.\r\n",
+          "createdAt": "2026-07-24T09:27:02Z",
+          "updatedAt": "2026-07-24T09:27:02Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "There is a typo in \"in case ofC509Certificate\", a space is missing between \"of\" and \"ofC509Certificate\"\r\n\r\n",
+          "createdAt": "2026-07-24T09:56:40Z",
+          "updatedAt": "2026-07-24T09:56:40Z"
+        }
+      ],
       "reviews": []
     }
   ]
