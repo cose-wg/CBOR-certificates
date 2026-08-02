@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-26T03:35:05.112908+00:00",
+  "timestamp": "2026-08-02T03:32:56.537080+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9446,6 +9446,38 @@
           "updatedAt": "2026-07-23T13:08:08Z"
         }
       ]
+    },
+    {
+      "number": 405,
+      "id": "I_kwDOCpt5cM8AAAABKwn9Kw",
+      "title": "Signature Algorithms Registry: incorrect SEQUENCE length octet in the DER column of values 23-25 (30 0B should be 30 0D)",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/405",
+      "state": "OPEN",
+      "author": "ligefeiBouncycastle",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The DER column of the C509 Signature Algorithms Registry (section \"C509 Signature\nAlgorithms Registry\" {#sigalg}, Figure 18 in -20) gives, for the three\nRSASSA-PKCS1-v1_5 entries:\n\n    |    23 | DER: 30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |\n    |    24 | DER: 30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |\n    |    25 | DER: 30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |\n\nThe leading `30 0B` declares a SEQUENCE of 11 content octets, but 13 content\noctets follow: the OID TLV (`06 09` + 9 octets = 11) plus the NULL parameters\nTLV (`05 00` = 2). As printed, the encodings are not valid DER. The length\noctet should be `0x0D`:\n\n    |    23 | DER: 30 0D 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |\n    |    24 | DER: 30 0D 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |\n    |    25 | DER: 30 0D 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |\n\nThree independent confirmations:\n\n1. **DER arithmetic**, as above (11 + 2 = 13 = 0x0D).\n2. **The registry itself**: the value -256 row (RSASSA-PKCS1-v1_5 with SHA-1)\n   has the identical SEQUENCE { OID, NULL } shape with a 9-octet OID body and\n   correctly reads `30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00`.\n3. **Real certificates**: every certificate signed with\n   sha256WithRSAEncryption -- including the document's own \"CAB Baseline RSA\n   HTTPS\" example in Appendix A -- carries\n   `30 0D 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00` as its signature\n   AlgorithmIdentifier.\n\nImpact: the DER field is mandatory in this registry and the table seeds the\nIANA registry's initial contents. An implementation that transcribes the\ncolumn literally (registry matching in C509 is defined over the exact DER)\nwill fail to int-encode any RSASSA-PKCS1-v1_5 certificate -- i.e. every RSA\nPKCS#1 v1.5 certificate falls back to the ~oid form, or fails to round-trip,\ndepending on the implementation. We found this while implementing C509 in\nBouncy Castle: rows 23-25 were the only registry entries that would not parse\nas DER when transcribed.\n\nSince the same three rows also appear in the Public Key Algorithms /\nSignature Algorithms cross-checks and in the companion test-vectors document's\nRSA examples, it may be worth verifying the corrected octets against\ndraft-ietf-cose-c509-test-vectors before the registry contents are handed to\nIANA.\n\nSuggested fix: change `30 0B` to `30 0D` in the DER field of registry values\n23, 24 and 25. Happy to open a PR if that helps.",
+      "createdAt": "2026-07-30T06:48:37Z",
+      "updatedAt": "2026-07-30T06:48:37Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 406,
+      "id": "I_kwDOCpt5cM8AAAABKwqgMA",
+      "title": "Optional point compression gives one certificate two conformant type 3 encodings (affects c5t and the test vectors)",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/406",
+      "state": "OPEN",
+      "author": "ligefeiBouncycastle",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 3.2.1 says elliptic curve public keys in Weierstrass form \"**may** be\npoint-compressed\", and defines the 0xfe/0xfd octets for the case where an\nuncompressed DER key is CBOR-encoded with compression. Compression is\ntherefore optional for type 3, and one X.509 certificate has two conformant\nC509 type 3 encodings that differ in bytes and length.\n\nThis is observable between the two WG documents. For the same kind of\ncertificate:\n\n* the Appendix A examples in this document **compress**, e.g. A.1 encodes the\n  subjectPublicKey as `58 21 FE B1 21 6A ...` (33 bytes, 0xFE marker);\n* draft-ietf-cose-c509-test-vectors-02 **does not compress**, e.g. its\n  Section 3.3 (secp256r1) encodes `58 41 04 F4 13 59 6A ...` (65 bytes,\n  uncompressed SEC1 point).\n\nBoth are correct per Section 3.2.1, and both invert to the same DER, so\nneither document is wrong. Three consequences seem worth considering:\n\n1. **Thumbprints.** c5t is computed over the C509 encoding, so two\n   conformant encoders produce different c5t values for the same\n   certificate. Anything keyed on c5t -- certificate pinning, caching,\n   deduplication, revocation matching by thumbprint -- can therefore\n   disagree between implementations that are both conformant. The same\n   applies to any deployment that hashes or compares the C509 bytes.\n\n2. **Test vectors as a conformance oracle.** An implementation that\n   compresses by default reproduces the Appendix A examples byte-for-byte\n   but \"fails\" the uncompressed EC cases in the test-vectors document, and\n   vice versa. In my implementation 7 of the 22 certificate cases in\n   draft-ietf-cose-c509-test-vectors-02 only match with compression\n   switched off; the other 15, and all decode directions, match either way.\n   Readers are likely to treat those vectors as pass/fail conformance\n   material.\n\n3. **Encoders need an explicit knob.** Because the choice is not derivable\n   from the input, a library cannot pick correctly on the caller's behalf;\n   it has to expose the option and the caller has to know which peer or\n   test suite expects which form.\n\nPossible resolutions, in decreasing order of strength:\n\n* make the choice deterministic for type 3 (either always compress\n  Weierstrass keys, or always preserve the form found in the DER) -- this\n  would make the type 3 encoding of a given certificate unique, which also\n  helps the serial number discussion in #403;\n* keep it optional but say explicitly in Section 3.2.1 that a certificate\n  may have more than one conformant type 3 encoding, and note the\n  consequence for c5t and for byte-level comparison;\n* at minimum, have draft-ietf-cose-c509-test-vectors state which choice its\n  vectors make, so implementers do not read a legitimate difference as a\n  defect.\n\nHappy to supply the encodings of any of the affected cases in both forms if\nthat is useful.",
+      "createdAt": "2026-07-30T06:54:32Z",
+      "updatedAt": "2026-07-30T06:54:32Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
