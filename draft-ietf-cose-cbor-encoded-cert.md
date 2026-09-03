@@ -2041,21 +2041,21 @@ IANA has created a new registry titled "C509 Signature Algorithms" under the reg
 |       | Identifiers: sha256WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    24 | Name:        RSASSA-PKCS1-v1_5 with SHA-384               |
 |       | Identifiers: sha384WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.12                        |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    25 | Name:        RSASSA-PKCS1-v1_5 with SHA-512               |
 |       | Identifiers: sha512WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.13                        |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    26 | Name:        RSASSA-PSS with SHA-256                      |
