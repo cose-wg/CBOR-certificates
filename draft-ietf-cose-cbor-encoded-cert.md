@@ -632,17 +632,6 @@ CBOR encoding of the following extension values are partly supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.
-
-~~~~~~~~~~~ cddl
-   RDNAttributes = (
-     ( attributeType: int, attributeValue: [ + SpecialText] ) //
-     ( attributeType: ~oid, attributeValue: [+ bytes] )
-   )
-   SubjectDirectoryAttributes = [ + RDNAttributes ]
-~~~~~~~~~~~
-{: sourcecode-name="c509.cddl"}
-
 * AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in {{RFC3779}}. If 'rdi' is not present, the extension value can be CBOR-encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, each subsequent ASId is encoded as the difference from the previous ASId.
 
 ~~~~~~~~~~~ cddl
@@ -1395,13 +1384,6 @@ The initial contents of the registry are:
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:        RFC 5280                                 |
 |       | extensionValue:  AuthorityInfoAccessSyntax                |
-+-------+-----------------------------------------------------------+
-|    24 | Name:            Subject Directory Attributes             |
-|       | Identifiers:     subjectDirectoryAttributes               |
-|       | OID:             2.5.29.9                                 |
-|       | DER:             06 03 55 1D 09                           |
-|       | Comments:        RFC 5280                                 |
-|       | extensionValue:  SubjectDirectoryAttributes               |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Issuer Alternative Name                  |
 |       | Identifiers:     issuerAltName                            |
