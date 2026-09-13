@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-06T04:06:07.055254+00:00",
+  "timestamp": "2026-09-13T04:21:36.421361+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9483,7 +9483,7 @@
       "labels": [],
       "body": "Section 3.2.1 says elliptic curve public keys in Weierstrass form \"**may** be\npoint-compressed\", and defines the 0xfe/0xfd octets for the case where an\nuncompressed DER key is CBOR-encoded with compression. Compression is\ntherefore optional for type 3, and one X.509 certificate has two conformant\nC509 type 3 encodings that differ in bytes and length.\n\nThis is observable between the two WG documents. For the same kind of\ncertificate:\n\n* the Appendix A examples in this document **compress**, e.g. A.1 encodes the\n  subjectPublicKey as `58 21 FE B1 21 6A ...` (33 bytes, 0xFE marker);\n* draft-ietf-cose-c509-test-vectors-02 **does not compress**, e.g. its\n  Section 3.3 (secp256r1) encodes `58 41 04 F4 13 59 6A ...` (65 bytes,\n  uncompressed SEC1 point).\n\nBoth are correct per Section 3.2.1, and both invert to the same DER, so\nneither document is wrong. Three consequences seem worth considering:\n\n1. **Thumbprints.** c5t is computed over the C509 encoding, so two\n   conformant encoders produce different c5t values for the same\n   certificate. Anything keyed on c5t -- certificate pinning, caching,\n   deduplication, revocation matching by thumbprint -- can therefore\n   disagree between implementations that are both conformant. The same\n   applies to any deployment that hashes or compares the C509 bytes.\n\n2. **Test vectors as a conformance oracle.** An implementation that\n   compresses by default reproduces the Appendix A examples byte-for-byte\n   but \"fails\" the uncompressed EC cases in the test-vectors document, and\n   vice versa. In my implementation 7 of the 22 certificate cases in\n   draft-ietf-cose-c509-test-vectors-02 only match with compression\n   switched off; the other 15, and all decode directions, match either way.\n   Readers are likely to treat those vectors as pass/fail conformance\n   material.\n\n3. **Encoders need an explicit knob.** Because the choice is not derivable\n   from the input, a library cannot pick correctly on the caller's behalf;\n   it has to expose the option and the caller has to know which peer or\n   test suite expects which form.\n\nPossible resolutions, in decreasing order of strength:\n\n* make the choice deterministic for type 3 (either always compress\n  Weierstrass keys, or always preserve the form found in the DER) -- this\n  would make the type 3 encoding of a given certificate unique, which also\n  helps the serial number discussion in #403;\n* keep it optional but say explicitly in Section 3.2.1 that a certificate\n  may have more than one conformant type 3 encoding, and note the\n  consequence for c5t and for byte-level comparison;\n* at minimum, have draft-ietf-cose-c509-test-vectors state which choice its\n  vectors make, so implementers do not read a legitimate difference as a\n  defect.\n\nHappy to supply the encodings of any of the affected cases in both forms if\nthat is useful.",
       "createdAt": "2026-07-30T06:54:32Z",
-      "updatedAt": "2026-08-21T13:09:04Z",
+      "updatedAt": "2026-09-11T14:00:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -9499,6 +9499,13 @@
           "body": "Thank you for the clarification. I agree that certificate identity should be computed over the original X.509 encoding, and making that explicit in the draft is the right fix. The point about future specific encodings for extensions also confirms that multiple valid type 3 encodings are inherent, so hash-over-X.509 is the robust design.\n\nRegarding your question: yes, my implementation already exposes the choice as an explicit option (`C509ConversionOptions.withPointCompression(boolean)`), and the earlier results were produced with it. I have now also included Section 3.4 in the re-test:\n\n- Section 3.3.2 DER with compression **on**  -> byte-identical to the Section 3.4.3\n  type 3 encoding (`... 58 21 FD ...`)\n- Section 3.3.2 DER with compression **off** -> byte-identical to the Section 3.3.3\n  type 3 encoding (`... 58 41 04 ...`)\n- Both decode back to the same original DER.\n\nThe seven uncompressed EC cases with published type 3 bytes, sections 3.3 and 3.5-3.10, reproduce your published bytes with compression off, and everything else with the default. All 23 cases that publish a type 3 encoding pass in both directions. I also picked up Section 3.11 (frp256v1), which publishes only a type 2 form: that vector parses and re-encodes byte-identically here, and its X.509 certificate round-trips through a type 3 encoding of my own making under either compression setting. That covers every certificate the document publishes \u2014 24 X.509 certificates with their 23 type 3 and 23 type 2 forms.\n\nOne small consistency question: the natively signed certificate in 3.4.4 carries `0xFD` as the point marker. Section 3.2.1 of the main draft assigns the SECG octets 0x02/0x03/0x04 to natively signed C509 certificates, and reserves 0xfe/0xfd for the case where an uncompressed DER key is re-encoded with compression. Appendix A.1 shows the split on a single certificate: A.1.1 (re-encoded) uses `58 21 FE`, A.1.2 (natively signed) uses `58 21 02`. 3.4.4 is the only natively signed certificate in the vectors document with a compressed point, the other native Weierstrass cases all carry an uncompressed `04`. So it is the only place the rule bites. Should 3.4.4 use `0x03` (odd y) rather than `0xFD`? My decoder accepts both, so this is a consistency question rather than an interop problem, but it seemed worth flagging while the vectors document is active.\n\nThank you again for the test vectors document. Running it against my implementation found a real encoder bug: the two-element array header of the specific policyConstraints encoding was not written, so every policyConstraints extension silently fell back to the generic `~oid` form. Since Section 3.7 requires natively signed certificates to use only specific CBOR-encoded fields, that also meant a natively signed certificate carrying policyConstraints could not be produced at all. Appendix A of the main draft has no policyConstraints example, so it could not have caught this.\n\nBest regards,",
           "createdAt": "2026-08-21T13:09:04Z",
           "updatedAt": "2026-08-21T13:09:04Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@ligefeiBouncycastle Thanks for this excellent comment. In the interest of not delaying this draft further I think we should define c5t only for C509 type 2 and leave type 3 out of scope for this document allowing future specifications to add this.\n\nWould this cause any problem?",
+          "createdAt": "2026-09-11T14:00:26Z",
+          "updatedAt": "2026-09-11T14:00:26Z"
         }
       ]
     }
@@ -17396,7 +17403,7 @@
       "labels": [],
       "body": "- C509 Certificate Types\r\n- C509 Certification Request Types\r\n- C509 Private Key Types\r\n- C509 Certification Request Templates Types\r\n- C509 RDN Attributes\r\n- C509 CRAttributes\r\n- C509 Extensions\r\n- C509 Certificate Policies\r\n- C509 Policies Qualifiers\r\n- C509 Information Accesses\r\n- C509 Extended Key Usages\r\n- C509 General Names\r\n- C509 Signature Algorithms\r\n- C509 Public Key Algorithms",
       "createdAt": "2026-09-03T11:17:03Z",
-      "updatedAt": "2026-09-03T12:46:19Z",
+      "updatedAt": "2026-09-11T13:49:46Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
@@ -17407,7 +17414,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Here is one example of a change in this PR:\r\n\r\nOLD\r\nFor values in the interval \\[0, 23\\] the registration procedure is \"IETF Review with Expert Review\". Values {{{\u2265}}} 32768 are reserved for Private Use. For all other values the registration procedure is \"Expert Review\".\r\n\r\nNEW\r\nValid values are in the interval \\[0, 2^63 - 1\\]. For values in the interval \\[0, 23\\] the registration procedure is \"IETF Review with Expert Review\". Values in the interval \\[32768, 65535\\] are reserved for Private Use, and values in the interval \\[65536, 2^63 - 1\\] are reserved for future use. For all other values the registration procedure is \"Expert Review\".\r\n\r\n\r\n\r\nThe last sentence makes sense in OLD but not in NEW. The range reserved for Private Use does not need any specification of registration procedure. In NEW there is a new range for future use for which there is no registration procedure specified, since \"other values\" does not include that range.\r\n",
+          "createdAt": "2026-09-11T13:49:46Z",
+          "updatedAt": "2026-09-11T13:49:46Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM8AAAABMBsXJA",
