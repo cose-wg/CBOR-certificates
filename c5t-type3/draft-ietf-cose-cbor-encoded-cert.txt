@@ -896,7 +896,9 @@ Table of Contents
    sufficient for uniquely calculating the hash value.  Applications
    using c5t with a non-native C509 certificate type and where the C509
    certificate is not available when the hash is calculated need to
-   specify potential CBOR encoding choices.
+   specify potential CBOR encoding choices.  Alternatively, the hash of
+   the DER encoded X.509 certificate may be used as a stable reference,
+   e.g., by using x5t as defined in [RFC9360].
 
    c5u, analogously to x5u in [RFC9360], provides the ability to
    identify a C509 certificate by a URI [RFC3986].  It contains a CBOR
