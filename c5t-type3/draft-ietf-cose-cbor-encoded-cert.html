@@ -20,18 +20,18 @@
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.0
-    Python 3.14.5
+    Python 3.14.7
     ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.1
+    platformdirs 4.11.7
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.2
+    wcwidth 0.8.3
 -->
 <link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -67,7 +67,6 @@
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -116,7 +115,6 @@
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -181,7 +179,6 @@
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1050,11 +1047,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">C509 Certificates</td>
-<td class="right">July 2026</td>
+<td class="right">September 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 25 January 2027</td>
+<td class="center">Expires 18 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1067,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-07-24" class="published">24 July 2026</time>
+<time datetime="2026-09-14" class="published">14 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-25">25 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-18">18 March 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1146,7 +1143,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1391,7 +1388,7 @@ svg {
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2">This specification makes use of the terminology in <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, <span>[<a href="#RFC7228" class="cite xref">RFC7228</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>. Unless otherwise specified, when referring to CBOR this specification always refers to Deterministically Encoded CBOR as specified in Sections <a href="https://rfc-editor.org/rfc/rfc8949#section-4.2.1" class="relref">4.2.1</a> and <a href="https://rfc-editor.org/rfc/rfc8949#section-4.2.2" class="relref">4.2.2</a> of <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-2">This specification makes use of the terminology in <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>, <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>, <span>[<a href="#RFC7228" class="cite xref">RFC7228</a>]</span>, <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, and <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>. When referring to CBOR, this specification always refers to Deterministically Encoded CBOR as specified in Sections <a href="https://rfc-editor.org/rfc/rfc8949#section-4.2.1" class="relref">4.2.1</a> and <a href="https://rfc-editor.org/rfc/rfc8949#section-4.2.2" class="relref">4.2.2</a> of <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>.<a href="#section-2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="certificate">
@@ -1473,16 +1470,12 @@ tag = #6
 <p id="section-3.1.1-1">The 'version' field is encoded in the 'c509CertificateType' CBOR int. The field 'c509CertificateType' also indicates the type of the C509 certificate. Two types are defined in this document: natively signed C509 certificates, following X.509 v3 (c509CertificateType = 2); and CBOR re-encoded X.509 v3 DER certificate (c509CertificateType = 3), see <a href="#type" class="auto internal xref">Section 8.2</a>. The number of elements in TBSCertificate is fixed and determined by the type. Additional types may be added in the future.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="csn">
+<div id="certificateserialnumber">
 <section id="section-3.1.2">
           <h4 id="name-certificateserialnumber">
 <a href="#section-3.1.2" class="section-number selfRef">3.1.2. </a><a href="#name-certificateserialnumber" class="section-name selfRef">certificateSerialNumber</a>
           </h4>
-<p id="section-3.1.2-1">The 'certificateSerialNumber' positive INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'.
-Leading 0x00 bytes are omitted following the preferred serialization as specified in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.3" class="relref">Section 3.4.3</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>.
-Serial numbers are always encoded as CBOR byte string even if the number can fit in an ordinary CBOR unsigned integer.
-This deviates from the preferred serialization of integers as specified in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.3" class="relref">Section 3.4.3</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, but provides an alternative deterministic encoding.
-When converting back to X.509 format, in case of C509Certificate type 3 or C509CertificationRequest type 3, if the highest bit in first byte is set, the leading 0x00 byte is put back to prepend to the byte string.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-1">The 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="signature">
@@ -1976,7 +1969,7 @@ C509CertData = bytes .cbor C509Certificate
 </div>
 <p id="section-3.4-4">C509CertData content thus includes the CBOR-encoded C509Certificate. The byte string encoding includes the length of each certificate, which simplifies parsing. See <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
 <p id="section-3.4-5">The COSE_C509 item has media type application/cose-c509+cbor, see <a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see <a href="#content-format" class="auto internal xref">Section 8.19</a>.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.4-6">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t. Note that for a non-native C509 certificate type, e.g., c509CertificateType = 3, there may be more than one conformant CBOR encoding (see, e.g., <a href="#subpubkey-alg-encoding" class="auto internal xref">Section 3.2.1</a>), so the DER encoded X.509 certificate may not be sufficient for uniquely calculating the hash value. Applications using c5t with a non-native C509 certificate type and where the C509 certificate is not available when the hash is calculated need to specify potential CBOR encoding choices.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
 <p id="section-3.4-7">c5u, analogously to x5u in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, provides the ability to identify a C509 certificate by a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:<a href="#section-3.4-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-8.1">
@@ -2132,7 +2125,6 @@ C509PEM = [
 <p id="section-3.7-2">Although this specification requires the use of Deterministically Encoded CBOR (see <a href="#notation" class="auto internal xref">Section 2</a>), it is still possible to represent certain X.509 certificate fields in different ways. This is a consequence of the extensibility of the C509 format, in which new encodings can be defined, for example, to optimize extensions for which no special CBOR encoding has previously been defined.<a href="#section-3.7-2" class="pilcrow">¶</a></p>
 <p id="section-3.7-3">Where both a specific and a generic CBOR encoding are supported, the specific CBOR encoding <span class="bcp14">MUST</span> be used. For example, when a specific CBOR encoding of an extension is defined in <a href="#ext-encoding" class="auto internal xref">Section 3.3</a> and the C509 Extensions Registry, that specific encoding <span class="bcp14">MUST</span> be used. In particular, when a specific otherName encoding is available, identified by a negative integer value in the C509 General Names Registry, it <span class="bcp14">MUST</span> be used.<a href="#section-3.7-3" class="pilcrow">¶</a></p>
 <p id="section-3.7-4">Native C509 certificates <span class="bcp14">MUST</span> use only specific CBOR-encoded fields. However, when decoding non-native C509 certificates, the decoder may need to support, for example, the (extensionID: ~oid, extensionValue: bytes / [bytes]) encoding of an extension for which an (extensionID: int, extensionValue: Defined) encoding exists. One reason is that the certificate might have been issued before the specific CBOR extension was registered.<a href="#section-3.7-4" class="pilcrow">¶</a></p>
-<p id="section-3.7-5">One specific case of deterministic but non-preferred serialization is CertificateSerialNumber, where byte string encoding is used also for small unsigned integers, see <a href="#csn" class="auto internal xref">Section 3.1.2</a>.<a href="#section-3.7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="c509-name-in-tls-and-dtls">
