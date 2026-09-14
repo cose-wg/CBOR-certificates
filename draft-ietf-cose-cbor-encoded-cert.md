@@ -437,7 +437,7 @@ CBOR encoding of the following extension values is fully supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{ext-field}} for special encoding in case keyUsage is the only extension present.
+* Key Usage (keyUsage). The 'KeyUsage' BIT STRING (excluding the tag, length, and leading 'unusedBits' byte) is interpreted as an unsigned little-endian integer and encoded as a CBOR uint. See {{ext-field}} for special encoding in case keyUsage is the only extension present.
 
 ~~~~~~~~~~~ cddl
    KeyUsage = uint
