@@ -1281,7 +1281,7 @@ The initial contents of the registry are:
 |    30 | Name:            Unstructured Address                     |
 |       | Identifiers:     unstructuredAddress                      |
 |       | OID:             1.2.840.113549.1.9.8                     |
-|       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08         |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 08         |
 |       | Comments:        RFC 2985                                 |
 +-------+-----------------------------------------------------------+
 ~~~~~~~~~~~
