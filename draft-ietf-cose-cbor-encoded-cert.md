@@ -2604,14 +2604,14 @@ where c509_data is the CBOR-encoded C509Certificate. For TLS 1.2 the same constr
 
 ## TLSA Selectors Registry {#tlsa}
 
-This document registers the following entry in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters". The C509 certificate data, C509CertData, is defined in {{cose-header-params}}.
+This document registers the following entry in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters". The content is the CBOR-encoded C509Certificate which is defined in {{message-fields}}.
 
 ~~~~~~~~~~~
 
 +-------+---------+------------------------+-------------------+
 | Value | Acronym |   Short Description    |     Reference     |
 +=======+=========+========================+===================+
-|  TBD7 |    C509 | C509 certificate data  | [[this document]] |
+|  TBD7 |    C509 |        C509Certificate | [[this document]] |
 +-------+---------+------------------------+-------------------+
 ~~~~~~~~~~~
 
