@@ -338,7 +338,10 @@ The 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CB
 
 ### signature
 
-The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
+The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see {{sigalg}}) if a corresponding integer value exists. Otherwise:
+
+- If the 'parameters' field is absent, it is encoded as an unwrapped CBOR OID.
+- If the 'parameters' field is present, it is encoded as an array containing an unwrapped CBOR OID tag {{RFC9090}} followed by the DER-encoded parameters as CBOR bytes.
 
 ### issuer {#issuer}
 
@@ -368,7 +371,10 @@ The 'subject' field is encoded exactly like issuer, except that the CBOR simple 
 
 ### subjectPublicKeyInfo
 
-The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) or as an array with an unwrapped CBOR OID tag {{RFC9090}} optionally followed by the parameters encoded as a CBOR byte string.
+The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see {{pkalg}}) if a corresponding integer value exists. Otherwise:
+
+- If the 'parameters' field is absent, it is encoded as an unwrapped CBOR OID.
+- If the 'parameters' field is present, it is encoded as an array containing an unwrapped CBOR OID tag {{RFC9090}} followed by the DER-encoded parameters as CBOR bytes.
 
 In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except undefined (see {{CRT}}). This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in {{alg-encoding}}.
 
