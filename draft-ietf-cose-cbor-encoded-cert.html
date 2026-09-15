@@ -1647,7 +1647,7 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-7.1">
-            <p id="section-3.3-7.1.1">Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See <a href="#ext-field" class="auto internal xref">Section 3.1.10</a> for special encoding in case keyUsage is the only extension present.<a href="#section-3.3-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-7.1.1">Key Usage (keyUsage). The 'KeyUsage' BIT STRING (excluding the tag, length, leading 'unusedBits' byte, and trailing unused bits) is represented by the bit sequence 'b0 b1 ... bn', where b0 is the least-significant bit (LSB) and bn is the most-significant bit (MSB). Its integer value is given by: sum(i=0..n)(bi × 2^i). See <a href="#ext-field" class="auto internal xref">Section 3.1.10</a> for special encoding in case keyUsage is the only extension present.<a href="#section-3.3-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-8">
