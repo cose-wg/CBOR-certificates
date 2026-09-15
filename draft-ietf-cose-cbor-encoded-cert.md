@@ -441,7 +441,7 @@ CBOR encoding of the following extension values is fully supported:
 ~~~~~~~~~~~
 {: sourcecode-name="c509.cddl"}
 
-* Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See {{ext-field}} for special encoding in case keyUsage is the only extension present.
+* Key Usage (keyUsage). The 'KeyUsage' BIT STRING (excluding the tag, length, leading 'unusedBits' byte, and trailing unused bits) is represented by the bit sequence 'b0 b1 ... bn', where b0 is the least-significant bit (LSB) and bn is the most-significant bit (MSB). Its integer value is given by: sum(i=0..n)(bi × 2^i). See {{ext-field}} for special encoding in case keyUsage is the only extension present.
 
 ~~~~~~~~~~~ cddl
    KeyUsage = uint
