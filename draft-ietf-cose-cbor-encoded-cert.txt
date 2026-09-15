@@ -889,7 +889,16 @@ Table of Contents
 
    The value type of c5t is the COSE_CertHash structure defined in
    [RFC9360], which contains the hash value of the C509 certificate
-   calculated over C509Certificate.
+   calculated over C509Certificate.  Note that for a non-native C509
+   certificate type, e.g., c509CertificateType = 3, there may be more
+   than one conformant CBOR encoding (see, e.g., Section 3.2.1), so the
+   DER encoded X.509 certificate may not be sufficient for uniquely
+   calculating the hash value.  Applications using c5t with a non-native
+   C509 certificate type and where the C509 certificate is not available
+   when the hash is calculated need to specify potential CBOR encoding
+   choices.  Alternatively, the hash of the DER encoded X.509
+   certificate may be used as a stable reference, e.g., by using x5t as
+   defined in [RFC9360].
 
    c5u, analogously to x5u in [RFC9360], provides the ability to
    identify a C509 certificate by a URI [RFC3986].  It contains a CBOR
@@ -4485,12 +4494,12 @@ Acknowledgments
    The authors want to thank Henk Birkholz, Mike Bishop, Mohamed
    Boucadair, Corey Bonnell, Carsten Bormann, Deb Cooley, Roman Danyliw,
    Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle
-   Johansson, Benjamin Kaduk, Ted Lemon, Ilari Liusvaara, Laurence
-   Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson,
-   Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan
-   Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and
-   Paul Wouters for reviewing and commenting on intermediate versions of
-   the draft.
+   Johansson, Benjamin Kaduk, Ted Lemon, Gefei Li, Ilari Liusvaara,
+   Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael
+   Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik,
+   Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke,
+   and Paul Wouters for reviewing and commenting on intermediate
+   versions of the draft.
 
 Authors' Addresses
 
