@@ -20,18 +20,18 @@
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.34.0
-    Python 3.14.5
+    Python 3.14.7
     ConfigArgParse 1.7.5
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.10.0
+    platformdirs 4.11.7
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.1
+    wcwidth 0.8.3
 -->
 <link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -67,7 +67,6 @@
   src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
   unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: italic;
@@ -116,7 +115,6 @@
   src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
   font-family: 'Lora';
   font-style: normal;
@@ -181,7 +179,6 @@
   font-display: swap;
   src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
 }
 
 @font-face {
@@ -1050,11 +1047,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">C509 Certificates</td>
-<td class="right">June 2026</td>
+<td class="right">September 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 1 January 2027</td>
+<td class="center">Expires 19 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1070,12 +1067,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-06-30" class="published">30 June 2026</time>
+<time datetime="2026-09-15" class="published">15 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-01-01">1 January 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-19">19 March 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1100,7 +1097,7 @@ svg {
 </div>
 <div class="author">
       <div class="author-name">L. Liao</div>
-<div class="org">NIO</div>
+<div class="org">NIO Inc.</div>
 </div>
 </dd>
 </dl>
@@ -1146,7 +1143,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 1 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 19 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1409,7 +1406,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-message-fields" class="section-name selfRef">Message Fields</a>
         </h3>
 <p id="section-3.1-1">This section describes the X.509 fields and their CBOR encodings and uses them in the definition of C509 certificates; see <a href="#fig-CBORCertCDDL" class="auto internal xref">Figure 1</a>. While many of <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> encodings are supported, there are a few instances marked "not supported" for which no alternative is provided and, therefore, no C509 encoding can be generated.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate and the CBOR Sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span> TBSCertificate. The member names therefore have documentary value only. Examples are given in the appendices; see, for example, <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The following Concise Data Definition Language (CDDL) defines the CBOR array C509Certificate. The elements of a C509Certificate form a CBOR Sequence <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>. The subsequence of elements described as the group TBSCertificate with the issuerSignatureValue removed at the end form a CBOR Sequence. The member names have documentary value only. Examples are given in the appendices; see, for example, <a href="#rfc7925-prof" class="auto internal xref">Appendix A.1</a>.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <span id="name-cddl-for-c509certificate"></span><div id="fig-CBORCertCDDL">
 <figure id="figure-1">
           <div class="lang-cddl sourcecode" id="section-3.1-3.1">
@@ -1494,7 +1491,7 @@ tag = #6
           <h4 id="name-issuer">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
-<p id="section-3.1.4-1">In the general case, the sequence of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">In the general case, the list of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-rdnattrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. The value of the attributes serialNumber and countryName <span class="bcp14">SHALL</span> contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1595,7 +1592,7 @@ tag = #6
           <h4 id="name-signaturevalue">
 <a href="#section-3.1.12" class="section-number selfRef">3.1.12. </a><a href="#name-signaturevalue" class="section-name selfRef">signatureValue</a>
           </h4>
-<p id="section-3.1.12-1">In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates, the signatureValue is calculated over the CBOR sequence TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.12-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.12-1">In general, the 'signatureValue' BIT STRING value field is encoded as the CBOR byte string issuerSignatureValue. This specification assumes that the BIT STRING has zero unused bits, and the unused bits byte is omitted. For natively signed C509 certificates, the signatureValue is calculated over the CBOR group TBSCertificate. For ECDSA, the encoding of issuerSignatureValue is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.12-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1972,7 +1969,7 @@ C509CertData = bytes .cbor C509Certificate
 </div>
 <p id="section-3.4-4">C509CertData content thus includes the CBOR-encoded C509Certificate. The byte string encoding includes the length of each certificate, which simplifies parsing. See <a href="#other-examples" class="auto internal xref">Appendix A.1.5</a> for an example.<a href="#section-3.4-4" class="pilcrow">¶</a></p>
 <p id="section-3.4-5">The COSE_C509 item has media type application/cose-c509+cbor, see <a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>. Different CoAP Content-Formats are defined depending on "usage" = "chain" or not, see <a href="#content-format" class="auto internal xref">Section 8.19</a>.  Stored file formats are defined for the cases with/without ("usage" = "chain") with "magic numbers" TBD8/TBD6 using the reserved CBOR tag 55799 and the corresponding Content-Formats TBD15/TBD3, enveloped as described in <span><a href="https://rfc-editor.org/rfc/rfc9277#section-2.2" class="relref">Section 2.2</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
-<p id="section-3.4-6">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary to calculate the thumbprint c5t.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
+<p id="section-3.4-6">The value type of c5t is the COSE_CertHash structure defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, which contains the hash value of the C509 certificate calculated over C509Certificate.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
 <p id="section-3.4-7">c5u, analogously to x5u in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span>, provides the ability to identify a C509 certificate by a URI <span>[<a href="#RFC3986" class="cite xref">RFC3986</a>]</span>.  It contains a CBOR text string (media type application/cbor and CoAP Content-Format 60). The referenced resource can be any of the following media types:<a href="#section-3.4-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.4-8.1">
@@ -1985,7 +1982,7 @@ C509CertData = bytes .cbor C509Certificate
             <p id="section-3.4-8.3.1">application/cose-c509+cbor; usage=chain (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.4-9">When the application/cose-c509+cbor media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding "bytes").  If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
+<p id="section-3.4-9">When the application/cose-c509+cbor media type is used, the data is a CBOR-encoded <code>COSE_X509</code> with only one <code>C509CertData</code> element.  If the parameter "usage" is set to "chain", this data is a CBOR-encoded <code>COSE_X509</code> with at least one <code>C509CertData</code> element.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
 <p id="section-3.4-10">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without appropriate authorization.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
 <span id="name-c509-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">
@@ -2199,7 +2196,7 @@ CRAttribute = (( attributeType: int, attributeValue: Defined ) //
 <p id="section-4.1-1">Two types of C509 Certification Requests are defined. Both use the same CBOR encoding and differ only in what is being signed; see <a href="#csr-type" class="auto internal xref">Section 8.3</a>. A C509 Certification Request is either an invertible CBOR re-encoding of a DER-encoded certification request <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span> or a natively signed request in which the signature is calculated over the CBOR encoding instead of the DER encoding.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1-2.1">
-            <p id="section-4.1-2.1.1">c509CertificationRequestType = 2. This type indicates that the C509 Certification Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR Sequence TBSCertificationRequest; see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. This encoding removes the need for ASN.1 and DER parsing and for re-encoding by the requesting party.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-4.1-2.1.1">c509CertificationRequestType = 2. This type indicates that the C509 Certification Request is natively signed, i.e., that subjectSignatureValue contains the signature over the CBOR group TBSCertificationRequest; see <a href="#fig-C509CSRCDDL" class="auto internal xref">Figure 2</a>. This encoding removes the need for ASN.1 and DER parsing and for re-encoding by the requesting party.<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-4.1-2.2">
             <p id="section-4.1-2.2.1">c509CertificationRequestType = 3. This type indicates that the C509 Certification Request is a CBOR re-encoded <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span> certification request, as defined in <a href="#CSR" class="auto internal xref">Section 4</a>. This encoding is backward compatible with legacy RFC 2986 certification requests and reduces transport overhead.<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
@@ -3843,17 +3840,17 @@ ExtensionTemplate = (
           <h4 id="name-media-type-application-cose-">
 <a href="#section-8.18.2" class="section-number selfRef">8.18.2. </a><a href="#name-media-type-application-cose-" class="section-name selfRef">Media Type application/cose-c509+cbor</a>
           </h4>
-<p id="section-8.18.2-1">When the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", this sequence indicates a certificate chain.<a href="#section-8.18.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.18.2-1">When the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure. If the parameter "usage" is set to "chain", the data is a certificate chain.<a href="#section-8.18.2-1" class="pilcrow">¶</a></p>
 <p id="section-8.18.2-2">Type name: application<a href="#section-8.18.2-2" class="pilcrow">¶</a></p>
 <p id="section-8.18.2-3">Subtype name: cose-c509+cbor<a href="#section-8.18.2-3" class="pilcrow">¶</a></p>
 <p id="section-8.18.2-4">Required parameters: N/A<a href="#section-8.18.2-4" class="pilcrow">¶</a></p>
 <p id="section-8.18.2-5">Optional parameters: usage<a href="#section-8.18.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.18.2-6.1">
-              <p id="section-8.18.2-6.1.1">Can be absent to provide no further information about the intended meaning of the order in the CBOR sequence of certificates.<a href="#section-8.18.2-6.1.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.2-6.1.1">Can be absent to provide no further information about the intended meaning of the order of the certificates.<a href="#section-8.18.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.2-6.2">
-              <p id="section-8.18.2-6.2.1">Can be set to "chain" to indicate that the sequence of data items is to be interpreted as a certificate chain.<a href="#section-8.18.2-6.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.2-6.2.1">Can be set to "chain" to indicate that the data items are to be interpreted as a certificate chain.<a href="#section-8.18.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-8.18.2-7">Encoding considerations: binary<a href="#section-8.18.2-7" class="pilcrow">¶</a></p>
@@ -4051,7 +4048,7 @@ ExtensionTemplate = (
               <p id="section-8.18.7-6.1.1">Can be absent to provide no further information about what the hash value is calculated over.<a href="#section-8.18.7-6.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-8.18.7-6.2">
-              <p id="section-8.18.7-6.2.1">Can be set to "c509" to indicate that the COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> is used, with hashValue calculated over a C509 certificate as defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.18.7-6.2.1" class="pilcrow">¶</a></p>
+              <p id="section-8.18.7-6.2.1">Can be set to "c509" to indicate that the COSE_CertHash structure as defined in <span>[<a href="#RFC9360" class="cite xref">RFC9360</a>]</span> is used, with hashValue calculated over a C509Certificate as defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.18.7-6.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-8.18.7-7">Encoding considerations: binary<a href="#section-8.18.7-7" class="pilcrow">¶</a></p>
@@ -5427,7 +5424,7 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
 </address>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Lijun Liao</span></div>
-<div dir="auto" class="left"><span class="org">NIO</span></div>
+<div dir="auto" class="left"><span class="org">NIO Inc.</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:lijun.liao@nio.io" class="email">lijun.liao@nio.io</a>

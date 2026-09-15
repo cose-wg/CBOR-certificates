@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 1 January 2027                            University of Glasgow
+Expires: 19 March 2027                             University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
-                                                                     NIO
-                                                            30 June 2026
+                                                                NIO Inc.
+                                                       15 September 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2027.
+   This Internet-Draft will expire on 19 March 2027.
 
 Copyright Notice
 
@@ -290,8 +290,10 @@ Table of Contents
    and, therefore, no C509 encoding can be generated.
 
    The following Concise Data Definition Language (CDDL) defines the
-   CBOR array C509Certificate and the CBOR Sequence [RFC8742]
-   TBSCertificate.  The member names therefore have documentary value
+   CBOR array C509Certificate.  The elements of a C509Certificate form a
+   CBOR Sequence [RFC8742].  The subsequence of elements described as
+   the group TBSCertificate with the issuerSignatureValue removed at the
+   end form a CBOR Sequence.  The member names have documentary value
    only.  Examples are given in the appendices; see, for example,
    Appendix A.1.
 
@@ -377,11 +379,11 @@ Table of Contents
 
 3.1.4.  issuer
 
-   In the general case, the sequence of 'RDNAttribute' is encoded as a
-   CBOR array consisting of RDNAttribute elements.
-   RelativeDistinguishedName with more than one AttributeTypeAndValue is
-   not supported.  Each RDNAttribute is CBOR-encoded as (type, value),
-   either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.
+   In the general case, the list of 'RDNAttribute' is encoded as a CBOR
+   array consisting of RDNAttribute elements.  RelativeDistinguishedName
+   with more than one AttributeTypeAndValue is not supported.  Each
+   RDNAttribute is CBOR-encoded as (type, value), either as an (int,
+   SpecialText) pair or as a (~oid, bytes) tuple.
 
    In the former case, the absolute value of the int encodes the
    attribute type (see Figure 10) and the sign is used to represent the
@@ -520,9 +522,9 @@ Table of Contents
    the CBOR byte string issuerSignatureValue.  This specification
    assumes that the BIT STRING has zero unused bits, and the unused bits
    byte is omitted.  For natively signed C509 certificates, the
-   signatureValue is calculated over the CBOR sequence TBSCertificate.
-   For ECDSA, the encoding of issuerSignatureValue is further optimized
-   as described in Section 3.2.
+   signatureValue is calculated over the CBOR group TBSCertificate.  For
+   ECDSA, the encoding of issuerSignatureValue is further optimized as
+   described in Section 3.2.
 
 3.2.  Encoding of subjectPublicKey and issuerSignatureValue
 
@@ -888,8 +890,7 @@ Table of Contents
 
    The value type of c5t is the COSE_CertHash structure defined in
    [RFC9360], which contains the hash value of the C509 certificate
-   calculated over C509Certificate.  Thus, C509CertData contains all
-   data necessary to calculate the thumbprint c5t.
+   calculated over C509Certificate.
 
    c5u, analogously to x5u in [RFC9360], provides the ability to
    identify a C509 certificate by a URI [RFC3986].  It contains a CBOR
@@ -903,9 +904,9 @@ Table of Contents
    *  application/cose-c509+cbor; usage=chain (Section 8.18.2)
 
    When the application/cose-c509+cbor media type is used, the data is a
-   CBOR sequence of single-entry COSE_C509 structures (encoding
-   "bytes").  If the parameter "usage" is set to "chain", this sequence
-   indicates a certificate chain.
+   CBOR-encoded COSE_X509 with only one C509CertData element.  If the
+   parameter "usage" is set to "chain", this data is a CBOR-encoded
+   COSE_X509 with at least one C509CertData element.
 
    As the contents of c5b, c5c, c5t, and c5u are untrusted input, the
    header parameters can be in either the protected or unprotected
@@ -1140,10 +1141,10 @@ Table of Contents
 
    *  c509CertificationRequestType = 2.  This type indicates that the
       C509 Certification Request is natively signed, i.e., that
-      subjectSignatureValue contains the signature over the CBOR
-      Sequence TBSCertificationRequest; see Figure 2.  This encoding
-      removes the need for ASN.1 and DER parsing and for re-encoding by
-      the requesting party.
+      subjectSignatureValue contains the signature over the CBOR group
+      TBSCertificationRequest; see Figure 2.  This encoding removes the
+      need for ASN.1 and DER parsing and for re-encoding by the
+      requesting party.
 
    *  c509CertificationRequestType = 3.  This type indicates that the
       C509 Certification Request is a CBOR re-encoded [RFC2986]
@@ -2917,8 +2918,8 @@ Table of Contents
 8.18.2.  Media Type application/cose-c509+cbor
 
    When the application/cose-c509+cbor media type is used, the data is a
-   COSE_C509 structure.  If the parameter "usage" is set to "chain",
-   this sequence indicates a certificate chain.
+   COSE_C509 structure.  If the parameter "usage" is set to "chain", the
+   data is a certificate chain.
 
    Type name: application
 
@@ -2929,10 +2930,10 @@ Table of Contents
    Optional parameters: usage
 
    *  Can be absent to provide no further information about the intended
-      meaning of the order in the CBOR sequence of certificates.
+      meaning of the order of the certificates.
 
-   *  Can be set to "chain" to indicate that the sequence of data items
-      is to be interpreted as a certificate chain.
+   *  Can be set to "chain" to indicate that the data items are to be
+      interpreted as a certificate chain.
 
    Encoding considerations: binary
 
@@ -3181,7 +3182,7 @@ Table of Contents
 
    *  Can be set to "c509" to indicate that the COSE_CertHash structure
       as defined in [RFC9360] is used, with hashValue calculated over a
-      C509 certificate as defined in Section 3.4.
+      C509Certificate as defined in Section 3.4.
 
    Encoding considerations: binary
 
@@ -4504,5 +4505,5 @@ Authors' Addresses
 
 
    Lijun Liao
-   NIO
+   NIO Inc.
    Email: lijun.liao@nio.io
