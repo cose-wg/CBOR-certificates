@@ -1,16 +1,18 @@
 [package]
 name = "c509"
-version = "0.4.2"
+version = "0.6.0"
 authors = ["John Preuß Mattsson <john.mattsson@ericsson.com>, Joel Höglund <joel.hoglund@ri.se>"]
 edition = "2018"
+description = "Reference implementation of CBOR-encoded X.509 (C509) certificates, tracking draft-ietf-cose-cbor-encoded-cert-20."
+license = "BSD-3-Clause"
+repository = "https://github.com/cose-wg/CBOR-certificates"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 asn1 = "0.16"
 asn1-rs = "0.6.1"
-cbor = "0.4.1"
-serde_cbor = "0.11"
+serde_cbor = { version = "0.11", features = ["tags"] }
 brotli = "3.3"
 chrono = "0.4"
 colored = "2"
@@ -20,12 +22,23 @@ num-traits = "0.2"
 num-bigint = "0.4"
 oid = "0.2"
 regex = "1"
-rustls = "0.19"
+rustc-serialize = "0.3"
+rustls = "0.20"
 secp256k1 = "0.29.0"
-webpki = "0.21"
-webpki-roots = "0.21"
+webpki-roots = "0.22"
 bit_reverse = "0.1.8"
 env_logger = "0.11"
+rayon = "1.7"
+p256 = { version = "0.13", features = ["ecdsa", "ecdh", "sha2", "pkcs8"] }
+p384 = { version = "0.13", features = ["ecdsa", "ecdh", "sha384", "pkcs8"] }
+p521 = { version = "0.13", features = ["ecdsa", "ecdh", "sha512", "pkcs8"] }
+ed25519-dalek = { version = "2", features = ["pkcs8"] }
+sha2 = { version = "0.10", features = ["oid"] }
+sha1 = { version = "0.10", features = ["oid"] }
+hmac = "0.12"
+rsa = { version = "0.9" }
+rand = "0.8"
+openssl = "0.10"
 
 [dev-dependencies]
 
