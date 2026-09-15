@@ -824,16 +824,6 @@ Table of Contents
         excludedSubtrees: GeneralSubtrees / null,
       ]
 
-   *  Subject Directory Attributes (subjectDirectoryAttributes).
-      Encoded as attributes in issuer and subject with the difference
-      that there can be more than one attributeValue.
-
-      RDNAttributes = (
-        ( attributeType: int, attributeValue: [ + SpecialText] ) //
-        ( attributeType: ~oid, attributeValue: [+ bytes] )
-      )
-      SubjectDirectoryAttributes = [ + RDNAttributes ]
-
    *  AS Identifiers (id-pe-autonomousSysIds).  The X.509 extension AS
       Identifiers is specified in [RFC3779].  If 'rdi' is not present,
       the extension value can be CBOR-encoded.  Each ASId is encoded as
@@ -1961,13 +1951,6 @@ Table of Contents
    |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
    |       | Comments:        RFC 5280                                 |
    |       | extensionValue:  AuthorityInfoAccessSyntax                |
-   +-------+-----------------------------------------------------------+
-   |    24 | Name:            Subject Directory Attributes             |
-   |       | Identifiers:     subjectDirectoryAttributes               |
-   |       | OID:             2.5.29.9                                 |
-   |       | DER:             06 03 55 1D 09                           |
-   |       | Comments:        RFC 5280                                 |
-   |       | extensionValue:  SubjectDirectoryAttributes               |
    +-------+-----------------------------------------------------------+
    |    25 | Name:            Issuer Alternative Name                  |
    |       | Identifiers:     issuerAltName                            |
