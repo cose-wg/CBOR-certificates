@@ -234,6 +234,69 @@ signed, no reference DER).
 implemented.  Test vectors at sections 10.1–10.3.
 Status: **planned**, lower priority.
 
+### 2. subjectDirectoryAttributes removed (draft PR #408) — FOLLOW-UP pending vector regen
+
+The extension **Subject Directory Attributes** (C509 ext ID 24, OID 2.5.29.9)
+was removed from the registry by draft PR #408, which merged **after**
+test-vectors-02 was published. The reference implementation now tracks draft
+master:
+
+- **Encode:** OID 2.5.29.9 no longer maps to the retired int-24 form; it takes
+  the generic `(~oid, bytes)` path (`registry.rs` `ext_map`, `conversion.rs`).
+- **Decode:** the legacy int-24 form is still tolerated (`extensions.rs`
+  `parse_cbor_ext_subject_directory_attr`) so older C509 / the -02 vectors still
+  round-trip.
+
+Because the -02 vectors froze the int-24 encoding, the two brainpoolP512r1
+cases that carry this extension (§3.10.2 X.509→C509, §3.10.4 TBS) no longer
+match byte-exact and are marked **XFAIL Cat V** (vector drift) by
+`validate_c509.sh` (`is_vector_drift_xfail`).
+
+**FOLLOW-UP:** when post-#408 test-vectors (≥ -03) are released, remove
+`is_vector_drift_xfail` and its two call sites and confirm §3.10.x passes
+byte-exact against the regenerated vectors.
+
+### 3. Upstream review follow-ups (PR #402 — draft moved ahead) — OPEN
+
+Surfaced while reviewing the Sept-2026 upstream PRs (the ones where `highlunder`
+is a requested reviewer). None break the current vector suite (all are on
+code paths no draft-02 vector exercises), so they are tracked here rather than
+blocking.
+
+- **AlgorithmIdentifier bare `~oid` (upstream PR #422) — DONE 2026-09-15.** The
+  CDDL is `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` — there is **no
+  one-element `[~oid]` array form**. Fixed both directions:
+  - *Encoder* (`conversion.rs`, 4 OID-fallback sites): now emits a **bare `~oid`**
+    (`lcbor_bytes(oid_val)`) when the AlgorithmIdentifier has no parameters, and
+    `[~oid, params]` when it does. (Was `lcbor_array(&[lcbor_bytes(oid_val)])`.)
+  - *Decoder* (`keys.rs::map_pk_id_to_oid` and `parse_cbor_sig_info`): the
+    `Value::Bytes` arm now reconstructs `SEQUENCE { OID }` from a bare `~oid`. The
+    legacy one-element `[~oid]` array is still accepted (tolerant decode).
+  - *Tests*: 6 unit tests in `keys.rs` (`mod alg_id_fallback_tests`) assert the
+    bare-`~oid`, legacy-`[~oid]`, and `[~oid, params]` decodes, including that the
+    bare and legacy forms reconstruct identically. `cargo test` green; full
+    `validate_c509.sh` unchanged at 123 PASS / 70 XFAIL / 8 SKIP / 0 FAIL (no
+    registered-algorithm vector exercises the fallback, so no vector regressed).
+
+- **CR Attribute generic `~oid` attributeType (upstream issue #419 / PR #423).**
+  #423 says a CR-attribute `attributeType` encoded as `~oid` is followed by the
+  DER-encoded `values` as a CBOR byte string. Our encoder (`conversion.rs:550`,
+  `lcbor_bytes(av[1])` where `av[1]` is the raw `values` SET OF *including* its
+  `31 <len>` tag/length — see line 466) implements **interpretation C** (whole
+  SET OF), the only fully invertible choice for a Type-3 CSR. #423's "values"
+  wording is consistent with C but the issue-#419 A/B/C question was never
+  explicitly resolved, and #423 does not address multi-value handling for the
+  registered `(int, Defined)` alternative. FOLLOW-UP: (a) post the "we implement
+  C" data point on #419 and suggest making it explicit; (b) confirm the
+  `parse_c509_csr` *decode* path round-trips the generic `~oid` SET-OF form.
+
+- **Refresh the PR onto current master.** Branch `c509-demo-impl-draft20` is
+  ~14 commits behind `origin/master`. The impl-relevant deltas are already
+  handled: #408 (subjectDirectoryAttributes removal — reconciled, see §2) and
+  #404 (serialNumber always-bstr — our encoder already conforms). The rest are
+  editorial. FOLLOW-UP: rebase/merge and re-run `validate_c509.sh` before
+  re-requesting review.
+
 ### Previously resolved issues
 
 | Issue | Resolution | Date |

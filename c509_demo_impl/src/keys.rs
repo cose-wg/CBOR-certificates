@@ -54,7 +54,11 @@ pub(crate) fn map_pk_id_to_oid(input: &Value) -> (Option<i64>, Vec<u8>) {
                 _ => panic!("Unknown pk type: {}", id),
             }
         },
-        Value::Bytes(raw_alg_id) => (None, raw_alg_id.to_vec()),
+        // Bare ~oid (no parameters): a CBOR byte string holding the OID value bytes
+        // only (unwrapped RFC 9090 OID). Reconstruct AlgorithmIdentifier = SEQUENCE { OID }.
+        // This is the CDDL `~oid` form (cose-wg/CBOR-certificates #414/#422); the one-element
+        // `[~oid]` array below is kept only for tolerant decoding of legacy encoders.
+        Value::Bytes(oid_val) => (None, lder_to_seq(vec![lder_to_generic(oid_val.to_vec(), ASN1_OID)])),
         Value::Array(arr) => {
             // RFC 9090 OID fallback (draft-ietf-cose-cbor-encoded-cert §2.3.3):
             // [~oid_value_bytes] or [~oid_value_bytes, params_der_bytes]
@@ -388,7 +392,11 @@ pub(crate) fn parse_cbor_sig_info(sig_alg: &Value, sig_val: &Value) -> (Vec<u8>,
             if !param.is_empty() { (lder_to_two_seq(lder_to_generic(oid, ASN1_OID), param), parsed_sig_val) }
             else { (lder_to_generic(lder_to_generic(oid, ASN1_OID), ASN1_SEQ), parsed_sig_val) }
         }
-        Value::Bytes(raw_alg_id) => { (raw_alg_id.to_vec(), sig_val_vec) }
+        // Bare ~oid (no parameters): OID value bytes only (unwrapped RFC 9090 OID).
+        // Reconstruct AlgorithmIdentifier = SEQUENCE { OID }. This is the CDDL `~oid`
+        // form (cose-wg/CBOR-certificates #414/#422); the one-element `[~oid]` array
+        // below is retained only for tolerant decoding of legacy encoders.
+        Value::Bytes(oid_val) => { (lder_to_seq(vec![lder_to_generic(oid_val.to_vec(), ASN1_OID)]), sig_val_vec) }
         Value::Array(arr) => {
             // RFC 9090 OID fallback (draft-ietf-cose-cbor-encoded-cert §2.2):
             // [~oid_value_bytes] or [~oid_value_bytes, params_der_bytes]
@@ -453,4 +461,72 @@ pub(crate) fn cbor_ecdsa(b: &[u8]) -> Vec<u8> {
     let s = lder_uint(seq[1]).to_vec();
     let max = std::cmp::max(r.len(), s.len());
     lcbor_bytes(&[vec![0u8; max - r.len()], r, vec![0u8; max - s.len()], s].concat())
+}
+
+#[cfg(test)]
+mod alg_id_fallback_tests {
+    //! RFC 9090 OID-fallback AlgorithmIdentifier decode, for algorithms with no
+    //! registered C509 integer. The CDDL is
+    //! `AlgorithmIdentifier = int / ~oid / [~oid, parameters]`, so the no-parameters
+    //! form is a bare `~oid` (a CBOR byte string of OID value bytes), not a
+    //! one-element `[~oid]` array (cose-wg/CBOR-certificates #414/#422). These tests
+    //! check that the decoder reconstructs `SEQUENCE { OID }` from the bare `~oid`,
+    //! reconstructs the same from a legacy `[~oid]` array (tolerant decode), and
+    //! reconstructs `SEQUENCE { OID, params }` from `[~oid, params]`.
+    use serde_cbor::Value;
+
+    // OID 1.2.3.4 -> value bytes 2A 03 04 (unregistered; exercises the fallback path).
+    const OID_VAL: [u8; 3] = [0x2A, 0x03, 0x04];
+    // SEQUENCE { OID 1.2.3.4 }
+    const SEQ_OID: [u8; 7] = [0x30, 0x05, 0x06, 0x03, 0x2A, 0x03, 0x04];
+    // SEQUENCE { OID 1.2.3.4, NULL }
+    const SEQ_OID_NULL: [u8; 9] = [0x30, 0x07, 0x06, 0x03, 0x2A, 0x03, 0x04, 0x05, 0x00];
+
+    #[test]
+    fn pk_alg_bare_oid_reconstructs_sequence() {
+        let (id, der) = super::map_pk_id_to_oid(&Value::Bytes(OID_VAL.to_vec()));
+        assert_eq!(id, None);
+        assert_eq!(der, SEQ_OID.to_vec());
+    }
+
+    #[test]
+    fn pk_alg_legacy_array_matches_bare() {
+        let (_, bare) = super::map_pk_id_to_oid(&Value::Bytes(OID_VAL.to_vec()));
+        let (_, arr) = super::map_pk_id_to_oid(&Value::Array(vec![Value::Bytes(OID_VAL.to_vec())]));
+        assert_eq!(bare, arr);
+        assert_eq!(arr, SEQ_OID.to_vec());
+    }
+
+    #[test]
+    fn pk_alg_oid_with_params() {
+        let v = Value::Array(vec![Value::Bytes(OID_VAL.to_vec()), Value::Bytes(vec![0x05, 0x00])]);
+        let (id, der) = super::map_pk_id_to_oid(&v);
+        assert_eq!(id, None);
+        assert_eq!(der, SEQ_OID_NULL.to_vec());
+    }
+
+    #[test]
+    fn sig_alg_bare_oid_reconstructs_sequence() {
+        let sig = Value::Bytes(vec![0xAA, 0xBB]);
+        let (alg_id, sig_val) = super::parse_cbor_sig_info(&Value::Bytes(OID_VAL.to_vec()), &sig);
+        assert_eq!(alg_id, SEQ_OID.to_vec());
+        assert_eq!(sig_val, vec![0xAA, 0xBB]);
+    }
+
+    #[test]
+    fn sig_alg_legacy_array_matches_bare() {
+        let sig = Value::Bytes(vec![0xAA, 0xBB]);
+        let (bare, _) = super::parse_cbor_sig_info(&Value::Bytes(OID_VAL.to_vec()), &sig);
+        let (arr, _) = super::parse_cbor_sig_info(&Value::Array(vec![Value::Bytes(OID_VAL.to_vec())]), &sig);
+        assert_eq!(bare, arr);
+        assert_eq!(arr, SEQ_OID.to_vec());
+    }
+
+    #[test]
+    fn sig_alg_oid_with_params() {
+        let sig = Value::Bytes(vec![0xAA, 0xBB]);
+        let v = Value::Array(vec![Value::Bytes(OID_VAL.to_vec()), Value::Bytes(vec![0x05, 0x00])]);
+        let (alg_id, _) = super::parse_cbor_sig_info(&v, &sig);
+        assert_eq!(alg_id, SEQ_OID_NULL.to_vec());
+    }
 }

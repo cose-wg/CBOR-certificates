@@ -401,7 +401,10 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
         if sig_seq.len() > 1 {
             output.push(lcbor_array(&[lcbor_bytes(oid_val), lcbor_bytes(sig_seq[1])]));
         } else {
-            output.push(lcbor_array(&[lcbor_bytes(oid_val)]));
+            // No parameters: emit the bare unwrapped ~oid. The CDDL
+            // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
+            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            output.push(lcbor_bytes(oid_val));
         }
     }
 
@@ -443,7 +446,10 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
         if spki_seq.len() > 1 {
             output.push(lcbor_array(&[lcbor_bytes(oid_val), lcbor_bytes(spki_seq[1])]));
         } else {
-            output.push(lcbor_array(&[lcbor_bytes(oid_val)]));
+            // No parameters: emit the bare unwrapped ~oid. The CDDL
+            // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
+            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            output.push(lcbor_bytes(oid_val));
         }
         output.push(lcbor_bytes(spki_key));
     }
@@ -493,7 +499,6 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
                                 EXT_EXT_KEY_USAGE => cbor_ext_eku(extn_value),
                                 EXT_AUTH_INFO | EXT_SUBJECT_INFO_ACCESS => cbor_ext_info_access(extn_value),
                                 EXT_ISSUER_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
-                                EXT_SUBJECT_DIRECTORY_ATTR => cbor_ext_subject_directory_attr(extn_value),
                                 EXT_NAME_CONSTRAINTS => cbor_ext_name_constraints(extn_value),
                                 EXT_POLICY_MAPPINGS => cbor_ext_policy_mappings(extn_value),
                                 EXT_POLICY_CONSTRAINTS => cbor_ext_policy_constraints(extn_value),
@@ -845,7 +850,10 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
         if sig_seq.len() > 1 {
             output.push(lcbor_array(&[lcbor_bytes(oid_val), lcbor_bytes(sig_seq[1])]));
         } else {
-            output.push(lcbor_array(&[lcbor_bytes(oid_val)]));
+            // No parameters: emit the bare unwrapped ~oid. The CDDL
+            // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
+            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            output.push(lcbor_bytes(oid_val));
         }
     }
     assert!(signature_algorithm == signature, "signature_algorithm != signature in TBSCertificate");
@@ -906,7 +914,10 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
         if spki_seq.len() > 1 {
             output.push(lcbor_array(&[lcbor_bytes(oid_val), lcbor_bytes(spki_seq[1])]));
         } else {
-            output.push(lcbor_array(&[lcbor_bytes(oid_val)]));
+            // No parameters: emit the bare unwrapped ~oid. The CDDL
+            // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
+            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            output.push(lcbor_bytes(oid_val));
         }
         output.push(lcbor_bytes(subject_public_key));
     }
@@ -955,7 +966,6 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
                     EXT_EXT_KEY_USAGE => cbor_ext_eku(extn_value),
                     EXT_AUTH_INFO | EXT_SUBJECT_INFO_ACCESS => cbor_ext_info_access(extn_value),
                     EXT_ISSUER_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
-                    EXT_SUBJECT_DIRECTORY_ATTR => cbor_ext_subject_directory_attr(extn_value),
                     EXT_NAME_CONSTRAINTS => cbor_ext_name_constraints(extn_value),
                     EXT_POLICY_MAPPINGS => cbor_ext_policy_mappings(extn_value),
                     EXT_POLICY_CONSTRAINTS => cbor_ext_policy_constraints(extn_value),

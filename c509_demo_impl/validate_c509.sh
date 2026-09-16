@@ -172,6 +172,34 @@ is_xfail() {
 }
 
 # ---------------------------------------------------------------------------
+# Vector-drift XFAIL: vectors whose *published* draft-02 encoding predates a
+# later normative change to the draft, so the reference implementation (which
+# tracks draft master) intentionally no longer reproduces them byte-exact.
+# These are expected divergences, not bugs.
+#
+#   section 3.10.x (brainpoolP512r1) carries the subjectDirectoryAttributes
+#   extension. That extension (C509 ext ID 24, OID 2.5.29.9) was REMOVED from
+#   the registry by draft PR #408, which merged AFTER test-vectors-02 was
+#   published. The encoder therefore emits the generic (~oid, bytes) form
+#   instead of the retired int-24 form, so its output no longer equals the
+#   int-24 encoding frozen in the -02 vectors (3.10.2 X.509→C509, 3.10.4 TBS).
+#   Decode of the legacy int-24 form is still supported.
+#
+# FOLLOW-UP: remove this helper (and its two call sites) once post-#408
+# test-vectors (>= -03) are released, and re-verify the 3.10.x cases pass
+# byte-exact against the regenerated vectors.
+# ---------------------------------------------------------------------------
+is_vector_drift_xfail() {
+    case "$1" in
+        v*_section_3.10.2_*|v*_section_3.10.4_*)
+            XFAIL_CATEGORY="V"
+            XFAIL_REASON="subjectDirectoryAttributes (ext 24) removed by draft PR #408 after test-vectors-02; encoder now uses the generic ~oid form. Expected until vectors are regenerated (>= -03)."
+            return 0 ;;
+    esac
+    return 1
+}
+
+# ---------------------------------------------------------------------------
 # Section-number arithmetic helpers
 #
 # type3_to_x509_section "3.1.3" → "3.1.2"
@@ -374,6 +402,9 @@ for crt_file in "${TV_DIR}/v${VERSION}_section_"*.crt; do
 
     if [ "${matched}" -eq 0 ]; then
         if is_xfail "${bn}"; then
+            log_xfail "${bn} [Cat ${XFAIL_CATEGORY}]"
+            echo "         ${XFAIL_REASON}"
+        elif is_vector_drift_xfail "${bn}"; then
             log_xfail "${bn} [Cat ${XFAIL_CATEGORY}]"
             echo "         ${XFAIL_REASON}"
         else
@@ -797,6 +828,9 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
             # as type-2 (e.g. an id-alg-unsigned X25519/X448 end-entity cert, whose
             # key cannot sign and whose issuer is an external CA). Tool limitation.
             log_xfail "${bn} [Cat B — f2 cannot encode this certificate as type-2 (id-alg-unsigned X25519/X448 end-entity, or unsupported)]"
+        elif is_vector_drift_xfail "${bn}"; then
+            log_xfail "${bn} [Cat ${XFAIL_CATEGORY}]"
+            echo "         ${XFAIL_REASON}"
         else
             log_fail "${bn}: TBS mismatch against IETF ${_sec} vector"
             if [ "${VERBOSE}" -eq 1 ]; then

@@ -91,7 +91,8 @@ pub const EXT_CERT_POLICIES:        u16 = 6;
 pub const EXT_AUTH_KEY_ID:          u16 = 7;
 pub const EXT_EXT_KEY_USAGE:        u16 = 8;
 pub const EXT_AUTH_INFO:            u16 = 9;
-pub const EXT_SUBJECT_DIRECTORY_ATTR: u16 = 24;
+// ext ID 24 (Subject Directory Attributes) removed from the registry (draft PR #408);
+// no longer emitted. Decode of the legacy int-24 form is still tolerated, see extensions.rs.
 pub const EXT_ISSUER_ALT_NAME:      u16 = 25;
 pub const EXT_NAME_CONSTRAINTS:     u16 = 26;
 pub const EXT_POLICY_MAPPINGS:      u16 = 27;
@@ -475,7 +476,8 @@ pub fn att_map(oid: &[u8]) -> Option<i64> {
 pub fn ext_map(oid: &[u8]) -> Option<u16> {
     match oid {
         [0x55, 0x1D, rest @ ..] => match rest {
-            [0x09] => Some(EXT_SUBJECT_DIRECTORY_ATTR),
+            // 2.5.29.9 (subjectDirectoryAttributes) removed from the registry (draft PR
+            // #408): no specific int ID, so it encodes via the generic raw-OID path.
             [0x0E] => Some(EXT_SUBJECT_KEY_ID),
             [0x0F] => Some(EXT_KEY_USAGE),
             [0x11] => Some(EXT_SUBJECT_ALT_NAME),
