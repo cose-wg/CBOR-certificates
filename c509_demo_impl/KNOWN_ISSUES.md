@@ -11,18 +11,23 @@ the hex comparisons transparently handle the draft-20 CBOR-array header
 against draft-01 (`--version 01`). It uses `od` (not `xxd`) so it needs no
 `vim-common`. Run `./validate_c509.sh` from this directory.
 
+Latest run (2026-09-17, 201 tests total):
+
 | Result | Count | Meaning |
 |--------|-------|---------|
-| PASS   | 117   | Tool output matches the official draft-02 vector exactly |
-| XFAIL  | 68    | Expected failure — Cat A / Cat B (see below) |
-| SKIP   | 4     | No reference data (e.g. a type-2 vector with no private key) |
+| PASS   | 123   | Tool output matches the official draft-02 vector exactly (byte-exact encode, verified signature, or byte-exact DER round-trip) |
+| XFAIL  | 70    | Expected failure — Cat A / Cat B / Cat V (see below) |
+| SKIP   | 8     | Check could not run — input absent, or algorithm not yet wired for signature verify (brainpool / RSA / SM2 / Ed448) |
 | FAIL   | 0     | No unexpected failures |
 
-The 68 XFAILs are **inherent**, not tool gaps: **Cat A** (59) type-2 natively-signed
-vectors have no X.509 DER to decode back to; the **CRT-template decode** entries (6)
-in §4 likewise have no DER equivalent (their lossless CBOR round-trip is tested in
-§9 instead); **Cat B** (3) are certs `f2` cannot sign as type-2 (an id-alg-unsigned
-X25519/X448 end-entity, or the frp256v1 curve).
+Of the 70 XFAILs, **68 are inherent** (not tool gaps) and **2 are temporary
+vector drift**: **Cat A** (59) type-2 natively-signed vectors have no X.509 DER
+to decode back to; the **CRT-template decode** entries (6) in §4 likewise have no
+DER equivalent (their lossless CBOR round-trip is tested in §9 instead); **Cat B**
+(3) are certs `f2` cannot sign as type-2 (an id-alg-unsigned X25519/X448
+end-entity, or the frp256v1 curve); **Cat V** (2) are the two brainpoolP512r1
+vectors frozen before draft PR #408 removed subjectDirectoryAttributes (see §2) —
+they clear once ≥-03 test vectors are regenerated.
 
 The former draft-20 gaps are now **implemented**:
 - **`r2` type-2 CSR** — RFC 6955 DhSig (the peer cert's `0x8B` array header is
@@ -57,6 +62,13 @@ All previously XFAIL categories that are now implemented:
 - SM2 and FRP256v1 type-3: **PASS** (Weierstrass bignum handles both)
 
 ### XFAIL breakdown
+
+> **Note on counts.** The per-category totals in this subsection (46 / 11 / 5 / 27)
+> are the historical **draft-01** vector accounting, kept for the category
+> explanations (why each class is inherent, the RustCrypto blocker, etc.). The
+> current **draft-02** default run tallies differently — Cat A 59, CRT-decode 6,
+> Cat B 3, Cat V 2 = 70 — as summarized in the table at the top. The prose below
+> is still accurate about *why* each category exists.
 
 #### Category A — Type 2 (natively signed) — 46 XFAILs (decoding test, §4)
 
@@ -283,10 +295,12 @@ blocking.
   "the DER-encoded 'values' (Section 4.1 of RFC 2986)" — the complete DER encoding
   of the `values` `SET OF` including its `31 <len>` tag/length. Our encoder matches
   (`conversion.rs:550`, `lcbor_bytes(av[1])` where `av[1]` is the raw `values` SET OF,
-  see line 466), the only fully invertible choice for a Type-3 CSR; the registered
-  `(int, Defined)` branch handles multiplicity per attribute definition. FOLLOW-UP:
-  (a) post the implementer endorsement of C on #419 (no change requested); (b) confirm
-  the `parse_c509_csr` *decode* path round-trips the generic `~oid` SET-OF form.
+  see line 466), the only fully invertible choice for a Type-3 CSR; the other CDDL
+  alternative, `(attributeType: int, attributeValue: Defined)`, covers the registered
+  attributes whose value shape is fixed by each attribute's own definition. #423 is
+  **merged** and #419 is **closed**, so no upstream comment is needed. FOLLOW-UP
+  (impl only): confirm the `parse_c509_csr` *decode* path round-trips the generic
+  `~oid` SET-OF form.
 
 - **Refresh the PR onto current master.** DONE 2026-09-17 — merged
   `origin/master` into `c509-demo-impl-draft20` (branch now 0 behind / ahead
