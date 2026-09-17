@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-15T04:28:19.706136+00:00",
+  "timestamp": "2026-09-17T04:29:54.693014+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9397,15 +9397,15 @@
       "id": "I_kwDOCpt5cM8AAAABJp61zg",
       "title": "Editorial Change: \"C509Certificate\" -> \"CBOR-encoded C509Certificate\"",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/399",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "xipki",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Email from Laurence to the cose mailing-list.\n\n\"\nHere\u2019s text from C509:\n\n      The value type of c5t is the COSE_CertHash structure defined in [RFC9360], which contains the hash value\n       of the C509 certificate calculated over C509Certificate. Thus, C509CertData contains all data necessary\n       to calculate the thumbprint c5t.\n\nLater the table says:\n\n    c5t 22 COSE_CertHash Hash of a C509Certificate\n\nI think this means that the first byte input to the hash is 0x8B, not 0x59 (0x59 is the first byte of an encoded byte string of length 256..64K) because of the mention of C509CertData.\n\nSeems like the definition should be:\n\n   The input to the hash is a CBOR-encoded C509Certificate.\n\nNo need to mention C509CertData because it\u2019s not a factor in the c5t, only in c5b and c5c.\n\nLL\n\"",
       "createdAt": "2026-07-21T20:37:23Z",
-      "updatedAt": "2026-07-23T13:37:22Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-15T11:22:54Z",
+      "closedAt": "2026-09-15T11:22:54Z",
       "comments": [
         {
           "author": "gselander",
@@ -9428,15 +9428,15 @@
       "id": "I_kwDOCpt5cM8AAAABJ5X6ww",
       "title": "Encoding of certificate serial number",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/403",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Laurence provided some comments on 3.1.2  summarised below:\n\nOLD\n> 3.1.2. certificateSerialNumber\nThe 'certificateSerialNumber' INTEGER value field is encoded as the unwrapped CBOR unsigned bignum (~biguint) 'CertificateSerialNumber'. Any leading 0x00 byte (to indicate that the number is not negative) is therefore omitted.\n\n\n1. Deterministic CBOR encoding [RFC 8949] encode biguint as int when possible, but in this draft serial numbers are always encoded as byte strings.\n\n2. The text on negative integers is confusing.\n\n3. Not clear how to convert back to X.509 format in case leading 0x00 byte was omitted.\n\n",
       "createdAt": "2026-07-23T13:06:54Z",
-      "updatedAt": "2026-07-23T13:08:08Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-15T11:23:58Z",
+      "closedAt": "2026-09-15T11:23:58Z",
       "comments": [
         {
           "author": "gselander",
@@ -9452,15 +9452,15 @@
       "id": "I_kwDOCpt5cM8AAAABKwn9Kw",
       "title": "Signature Algorithms Registry: incorrect SEQUENCE length octet in the DER column of values 23-25 (30 0B should be 30 0D)",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/405",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ligefeiBouncycastle",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The DER column of the C509 Signature Algorithms Registry (section \"C509 Signature\nAlgorithms Registry\" {#sigalg}, Figure 18 in -20) gives, for the three\nRSASSA-PKCS1-v1_5 entries:\n\n    |    23 | DER: 30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |\n    |    24 | DER: 30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |\n    |    25 | DER: 30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |\n\nThe leading `30 0B` declares a SEQUENCE of 11 content octets, but 13 content\noctets follow: the OID TLV (`06 09` + 9 octets = 11) plus the NULL parameters\nTLV (`05 00` = 2). As printed, the encodings are not valid DER. The length\noctet should be `0x0D`:\n\n    |    23 | DER: 30 0D 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |\n    |    24 | DER: 30 0D 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |\n    |    25 | DER: 30 0D 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |\n\nThree independent confirmations:\n\n1. **DER arithmetic**, as above (11 + 2 = 13 = 0x0D).\n2. **The registry itself**: the value -256 row (RSASSA-PKCS1-v1_5 with SHA-1)\n   has the identical SEQUENCE { OID, NULL } shape with a 9-octet OID body and\n   correctly reads `30 0D 06 09 2A 86 48 86 F7 0D 01 01 05 05 00`.\n3. **Real certificates**: every certificate signed with\n   sha256WithRSAEncryption -- including the document's own \"CAB Baseline RSA\n   HTTPS\" example in Appendix A -- carries\n   `30 0D 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00` as its signature\n   AlgorithmIdentifier.\n\nImpact: the DER field is mandatory in this registry and the table seeds the\nIANA registry's initial contents. An implementation that transcribes the\ncolumn literally (registry matching in C509 is defined over the exact DER)\nwill fail to int-encode any RSASSA-PKCS1-v1_5 certificate -- i.e. every RSA\nPKCS#1 v1.5 certificate falls back to the ~oid form, or fails to round-trip,\ndepending on the implementation. We found this while implementing C509 in\nBouncy Castle: rows 23-25 were the only registry entries that would not parse\nas DER when transcribed.\n\nSince the same three rows also appear in the Public Key Algorithms /\nSignature Algorithms cross-checks and in the companion test-vectors document's\nRSA examples, it may be worth verifying the corrected octets against\ndraft-ietf-cose-c509-test-vectors before the registry contents are handed to\nIANA.\n\nSuggested fix: change `30 0B` to `30 0D` in the DER field of registry values\n23, 24 and 25. Happy to open a PR if that helps.",
       "createdAt": "2026-07-30T06:48:37Z",
-      "updatedAt": "2026-08-03T07:39:58Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-15T13:09:43Z",
+      "closedAt": "2026-09-15T13:09:43Z",
       "comments": [
         {
           "author": "xipki",
@@ -9483,7 +9483,7 @@
       "labels": [],
       "body": "Section 3.2.1 says elliptic curve public keys in Weierstrass form \"**may** be\npoint-compressed\", and defines the 0xfe/0xfd octets for the case where an\nuncompressed DER key is CBOR-encoded with compression. Compression is\ntherefore optional for type 3, and one X.509 certificate has two conformant\nC509 type 3 encodings that differ in bytes and length.\n\nThis is observable between the two WG documents. For the same kind of\ncertificate:\n\n* the Appendix A examples in this document **compress**, e.g. A.1 encodes the\n  subjectPublicKey as `58 21 FE B1 21 6A ...` (33 bytes, 0xFE marker);\n* draft-ietf-cose-c509-test-vectors-02 **does not compress**, e.g. its\n  Section 3.3 (secp256r1) encodes `58 41 04 F4 13 59 6A ...` (65 bytes,\n  uncompressed SEC1 point).\n\nBoth are correct per Section 3.2.1, and both invert to the same DER, so\nneither document is wrong. Three consequences seem worth considering:\n\n1. **Thumbprints.** c5t is computed over the C509 encoding, so two\n   conformant encoders produce different c5t values for the same\n   certificate. Anything keyed on c5t -- certificate pinning, caching,\n   deduplication, revocation matching by thumbprint -- can therefore\n   disagree between implementations that are both conformant. The same\n   applies to any deployment that hashes or compares the C509 bytes.\n\n2. **Test vectors as a conformance oracle.** An implementation that\n   compresses by default reproduces the Appendix A examples byte-for-byte\n   but \"fails\" the uncompressed EC cases in the test-vectors document, and\n   vice versa. In my implementation 7 of the 22 certificate cases in\n   draft-ietf-cose-c509-test-vectors-02 only match with compression\n   switched off; the other 15, and all decode directions, match either way.\n   Readers are likely to treat those vectors as pass/fail conformance\n   material.\n\n3. **Encoders need an explicit knob.** Because the choice is not derivable\n   from the input, a library cannot pick correctly on the caller's behalf;\n   it has to expose the option and the caller has to know which peer or\n   test suite expects which form.\n\nPossible resolutions, in decreasing order of strength:\n\n* make the choice deterministic for type 3 (either always compress\n  Weierstrass keys, or always preserve the form found in the DER) -- this\n  would make the type 3 encoding of a given certificate unique, which also\n  helps the serial number discussion in #403;\n* keep it optional but say explicitly in Section 3.2.1 that a certificate\n  may have more than one conformant type 3 encoding, and note the\n  consequence for c5t and for byte-level comparison;\n* at minimum, have draft-ietf-cose-c509-test-vectors state which choice its\n  vectors make, so implementers do not read a legitimate difference as a\n  defect.\n\nHappy to supply the encodings of any of the affected cases in both forms if\nthat is useful.",
       "createdAt": "2026-07-30T06:54:32Z",
-      "updatedAt": "2026-09-14T11:54:12Z",
+      "updatedAt": "2026-09-15T11:09:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -9520,6 +9520,20 @@
           "body": "In PR #416 I tried with suggestion no. 2 above:\n\n> keep it optional but say explicitly in Section 3.2.1 that a certificate may have more than one conformant type 3 encoding, and note the consequence for c5t and for byte-level comparison;\n\n and also mentioned hash(X.509) and x5t as stable refererences. \n\nPlease comment.",
           "createdAt": "2026-09-14T11:54:12Z",
           "updatedAt": "2026-09-14T11:54:12Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@ligefeiBouncycastle We plan to merge PR #416, do you have any comments on the resolution?",
+          "createdAt": "2026-09-15T10:33:41Z",
+          "updatedAt": "2026-09-15T10:33:41Z"
+        },
+        {
+          "author": "ligefeiBouncycastle",
+          "authorAssociation": "NONE",
+          "body": "@gselander Thanks, PR #416 resolves the issue for me and I am happy for it to be merged.",
+          "createdAt": "2026-09-15T11:09:58Z",
+          "updatedAt": "2026-09-15T11:09:58Z"
         }
       ]
     },
@@ -9528,15 +9542,15 @@
       "id": "I_kwDOCpt5cM8AAAABREefVA",
       "title": "RDN Attributes Registry: incorrect DER length for unstructuredAddress (06 0A should be 06 09)",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/411",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "In the \"C509 RDN Attributes\" registry, the DER encoding for value 30 (`unstructuredAddress`, OID `1.2.840.113549.1.9.8`) has an incorrect length octet.\nCurrent text:\nDER: 06 0A 2A 86 48 86 F7 0D 01 09 08\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-13T14:02:30Z",
-      "updatedAt": "2026-09-14T14:55:36Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-15T13:09:44Z",
+      "closedAt": "2026-09-15T13:09:44Z",
       "comments": []
     },
     {
@@ -9544,15 +9558,15 @@
       "id": "I_kwDOCpt5cM8AAAABRKWDkw",
       "title": "Clarify KeyUsage bit-to-integer mapping; current wording does not match the examples",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/412",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The current KeyUsage text says that the ASN.1 BIT STRING is interpreted as an unsigned integer in network byte order. That wording does not define\u2014and does not naturally describe\u2014the mapping used by the examples, which map ASN.1 named bit n to CBOR integer bit n, contributing 2^n to the encoded value.\n\nThis should be stated explicitly so that independent implementations produce the same C509 value and can reconstruct the ASN.1 BIT STRING correctly.\n\n**Current text**\nThe Key Usage description says:\nThe 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int.\n\nSource:\nThe extension example says that digitalSignature (0), nonRepudiation (1), keyEncipherment (2), and keyAgreement (4) are encoded as 23:\n2^0 + 2^1 + 2^2 + 2^4 = 23\n\n**Why clarification is needed**\nRFC 5280 defines KeyUsage values as ASN.1 named bit positions. X.690 Section 8.6.2.2 specifies that the first bit of a BIT STRING is placed in the most significant bit of the first bit-data octet.\n\nFor named bits 0, 1, 2, and 4, the DER BIT STRING is:\n03 02 03 E8\nHere, 03 is the BIT STRING tag, 02 is the length, 03 is the number of unused bits, and E8 is the bit-data octet:\n\nASN.1 named bits asserted:       0, 1, 2, 4\nBIT STRING data octet:           11101000b = 0xE8 = 232\nSignificant bits, MSB first:     11101b = 29\nValue used by the draft example: 2^0 + 2^1 + 2^2 + 2^4 = 23\nThus, neither interpreting the complete bit-data octet as a big-endian integer nor removing the padding and interpreting the remaining bits in their ASN.1 transmission order yields 23. The value 23 results from a different transformation: ASN.1 named bit n is mapped to integer bit n.\n\nThe certificate test vector is consistent with that intended mapping. It contains:\n03 02 07 80\nwhich asserts only named bit 0 (digitalSignature), and the corresponding C509 certificate encodes KeyUsage as integer 1.\n\nThe test vector therefore supports the apparent intent, but by itself does not distinguish the named-bit mapping from an interpretation that removes the padding and reads the single remaining significant bit as integer 1. The multi-bit example above does distinguish these mappings. The normative description should define the intended mapping directly rather than relying on examples.\n\n**Interoperability impact**\nImplementations can reasonably derive different integer values from the phrase \u201cunsigned integer in network byte order.\u201d For the multi-bit example above, possible interpretations include 232 from the complete bit-data octet, 29 from the significant bits in ASN.1 order, or the intended value 23 from named-bit positions.\n\nThis affects native C509 encoding, conversion of DER X.509 certificates to type 3 C509 certificates, reconstruction of the original KeyUsage BIT STRING, and interoperability between independent implementations.\n\n**Suggested fix**\nI suggest replacing the current sentence with text that explicitly maps ASN.1 named-bit positions to CBOR integer bit positions:\n\n\u201cThe KeyUsage BIT STRING is encoded as a CBOR unsigned integer by mapping each asserted ASN.1 named bit n to bit n of the CBOR integer. The encoded value is the sum of 2^n for all asserted KeyUsage named bits n.  The unused-bits count is not encoded as part of the integer, and the bit-data octets are not directly interpreted as a network-byte-order integer.\n\nWhen reconstructing the ASN.1 BIT STRING, bit n of the CBOR integer is mapped to ASN.1 named bit n, where named bit 0 is placed in the most significant bit of the first BIT STRING bit-data octet.\u201d\n\nThis wording matches both existing examples: digitalSignature alone is encoded as 1, and named bits 0, 1, 2, and 4 are encoded as 23.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T07:49:51Z",
-      "updatedAt": "2026-09-14T14:30:11Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-15T13:12:15Z",
+      "closedAt": "2026-09-15T13:12:15Z",
       "comments": []
     },
     {
@@ -9698,11 +9712,54 @@
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
-      "body": "The CDDL for a generic certification-request attribute is:\n\nCRAttributes = [ * CRAttribute ]\nCRAttribute = (( attributeType: int, attributeValue: Defined ) //\n               ( attributeType: ~oid, attributeValue: bytes ))\nThe second alternative provides a fallback for an attribute whose OID has no registered C509 integer representation. However, the document does not define the ASN.1 boundary represented by attributeValue: bytes.\n\nA PKCS #10 Attribute contains a SET OF AttributeValue, which can contain more than one value. It is therefore unclear whether the byte string contains:\nA. one complete DER-encoded AttributeValue;\nB. the concatenated DER encodings of all AttributeValue elements; or\nC. the complete DER encoding of the values SET OF field, including\n   its identifier and length octets.\nThese interpretations are not equivalent. In particular, option A cannot represent a multi-valued attribute, while option B does not explicitly preserve the enclosing SET OF boundary. This matters for a Type 3 C509 Certification Request, which is defined as an invertible re-encoding of a DER-encoded PKCS #10 request. If encoders choose different boundaries, the original CertificationRequestInfo DER cannot be reconstructed consistently and the original proof-of-possession signature may fail to verify.\n\nCould the document specify the exact contents of this byte string and how multiple attribute values are represented?\n\nIf the intent is to preserve the complete ASN.1 values field, suggested text is:\n\n\u201cWhen attributeType is encoded as an unwrapped CBOR OID tag, the attributeValue byte string contains exactly one complete DER encoding\nof the Attribute values SET OF field, including its identifier and length octets. This encoding preserves the number, boundaries, and DER\nordering of all AttributeValue elements.\u201d\n\nRelated generic byte-string fields would also benefit from explicit boundaries. In particular, AlgorithmIdentifier.parameters and a generic RDNAttribute.attributeValue appear to require one complete DER-encoded ASN.1 value, including identifier and length octets, for reversible Type 3 encoding. By contrast, the generic Extension case is already explicit that it carries the extnValue OCTET STRING value field, so no equivalent clarification appears necessary there.\n\n\nHeng Cai from Alibaba Cloud",
+      "body": "The CDDL for a generic certification-request attribute is:\n\nCRAttributes = [ * CRAttribute ]\nCRAttribute = (( attributeType: int, attributeValue: Defined ) //\n               ( attributeType: ~oid, attributeValue: bytes ))\nThe second alternative provides a fallback for an attribute whose OID has no registered C509 integer representation. However, the document does not define the ASN.1 boundary represented by attributeValue: bytes.\n\nA PKCS #10 Attribute contains a SET OF AttributeValue, which can contain more than one value. It is therefore unclear whether the byte string contains:\nA. one complete DER-encoded AttributeValue;\nB. the concatenated DER encodings of all AttributeValue elements; or\nC. the complete DER encoding of the values SET OF field, including\n   its identifier and length octets.\nThese interpretations are not equivalent. In particular, option A cannot represent a multi-valued attribute, while option B does not explicitly preserve the enclosing SET OF boundary. This matters for a Type 3 C509 Certification Request, which is defined as an invertible re-encoding of a DER-encoded PKCS #10 request. If encoders choose different boundaries, the original CertificationRequestInfo DER cannot be reconstructed consistently and the original proof-of-possession signature may fail to verify.\n\nCould the document specify the exact contents of this byte string and how multiple attribute values are represented?\n\nIf the intent is to preserve the complete ASN.1 values field, suggested text is:\n\n\u201cWhen attributeType is encoded as an unwrapped CBOR OID tag, the attributeValue byte string contains exactly one complete DER encoding of the Attribute values SET OF field, including its identifier and length octets. This encoding preserves the number, boundaries, and DER ordering of all AttributeValue elements.\u201d\n\nRelated generic byte-string fields would also benefit from explicit boundaries. In particular, AlgorithmIdentifier.parameters and a generic RDNAttribute.attributeValue appear to require one complete DER-encoded ASN.1 value, including identifier and length octets, for reversible Type 3 encoding. By contrast, the generic Extension case is already explicit that it carries the extnValue OCTET STRING value field, so no equivalent clarification appears necessary there.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T12:25:35Z",
-      "updatedAt": "2026-09-14T14:32:06Z",
+      "updatedAt": "2026-09-16T14:58:35Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@caiheng1986 Thanks for good input! Do you have any further comments on the PRs of this issue and the other issues you raised?",
+          "createdAt": "2026-09-15T10:36:18Z",
+          "updatedAt": "2026-09-15T10:36:18Z"
+        },
+        {
+          "author": "caiheng1986",
+          "authorAssociation": "NONE",
+          "body": "> Thanks for good input! Do you have any further comments on the PRs of this issue and the other issues you raised?\n\nThanks for addressing these issues. I\u2019ve reviewed the PRs, and the proposed changes look good to me. I have no further comments at this time.",
+          "createdAt": "2026-09-15T11:55:32Z",
+          "updatedAt": "2026-09-15T11:55:32Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> I\u2019ve reviewed the PRs\n@caiheng1986 Do you mean all the following PRs?\n\n#420\n#421\n#422 \n#423 \n#424 \n#425\n#426\n",
+          "createdAt": "2026-09-15T12:34:50Z",
+          "updatedAt": "2026-09-15T12:34:50Z"
+        },
+        {
+          "author": "caiheng1986",
+          "authorAssociation": "NONE",
+          "body": "> > I\u2019ve reviewed the PRs\n> > [@caiheng1986](https://github.com/caiheng1986) Do you mean all the following PRs?\n> \n> [#420](https://github.com/cose-wg/CBOR-certificates/pull/420) [#421](https://github.com/cose-wg/CBOR-certificates/pull/421) [#422](https://github.com/cose-wg/CBOR-certificates/pull/422) [#423](https://github.com/cose-wg/CBOR-certificates/pull/423) [#424](https://github.com/cose-wg/CBOR-certificates/pull/424) [#425](https://github.com/cose-wg/CBOR-certificates/pull/425) [#426](https://github.com/cose-wg/CBOR-certificates/pull/426)\n\nFor PR #423 I noticed one possible cross-reference typo: {{extype}} refers to the C509 Extensions Registry, while this appears to refer to the C509 CR Attributes Registry, {{cratttype}}.",
+          "createdAt": "2026-09-15T14:14:06Z",
+          "updatedAt": "2026-09-15T14:14:06Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> For PR [#423](https://github.com/cose-wg/CBOR-certificates/pull/423) I noticed one possible cross-reference typo: {{extype}} refers to the C509 Extensions Registry, while this appears to refer to the C509 CR Attributes Registry, {{cratttype}}.\n\nNow the cross-ref shall be fixed.",
+          "createdAt": "2026-09-15T14:19:09Z",
+          "updatedAt": "2026-09-15T14:19:09Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Confirming #423 resolves this from an implementation standpoint. #423 specifies the\ngeneric form as \"the DER-encoded 'values' (Section 4.1 of RFC 2986)\", i.e. the\ncomplete DER encoding of the `values` `SET OF`, including its `31 <len>` tag and\nlength. That is option **C** in the issue, not a single `AttributeValue` (A) or a bare\nconcatenation (B).\n\nThis matches what the proposed reference encoder produces, and it is the choice that keeps\na Type 3 Certification Request invertible: a PKCS#10 attribute's `values` is a `SET OF` that may \nhold more than one value, so dropping the SET boundary or concatenating would lose the \nmultiplicity and the DER-canonical ordering needed to reproduce the original TBS. (While the \nother CDDL alternative, `(attributeType: int, attributeValue: Defined)`, covers the registered \nattributes, where the shape of the values is fixed by each attribute's own definition, so there \nis no generic multiplicity question there either.)",
+          "createdAt": "2026-09-16T14:58:35Z",
+          "updatedAt": "2026-09-16T14:58:35Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -17371,24 +17428,26 @@
       "id": "PR_kwDOCpt5cM70_vQH",
       "title": "Late editorial changes",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/401",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Based on Lijun's PR",
       "createdAt": "2026-07-22T17:34:18Z",
-      "updatedAt": "2026-07-23T07:06:40Z",
+      "updatedAt": "2026-09-15T11:18:06Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "late-editorials",
       "headRefOid": "1052f99ac818be1763d251336591cba1d2bd7168",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-15T11:18:06Z",
+      "mergedAt": "2026-09-15T11:18:06Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "f9603c94a4110ff4d2cc90dd045d48d49114e1f5"
+      },
       "comments": [],
       "reviews": [
         {
@@ -17397,7 +17456,7 @@
             "abbreviatedOid": "d7e3b18"
           },
           "author": "lijun-nio",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2026-07-22T17:52:01Z",
@@ -17464,24 +17523,26 @@
       "id": "PR_kwDOCpt5cM71Ys51",
       "title": "Clarifying certificate serial number encoding",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/404",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Addressing #403",
       "createdAt": "2026-07-23T13:22:46Z",
-      "updatedAt": "2026-07-24T10:34:49Z",
+      "updatedAt": "2026-09-15T11:22:02Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "certificate-serial",
       "headRefOid": "a8c0737a56eb5396545e3c9d2396043fb7bae1f8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-15T11:22:02Z",
+      "mergedAt": "2026-09-15T11:22:02Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "933576d26bea08053d500694ac47fe5c324c3f9d"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -17539,24 +17600,26 @@
       "id": "PR_kwDOCpt5cM8AAAABCBgsZA",
       "title": "Remove the extension SubjectDirectoryAttributes",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/408",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-09-03T08:23:38Z",
-      "updatedAt": "2026-09-03T08:23:39Z",
+      "updatedAt": "2026-09-15T11:30:42Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "remove-ext-subjectDirectoryAttributes",
       "headRefOid": "07dce9d201db007facac526dab7c327a529645ad",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-15T11:30:42Z",
+      "mergedAt": "2026-09-15T11:30:42Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "884961aa41ab2df815fbc81ebcbdb55ae4a15d14"
+      },
       "comments": [],
       "reviews": []
     },
@@ -17565,24 +17628,26 @@
       "id": "PR_kwDOCpt5cM8AAAABCBkJKA",
       "title": "Fixed the ASN.1 encoding of RSA AlgorithmIdentifier and unstructedAddress",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/409",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #405\r\nFix #411",
       "createdAt": "2026-09-03T08:30:28Z",
-      "updatedAt": "2026-09-14T16:54:15Z",
+      "updatedAt": "2026-09-15T13:09:42Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "fix-asn1-encoding-of-rsa-algid",
       "headRefOid": "e47ac5afbc585fb60c4f48900efc5798270b753c",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-15T13:09:42Z",
+      "mergedAt": "2026-09-15T13:09:42Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "47ee8bc70b999010bf71e054cbc58cac93ce8cae"
+      },
       "comments": [],
       "reviews": []
     },
@@ -17591,24 +17656,26 @@
       "id": "PR_kwDOCpt5cM8AAAABCC5Wyg",
       "title": "Specify the range of ID values explicitly:",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/410",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "- C509 Certificate Types\r\n- C509 Certification Request Types\r\n- C509 Private Key Types\r\n- C509 Certification Request Templates Types\r\n- C509 RDN Attributes\r\n- C509 CRAttributes\r\n- C509 Extensions\r\n- C509 Certificate Policies\r\n- C509 Policies Qualifiers\r\n- C509 Information Accesses\r\n- C509 Extended Key Usages\r\n- C509 General Names\r\n- C509 Signature Algorithms\r\n- C509 Public Key Algorithms",
       "createdAt": "2026-09-03T11:17:03Z",
-      "updatedAt": "2026-09-13T04:35:12Z",
+      "updatedAt": "2026-09-15T13:10:08Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "id-range-2",
-      "headRefOid": "7e098f7be70e1553a333cf32fe100051bf5564bf",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "0ea5cb8cfc2c137c98d930b59568e1482e69f630",
+      "closedAt": "2026-09-15T13:10:08Z",
+      "mergedAt": "2026-09-15T13:10:07Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "d8c9d8bf43c6126eef7cab2fd4d988c1497eb312"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -17619,10 +17686,38 @@
         },
         {
           "author": "lijun-nio",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "body": "Also take the mentioned example, \"other values\" here is the range [24, 32767].\r\n\r\nIn general, \"other values\" covers the ranges [-2^63, -25] (if negative values are allowed) and [24, 32767].",
           "createdAt": "2026-09-13T04:35:12Z",
           "updatedAt": "2026-09-13T04:35:12Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Forgot to follow up in this, here is my problem: The sentence 'For all other values the registration procedure is \"Expert Review\".' comes after a newly inserted text about future use. This is a problem since \"other\" refers to 'other than private use', but the newly inserted text changes the meaning of \"other\". Now \"other\" refers to other than private use *and* future use, which leaves the registration procedure for future use unspecified. Proposed fix:\r\n\r\nOLD\r\nValid values are in the interval \\[-2^63, 2^63 - 1\\]. For values in the interval \\[-24, 23\\] the registration procedure is \"IETF Review with Expert Review\". Values in the interval \\[32768, 65535\\] are reserved for Private Use, and values in the interval \\[65536, 2^63 - 1\\] are reserved for future use. For all other values the registration procedure is \"Expert Review\".\r\nNEW\r\nValid values are in the interval \\[-2^63, 2^63 - 1\\].  Values in the interval \\[65536, 2^63 - 1\\] are reserved for future use. For values in the interval \\[-24, 23\\] the registration procedure is \"IETF Review with Expert Review\". Values in the interval \\[32768, 65535\\] are reserved for Private Use, and for all other values the registration procedure is \"Expert Review\". ",
+          "createdAt": "2026-09-15T11:52:43Z",
+          "updatedAt": "2026-09-15T11:52:43Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I am working on this PR.",
+          "createdAt": "2026-09-15T11:57:56Z",
+          "updatedAt": "2026-09-15T11:57:56Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@gselander How about the changes now?",
+          "createdAt": "2026-09-15T12:26:20Z",
+          "updatedAt": "2026-09-15T12:26:20Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It looks good.\r\n",
+          "createdAt": "2026-09-15T13:07:24Z",
+          "updatedAt": "2026-09-15T13:07:35Z"
         }
       ],
       "reviews": [
@@ -17646,24 +17741,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDcPslA",
       "title": "Non-unique certificate hash for non-native C509",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/416",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gselander",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "Starting point to address #406",
       "createdAt": "2026-09-14T11:38:12Z",
-      "updatedAt": "2026-09-14T14:06:23Z",
+      "updatedAt": "2026-09-15T13:11:02Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
+      "baseRefOid": "933576d26bea08053d500694ac47fe5c324c3f9d",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "c5t-type3",
-      "headRefOid": "9e6192157a71b31282191f722b5f759489a43b51",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "285367fdc6844e1ffb20c9c16231059f45d4ae27",
+      "closedAt": "2026-09-15T13:11:02Z",
+      "mergedAt": "2026-09-15T13:11:02Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "c7847eb63d8defc15c461fee8200ec9adddb5871"
+      },
       "comments": [],
       "reviews": []
     },
@@ -17672,25 +17769,35 @@
       "id": "PR_kwDOCpt5cM8AAAABDd7ywQ",
       "title": "Editorial change: specify the mapping of keyUsage BITSTRING to int more precisely",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/420",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #412 ",
       "createdAt": "2026-09-14T14:53:04Z",
-      "updatedAt": "2026-09-14T19:01:22Z",
+      "updatedAt": "2026-09-15T13:12:14Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "ext-keyusage",
-      "headRefOid": "a1220f90dd989c7ac28db179f39211e4f1102888",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "cd7af9f26c1d61df9383b2cb21eb5fe14bd536d9",
+      "closedAt": "2026-09-15T13:12:13Z",
+      "mergedAt": "2026-09-15T13:12:13Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "074689a8c2516aedfb1d76f247f6024134f79bd2"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "LGTM. Just editorial proposal:\r\n\r\nOLD\r\n The 'KeyUsage' BIT STRING (excluding the tag, length, and leading 'unusedBits' byte, and the last unused bits) is represented by the bit sequence 'b0 b1 ... bn', where b0 is the least-significant bit (LSB) and bn is the most-significant bit (MSB). Its integer value is given by: sum(i=0..n) = bi \u00d7 2^i. \r\n\r\nNEW\r\nThe 'KeyUsage' BIT STRING (excluding the tag, length, leading 'unusedBits' byte, and trailing unused bits) is represented by the bit sequence 'b0 b1 ... bn', where b0 is the least-significant bit (LSB) and bn is the most-significant bit (MSB). Its integer value is given by: sum(i = 0..n) (b_i * 2^i).\r\n",
+          "createdAt": "2026-09-15T08:47:18Z",
+          "updatedAt": "2026-09-15T08:47:18Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -17700,24 +17807,46 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/421",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #413 ",
       "createdAt": "2026-09-14T15:11:25Z",
-      "updatedAt": "2026-09-14T15:11:26Z",
+      "updatedAt": "2026-09-15T13:20:21Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "name-attributeType",
-      "headRefOid": "9032b6e88ad6e1735fe1a58d25eb14b6697b1e4e",
+      "headRefOid": "c31710cd3fccca307976f040e42d6a30f3a96805",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good, but I would change the order of the sentences to match the \"still\", for example\r\n\r\nOLD\r\nIn CBOR, all text strings are UTF-8 encoded. In natively signed C509 certificates, the 'attributeType' int SHALL be non-negative. Text strings SHALL still adhere to any {{RFC5280}} restrictions. The value of the attributes serialNumber and countryName SHALL contain only characters from the 74-character ASCII subset permitted by PrintableString. \r\n\r\nNEW\r\nIn natively signed C509 certificates, the 'attributeType' int SHALL be non-negative. In CBOR, all text strings are UTF-8 encoded. Text strings SHALL still adhere to any {{RFC5280}} restrictions. The value of the attributes serialNumber and countryName SHALL contain only characters from the 74-character ASCII subset permitted by PrintableString. ",
+          "createdAt": "2026-09-15T08:28:58Z",
+          "updatedAt": "2026-09-15T08:28:58Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpG4Nw",
+          "commit": {
+            "abbreviatedOid": "c31710c"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Agree with GS's minor comment, otherwise approve!",
+          "createdAt": "2026-09-15T13:20:20Z",
+          "updatedAt": "2026-09-15T13:20:20Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 422,
@@ -17726,12 +17855,12 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/422",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #414 ",
       "createdAt": "2026-09-14T16:52:21Z",
-      "updatedAt": "2026-09-14T16:53:03Z",
+      "updatedAt": "2026-09-15T13:31:35Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
@@ -17743,7 +17872,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpOk-Q",
+          "commit": {
+            "abbreviatedOid": "0bb1e5c"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Approve, this seems to resolve the prose/CDDL mismatch (#414).",
+          "createdAt": "2026-09-15T13:31:35Z",
+          "updatedAt": "2026-09-15T13:31:35Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 423,
@@ -17752,24 +17895,38 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/423",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #419",
       "createdAt": "2026-09-14T18:19:59Z",
-      "updatedAt": "2026-09-14T18:20:04Z",
+      "updatedAt": "2026-09-15T14:18:20Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "CRAttributes",
-      "headRefOid": "2cc7a6f36d6518d2d44deb6031f06615c9494cf4",
+      "headRefOid": "090d109fd595b0915aa05c28ad3011144f5c8562",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpP1BQ",
+          "commit": {
+            "abbreviatedOid": "2cc7a6f"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Good gap-fill!",
+          "createdAt": "2026-09-15T13:33:21Z",
+          "updatedAt": "2026-09-15T13:33:21Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 424,
@@ -17778,24 +17935,38 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/424",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #417",
       "createdAt": "2026-09-14T18:26:26Z",
-      "updatedAt": "2026-09-14T18:26:27Z",
+      "updatedAt": "2026-09-15T13:37:02Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "null-issuer",
-      "headRefOid": "7c8d795e343d967f33cd2953322f07ffa5fcd170",
+      "headRefOid": "c20b31cffc9b74f156848385af8cdc7b371f668f",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpScqw",
+          "commit": {
+            "abbreviatedOid": "c20b31c"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Approve, 'octet-for-octet' is a precise term; an implementation compares the encoded DNs byte-for-byte.",
+          "createdAt": "2026-09-15T13:37:01Z",
+          "updatedAt": "2026-09-15T13:37:01Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 425,
@@ -17804,24 +17975,38 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/425",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #415",
       "createdAt": "2026-09-14T18:42:20Z",
-      "updatedAt": "2026-09-14T18:42:22Z",
+      "updatedAt": "2026-09-15T15:59:01Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "c509-for-c5u",
-      "headRefOid": "ccb8781cd58c056bbe79819b6db8a50f6edaf901",
+      "headRefOid": "cd943212b8cdd8c3c94e5d42ffc3deeb3bacc7ca",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpYCEw",
+          "commit": {
+            "abbreviatedOid": "ccb8781"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Clearer. Explicitly stating one entry vs. an ordered chain of \u22652 removes the earlier ambiguity.",
+          "createdAt": "2026-09-15T13:44:52Z",
+          "updatedAt": "2026-09-15T13:44:52Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 426,
@@ -17830,12 +18015,12 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/426",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #418 ",
       "createdAt": "2026-09-14T18:54:39Z",
-      "updatedAt": "2026-09-14T18:54:44Z",
+      "updatedAt": "2026-09-15T13:48:45Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
@@ -17847,7 +18032,21 @@
       "mergedBy": null,
       "mergeCommit": null,
       "comments": [],
-      "reviews": []
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpbL9Q",
+          "commit": {
+            "abbreviatedOid": "607e7f3"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Looks good to me!",
+          "createdAt": "2026-09-15T13:48:45Z",
+          "updatedAt": "2026-09-15T13:48:45Z",
+          "comments": []
+        }
+      ]
     },
     {
       "number": 427,
@@ -17856,12 +18055,12 @@
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/427",
       "state": "OPEN",
       "author": "lijun-nio",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-09-14T18:58:46Z",
-      "updatedAt": "2026-09-14T18:58:47Z",
+      "updatedAt": "2026-09-15T13:50:28Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
@@ -17872,8 +18071,78 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Good, I already added Gefei in #416.",
+          "createdAt": "2026-09-15T10:18:21Z",
+          "updatedAt": "2026-09-15T10:18:21Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNpcpgg",
+          "commit": {
+            "abbreviatedOid": "a11694b"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2026-09-15T13:50:28Z",
+          "updatedAt": "2026-09-15T13:50:28Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 428,
+      "id": "PR_kwDOCpt5cM8AAAABDoa87g",
+      "title": "Updated references:",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/428",
+      "state": "OPEN",
+      "author": "lijun-nio",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "RFC8446 -> RFC9846, I-D.ietf-lamps-macaddress-on -> RFC10031",
+      "createdAt": "2026-09-15T15:28:27Z",
+      "updatedAt": "2026-09-15T23:37:09Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "074689a8c2516aedfb1d76f247f6024134f79bd2",
+      "headRepository": "lijun-nio/CBOR-certificates",
+      "headRefName": "update-references",
+      "headRefOid": "3c1e605671db37df63bfd2636a5af109608143f5",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "This PR may be ignored if IETF Editor will take the job.",
+          "createdAt": "2026-09-15T15:29:01Z",
+          "updatedAt": "2026-09-15T15:29:01Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABNvSsDQ",
+          "commit": {
+            "abbreviatedOid": "3c1e605"
+          },
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good to me",
+          "createdAt": "2026-09-15T23:37:09Z",
+          "updatedAt": "2026-09-15T23:37:09Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
