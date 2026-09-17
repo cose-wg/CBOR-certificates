@@ -75,7 +75,7 @@ normative:
   RFC9598:
   RFC9668:
   RFC9883:
-  I-D.ietf-lamps-macaddress-on:
+  RFC10031:
 
   POSIX:
     title: IEEE Standard for Information Technology--Portable Operating System Interface (POSIX(TM)) Base Specifications, Issue 7
@@ -115,7 +115,6 @@ informative:
   RFC7468:
   RFC7925:
   RFC7932:
-  RFC8446:
   RFC8603:
   RFC8879:
   RFC9000:
@@ -124,6 +123,7 @@ informative:
   RFC9190:
   RFC9191:
   RFC9528: edhoc
+  RFC9846:
   RFC9908:
 
   CAB-TLS:
@@ -240,7 +240,7 @@ X.509 certificates are defined using Abstract Syntax Notation One (ASN.1) and en
 
 CBOR is a data format designed for small code size and small message size in systems with very limited memory, processor power, and instruction sets. CBOR builds on the JSON data model but extends it by, for example, encoding binary data directly without base64 conversion. In addition to the binary CBOR encoding, CBOR also has a diagnostic notation that is human-readable and editable, which simplifies development and debugging. The Concise Data Definition Language (CDDL) {{RFC8610}} provides a way to express structures for protocol messages and APIs that use CBOR. {{RFC8610}} also extends the diagnostic notation. For a complete specification and examples, see {{RFC8949}}, {{RFC8610}}, and {{RFC8742}}. A tool for becoming familiar with CBOR, available at the time of publication, is the CBOR playground {{CborMe}}.
 
-The C509 encoding supports a large subset of {{RFC5280}} and all certificates profiled for {{RFC7925}}, IEEE 802.1AR (DevID) {{IEEE-802.1AR}}, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, and eUICC {{GSMA-eUICC}}. C509 is designed for small code size and compact encoding of certificates in constrained environments including certificates profiled specifically for IoT deployments, but can be applied to certificate-based authentication in general, for example, using TLS {{RFC8446}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}} and EDHOC {{-edhoc}}. This document does not specify a certificate profile.
+The C509 encoding supports a large subset of {{RFC5280}} and all certificates profiled for {{RFC7925}}, IEEE 802.1AR (DevID) {{IEEE-802.1AR}}, CAB Baseline {{CAB-TLS}}, {{CAB-Code}}, RPKI {{RFC6487}}, Wi-SUN {{Wi-SUN}}, and eUICC {{GSMA-eUICC}}. C509 is designed for small code size and compact encoding of certificates in constrained environments including certificates profiled specifically for IoT deployments, but can be applied to certificate-based authentication in general, for example, using TLS {{RFC9846}}, QUIC {{RFC9000}}, DTLS {{RFC9147}}, COSE {{RFC9052}} and EDHOC {{-edhoc}}. This document does not specify a certificate profile.
 
 At the time of publication, there are several C509 implementations targeting, for example, in-vehicle and vehicle-to-cloud communication, Uncrewed Aircraft Systems (UAS), and Global Navigation Satellite System (GNSS) deployments. When used to re-encode DER-encoded X.509 certificates, the CBOR encoding can reduce the size of {{RFC7925}}-profiled certificates by more than 50%; see {{appA}}.
 
@@ -554,7 +554,7 @@ CBOR encoding of the following extension values are partly supported:
 * Subject Alternative Name (subjectAltName). If the subject alternative name only contains general names registered in {{GN}} the extension value can be CBOR encoded. extensionValue is encoded as an array of (int, any) pairs where each pair encodes a general name (see {{GN}}). If subjectAltName contains exactly one dNSName, the array and the int are omitted and extensionValue is the dNSName encoded as a CBOR text string. In addition to the general names defined in {{RFC5280}}, the otherName values with type-id id-on-hardwareModuleName, id-on-SmtpUTF8Mailbox and id-on-MACAddress have been given their own ints; such otherName values are encoded as follows:
   - For id-on-hardwareModuleName, the value is a CBOR array [ hwType: ~oid, hwSerialNum: bytes ] as specified in {{RFC4108}}.
   - For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in {{RFC9598}}.
-  - For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in {{I-D.ietf-lamps-macaddress-on}}.
+  - For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in {{RFC10031}}.
 
 ~~~~~~~~~~~ cddl
    GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
@@ -760,7 +760,7 @@ One specific case of deterministic but non-preferred serialization is Certificat
 
 ## C509 Name in TLS and DTLS
 
-In TLS and DTLS, the subject of a trusted authority may be sent to the peer to help it select the certificate chain, as in the CertificateAuthoritiesExtension in {{RFC8446}}, in the certificate_authorities field of CertificateRequest in {{RFC5246}}, or in the TrustedAuthorities in {{RFC6066}}. For such usage in TLS and DTLS, the C509 name is wrapped in a distinguished name {{X.501}} with exactly one RelativeDistinguishedName, which in turn contains exactly one AttributeTypeAndValue with the attribute C509Name. The attribute value is the raw byte string of the encoded C509 Name as specified in {{subject}}.
+In TLS and DTLS, the subject of a trusted authority may be sent to the peer to help it select the certificate chain, as in the CertificateAuthoritiesExtension in {{RFC9846}}, in the certificate_authorities field of CertificateRequest in {{RFC5246}}, or in the TrustedAuthorities in {{RFC6066}}. For such usage in TLS and DTLS, the C509 name is wrapped in a distinguished name {{X.501}} with exactly one RelativeDistinguishedName, which in turn contains exactly one AttributeTypeAndValue with the attribute C509Name. The attribute value is the raw byte string of the encoded C509 Name as specified in {{subject}}.
 
    The attribute for C509 Name has the following structure:
 
@@ -1868,7 +1868,7 @@ The initial contents of the registry are:
 | Value | General Name                                              |
 +=======+===========================================================+
 |    -3 | Name:             otherName with MACAddress               |
-|       | Comments:         TBD92(Use RFC I-D-lamps-macaddress-on)  |
+|       | Comments:         RFC 10031                               |
 |       |                   id-on-MACAddress                        |
 |       |                   (1.3.6.1.5.5.7.8.12)                    |
 |       |                   06 08 2B 06 01 05 05 07 08 0C           |
@@ -2584,7 +2584,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in {{Section 4.4.2 of RFC8446}}:
+This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in {{Section 4.4.2 of RFC9846}}:
 
 ~~~~~~~~~~~
 case C509:
