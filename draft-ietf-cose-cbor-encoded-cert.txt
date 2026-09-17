@@ -195,7 +195,7 @@ Table of Contents
    code size and compact encoding of certificates in constrained
    environments including certificates profiled specifically for IoT
    deployments, but can be applied to certificate-based authentication
-   in general, for example, using TLS [RFC8446], QUIC [RFC9000], DTLS
+   in general, for example, using TLS [RFC9846], QUIC [RFC9000], DTLS
    [RFC9147], COSE [RFC9052] and EDHOC [RFC9528].  This document does
    not specify a certificate profile.
 
@@ -741,7 +741,7 @@ Table of Contents
 
       -  For id-on-MACAddress, the value is a CBOR byte string
          containing 6 octets for EUI-48 and 8 octets for EUI-64 as
-         specified in [I-D.ietf-lamps-macaddress-on].
+         specified in [RFC10031].
 
       GeneralName = ( GeneralNameType : int, GeneralNameValue : any )
       GeneralNames = [ + GeneralName ]
@@ -1093,7 +1093,7 @@ Table of Contents
 
    In TLS and DTLS, the subject of a trusted authority may be sent to
    the peer to help it select the certificate chain, as in the
-   CertificateAuthoritiesExtension in [RFC8446], in the
+   CertificateAuthoritiesExtension in [RFC9846], in the
    certificate_authorities field of CertificateRequest in [RFC5246], or
    in the TrustedAuthorities in [RFC6066].  For such usage in TLS and
    DTLS, the C509 name is wrapped in a distinguished name [X.501] with
@@ -2512,7 +2512,7 @@ Table of Contents
    | Value | General Name                                              |
    +=======+===========================================================+
    |    -3 | Name:             otherName with MACAddress               |
-   |       | Comments:         TBD92(Use RFC I-D-lamps-macaddress-on)  |
+   |       | Comments:         RFC 10031                               |
    |       |                   id-on-MACAddress                        |
    |       |                   (1.3.6.1.5.5.7.8.12)                    |
    |       |                   06 08 2B 06 01 05 05 07 08 0C           |
@@ -3335,7 +3335,7 @@ Table of Contents
    Extensions".  The new certificate type can be used with additional
    TLS certificate compression [RFC8879].  For TLS 1.3, the C509
    certificate type is defined as a new case in the CertificateEntry
-   struct specified in Section 4.4.2 of [RFC8446]:
+   struct specified in Section 4.4.2 of [RFC9846]:
 
    case C509:
      opaque c509_data<1..2^24-1>;
@@ -3401,14 +3401,6 @@ Table of Contents
 9.  References
 
 9.1.  Normative References
-
-   [I-D.ietf-lamps-macaddress-on]
-              Housley, R., Bonnell, C., Mandel, J., Okubo, T., and M.
-              StJohns, "Media Access Control (MAC) Addresses in X.509
-              Certificates", Work in Progress, Internet-Draft, draft-
-              ietf-lamps-macaddress-on-07, 12 March 2026,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-lamps-
-              macaddress-on-07>.
 
    [POSIX]    "IEEE Standard for Information Technology--Portable
               Operating System Interface (POSIX(TM)) Base
@@ -3573,6 +3565,11 @@ Table of Contents
               a Private Key", RFC 9883, DOI 10.17487/RFC9883, October
               2025, <https://www.rfc-editor.org/rfc/rfc9883>.
 
+   [RFC10031] Housley, R., Bonnell, C., Mandel, J., Okubo, T., and M.
+              StJohns, "Media Access Control (MAC) Addresses in X.509
+              Certificates", RFC 10031, DOI 10.17487/RFC10031, August
+              2026, <https://www.rfc-editor.org/rfc/rfc10031>.
+
    [SECG]     "Elliptic Curve Cryptography, Standards for Efficient
               Cryptography Group, ver. 2", 2009,
               <https://secg.org/sec1-v2.pdf>.
@@ -3684,10 +3681,6 @@ Table of Contents
               Format", RFC 7932, DOI 10.17487/RFC7932, July 2016,
               <https://www.rfc-editor.org/rfc/rfc7932>.
 
-   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/rfc/rfc8446>.
-
    [RFC8603]  Jenkins, M. and L. Zieglar, "Commercial National Security
               Algorithm (CNSA) Suite Certificate and Certificate
               Revocation List (CRL) Profile", RFC 8603,
@@ -3728,6 +3721,10 @@ Table of Contents
               "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
               DOI 10.17487/RFC9528, March 2024,
               <https://www.rfc-editor.org/rfc/rfc9528>.
+
+   [RFC9846]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 9846, DOI 10.17487/RFC9846, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc9846>.
 
    [RFC9908]  Richardson, M., Ed., Friel, O., von Oheimb, D., and D.
               Harkins, "Clarification and Enhancement of the CSR
