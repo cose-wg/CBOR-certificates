@@ -310,7 +310,38 @@ blocking.
   removal — see §2), #422/#414 (bare `~oid` AlgorithmIdentifier — see §3),
   #423/#419 (CR-attribute `~oid` = interpretation C — see §3), #420 (keyUsage
   LSB-first — encoder already matches), #404 (serialNumber always-bstr — already
-  conforms). The rest are editorial. No newly-merged PR requires an impl change.
+  conforms). The rest are editorial. No newly-merged PR requires an impl change to
+  keep the vector suite green; one clarification (#421) is a latent, currently
+  unexercised edge case in the type-2 encoder — see the audit item below.
+
+- **Merged-PR audit (2026-09-17) — 12 PRs since merge-base #398.** Result: 11
+  fully addressed or no-impl-needed, 1 latent gap.
+  - *Doc-only / IANA-only (no impl):* #401 (late editorials), #410 (explicit ID
+    ranges), #416 (c5t non-unique-hash caveat — our tool already emits both
+    compression forms and has `-nc`), #427 (acknowledgments), #428 (reference
+    updates).
+  - *#409 (RSA AlgId + unstructuredAddress DER lengths):* documentation fix to the
+    IANA registry comment columns (`30 0B`→`30 0D`, `06 0A`→`06 09`). Our impl
+    builds both dynamically — `keys.rs:353-355` wraps `OID + ASN1_NULL` in a DER
+    SEQUENCE (yields `30 0D … 05 00`) and the OID length comes from the `oid!`
+    const (`06 09`). Correct by construction; RSA certs already round-trip
+    byte-exact in the 4710/5000 batch test. No change.
+  - *Already addressed / conformant:* #408, #422, #423, #420, #404 (see items
+    above and §2).
+  - **#421 (attributeType non-negative in natively-signed certs) — LATENT GAP.**
+    #421 clarifies that in a **type-2** (natively signed) cert the RDN
+    `attributeType` int SHALL be **non-negative** (the sign is only used in type-3
+    to preserve the X.509 string type for lossless DER round-trip). Our `f2`
+    encoder reuses the type-3 name fields verbatim (`type2.rs:47-50` copies all 11
+    fields from `parse_x509_cert_nc`), so for a general-form RDN attribute of type
+    printableString (e.g. `countryName`/`serialNumber` in a multi-attribute name)
+    it would emit a **negative** `attributeType` — contravening #421. **Not
+    exercised by any -02 vector:** the passing §7 type-2 certs use the single-CN
+    shortcut (subject encoded directly as `48 …` bstr, no `(int, SpecialText)`
+    pair), so §7 stays green. FOLLOW-UP (impl, low priority): in the type-2 path,
+    force `attributeType` non-negative and emit the value as UTF-8 for
+    printableString name attributes; add a type-2 vector with a multi-attribute
+    name (incl. `countryName`) once ≥-03 vectors exist to lock it down.
 
 - **New draft-clarification issues #417/#418/#415 (open PRs #424/#425/#426).**
   #417 (null-issuer "identical") is the only one with impl relevance: PR #424
