@@ -844,7 +844,12 @@ Note that a key agreement key pair may be used with a signature algorithm in a c
 
 ## Certification Request Attributes
 
-The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no GeneralAttribute SHALL be encoded as an empty CBOR array.
+The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no elements SHALL be encoded as an empty CBOR array.
+
+Each 'attributeType' is encoded either as a CBOR int (see {{cratttype}}) or as an unwrapped CBOR OID tag {{RFC9090}}.
+
+- If 'attributeType' is encoded as a CBOR int, it is followed by a CBOR item of any type other than undefined. The specific type of the item is determined by 'attributeType'.
+- If 'attributeType' is encoded as an unwrapped CBOR OID tag, it is followed by the DER-encoded 'values' (Section 4.1 of {{RFC2986}}) encoded as a CBOR byte string.
 
 The remainder of this section specifies CBOR-encoded attributes for Certification Requests.
 
