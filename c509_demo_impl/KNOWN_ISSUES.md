@@ -288,12 +288,24 @@ blocking.
   (a) post the implementer endorsement of C on #419 (no change requested); (b) confirm
   the `parse_c509_csr` *decode* path round-trips the generic `~oid` SET-OF form.
 
-- **Refresh the PR onto current master.** Branch `c509-demo-impl-draft20` is
-  ~14 commits behind `origin/master`. The impl-relevant deltas are already
-  handled: #408 (subjectDirectoryAttributes removal — reconciled, see §2) and
-  #404 (serialNumber always-bstr — our encoder already conforms). The rest are
-  editorial. FOLLOW-UP: rebase/merge and re-run `validate_c509.sh` before
-  re-requesting review.
+- **Refresh the PR onto current master.** DONE 2026-09-17 — merged
+  `origin/master` into `c509-demo-impl-draft20` (branch now 0 behind / ahead
+  only by our commits). The merge is conflict-free: our commits touch only
+  `c509_demo_impl/`, the 45 upstream commits touch only the draft `.md`. All
+  impl-relevant draft deltas were already handled: #408 (subjectDirectoryAttributes
+  removal — see §2), #422/#414 (bare `~oid` AlgorithmIdentifier — see §3),
+  #423/#419 (CR-attribute `~oid` = interpretation C — see §3), #420 (keyUsage
+  LSB-first — encoder already matches), #404 (serialNumber always-bstr — already
+  conforms). The rest are editorial. No newly-merged PR requires an impl change.
+
+- **New draft-clarification issues #417/#418/#415 (open PRs #424/#425/#426).**
+  #417 (null-issuer "identical") is the only one with impl relevance: PR #424
+  resolves it as octet-for-octet self-issued. Our encoder already conforms —
+  `conversion.rs:861` nulls the issuer via `issuer == subject`, a byte-for-byte
+  comparison of the raw DER Name TLVs, and decode copies the subject Name back
+  (`conversion.rs:129`), so the round-trip is exact. No change needed. #418
+  (TLSA selector wrapper) and #415 (`application/cose-c509+cbor` sequence-vs-array)
+  are TLS/COSE bundling concerns our tool does not emit; no impl action.
 
 ### Previously resolved issues
 
