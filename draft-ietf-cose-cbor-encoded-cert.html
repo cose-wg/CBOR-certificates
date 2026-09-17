@@ -2240,8 +2240,17 @@ DhSigStaticType = [
         <h3 id="name-certification-request-attri">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-certification-request-attri" class="section-name selfRef">Certification Request Attributes</a>
         </h3>
-<p id="section-4.3-1">The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no GeneralAttribute <span class="bcp14">SHALL</span> be encoded as an empty CBOR array.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">The remainder of this section specifies CBOR-encoded attributes for Certification Requests.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no elements <span class="bcp14">SHALL</span> be encoded as an empty CBOR array.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">Each 'attributeType' is encoded either as a CBOR int (see <a href="#cratttype" class="auto internal xref">Section 8.7</a>) or as an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3-3.1">
+            <p id="section-4.3-3.1.1">If 'attributeType' is encoded as a CBOR int, it is followed by a CBOR item of any type other than undefined. The specific type of the item is determined by 'attributeType'.<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-3.2">
+            <p id="section-4.3-3.2.1">If 'attributeType' is encoded as an unwrapped CBOR OID tag, it is followed by the DER-encoded 'values' (Section 4.1 of <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>) encoded as a CBOR byte string.<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.3-4">The remainder of this section specifies CBOR-encoded attributes for Certification Requests.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <div id="extension-request">
 <section id="section-4.3.1">
           <h4 id="name-extension-request">
