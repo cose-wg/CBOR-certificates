@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 19 March 2027                             University of Glasgow
+Expires: 21 March 2027                             University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                 NIO Inc.
-                                                       15 September 2026
+                                                       17 September 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 19 March 2027.
+   This Internet-Draft will expire on 21 March 2027.
 
 Copyright Notice
 
@@ -392,7 +392,7 @@ Table of Contents
    array consisting of RDNAttribute elements.  RelativeDistinguishedName
    with more than one AttributeTypeAndValue is not supported.  Each
    RDNAttribute is CBOR-encoded as (type, value), either as an (int,
-   SpecialText) pair or as a (~oid, bytes) tuple.
+   SpecialText) pair or as a (~oid, bytes) pair.
 
    In the former case, the absolute value of the int encodes the
    attribute type (see Figure 10) and the sign is used to represent the
@@ -400,9 +400,9 @@ Table of Contents
    utf8String, negative for printableString.  Attribute values which are
    always of type IA5String are unambiguously represented using a non-
    negative int.  Examples include emailAddress and domainComponent (see
-   [RFC5280]).  In CBOR, all text strings are UTF-8 encoded and in
-   natively signed C509 certificates all CBOR ints SHALL be non-
-   negative.  Text strings SHALL still adhere to any [RFC5280]
+   [RFC5280]).  In natively signed C509 certificates, the
+   'attributeType' int SHALL be non-negative.  In CBOR, all text strings
+   are UTF-8 encoded.  Text strings SHALL still adhere to any [RFC5280]
    restrictions.  The value of the attributes serialNumber and
    countryName SHALL contain only characters from the 74-character ASCII
    subset permitted by PrintableString.  Additionally, the value of the
