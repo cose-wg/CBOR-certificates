@@ -279,16 +279,14 @@ blocking.
     registered-algorithm vector exercises the fallback, so no vector regressed).
 
 - **CR Attribute generic `~oid` attributeType (upstream issue #419 / PR #423).**
-  #423 says a CR-attribute `attributeType` encoded as `~oid` is followed by the
-  DER-encoded `values` as a CBOR byte string. Our encoder (`conversion.rs:550`,
-  `lcbor_bytes(av[1])` where `av[1]` is the raw `values` SET OF *including* its
-  `31 <len>` tag/length — see line 466) implements **interpretation C** (whole
-  SET OF), the only fully invertible choice for a Type-3 CSR. #423's "values"
-  wording is consistent with C but the issue-#419 A/B/C question was never
-  explicitly resolved, and #423 does not address multi-value handling for the
-  registered `(int, Defined)` alternative. FOLLOW-UP: (a) post the "we implement
-  C" data point on #419 and suggest making it explicit; (b) confirm the
-  `parse_c509_csr` *decode* path round-trips the generic `~oid` SET-OF form.
+  #423 resolves #419 as **interpretation C**: it specifies the generic form as
+  "the DER-encoded 'values' (Section 4.1 of RFC 2986)" — the complete DER encoding
+  of the `values` `SET OF` including its `31 <len>` tag/length. Our encoder matches
+  (`conversion.rs:550`, `lcbor_bytes(av[1])` where `av[1]` is the raw `values` SET OF,
+  see line 466), the only fully invertible choice for a Type-3 CSR; the registered
+  `(int, Defined)` branch handles multiplicity per attribute definition. FOLLOW-UP:
+  (a) post the implementer endorsement of C on #419 (no change requested); (b) confirm
+  the `parse_c509_csr` *decode* path round-trips the generic `~oid` SET-OF form.
 
 - **Refresh the PR onto current master.** Branch `c509-demo-impl-draft20` is
   ~14 commits behind `origin/master`. The impl-relevant deltas are already
