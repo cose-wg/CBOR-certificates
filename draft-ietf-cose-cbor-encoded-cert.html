@@ -16,22 +16,22 @@
        Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER-encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is computed over the CBOR encoding instead of the DER encoding, thereby avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 while providing comparable size reduction. 
        This document also specifies CBOR-encoded data structures for certification requests and certification request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698 by extending the TLSA selectors registry to include C509 certificates. 
     " name="description">
-<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="xml2rfc 3.34.1" name="generator">
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.0
+  xml2rfc 3.34.1
     Python 3.14.7
-    ConfigArgParse 1.7.5
+    ConfigArgParse 1.7.7
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.7
+    platformdirs 4.11.10
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.3
+    wcwidth 0.8.4
 -->
 <link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1051,7 +1051,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 21 March 2027</td>
+<td class="center">Expires 23 March 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-17" class="published">17 September 2026</time>
+<time datetime="2026-09-19" class="published">19 September 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-21">21 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-03-23">23 March 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 21 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 23 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1519,7 +1519,7 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
           </ul>
 <p id="section-3.1.4-5">The final encoding of the attribute value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-7">If and only if the 'issuer' field is octet-for-octet identical to the 'subject' field, as in the case of a self-issued certificate, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="validity">
