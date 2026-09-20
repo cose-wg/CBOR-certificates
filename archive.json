@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-17T04:29:54.693014+00:00",
+  "timestamp": "2026-09-20T04:30:26.315931+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9476,15 +9476,15 @@
       "id": "I_kwDOCpt5cM8AAAABKwqgMA",
       "title": "Optional point compression gives one certificate two conformant type 3 encodings (affects c5t and the test vectors)",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/406",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "ligefeiBouncycastle",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Section 3.2.1 says elliptic curve public keys in Weierstrass form \"**may** be\npoint-compressed\", and defines the 0xfe/0xfd octets for the case where an\nuncompressed DER key is CBOR-encoded with compression. Compression is\ntherefore optional for type 3, and one X.509 certificate has two conformant\nC509 type 3 encodings that differ in bytes and length.\n\nThis is observable between the two WG documents. For the same kind of\ncertificate:\n\n* the Appendix A examples in this document **compress**, e.g. A.1 encodes the\n  subjectPublicKey as `58 21 FE B1 21 6A ...` (33 bytes, 0xFE marker);\n* draft-ietf-cose-c509-test-vectors-02 **does not compress**, e.g. its\n  Section 3.3 (secp256r1) encodes `58 41 04 F4 13 59 6A ...` (65 bytes,\n  uncompressed SEC1 point).\n\nBoth are correct per Section 3.2.1, and both invert to the same DER, so\nneither document is wrong. Three consequences seem worth considering:\n\n1. **Thumbprints.** c5t is computed over the C509 encoding, so two\n   conformant encoders produce different c5t values for the same\n   certificate. Anything keyed on c5t -- certificate pinning, caching,\n   deduplication, revocation matching by thumbprint -- can therefore\n   disagree between implementations that are both conformant. The same\n   applies to any deployment that hashes or compares the C509 bytes.\n\n2. **Test vectors as a conformance oracle.** An implementation that\n   compresses by default reproduces the Appendix A examples byte-for-byte\n   but \"fails\" the uncompressed EC cases in the test-vectors document, and\n   vice versa. In my implementation 7 of the 22 certificate cases in\n   draft-ietf-cose-c509-test-vectors-02 only match with compression\n   switched off; the other 15, and all decode directions, match either way.\n   Readers are likely to treat those vectors as pass/fail conformance\n   material.\n\n3. **Encoders need an explicit knob.** Because the choice is not derivable\n   from the input, a library cannot pick correctly on the caller's behalf;\n   it has to expose the option and the caller has to know which peer or\n   test suite expects which form.\n\nPossible resolutions, in decreasing order of strength:\n\n* make the choice deterministic for type 3 (either always compress\n  Weierstrass keys, or always preserve the form found in the DER) -- this\n  would make the type 3 encoding of a given certificate unique, which also\n  helps the serial number discussion in #403;\n* keep it optional but say explicitly in Section 3.2.1 that a certificate\n  may have more than one conformant type 3 encoding, and note the\n  consequence for c5t and for byte-level comparison;\n* at minimum, have draft-ietf-cose-c509-test-vectors state which choice its\n  vectors make, so implementers do not read a legitimate difference as a\n  defect.\n\nHappy to supply the encodings of any of the affected cases in both forms if\nthat is useful.",
       "createdAt": "2026-07-30T06:54:32Z",
-      "updatedAt": "2026-09-15T11:09:58Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-17T08:09:51Z",
+      "closedAt": "2026-09-17T08:09:51Z",
       "comments": [
         {
           "author": "xipki",
@@ -9574,15 +9574,15 @@
       "id": "I_kwDOCpt5cM8AAAABRKzGPg",
       "title": "Clarify the scope of the non-negative CBOR integer requirement",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/413",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Section 3.1.4 states:\n\nIn natively signed C509 certificates all CBOR ints SHALL be non-negative.\n\nIn context, this requirement appears to apply only to integer attributeType values in the issuer and subject Names. However, \u201call CBOR ints\u201d reads as certificate-wide and is inconsistent with negative integers defined elsewhere, such as critical extensionID values and the BasicConstraints values -1 and -2.\n\nSuggested replacement:\nIn natively signed C509 certificates, an RDNAttribute encoded using the (attributeType: int, attributeValue: SpecialText) alternative SHALL use a non-negative attributeType. This restriction does not apply to integer-valued fields outside the issuer and subject Names.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T08:40:17Z",
-      "updatedAt": "2026-09-14T14:28:35Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-17T08:04:15Z",
+      "closedAt": "2026-09-17T08:04:15Z",
       "comments": [
         {
           "author": "gselander",
@@ -9598,15 +9598,15 @@
       "id": "I_kwDOCpt5cM8AAAABRLMYdw",
       "title": "AlgorithmIdentifier CDDL and prose disagree when parameters are absent",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/414",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The AlgorithmIdentifier CDDL conflicts with the descriptions in Sections 3.1.3 (signature) and 3.1.7 (subjectPublicKeyInfo) when the ASN.1 parameters field is absent.\n\nThe CDDL defines:\nAlgorithmIdentifier = int / ~oid /\n                      [ algorithm: ~oid, parameters: bytes ]\n\nThis allows the following three forms:\nint\n~oid\n[~oid, bytes]\n\nIn contrast, Sections 3.1.3 signature   and 3.1.7 subjectPublicKeyInfo   describe the non-integer form as:\n\nan array with an unwrapped CBOR OID tag optionally followed by the parameters encoded as a CBOR byte string\n\nThis wording appears to allow:\n[~oid]\n[~oid, bytes]\n\nTherefore, for an algorithm that has no registered C509 integer value and whose parameters field is absent, it is unclear whether the required encoding is the bare OID form ~oid, as specified by the CDDL, or the single-element array [~oid], as implied by the prose.\n\nThe single-element array is not accepted by the current CDDL. Implementations following different parts of the specification may consequently produce or accept different encodings.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T09:22:43Z",
-      "updatedAt": "2026-09-14T15:10:29Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-17T08:08:23Z",
+      "closedAt": "2026-09-17T08:08:23Z",
       "comments": [
         {
           "author": "gselander",
@@ -9660,15 +9660,15 @@
       "id": "I_kwDOCpt5cM8AAAABRMnO0w",
       "title": "Clarify the meaning of \u201cidentical\u201d when encoding issuer as null",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/417",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Section 3.1.4 states:\n\nIf the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field MUST be encoded as the CBOR simple value null (0xf6).\n\nThe intended meaning appears to be that null is a compact representation of an issuer equal to the subject. However, the comparison implied by \u201cidentical\u201d is not explicitly defined. An implementation could compare:\n\nthe complete DER encodings of the two Name values;\nthe resulting C509 Name data items; or\nthe names using X.509 name-matching semantics.\nThese comparisons are not necessarily equivalent. For example, issuer and subject may contain the same commonName characters while one is encoded as PrintableString and the other as UTF8String. They may be treated as equivalent names, but their DER encodings differ because the ASN.1 string tags differ. If a Type 3 encoder treats them as identical and replaces issuer with null, a decoder copying the subject encoding into issuer cannot reconstruct the original TBSCertificate DER, so verification of the original signature can fail.\n\nThe current sentence also specifies only that an identical issuer MUST be encoded as null; it does not explicitly state that null MUST be used only in that case or that a decoder MUST interpret null as the subject value. Although this behavior can be inferred, stating it directly would make the encoding and decoding requirements unambiguous.\n\n**Suggested clarification**\n\u201cFor c509CertificateType = 3, the issuer field MUST be encoded as null if and only if the complete DER encoding of the issuer Name, including\nits identifier and length octets, is octet-for-octet identical to the complete DER encoding of the subject Name. When reconstructing the X.509 certificate, a decoder encountering a null issuer field MUST use the complete DER encoding of the subject Name as the issuer Name.\n\nFor c509CertificateType = 2, a null issuer field means that issuer and subject represent the same C509 Name data item. A decoder MUST treat\nthe issuer as having the subject Name value.\u201d\n\nIt may also be useful to clarify that issuer == subject indicates a self-issued certificate; it does not by itself prove that the certificate is self-signed or establish it as a trust anchor.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T12:02:56Z",
-      "updatedAt": "2026-09-14T14:36:58Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-19T14:25:06Z",
+      "closedAt": "2026-09-19T14:25:06Z",
       "comments": [
         {
           "author": "gselander",
@@ -9707,15 +9707,15 @@
       "id": "I_kwDOCpt5cM8AAAABRM1J6g",
       "title": "Clarify the DER contents and multi-value handling of generic CRAttribute bytes",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/419",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The CDDL for a generic certification-request attribute is:\n\nCRAttributes = [ * CRAttribute ]\nCRAttribute = (( attributeType: int, attributeValue: Defined ) //\n               ( attributeType: ~oid, attributeValue: bytes ))\nThe second alternative provides a fallback for an attribute whose OID has no registered C509 integer representation. However, the document does not define the ASN.1 boundary represented by attributeValue: bytes.\n\nA PKCS #10 Attribute contains a SET OF AttributeValue, which can contain more than one value. It is therefore unclear whether the byte string contains:\nA. one complete DER-encoded AttributeValue;\nB. the concatenated DER encodings of all AttributeValue elements; or\nC. the complete DER encoding of the values SET OF field, including\n   its identifier and length octets.\nThese interpretations are not equivalent. In particular, option A cannot represent a multi-valued attribute, while option B does not explicitly preserve the enclosing SET OF boundary. This matters for a Type 3 C509 Certification Request, which is defined as an invertible re-encoding of a DER-encoded PKCS #10 request. If encoders choose different boundaries, the original CertificationRequestInfo DER cannot be reconstructed consistently and the original proof-of-possession signature may fail to verify.\n\nCould the document specify the exact contents of this byte string and how multiple attribute values are represented?\n\nIf the intent is to preserve the complete ASN.1 values field, suggested text is:\n\n\u201cWhen attributeType is encoded as an unwrapped CBOR OID tag, the attributeValue byte string contains exactly one complete DER encoding of the Attribute values SET OF field, including its identifier and length octets. This encoding preserves the number, boundaries, and DER ordering of all AttributeValue elements.\u201d\n\nRelated generic byte-string fields would also benefit from explicit boundaries. In particular, AlgorithmIdentifier.parameters and a generic RDNAttribute.attributeValue appear to require one complete DER-encoded ASN.1 value, including identifier and length octets, for reversible Type 3 encoding. By contrast, the generic Extension case is already explicit that it carries the extnValue OCTET STRING value field, so no equivalent clarification appears necessary there.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T12:25:35Z",
-      "updatedAt": "2026-09-16T14:58:35Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-17T08:10:30Z",
+      "closedAt": "2026-09-17T08:10:30Z",
       "comments": [
         {
           "author": "gselander",
@@ -17805,24 +17805,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDeG_pg",
       "title": "Specify the attributeType explicitly.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/421",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #413 ",
       "createdAt": "2026-09-14T15:11:25Z",
-      "updatedAt": "2026-09-15T13:20:21Z",
+      "updatedAt": "2026-09-17T08:04:15Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
+      "baseRefOid": "074689a8c2516aedfb1d76f247f6024134f79bd2",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "name-attributeType",
-      "headRefOid": "c31710cd3fccca307976f040e42d6a30f3a96805",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "567ac8dc4b45567e39add20097477b4f417e2e19",
+      "closedAt": "2026-09-17T08:04:14Z",
+      "mergedAt": "2026-09-17T08:04:14Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "00bf2869ab8ec775105a2945218e57d446f743a1"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -17853,24 +17855,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDe9E1g",
       "title": "Align the text with CDDL definition of AlgorithmIdentifier.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/422",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #414 ",
       "createdAt": "2026-09-14T16:52:21Z",
-      "updatedAt": "2026-09-15T13:31:35Z",
+      "updatedAt": "2026-09-17T08:08:22Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "encoding-algorithm-identifier",
       "headRefOid": "0bb1e5cf232e6c93e9fa5247615415aef5520467",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-17T08:08:22Z",
+      "mergedAt": "2026-09-17T08:08:22Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "5d8ae4c3f5e053c99be4aae9237c4b07f2a3b929"
+      },
       "comments": [],
       "reviews": [
         {
@@ -17893,24 +17897,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDfoHTA",
       "title": "Specify the encoding of CRAttribute with attributeType of type ~oid explicitly",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/423",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #419",
       "createdAt": "2026-09-14T18:19:59Z",
-      "updatedAt": "2026-09-15T14:18:20Z",
+      "updatedAt": "2026-09-17T08:10:29Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "CRAttributes",
       "headRefOid": "090d109fd595b0915aa05c28ad3011144f5c8562",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-17T08:10:29Z",
+      "mergedAt": "2026-09-17T08:10:29Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "a6bf3441f7d3673aab5798bea98474e52d3d77f2"
+      },
       "comments": [],
       "reviews": [
         {
@@ -17933,25 +17939,35 @@
       "id": "PR_kwDOCpt5cM8AAAABDfrLzw",
       "title": "Describe the condition for null-issuer precisely.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/424",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #417",
       "createdAt": "2026-09-14T18:26:26Z",
-      "updatedAt": "2026-09-15T13:37:02Z",
+      "updatedAt": "2026-09-19T14:25:05Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "null-issuer",
-      "headRefOid": "c20b31cffc9b74f156848385af8cdc7b371f668f",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "headRefOid": "c5f6a3c92ec536483cd52665650c6ddeced9c5ec",
+      "closedAt": "2026-09-19T14:25:05Z",
+      "mergedAt": "2026-09-19T14:25:05Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "89f669a88b3e1dac8af6c8029d82f1d81315facb"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Since there were no objections, I merge this now.",
+          "createdAt": "2026-09-19T14:24:58Z",
+          "updatedAt": "2026-09-19T14:24:58Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM8AAAABNpScqw",
@@ -17980,18 +17996,47 @@
       "labels": [],
       "body": "Fix #415",
       "createdAt": "2026-09-14T18:42:20Z",
-      "updatedAt": "2026-09-15T15:59:01Z",
+      "updatedAt": "2026-09-19T14:24:22Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
+      "baseRefOid": "a6bf3441f7d3673aab5798bea98474e52d3d77f2",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "c509-for-c5u",
-      "headRefOid": "cd943212b8cdd8c3c94e5d42ffc3deeb3bacc7ca",
+      "headRefOid": "8c022b32492b3d544d525f0a2dcbc22f65586b18",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I changed the text according to section 8.18.2. With that definition, the media type without \"usage\" is general COSE_C509, whereas the \"usage\" = \"chain\" restricted to the second case of the CDDL.\r\n\r\n@lijun-nio @highlunder Please comment.\r\n",
+          "createdAt": "2026-09-17T09:10:54Z",
+          "updatedAt": "2026-09-17T09:11:07Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The application needs to get the target certificate. But if there are more than 1 certificate under 'application/cose-x509', the application cannot determine which one is the target certificate. Thus I prefer to limit the size to 1, as RFC 9030 does.\r\n\r\nSecondly, I prefer to allow 1 certificate if usage=chain, since it forms also the special case of certificate chain, and is not explicitly forbidden in RFC 9030.\r\n\r\n\r\nThe text in RFC9360 (COSE) is:\r\n```\r\nWhen the application/cose-x509 media type is used, the data is a CBOR \r\nsequence of single-entry COSE_X509 structures (encoding \"bstr\"). If the\r\nparameter \"usage\" is set to \"chain\", this sequence indicates a certificate \r\nchain.\r\n```\r\n",
+          "createdAt": "2026-09-17T09:34:32Z",
+          "updatedAt": "2026-09-17T09:34:50Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Once we all agree on the final changes, I will chose this PR and submit a new PR to not spam the commits.",
+          "createdAt": "2026-09-17T09:42:36Z",
+          "updatedAt": "2026-09-17T09:42:36Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@lijun-nio Then we would need to change 8.18.2 as well. Are you thinking of something like this:\r\n\r\n> When the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure. If \"usage\" is not present, the data is a single certificate (encoding \"bytes\"). If the parameter \"usage\" is set to \"chain\", this indicates a certificate chain (encoding \"array\").\r\n",
+          "createdAt": "2026-09-19T14:24:22Z",
+          "updatedAt": "2026-09-19T14:24:22Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM8AAAABNpYCEw",
@@ -18020,7 +18065,7 @@
       "labels": [],
       "body": "Fix #418 ",
       "createdAt": "2026-09-14T18:54:39Z",
-      "updatedAt": "2026-09-15T13:48:45Z",
+      "updatedAt": "2026-09-19T14:53:05Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
@@ -18031,7 +18076,43 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@BrianSipos Could you please check this? Thanks!",
+          "createdAt": "2026-09-17T08:40:58Z",
+          "updatedAt": "2026-09-17T08:40:58Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> Does this registration want to be any more specific about constraints on the contents of the c509?\r\n\r\nAny more details?",
+          "createdAt": "2026-09-17T15:52:22Z",
+          "updatedAt": "2026-09-17T15:52:22Z"
+        },
+        {
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> > Does this registration want to be any more specific about constraints on the contents of the c509?\n> \n> Any more details?\n\nNo, I don't know that there need to be. Just asking in case the expected use is only one c509 type or any other limit.",
+          "createdAt": "2026-09-17T18:17:17Z",
+          "updatedAt": "2026-09-17T18:17:17Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "After reading RFC 6698 carefully, this change is needed. Otherwise, as in the version -20, since the application receives the CBOR-encoded C509Certificate, but C509CertData is required in TLSA, thus the application needs to wrap the C509Certificate to build a C509CertData.",
+          "createdAt": "2026-09-17T19:14:43Z",
+          "updatedAt": "2026-09-17T19:14:43Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> After reading RFC 6698 carefully, this change is needed. Otherwise, as in the version -20, since the application receives the CBOR-encoded C509Certificate, but C509CertData is required in TLSA, thus the application needs to wrap the C509Certificate to build a C509CertData.\r\n\r\nI agree using a plain certificate is analogous to X.509, but I don't follow the reasoning above. If C509CertData is required in TLSA, why then are we replacing C509 certificate data with C509 certificate?",
+          "createdAt": "2026-09-19T14:53:05Z",
+          "updatedAt": "2026-09-19T14:53:05Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOCpt5cM8AAAABNpbL9Q",
@@ -18045,6 +18126,19 @@
           "createdAt": "2026-09-15T13:48:45Z",
           "updatedAt": "2026-09-15T13:48:45Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOCpt5cM8AAAABODg19A",
+          "commit": {
+            "abbreviatedOid": "607e7f3"
+          },
+          "author": "BrianSipos",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "This change seems okay. The PKIX selector is also a single certificate.\n\nDoes this registration want to be any more specific about constraints on the contents of the c509?",
+          "createdAt": "2026-09-17T15:44:26Z",
+          "updatedAt": "2026-09-17T15:44:26Z",
+          "comments": []
         }
       ]
     },
@@ -18053,24 +18147,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDf6ufQ",
       "title": "Add Gefei and Heng to Thanks.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/427",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-09-14T18:58:46Z",
-      "updatedAt": "2026-09-15T13:50:28Z",
+      "updatedAt": "2026-09-17T08:38:50Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
-      "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
+      "baseRefOid": "a6bf3441f7d3673aab5798bea98474e52d3d77f2",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "thanks-gefei-heng",
-      "headRefOid": "a11694b1a7b8ae5d965abe8a33c4be61d30c3dc4",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "headRefOid": "9a5235e8dff416cff763ec344ded4bc63ac43de7",
+      "closedAt": "2026-09-17T08:38:50Z",
+      "mergedAt": "2026-09-17T08:38:50Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "1e41fd1e60c6d1b62bbb1e86280997ea7ce26007"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -18101,24 +18197,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDoa87g",
       "title": "Updated references:",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/428",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "RFC8446 -> RFC9846, I-D.ietf-lamps-macaddress-on -> RFC10031",
       "createdAt": "2026-09-15T15:28:27Z",
-      "updatedAt": "2026-09-15T23:37:09Z",
+      "updatedAt": "2026-09-17T08:38:13Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "074689a8c2516aedfb1d76f247f6024134f79bd2",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "update-references",
       "headRefOid": "3c1e605671db37df63bfd2636a5af109608143f5",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-17T08:38:13Z",
+      "mergedAt": "2026-09-17T08:38:13Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "1d55772d2629866200ea72564256ed6a7b4478bc"
+      },
       "comments": [
         {
           "author": "lijun-nio",
