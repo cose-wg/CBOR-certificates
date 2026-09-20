@@ -363,7 +363,7 @@ The final encoding of the attribute value may therefore be text, bytes, or tag, 
 
 In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types.
 
-If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field MUST be encoded as the CBOR simple value null (0xf6).
+If and only if the 'issuer' field is octet-for-octet identical to the 'subject' field, as in the case of a self-issued certificate, then the 'issuer' field MUST be encoded as the CBOR simple value null (0xf6).
 
 ### validity
 
