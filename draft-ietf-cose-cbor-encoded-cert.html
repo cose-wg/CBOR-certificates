@@ -1982,13 +1982,10 @@ C509CertData = bytes .cbor C509Certificate
             <p id="section-3.4-8.1.1">application/cose-c509-cert+cbor (<a href="#cose-c509-cert" class="auto internal xref">Section 8.18.1</a>)<a href="#section-3.4-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-8.2">
-            <p id="section-3.4-8.2.1">application/cose-c509+cbor (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.4-8.3">
-            <p id="section-3.4-8.3.1">application/cose-c509+cbor; usage=chain (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-8.2.1">application/cose-c509+cbor; usage=chain (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.4-9">When the application/cose-c509+cbor media type is used, the data is a CBOR-encoded <code>COSE_X509</code> with only one <code>C509CertData</code> element.  If the parameter "usage" is set to "chain", this data is a CBOR-encoded <code>COSE_X509</code> with at least one <code>C509CertData</code> element.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
+<p id="section-3.4-9">When the <code>application/cose-c509-cert+cbor</code> media type is used, the data is a <code>C509Certificate</code> structure containing a single certificate. When <code>application/cose-c509+cbor; usage=chain</code> media type is used, the data is a <code>COSE_C509</code> structure with at least two certificates.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
 <p id="section-3.4-10">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without appropriate authorization.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
 <span id="name-c509-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">

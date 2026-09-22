@@ -923,14 +923,12 @@ Table of Contents
 
    *  application/cose-c509-cert+cbor (Section 8.18.1)
 
-   *  application/cose-c509+cbor (Section 8.18.2)
-
    *  application/cose-c509+cbor; usage=chain (Section 8.18.2)
 
-   When the application/cose-c509+cbor media type is used, the data is a
-   CBOR-encoded COSE_X509 with only one C509CertData element.  If the
-   parameter "usage" is set to "chain", this data is a CBOR-encoded
-   COSE_X509 with at least one C509CertData element.
+   When the application/cose-c509-cert+cbor media type is used, the data
+   is a C509Certificate structure containing a single certificate.  When
+   application/cose-c509+cbor; usage=chain media type is used, the data
+   is a COSE_C509 structure with at least two certificates.
 
    As the contents of c5b, c5c, c5t, and c5u are untrusted input, the
    header parameters can be in either the protected or unprotected
