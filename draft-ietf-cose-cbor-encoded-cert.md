@@ -2582,7 +2582,7 @@ IANA is requested to add entries for "application/cbor" to the "CoAP Content-For
 
 ## TLS Certificate Types Registry {#tls}
 
-This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in {{Section 4.4.2 of RFC9846}}:
+This document registers the following entry in the "TLS Certificate Types" registry in the registry group "Transport Layer Security (TLS) Extensions". The new certificate type can be used with additional TLS certificate compression {{RFC8879}}. For TLS 1.3, the C509 certificate type is defined as a new case in the CertificateEntry struct specified in {{Section 4.5.1 of RFC9846}}:
 
 ~~~~~~~~~~~
 case C509:
