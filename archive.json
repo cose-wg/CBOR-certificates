@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-20T04:30:26.315931+00:00",
+  "timestamp": "2026-09-22T04:24:13.776083+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9758,6 +9758,30 @@
           "body": "Confirming #423 resolves this from an implementation standpoint. #423 specifies the\ngeneric form as \"the DER-encoded 'values' (Section 4.1 of RFC 2986)\", i.e. the\ncomplete DER encoding of the `values` `SET OF`, including its `31 <len>` tag and\nlength. That is option **C** in the issue, not a single `AttributeValue` (A) or a bare\nconcatenation (B).\n\nThis matches what the proposed reference encoder produces, and it is the choice that keeps\na Type 3 Certification Request invertible: a PKCS#10 attribute's `values` is a `SET OF` that may \nhold more than one value, so dropping the SET boundary or concatenating would lose the \nmultiplicity and the DER-canonical ordering needed to reproduce the original TBS. (While the \nother CDDL alternative, `(attributeType: int, attributeValue: Defined)`, covers the registered \nattributes, where the shape of the values is fixed by each attribute's own definition, so there \nis no generic multiplicity question there either.)",
           "createdAt": "2026-09-16T14:58:35Z",
           "updatedAt": "2026-09-16T14:58:35Z"
+        }
+      ]
+    },
+    {
+      "number": 429,
+      "id": "I_kwDOCpt5cM8AAAABSZUOBQ",
+      "title": "Napilbalh@gmail.com",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/429",
+      "state": "OPEN",
+      "author": "meswap29-ship-it",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-09-21T16:06:57Z",
+      "updatedAt": "2026-09-21T16:27:00Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Spam?\n",
+          "createdAt": "2026-09-21T16:27:00Z",
+          "updatedAt": "2026-09-21T16:27:00Z"
         }
       ]
     }
