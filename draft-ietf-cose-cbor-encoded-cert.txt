@@ -6,14 +6,14 @@ Network Working Group                                  J. Preuß Mattsson
 Internet-Draft                                               G. Selander
 Updates: 6698 (if approved)                                  Ericsson AB
 Intended status: Standards Track                                 S. Raza
-Expires: 23 March 2027                             University of Glasgow
+Expires: 26 March 2027                             University of Glasgow
                                                               J. Höglund
                                                                  RISE AB
                                                               M. Furuhed
                                                                IN Groupe
                                                                  L. Liao
                                                                 NIO Inc.
-                                                       19 September 2026
+                                                       22 September 2026
 
 
           CBOR Encoded X.509 Certificates (C509 Certificates)
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 March 2027.
+   This Internet-Draft will expire on 26 March 2027.
 
 Copyright Notice
 
@@ -3359,13 +3359,13 @@ Table of Contents
 
    This document registers the following entry in the "TLSA Selectors"
    registry in the registry group "DNS-Based Authentication of Named
-   Entities (DANE) Parameters".  The C509 certificate data,
-   C509CertData, is defined in Section 3.4.
+   Entities (DANE) Parameters".  The content is the CBOR-encoded
+   C509Certificate which is defined in Section 3.1.
 
    +-------+---------+------------------------+-------------------+
    | Value | Acronym |   Short Description    |     Reference     |
    +=======+=========+========================+===================+
-   |  TBD7 |    C509 | C509 certificate data  | [[this document]] |
+   |  TBD7 |    C509 |        C509Certificate | [[this document]] |
    +-------+---------+------------------------+-------------------+
 
    The TLSA selectors registry defined in [RFC6698] originally only
