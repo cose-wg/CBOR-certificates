@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-22T04:24:13.776083+00:00",
+  "timestamp": "2026-09-24T04:18:09.873793+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9629,15 +9629,15 @@
       "id": "I_kwDOCpt5cM8AAAABRLcOBw",
       "title": "Clarify the wire format of application/cose-c509+cbor",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/415",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "The current text appears to define two different wire formats for application/cose-c509+cbor: one COSE_C509 data item, using a CBOR array when multiple certificates are present, or a CBOR Sequence containing multiple top-level certificate items.\n\nThe CDDL defines:\nCOSE_C509 = C509CertData / [ 2* C509CertData ]\nC509CertData = bytes .cbor C509Certificate\n\nUnder this definition, the representation is exactly one top-level CBOR data item:\none certificate:    bstr(cert1)\ntwo certificates: [ bstr(cert1), bstr(cert2) ]\nThe same section later states:\n\nWhen the application/cose-c509+cbor media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding \"bytes\").\n\nA CBOR Sequence of two single-certificate entries instead has two top-level data items and no enclosing array:\nbstr(cert1) bstr(cert2)\n\nThese representations produce different bytes and require different parsing models. A CBOR Sequence is self-delimiting and can be parsed item by item until the payload ends, but it is not the array representation defined by COSE_C509.\n\nThe media-type registration also says that the data is \u201ca COSE_C509 structure\u201d, which appears to support the single-item CDDL form. As written, however, an implementation following the CDDL may reject a certificate sequence produced according to the prose, and vice versa.\n\n**Suggested change**\nPlease clarify which wire format is intended and use it consistently in the CDDL, the description of c5u, and the media-type registration.\n\nIf the current COSE_C509 CDDL is intended, I suggest replacing the CBOR Sequence wording with text such as:\n\n\u201cWhen the application/cose-c509+cbor media type is used, the data consists of exactly one COSE_C509 data item. A single certificate is\nrepresented by the C509CertData alternative. Two or more certificates are represented by the array alternative. If the \"usage\" parameter is\nset to \"chain\", the C509CertData value or values carried by that item are ordered as a certificate chain.\u201d\n\nThis keeps a media-type representation as one top-level CBOR item and makes the single-certificate and multiple-certificate forms structurally explicit.\n\nIf a CBOR Sequence is instead intended, the COSE_C509 CDDL and the media-type registration should be revised accordingly so that the payload is no longer described as one COSE_C509 data item using the array alternative.\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T09:50:17Z",
-      "updatedAt": "2026-09-14T15:05:14Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-22T11:00:47Z",
+      "closedAt": "2026-09-22T11:00:47Z",
       "comments": [
         {
           "author": "gselander",
@@ -9652,6 +9652,13 @@
           "body": "> Would something like this work?\n> \n> OLD When the application/cose-c509+cbor media type is used, the data is a CBOR sequence of single-entry COSE_C509 structures (encoding \"bytes\"). If the parameter \"usage\" is set to \"chain\", this sequence indicates a certificate chain. NEW When the application/cose-c509+cbor media type is used, the data is a single C509 certificate (C509CertData). If the parameter \"usage\" is set to \"chain\", this sequence is a certificate chain (array of C509CertData), see Section 3.4.\n\nThanks, this looks much clearer. If the intention is that usage=chain always uses the array form, perhaps the text could read:\n\u201cWhen the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure containing either a single C509CertData or an array of C509CertData, see Section 3.4. If the parameter \"usage\" is set to \"chain\", the COSE_C509 structure uses the array form, and the certificates in the array form a certificate chain.\u201d\nThis would also avoid using \u201csequence\u201d, which might be confused with a CBOR Sequence. Would this match the intended encoding?",
           "createdAt": "2026-09-14T15:05:14Z",
           "updatedAt": "2026-09-14T15:05:14Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "@caiheng1986 Note that the resolution (see #430) was different than the text above, but should hopefully serve the same purpose. I close the issue now, we can re-open if there is something missing.",
+          "createdAt": "2026-09-22T11:00:43Z",
+          "updatedAt": "2026-09-22T11:00:43Z"
         }
       ]
     },
@@ -9691,15 +9698,15 @@
       "id": "I_kwDOCpt5cM8AAAABRMul0Q",
       "title": "Clarify whether the C509 TLSA selector includes the C509CertData byte-string wrapper",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/418",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "caiheng1986",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Section 8.20 defines the C509 certificate data carried in a TLS CertificateEntry as:\n\ncase C509:\n  opaque c509_data<1..2^24-1>;\nand states that c509_data is the CBOR-encoded C509Certificate. The TLS vector supplies the certificate length, so the contents of c509_data are the encoded C509Certificate itself.\n\nSection 8.21, however, defines the new C509 TLSA selector by referring to C509CertData from Section 3.4:\n\nC509CertData = bytes .cbor C509Certificate\nC509CertData is a CBOR byte string containing an encoded C509Certificate. Its encoded form therefore includes a CBOR byte-string header in addition to the certificate bytes. The example later in the document explicitly notes that C509CertData differs from C509Certificate by the 58 8D byte-string prefix.\n\nThese may intentionally be two different encapsulation layers. However, Section 8.21 does not state the exact octet sequence produced by Selector TBD7. It is therefore unclear whether the selector output is:\n\n\nA. the exact octets carried in CertificateEntry.c509_data\n   (the CBOR encoding of C509Certificate, without a CBOR bstr header)\n\nor\n\nB. the deterministic CBOR encoding of C509CertData\n   (including the CBOR bstr header)\nOur reading of the explicit C509CertData reference is that option B is the literal interpretation. However, because Section 8.20 defines the C509 certificate bytes carried by TLS as option A, it would be helpful to confirm whether the additional C509CertData wrapper in the TLSA selector is intentional.\n\nThe distinction affects every TLSA Matching Type: Matching Type 0 produces different association data, while Matching Types 1 and 2 operate on different hash inputs and would ordinarily produce different hashes.\n\nPlease define the selector output as an exact sequence of octets. For example, if option A is intended:\n\n\u201cThe output of Selector TBD7 is the exact sequence of octets carried in CertificateEntry.c509_data, namely the deterministic CBOR encoding of C509Certificate. The selector output does not include a CBOR byte-string header.\u201d\n\nIf option B is intended, text such as the following would make that explicit:\n\n\u201cThe output of Selector TBD7 is the deterministic CBOR encoding of C509CertData, including its CBOR byte-string header. When the\ncertificate is obtained from CertificateEntry.c509_data, those octets are wrapped in a deterministically encoded CBOR byte string before the\nTLSA Matching Type operation is applied.\u201d\n\n\nHeng Cai from Alibaba Cloud",
       "createdAt": "2026-09-14T12:15:07Z",
-      "updatedAt": "2026-09-14T14:31:54Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-22T10:37:46Z",
+      "closedAt": "2026-09-22T10:37:46Z",
       "comments": []
     },
     {
@@ -9766,15 +9773,15 @@
       "id": "I_kwDOCpt5cM8AAAABSZUOBQ",
       "title": "Napilbalh@gmail.com",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/429",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "meswap29-ship-it",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2026-09-21T16:06:57Z",
-      "updatedAt": "2026-09-21T16:27:00Z",
-      "closedAt": null,
+      "updatedAt": "2026-09-22T10:36:58Z",
+      "closedAt": "2026-09-22T10:36:58Z",
       "comments": [
         {
           "author": "highlunder",
@@ -9782,6 +9789,13 @@
           "body": "Spam?\n",
           "createdAt": "2026-09-21T16:27:00Z",
           "updatedAt": "2026-09-21T16:27:00Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Probably, at least I didn't understand the comment.",
+          "createdAt": "2026-09-22T10:36:56Z",
+          "updatedAt": "2026-09-22T10:36:56Z"
         }
       ]
     }
@@ -18013,21 +18027,21 @@
       "id": "PR_kwDOCpt5cM8AAAABDfy1Sg",
       "title": "More precise description of the data for 'c5u'.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/425",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #415",
       "createdAt": "2026-09-14T18:42:20Z",
-      "updatedAt": "2026-09-19T14:24:22Z",
+      "updatedAt": "2026-09-22T10:45:47Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "a6bf3441f7d3673aab5798bea98474e52d3d77f2",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "c509-for-c5u",
       "headRefOid": "8c022b32492b3d544d525f0a2dcbc22f65586b18",
-      "closedAt": null,
+      "closedAt": "2026-09-22T10:45:46Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
@@ -18059,6 +18073,20 @@
           "body": "@lijun-nio Then we would need to change 8.18.2 as well. Are you thinking of something like this:\r\n\r\n> When the application/cose-c509+cbor media type is used, the data is a COSE_C509 structure. If \"usage\" is not present, the data is a single certificate (encoding \"bytes\"). If the parameter \"usage\" is set to \"chain\", this indicates a certificate chain (encoding \"array\").\r\n",
           "createdAt": "2026-09-19T14:24:22Z",
           "updatedAt": "2026-09-19T14:24:22Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I prefer not to change \"Section 8.18.2\".\r\n\r\nTo align both sections (8.18.2 and 3.4), it is better to change following block (removing \"application/cose-c509+cbor\"):\r\n\r\nOLD\r\n```\r\n   c5u, analogously to x5u in [RFC9360], provides the ability to\r\n   identify a C509 certificate by a URI [RFC3986].  It contains a CBOR\r\n   text string (media type application/cbor and CoAP Content-Format 60).\r\n   The referenced resource can be any of the following media types:\r\n\r\n   *  application/cose-c509-cert+cbor (Section 8.18.1)\r\n\r\n   *  application/cose-c509+cbor (Section 8.18.2)\r\n\r\n   *  application/cose-c509+cbor; usage=chain (Section 8.18.2)\r\n\r\n   When the application/cose-c509+cbor media type is used, the data is a\r\n   CBOR sequence of single-entry COSE_C509 structures (encoding\r\n   \"bytes\").  If the parameter \"usage\" is set to \"chain\", this sequence\r\n   indicates a certificate chain.\r\n```\r\n\r\nNEW\r\nOLD\r\n```\r\n   c5u, analogously to x5u in [RFC9360], provides the ability to\r\n   ...\r\n   The referenced resource can be any of the following media types:\r\n\r\n   *  application/cose-c509-cert+cbor (Section 8.18.1)\r\n\r\n   *  application/cose-c509+cbor; usage=chain (Section 8.18.2)\r\n\r\n   When the application/cose-c509+cbor; usage=chain media type is used, the data is a\r\n   certificate chain with at least two certificates.\r\n```\r\n",
+          "createdAt": "2026-09-22T09:05:14Z",
+          "updatedAt": "2026-09-22T09:05:14Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Replaced by #430 .",
+          "createdAt": "2026-09-22T10:45:46Z",
+          "updatedAt": "2026-09-22T10:45:46Z"
         }
       ],
       "reviews": [
@@ -18082,24 +18110,26 @@
       "id": "PR_kwDOCpt5cM8AAAABDf4xcQ",
       "title": "Align the TLSA selector with RFC 6698.",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/426",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "lijun-nio",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Fix #418 ",
       "createdAt": "2026-09-14T18:54:39Z",
-      "updatedAt": "2026-09-19T14:53:05Z",
+      "updatedAt": "2026-09-22T10:37:45Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "879055f323c3fa5a5a9e0a95defddeed8f73014f",
       "headRepository": "lijun-nio/CBOR-certificates",
       "headRefName": "tlsa-data",
       "headRefOid": "607e7f3c38075242ce0f1ded7e9c1bf9957fefd0",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2026-09-22T10:37:45Z",
+      "mergedAt": "2026-09-22T10:37:45Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "68b59f0ceef39cd97f0a94585f66b5955180dfc0"
+      },
       "comments": [
         {
           "author": "gselander",
@@ -18135,6 +18165,13 @@
           "body": "> After reading RFC 6698 carefully, this change is needed. Otherwise, as in the version -20, since the application receives the CBOR-encoded C509Certificate, but C509CertData is required in TLSA, thus the application needs to wrap the C509Certificate to build a C509CertData.\r\n\r\nI agree using a plain certificate is analogous to X.509, but I don't follow the reasoning above. If C509CertData is required in TLSA, why then are we replacing C509 certificate data with C509 certificate?",
           "createdAt": "2026-09-19T14:53:05Z",
           "updatedAt": "2026-09-19T14:53:05Z"
+        },
+        {
+          "author": "lijun-nio",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "As I undertstand:\r\n\r\n- In RFC 6698 (DANE/TLSA), the peer does not normally get the server certificate from DNS. The certificate is obtained through the normal TLS handshake; DNS is used to obtain a TLSA record that tells the client what certificate/key it should expect.\r\n\r\n- The TLS handshake transports the C509Certificate, but not C509CertData.\r\n\r\nHowever, in the current version (-20), the TLSA Selector defines `C509CertData`. In this case, to verify whether the via TLS received certificate is trusted, the peer has to construct a `C509CertData` structure from the received `C509Certificate`. This works technically, but not good.\r\n\r\nThus this PR changes the data format for TLSA Sector from `C509CertData` to `C509Certificate`.",
+          "createdAt": "2026-09-22T08:53:40Z",
+          "updatedAt": "2026-09-22T08:53:40Z"
         }
       ],
       "reviews": [
@@ -18265,6 +18302,75 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 430,
+      "id": "PR_kwDOCpt5cM8AAAABEj-f_g",
+      "title": "More precise description of the data for 'c5u'",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/430",
+      "state": "MERGED",
+      "author": "lijun-nio",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #425 ",
+      "createdAt": "2026-09-22T10:45:17Z",
+      "updatedAt": "2026-09-22T10:58:42Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "68b59f0ceef39cd97f0a94585f66b5955180dfc0",
+      "headRepository": "lijun-nio/CBOR-certificates",
+      "headRefName": "c509-for-c5u-2",
+      "headRefOid": "14df1c622213d50157574d8323a6c617b2138134",
+      "closedAt": "2026-09-22T10:56:33Z",
+      "mergedAt": "2026-09-22T10:56:33Z",
+      "mergedBy": "gselander",
+      "mergeCommit": {
+        "oid": "bf3541e2c630d909b61b683e2c349a8e260ca7a6"
+      },
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I find this instruction clear, merge now. ",
+          "createdAt": "2026-09-22T10:56:23Z",
+          "updatedAt": "2026-09-22T10:56:23Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Here is the resolution to #415.",
+          "createdAt": "2026-09-22T10:58:42Z",
+          "updatedAt": "2026-09-22T10:58:42Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 431,
+      "id": "PR_kwDOCpt5cM8AAAABEkgjtA",
+      "title": "New TLS ref",
+      "url": "https://github.com/cose-wg/CBOR-certificates/pull/431",
+      "state": "CLOSED",
+      "author": "gselander",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-09-22T11:50:31Z",
+      "updatedAt": "2026-09-22T11:50:39Z",
+      "baseRepository": "cose-wg/CBOR-certificates",
+      "baseRefName": "master",
+      "baseRefOid": "75b36e07d64c38de76916a345f00b513a97aece0",
+      "headRepository": "cose-wg/CBOR-certificates",
+      "headRefName": "c5t-type3",
+      "headRefOid": "e69aa0ae12dc13cecc44bf588899e7213c1a8527",
+      "closedAt": "2026-09-22T11:50:39Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
