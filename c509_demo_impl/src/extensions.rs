@@ -1,7 +1,7 @@
 //! X.509 extension encoding and decoding for C509.
 //!
 //! Converts each X.509v3 extension between its DER form and the compact C509 CBOR
-//! representation defined in draft-ietf-cose-cbor-encoded-cert-20. Handles all
+//! representation defined in draft-ietf-cose-cbor-encoded-cert-21. Handles all
 //! registered extension types (draft §9.4) plus an RFC 9090 OID fallback for
 //! unknown extensions.
 

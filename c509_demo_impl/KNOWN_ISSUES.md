@@ -1,7 +1,9 @@
 # Known Issues and Limitations
 
 Reference implementation of draft-ietf-cose-cbor-encoded-cert, aligned with
-**draft-20** (RFC-track).
+**draft-21** (RFC-track). The -20→-21 delta is editorial / registry-comment /
+reference-only (no wire, CDDL, or registry-ID changes); see §"draft-21 alignment"
+under *Open Issues* for the per-PR audit.
 
 ## Test Vector Status (default: draft-ietf-cose-c509-test-vectors-02)
 
@@ -351,6 +353,37 @@ blocking.
   (`conversion.rs:129`), so the round-trip is exact. No change needed. #418
   (TLSA selector wrapper) and #415 (`application/cose-c509+cbor` sequence-vs-array)
   are TLS/COSE bundling concerns our tool does not emit; no impl action.
+
+### 4. draft-21 is now official (2026-09-24) — alignment confirmed, no code change
+
+The WG published **draft-ietf-cose-cbor-encoded-cert-21** as the official version.
+The v20→v21 diff was cross-checked against the merged-PR set and the
+implementation; **every change is editorial, registry-comment, or reference-only —
+no wire format, CDDL, or registry-ID changed**, so the codec is byte-for-byte
+identical and the -02 vector suite is unaffected (still 123 PASS / 70 XFAIL / 8
+SKIP / 0 FAIL). Version labels were bumped to `-21` (Cargo.toml, `lib.rs`,
+`registry.rs`, `extensions.rs`, `conversion.rs`, README) in v0.6.1.
+
+Per-PR result (detail in items §2–§3 above):
+
+| PR | Nature | Impl status |
+|----|--------|-------------|
+| #404 serialNumber always-bstr | encoding clarification | conforms |
+| #408 subjectDirectoryAttributes removed | registry removal | encode drops int-24; decode tolerant (§2) |
+| #409 RSA / unstructuredAddress DER lengths | IANA comment fix | correct by construction |
+| #410 explicit integer ID ranges | IANA text | doc-only |
+| #420 keyUsage LSB-first | clarification | encoder matches |
+| #421 type-2 attributeType non-negative | clarification | **latent gap**, no -02 vector exercises it (§3) |
+| #422 bare `~oid` AlgorithmIdentifier | CDDL clarification | DONE 2026-09-15 (§3) |
+| #423/#419 CR-attribute generic `~oid` | clarification | encoder matches (§3) |
+| #424 null-issuer octet-for-octet | clarification | conforms (§3) |
+| #426 TLSA selector = bare C509Certificate | TLS bundling | not emitted by tool |
+| #430 c5u data description | media-type text | not emitted by tool |
+| #428 RFC 8446 → 9846 TLS reference | reference update | doc-only |
+
+The single carried-forward impl TODO is the **#421 latent gap** (type-2
+multi-attribute name attributeType sign), still low-priority and unexercised by
+any published vector.
 
 ### Previously resolved issues
 

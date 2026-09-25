@@ -1,4 +1,4 @@
-//! C509 IANA Registries — draft-ietf-cose-cbor-encoded-cert-20
+//! C509 IANA Registries — draft-ietf-cose-cbor-encoded-cert-21
 //!
 //! Integer IDs assigned in the IANA registries for C509 signature algorithms,
 //! public key types, named curves, attribute types, extension types, and general

@@ -1,6 +1,6 @@
 //! Reference implementation of CBOR-encoded X.509 certificates (C509).
 //!
-//! Implements draft-ietf-cose-cbor-encoded-cert-20. Converts between standard
+//! Implements draft-ietf-cose-cbor-encoded-cert-21. Converts between standard
 //! X.509 DER certificates and their compact C509 CBOR representation, targeting
 //! constrained IoT devices.
 //!

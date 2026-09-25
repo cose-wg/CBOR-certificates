@@ -1,9 +1,9 @@
 [package]
 name = "c509"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["John Preuß Mattsson <john.mattsson@ericsson.com>, Joel Höglund <joel.hoglund@ri.se>"]
 edition = "2018"
-description = "Reference implementation of CBOR-encoded X.509 (C509) certificates, tracking draft-ietf-cose-cbor-encoded-cert-20."
+description = "Reference implementation of CBOR-encoded X.509 (C509) certificates, tracking draft-ietf-cose-cbor-encoded-cert-21."
 license = "BSD-3-Clause"
 repository = "https://github.com/cose-wg/CBOR-certificates"
 

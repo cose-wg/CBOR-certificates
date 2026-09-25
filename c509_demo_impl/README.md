@@ -2,7 +2,7 @@
 
 Rust reference implementation of CBOR-encoded X.509 certificates (C509),
 tracking **[draft-ietf-cose-cbor-encoded-cert](https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/)**
-— aligned with **draft-20** (the version now in the RFC-publication pipeline).
+— aligned with **draft-21** (the version now in the RFC-publication pipeline).
 
 Converts, bidirectionally and losslessly, between standard X.509 DER
 certificates/CSRs and their compact C509 CBOR representation. Targets
@@ -295,6 +295,20 @@ Bug reports and pull requests:
 [COSE WG issue tracker](https://github.com/cose-wg/CBOR-certificates/issues).
 
 ## Version history
+
+**v0.6.1** (2026-09) — draft-21 alignment (no wire changes)
+Re-labelled the tool to track **draft-ietf-cose-cbor-encoded-cert-21**, now the
+official version. The -20→-21 delta is entirely editorial/registry-comment/
+reference bookkeeping — no encoding, CDDL, or registry-ID changes — so the codec
+is unchanged and the -02 vector suite is unaffected. Every substantive v20→v21 PR
+was audited against the implementation (see `KNOWN_ISSUES.md` §"draft-21
+alignment"): #404 (serialNumber always-bstr), #408 (subjectDirectoryAttributes
+removed), #409 (RSA/unstructuredAddress DER-length comment fixes — correct by
+construction here), #410 (explicit ID ranges), #420 (keyUsage LSB-first), #421
+(type-2 attributeType non-negative — latent, unexercised), #422 (bare `~oid`
+AlgorithmIdentifier), #423/#419 (CR-attribute generic `~oid`), #424 (null-issuer
+octet-for-octet), #426/#430 (TLSA/c5u data description), #428 (RFC 8446→9846 TLS
+reference). All are already handled or need no code change.
 
 **v0.6.0** (2026-07) — draft-20 / RFC-track alignment
 Aligned the whole tool with **draft-ietf-cose-cbor-encoded-cert-20**: a C509

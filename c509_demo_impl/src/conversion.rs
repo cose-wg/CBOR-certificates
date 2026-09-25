@@ -364,7 +364,7 @@ pub fn parse_x509_item(input: Vec<u8>, no_compression: bool) -> Cert {
 
 /// Encodes a PKCS#10 DER CSR into a C509 type-3 (X.509-encoded) CBOR representation.
 ///
-/// Output CBOR sequence per draft-ietf-cose-cbor-encoded-cert-20 Section 8:
+/// Output CBOR sequence per draft-ietf-cose-cbor-encoded-cert-21 Section 8:
 ///   [type=3, subjectSignatureAlgorithm, subject, subjectPKAlgorithm,
 ///    subjectPublicKey, attributes, subjectSignatureValue]
 ///
