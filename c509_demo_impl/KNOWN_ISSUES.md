@@ -1,0 +1,409 @@
+# Known Issues and Limitations
+
+Reference implementation of draft-ietf-cose-cbor-encoded-cert, aligned with
+**draft-21** (RFC-track). The -20→-21 delta is editorial / registry-comment /
+reference-only (no wire, CDDL, or registry-ID changes); see §"draft-21 alignment"
+under *Open Issues* for the per-PR audit.
+
+## Test Vector Status (default: draft-ietf-cose-c509-test-vectors-02)
+
+`validate_c509.sh` is **version-agnostic**: file pairing, the C509 type byte, and
+the hex comparisons transparently handle the draft-20 CBOR-array header
+(`0x8B` cert / `0x87` CSR), so it runs clean against draft-02 (default) and still
+against draft-01 (`--version 01`). It uses `od` (not `xxd`) so it needs no
+`vim-common`. Run `./validate_c509.sh` from this directory.
+
+Latest run (2026-09-17, 201 tests total):
+
+| Result | Count | Meaning |
+|--------|-------|---------|
+| PASS   | 123   | Tool output matches the official draft-02 vector exactly (byte-exact encode, verified signature, or byte-exact DER round-trip) |
+| XFAIL  | 70    | Expected failure — Cat A / Cat B / Cat V (see below) |
+| SKIP   | 8     | Check could not run — input absent, or algorithm not yet wired for signature verify (brainpool / RSA / SM2 / Ed448) |
+| FAIL   | 0     | No unexpected failures |
+
+Of the 70 XFAILs, **68 are inherent** (not tool gaps) and **2 are temporary
+vector drift**: **Cat A** (59) type-2 natively-signed vectors have no X.509 DER
+to decode back to; the **CRT-template decode** entries (6) in §4 likewise have no
+DER equivalent (their lossless CBOR round-trip is tested in §9 instead); **Cat B**
+(3) are certs `f2` cannot sign as type-2 (an id-alg-unsigned X25519/X448
+end-entity, or the frp256v1 curve); **Cat V** (2) are the two brainpoolP512r1
+vectors frozen before draft PR #408 removed subjectDirectoryAttributes (see §2) —
+they clear once ≥-03 test vectors are regenerated.
+
+The former draft-20 gaps are now **implemented**:
+- **`r2` type-2 CSR** — RFC 6955 DhSig (the peer cert's `0x8B` array header is
+  skipped in the KDF field walk) and the nested `withcert` embedded certificate
+  (unwrapped from `bytes .cbor`, re-signed type-2, re-wrapped) both round-trip.
+- **CRT templates (§10)** — the `c` dispatch now detects a template by its first
+  array element (`templateType = 0`) rather than the raw first byte, and
+  `parse_c509_crt` skips the `0x87` array header, giving a byte-exact re-encode.
+
+Running `--version 01` (legacy draft-19 vectors) against this draft-20 tool leaves
+one expected divergence — the §8.7 `withcert` CSR, whose embedded certificate is
+`bytes .cbor`-wrapped from draft-20 but embedded directly in draft-19.
+
+### draft-01 section-number reference
+
+Filenames follow the pattern `v{VER}_section_{N.N.N}_{anchor}.{ext}` matching the
+section number in the corresponding draft version.
+
+The XFAIL classification in sections §2–§6 is driven by section number patterns:
+- Section `*.4` and `3.11.3` → Type 2 natively-signed (Category A)
+- Section `10.*` → CRT templates (Category E1; §8 not implemented)
+- Type-2 content in any section (first byte `02`) → Category A
+
+Section §7 (Type-2 signing via `f2`) introduces new categories:
+- Cat B → unsupported key algorithm (brainpool, SM2, FRP256v1, Ed448, RSA, X25519/X448 EE)
+- Cat B2 → CSR type-2 (`f2` encodes certificates only)
+
+All previously XFAIL categories that are now implemented:
+- DH-PoP CSRs (§9.1 Table 3 values 14–16): **IMPLEMENTED, PASS**
+- X25519 PoP CSRs (§7.2 attr type 2): **IMPLEMENTED, PASS**
+- RFC 9090 OID fallback (§2.2, §2.3.3): **IMPLEMENTED, PASS**
+- SM2 and FRP256v1 type-3: **PASS** (Weierstrass bignum handles both)
+
+### XFAIL breakdown
+
+> **Note on counts.** The per-category totals in this subsection (46 / 11 / 5 / 27)
+> are the historical **draft-01** vector accounting, kept for the category
+> explanations (why each class is inherent, the RustCrypto blocker, etc.). The
+> current **draft-02** default run tallies differently — Cat A 59, CRT-decode 6,
+> Cat B 3, Cat V 2 = 70 — as summarized in the table at the top. The prose below
+> is still accurate about *why* each category exists.
+
+#### Category A — Type 2 (natively signed) — 46 XFAILs (decoding test, §4)
+
+`c509CertificateType = 2` means `issuerSignatureValue` covers the *CBOR*
+`TBSCertificate`, not the ASN.1 DER one (§2.1, §2.3.5
+draft-ietf-cose-cbor-encoded-cert).  No X.509 DER origin exists for these
+certificates; they can only live in C509 form.
+
+All 46 XFAILs are in the **decoding test** (Section 4 of validate_c509.sh):
+the decoded DER cannot be compared to anything.  The 23 affected algorithm
+variants appear as a plain `.cbor.hex` and an annotated `_1.cbor.hex` file:
+
+- CA cert: `c509_ca`
+- RSA: `c509_selfsign_rsa`, `_rsa_f5`, `_rsa_with_sha1`, `_rsa_with_sha512`
+- RSASSA-PSS: `c509_selfsign_rsassa_pss_sha{256,384,512}`, `_shake{128,256}`
+- EC Weierstrass: `c509_selfsign_secp{256,384,521}r1`, `_compress_secp256r1`
+- Edwards: `c509_selfsign_ed{25519,448}`
+- Brainpool: `c509_selfsign_brainpoolp{256,384,512}r1`
+- FRP256v1: `c509_selfsign_frp256v1`
+- SM2: `c509_selfsign_sm2p256v1`
+- EE with DH keys: `c509_ee_x25519`, `c509_ee_x448`
+
+These Cat A XFAILs cannot be eliminated from §4 (there is no DER to compare
+against by design).  **However**, the §7 signing test (`f2` command) tests
+the *TBS generation* (fields 0–9) independently of §4.  `f2` supports
+secp256r1, secp384r1, secp521r1, and Ed25519, giving PASSes in §7 for
+sections 2.4, 3.3.4, 3.4.4, 3.5.4, 3.6.4, and 3.14.4.
+
+#### Category B — Unsupported key in type-2 signing — 11 XFAILs (§7 only)
+
+`f2` supports secp256r1, secp384r1, secp521r1, and Ed25519.  All other key
+types present in the test vectors report Cat B in §7.
+
+| Curve/algorithm | Section | Crate | Status |
+|-----------------|---------|-------|--------|
+| secp256r1 | 3.3.4, 3.4.4 | `p256 0.13` | **PASS** |
+| secp384r1 | 3.5.4 | `p384 0.13` | **PASS** |
+| secp521r1 | 3.6.4 | `p521 0.13` | **PASS** |
+| Ed25519 | 3.14.4, 2.4 | `ed25519-dalek 2` | **PASS** |
+| brainpoolP256r1 | 3.8.4 | `bp256 0.14.0-rc` | deferred — see note |
+| brainpoolP384r1 | 3.9.4 | `bp384 0.14.0-rc` | deferred — see note |
+| brainpoolP512r1 | 3.10.4 | — | not planned (no RustCrypto crate exists) |
+| SM2 | 3.7.4 | `sm2 0.14.0-rc` | deferred — see note |
+| FRP256v1 | 3.11.3 | — | not planned (no Rust support anywhere) |
+| Ed448 | 3.15.4 | `ed448-goldilocks 0.14.0-pre` | deferred — see note |
+| RSA / RSA-PSS | 3.1, 3.2, 4.20 | — | not planned (different signature structure) |
+| X25519 / X448 EE | 3.12, 3.13 | — | not planned (key-agreement keys; no signing key in test vectors) |
+
+##### RustCrypto availability and the 0.14.0-rc blocker
+
+RustCrypto's elliptic-curves repository (<https://github.com/RustCrypto/elliptic-curves>)
+provides crates for brainpoolP256r1/384r1, SM2, and Ed448, but all are
+currently in the **0.14.0-rc.9 / 0.14.0-pre.12** pre-release series:
+
+- `bp256 0.14.0-rc.9` — brainpoolP256r1, ECDSA + PKCS#8 (`DecodePrivateKey`)
+- `bp384 0.14.0-rc.9` — brainpoolP384r1, ECDSA + PKCS#8
+- `sm2 0.14.0-rc.9` — SM2DSA + PKCS#8 (OID 1.2.156.10197.1.301)
+- `ed448-goldilocks 0.14.0-pre.12` — Ed448 EdDSA + PKCS#8
+
+**The 0.14.0-rc compatibility problem:**
+The currently used crates (`p256`/`p384`/`p521` at 0.13) and the RC crates
+share foundational dependencies at incompatible major versions:
+
+```
+p256 0.13  ──► elliptic-curve 0.13, ecdsa 0.16 (signature 2.1), pkcs8 0.10
+bp256 0.14 ──► elliptic-curve 0.14, ecdsa 0.17 (signature 2.2-rc)
+```
+
+Cargo can load both versions simultaneously, but Rust traits from different
+crate versions are distinct types.  The `use p256::pkcs8::DecodePrivateKey`
+and `use p256::ecdsa::signature::Signer` imports in `sign_tbs()` work because
+all 0.13 EC crates re-export the same underlying trait objects.  Adding a
+0.14-rc crate alongside them would require a separate import for the 0.17
+version of those traits, and the single dispatch function would stop
+compiling.  Resolution requires upgrading p256/p384/p521 to 0.14.0-rc
+simultaneously — a coherent but risky upgrade against a moving API target.
+
+**SM2 additional complexity:**
+SM2DSA signs `SM3(ZA || message)` where ZA is a hash of the curve parameters
+and the signer's distinguished ID (default `"1234567812345678"`).  The `sm2`
+crate handles this internally, but it is unclear whether the IETF test vector
+was generated with the default ID — reproducibility of the exact TBS is
+uncertain until tested.
+
+**Recommendation:** wait for the stable 0.14.0 release (rc.9 is late in the
+cycle), then upgrade all EC crates atomically.  At that point brainpoolP256r1,
+brainpoolP384r1, and Ed448 should be straightforward additions (same
+`from_pkcs8_pem` + `.sign(tbs)` pattern as the existing arms in `sign_tbs()`).
+SM2 warrants a separate investigation of the ZA prefix after upgrading.
+
+#### Category B2 — CSR type-2 not supported by `f2` — 5 XFAILs (§7 only)
+
+`f2` encodes X.509 certificates only; PKCS#10 CSR type-2 encoding is not
+implemented.  Affected: sections 8.1.4, 8.3.4, 8.4.4, 8.5.4, 8.7.4.
+
+#### Category B — SM2 — RESOLVED (type-3 now PASSING)
+
+The SM2 type-3 encoding and round-trip (`v01_x509_selfsign_sm2p256v1.crt`)
+now PASS.  The SM2 curve (OID `1.2.156.10197.1.301`, §9.2 Table 4) is a
+standard Weierstrass curve so the existing bignum-based `decompress_ecc_key`
+and `tonelli_shanks` implementations handle it correctly.  The SM3 hash is
+not required for type-3 re-encoding because the signature bytes are copied
+verbatim from the input DER, not recomputed.
+
+The two remaining SM2 XFAILs (`v01_c509_selfsign_sm2p256v1.cbor.hex` and
+`_1`) are type-2 (natively signed) vectors — Category A applies.
+
+**No external SM2/SM3 crates needed** for the current re-encoding use case.
+
+#### Category C — FRP256v1 — RESOLVED (type-3 now PASSING)
+
+FRP256v1 (OID `1.2.250.1.223.101.256.1`, §9.2 Table 4, the French ANSSI
+national curve) type-3 encoding, decoding, and round-trip now PASS without
+any new dependencies.  The curve parameters were already present in
+`decompress_ecc_key` in `keys.rs`.  The decoding test extraction was also
+fixed: `c509 c` labels the reconstructed DER as "Input: DER encoded X.509
+certificate" (the tool shows both input and output); the validation script
+now captures that block instead of the final CBOR line.
+
+Encoding comparison: the test vector uses the uncompressed key (`04` prefix);
+the tool (without `-nc`) produces compressed (`FE` prefix).  Both are
+correct — the `-nc` variant matches the expected vector exactly.
+
+The two type-2 FRP256v1 XFAILs remain under Category A (natively signed).
+
+#### Category D — Unconvertible certificate — RESOLVED (now PASSING)
+
+`v01_x509_unconvertible.crt` uses a public-key OID absent from the C509 integer
+registry.  The RFC 9090 OID fallback (`[~oid_value_bytes, params_der_bytes]` for
+algorithm fields; `~oid_value_bytes` for extension IDs) is now implemented.
+
+Also fixed: AS Identifiers extension with `rdi` field present.  The draft
+(§ext-encoding) says "If 'rdi' is not present, the extension value can be
+CBOR-encoded."  When `rdi` IS present, the extension now correctly uses the OID
+fallback form instead of encoding with integer `33`.
+
+Three locations fixed in `conversion.rs` and `keys.rs`:
+1. Sig-alg encoding fallback: `[~oid]` or `[~oid, params]` array (not raw DER)
+2. PkAlg encoding fallback: same (`keys.rs` encoding + decoding)
+3. AS Identifiers rdi detection: forced OID fallback when rdi [1] is present
+
+#### Category E — Unimplemented CSR/CRT features — 27 XFAILs
+
+**E1 — Certification Request Templates (§8): 6 XFAILs**
+`C509CertificationRequestTemplate` is a distinct CBOR structure from
+`TBSCertificationRequest` that omits `subjectSignatureValue` and adds a
+`templateValues` component.  Not implemented.
+Files: `v01_{complex,oneelement,undefined}_csrt.cbor.hex` + `_1` each.
+
+**E2 — Type-3 CSR decoding without reference DER: 8 XFAILs**
+`v01_c509_type_3_certification_request_{1…6}.cbor.hex` are type-3 C509 CSRs.
+The tool can decode them, but the test vectors do not include reference `.der`
+files to verify correctness against.
+
+**E3 — DH-signature (proof-of-possession) CSRs: 9 XFAILs**
+Algorithm values 14–16 in §9.1 Table 3 (`DhSigStatic` with HMAC-SHA256/384/512,
+RFC 6955 proof-of-possession).  Tool panics: `Unknown sign alg type: 14`.
+Files: `v01_x509csr_dhsig_sha{256,384,512}.csr` (§6 round-trip × 3) and
+`v01_c509csr_dhsig_sha{256,384,512}.cbor.hex` + `_1` (§4 decoding × 6).
+
+**E4 — X25519 proof-of-possession CSRs: 4 XFAILs**
+SubjectPublicKeyInfo attribute type 2 (ECDH key-agreement PoP, §7.2).  Tool
+panics: `Unknown CSR attribute type 2`.
+Files: `v01_x509csr_x25519{,_withcert}.csr` (§6 round-trip × 2) and
+`v01_c509csr_ecdsa_p256.cbor.hex` + `_1` (§4 decoding × 2, type-2 natively
+signed, no reference DER).
+
+---
+
+## Open Issues
+
+### 1. CRT (Certification Request Template, §8) — OPEN
+
+`C509CertificationRequestTemplate` is a distinct CBOR structure not yet
+implemented.  Test vectors at sections 10.1–10.3.
+Status: **planned**, lower priority.
+
+### 2. subjectDirectoryAttributes removed (draft PR #408) — FOLLOW-UP pending vector regen
+
+The extension **Subject Directory Attributes** (C509 ext ID 24, OID 2.5.29.9)
+was removed from the registry by draft PR #408, which merged **after**
+test-vectors-02 was published. The reference implementation now tracks draft
+master:
+
+- **Encode:** OID 2.5.29.9 no longer maps to the retired int-24 form; it takes
+  the generic `(~oid, bytes)` path (`registry.rs` `ext_map`, `conversion.rs`).
+- **Decode:** the legacy int-24 form is still tolerated (`extensions.rs`
+  `parse_cbor_ext_subject_directory_attr`) so older C509 / the -02 vectors still
+  round-trip.
+
+Because the -02 vectors froze the int-24 encoding, the two brainpoolP512r1
+cases that carry this extension (§3.10.2 X.509→C509, §3.10.4 TBS) no longer
+match byte-exact and are marked **XFAIL Cat V** (vector drift) by
+`validate_c509.sh` (`is_vector_drift_xfail`).
+
+**FOLLOW-UP:** when post-#408 test-vectors (≥ -03) are released, remove
+`is_vector_drift_xfail` and its two call sites and confirm §3.10.x passes
+byte-exact against the regenerated vectors.
+
+### 3. Upstream review follow-ups (PR #402 — draft moved ahead) — OPEN
+
+Surfaced while reviewing the Sept-2026 upstream PRs (the ones where `highlunder`
+is a requested reviewer). None break the current vector suite (all are on
+code paths no draft-02 vector exercises), so they are tracked here rather than
+blocking.
+
+- **AlgorithmIdentifier bare `~oid` (upstream PR #422) — DONE 2026-09-15.** The
+  CDDL is `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` — there is **no
+  one-element `[~oid]` array form**. Fixed both directions:
+  - *Encoder* (`conversion.rs`, 4 OID-fallback sites): now emits a **bare `~oid`**
+    (`lcbor_bytes(oid_val)`) when the AlgorithmIdentifier has no parameters, and
+    `[~oid, params]` when it does. (Was `lcbor_array(&[lcbor_bytes(oid_val)])`.)
+  - *Decoder* (`keys.rs::map_pk_id_to_oid` and `parse_cbor_sig_info`): the
+    `Value::Bytes` arm now reconstructs `SEQUENCE { OID }` from a bare `~oid`. The
+    legacy one-element `[~oid]` array is still accepted (tolerant decode).
+  - *Tests*: 6 unit tests in `keys.rs` (`mod alg_id_fallback_tests`) assert the
+    bare-`~oid`, legacy-`[~oid]`, and `[~oid, params]` decodes, including that the
+    bare and legacy forms reconstruct identically. `cargo test` green; full
+    `validate_c509.sh` unchanged at 123 PASS / 70 XFAIL / 8 SKIP / 0 FAIL (no
+    registered-algorithm vector exercises the fallback, so no vector regressed).
+
+- **CR Attribute generic `~oid` attributeType (upstream issue #419 / PR #423).**
+  #423 resolves #419 as **interpretation C**: it specifies the generic form as
+  "the DER-encoded 'values' (Section 4.1 of RFC 2986)" — the complete DER encoding
+  of the `values` `SET OF` including its `31 <len>` tag/length. Our encoder matches
+  (`conversion.rs:550`, `lcbor_bytes(av[1])` where `av[1]` is the raw `values` SET OF,
+  see line 466), the only fully invertible choice for a Type-3 CSR; the other CDDL
+  alternative, `(attributeType: int, attributeValue: Defined)`, covers the registered
+  attributes whose value shape is fixed by each attribute's own definition. #423 is
+  **merged** and #419 is **closed**, so no upstream comment is needed. FOLLOW-UP
+  (impl only): confirm the `parse_c509_csr` *decode* path round-trips the generic
+  `~oid` SET-OF form.
+
+- **Refresh the PR onto current master.** DONE 2026-09-17 — merged
+  `origin/master` into `c509-demo-impl-draft20` (branch now 0 behind / ahead
+  only by our commits). The merge is conflict-free: our commits touch only
+  `c509_demo_impl/`, the 45 upstream commits touch only the draft `.md`. All
+  impl-relevant draft deltas were already handled: #408 (subjectDirectoryAttributes
+  removal — see §2), #422/#414 (bare `~oid` AlgorithmIdentifier — see §3),
+  #423/#419 (CR-attribute `~oid` = interpretation C — see §3), #420 (keyUsage
+  LSB-first — encoder already matches), #404 (serialNumber always-bstr — already
+  conforms). The rest are editorial. No newly-merged PR requires an impl change to
+  keep the vector suite green; one clarification (#421) is a latent, currently
+  unexercised edge case in the type-2 encoder — see the audit item below.
+
+- **Merged-PR audit (2026-09-17) — 12 PRs since merge-base #398.** Result: 11
+  fully addressed or no-impl-needed, 1 latent gap.
+  - *Doc-only / IANA-only (no impl):* #401 (late editorials), #410 (explicit ID
+    ranges), #416 (c5t non-unique-hash caveat — our tool already emits both
+    compression forms and has `-nc`), #427 (acknowledgments), #428 (reference
+    updates).
+  - *#409 (RSA AlgId + unstructuredAddress DER lengths):* documentation fix to the
+    IANA registry comment columns (`30 0B`→`30 0D`, `06 0A`→`06 09`). Our impl
+    builds both dynamically — `keys.rs:353-355` wraps `OID + ASN1_NULL` in a DER
+    SEQUENCE (yields `30 0D … 05 00`) and the OID length comes from the `oid!`
+    const (`06 09`). Correct by construction; RSA certs already round-trip
+    byte-exact in the 4710/5000 batch test. No change.
+  - *Already addressed / conformant:* #408, #422, #423, #420, #404 (see items
+    above and §2).
+  - **#421 (attributeType non-negative in natively-signed certs) — LATENT GAP.**
+    #421 clarifies that in a **type-2** (natively signed) cert the RDN
+    `attributeType` int SHALL be **non-negative** (the sign is only used in type-3
+    to preserve the X.509 string type for lossless DER round-trip). Our `f2`
+    encoder reuses the type-3 name fields verbatim (`type2.rs:47-50` copies all 11
+    fields from `parse_x509_cert_nc`), so for a general-form RDN attribute of type
+    printableString (e.g. `countryName`/`serialNumber` in a multi-attribute name)
+    it would emit a **negative** `attributeType` — contravening #421. **Not
+    exercised by any -02 vector:** the passing §7 type-2 certs use the single-CN
+    shortcut (subject encoded directly as `48 …` bstr, no `(int, SpecialText)`
+    pair), so §7 stays green. FOLLOW-UP (impl, low priority): in the type-2 path,
+    force `attributeType` non-negative and emit the value as UTF-8 for
+    printableString name attributes; add a type-2 vector with a multi-attribute
+    name (incl. `countryName`) once ≥-03 vectors exist to lock it down.
+
+- **New draft-clarification issues #417/#418/#415 (open PRs #424/#425/#426).**
+  #417 (null-issuer "identical") is the only one with impl relevance: PR #424
+  resolves it as octet-for-octet self-issued. Our encoder already conforms —
+  `conversion.rs:861` nulls the issuer via `issuer == subject`, a byte-for-byte
+  comparison of the raw DER Name TLVs, and decode copies the subject Name back
+  (`conversion.rs:129`), so the round-trip is exact. No change needed. #418
+  (TLSA selector wrapper) and #415 (`application/cose-c509+cbor` sequence-vs-array)
+  are TLS/COSE bundling concerns our tool does not emit; no impl action.
+
+### 4. draft-21 is now official (2026-09-24) — alignment confirmed, no code change
+
+The WG published **draft-ietf-cose-cbor-encoded-cert-21** as the official version.
+The v20→v21 diff was cross-checked against the merged-PR set and the
+implementation; **every change is editorial, registry-comment, or reference-only —
+no wire format, CDDL, or registry-ID changed**, so the codec is byte-for-byte
+identical and the -02 vector suite is unaffected (still 123 PASS / 70 XFAIL / 8
+SKIP / 0 FAIL). Version labels were bumped to `-21` (Cargo.toml, `lib.rs`,
+`registry.rs`, `extensions.rs`, `conversion.rs`, README) in v0.6.1.
+
+Per-PR result (detail in items §2–§3 above):
+
+| PR | Nature | Impl status |
+|----|--------|-------------|
+| #404 serialNumber always-bstr | encoding clarification | conforms |
+| #408 subjectDirectoryAttributes removed | registry removal | encode drops int-24; decode tolerant (§2) |
+| #409 RSA / unstructuredAddress DER lengths | IANA comment fix | correct by construction |
+| #410 explicit integer ID ranges | IANA text | doc-only |
+| #420 keyUsage LSB-first | clarification | encoder matches |
+| #421 type-2 attributeType non-negative | clarification | **latent gap**, no -02 vector exercises it (§3) |
+| #422 bare `~oid` AlgorithmIdentifier | CDDL clarification | DONE 2026-09-15 (§3) |
+| #423/#419 CR-attribute generic `~oid` | clarification | encoder matches (§3) |
+| #424 null-issuer octet-for-octet | clarification | conforms (§3) |
+| #426 TLSA selector = bare C509Certificate | TLS bundling | not emitted by tool |
+| #430 c5u data description | media-type text | not emitted by tool |
+| #428 RFC 8446 → 9846 TLS reference | reference update | doc-only |
+
+The single carried-forward impl TODO is the **#421 latent gap** (type-2
+multi-attribute name attributeType sign), still low-priority and unexercised by
+any published vector.
+
+### Previously resolved issues
+
+| Issue | Resolution | Date |
+|-------|-----------|------|
+| SM2 type-3 | PASS — Weierstrass bignum handles the curve; no new crates needed | 2026-05-29 |
+| FRP256v1 type-3 | PASS — curve parameters already in `keys.rs` | 2026-05-29 |
+| RFC 9090 OID fallback | IMPLEMENTED — `[~oid, params]` arrays in sig/pk alg encoding/decoding; AS Identifiers rdi fallback | 2026-05-29 |
+| DH-PoP decode (§9.1 vals 14–16) | IMPLEMENTED — `parse_cbor_sig_info` handles DhSigStatic DER reconstruction | 2026-05-29 |
+| X25519 PoP attr type 2 (§7.2) | IMPLEMENTED — `parse_c509_csr` case 2 reconstructs PrivateKeyPossessionStatement DER | 2026-05-29 |
+| `parse_c509_item` dispatch | IMPLEMENTED — auto-detects cert (11 elements) vs CSR (7 elements) | 2026-05-29 |
+| Type-2 secp256r1 (`f2` command) | IMPLEMENTED — `type2.rs`: SHA-256 SKI, RFC 6979 ECDSA; §7 PASS for 3.3.4, 3.4.4 | 2026-06-04 |
+| Type-2 secp384r1, secp521r1, Ed25519 | IMPLEMENTED — `type2.rs` extended; §7 PASS for 3.5.4, 3.6.4, 3.14.4, 2.4 | 2026-06-04 |
+
+---
+
+## Real-world round-trip results
+
+`test_results/batch_test_2026-05-22_16-16-07.log`:
+**4710 / 5000 hosts** pass lossless round-trip.  1 conversion failure
+(barcelona.cat cert #3 — BMPString `explicitText` in UserNotice; C509
+normalises string types to UTF-8 so this cert is inherently non-roundtrippable
+by design).  Rest of failures are network timeouts or unreachable hosts.
