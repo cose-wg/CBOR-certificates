@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-09-27T04:52:31.450836+00:00",
+  "timestamp": "2026-10-29T05:20:24.287707+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -9780,7 +9780,7 @@
       "labels": [],
       "body": "",
       "createdAt": "2026-09-21T16:06:57Z",
-      "updatedAt": "2026-09-22T10:36:58Z",
+      "updatedAt": "2026-10-27T23:57:27Z",
       "closedAt": "2026-09-22T10:36:58Z",
       "comments": [
         {
@@ -9796,6 +9796,13 @@
           "body": "Probably, at least I didn't understand the comment.",
           "createdAt": "2026-09-22T10:36:56Z",
           "updatedAt": "2026-09-22T10:36:56Z"
+        },
+        {
+          "author": "meswap29-ship-it",
+          "authorAssociation": "NONE",
+          "body": "Napilbalh\n\nnapilbalh@gmail.com\n",
+          "createdAt": "2026-10-27T23:57:27Z",
+          "updatedAt": "2026-10-27T23:57:27Z"
         }
       ]
     }
