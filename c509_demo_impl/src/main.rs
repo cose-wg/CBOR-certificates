@@ -50,12 +50,12 @@ Commands:
   t  <urllist.txt>   Bulk round-trip test from a URL list file
   f2 <cert.der> <key.pem>                    Encode X.509 DER → Type-2 C509 hex
   f2 <cert.der> <key.pem> -nc               Also store EC public keys uncompressed
-  r2 <csr.der> <subj_key.pem>               Encode PKCS#10 DER → Type-2 C509 CSR (ECDSA/unsigned)
+  r2 <csr.der> <subj_key.pem>               Encode PKCS#10 DER → Type-2 C509 CSR (signed with the subject key, or unsigned)
   r2 <csr.der> <subj_key.pem> <peer_key.pem> --peer-cert <cert.cbor.hex>  DhSigStatic (RFC 6955)
   r2 ... --embedded-cert-key <key.pem>     Re-sign embedded C509 certs in attrs as type-2
   r2 ... -nc                                Also store EC public keys uncompressed
   v2 <c509.cbor.hex>                        Cryptographically verify a Type-2 signature (self-signed)
-  v2 <c509.cbor.hex> --issuer-point <hex>   Verify a CA-signed Type-2 against the issuer EC point
+  v2 <c509.cbor.hex> --issuer-point <hex>   Verify a CA-signed Type-2 with the issuer public key (same algorithm as the subject key; not RSA)
 ";
 
     let all_args: Vec<String> = args().collect();

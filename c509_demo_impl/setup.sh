@@ -3,7 +3,8 @@
 # setup.sh — install the system prerequisites for the C509 reference tool.
 #
 # The Rust crate depends on the `openssl` crate (native OpenSSL, used for
-# brainpoolP256r1/P384r1/P512r1 and Ed448 Type-2 signing), so a plain
+# Type-2 signing and verification with brainpoolP256r1/P384r1/P512r1,
+# frp256v1, SM2 and Ed448, and for SHAKE), so a plain
 # `cargo build` needs the system OpenSSL development library plus pkg-config
 # and a C toolchain to build and link the *-sys crates. The test-vector
 # fetcher (fetch_test_vectors.sh) additionally needs curl and python3-lxml.

@@ -298,12 +298,12 @@ blocking.
     fields from `parse_x509_cert_nc`), so for a general-form RDN attribute of type
     printableString (e.g. `countryName`/`serialNumber` in a multi-attribute name)
     it would emit a **negative** `attributeType` — contravening #421. **Not
-    exercised by any -02 vector:** the passing §7 type-2 certs use the single-CN
-    shortcut (subject encoded directly as `48 …` bstr, no `(int, SpecialText)`
-    pair), so §7 stays green. FOLLOW-UP (impl, low priority): in the type-2 path,
-    force `attributeType` non-negative and emit the value as UTF-8 for
-    printableString name attributes; add a type-2 vector with a multi-attribute
-    name (incl. `countryName`) once ≥-03 vectors exist to lock it down.
+    exercised by any -02 or -03 vector:** every name attribute in their type-2
+    certificates is a UTF8String, so §7 stays green. FOLLOW-UP (impl, low
+    priority): in the type-2 path, force `attributeType` non-negative and emit
+    the value as UTF-8 for printableString name attributes, with a covering
+    type-2 vector (e.g. a multi-attribute name with a printableString
+    `countryName`).
 
 - **New draft-clarification issues #417/#418/#415 (open PRs #424/#425/#426).**
   #417 (null-issuer "identical") is the only one with impl relevance: PR #424
@@ -333,7 +333,7 @@ Per-PR result (detail in items §2–§3 above):
 | #409 RSA / unstructuredAddress DER lengths | IANA comment fix | correct by construction |
 | #410 explicit integer ID ranges | IANA text | doc-only |
 | #420 keyUsage LSB-first | clarification | encoder matches |
-| #421 type-2 attributeType non-negative | clarification | **latent gap**, no -02 vector exercises it (§3) |
+| #421 type-2 attributeType non-negative | clarification | **latent gap**, no -02 or -03 vector exercises it (§3) |
 | #422 bare `~oid` AlgorithmIdentifier | CDDL clarification | DONE 2026-09-15 (§3) |
 | #423/#419 CR-attribute generic `~oid` | clarification | encoder matches (§3) |
 | #424 null-issuer octet-for-octet | clarification | conforms (§3) |

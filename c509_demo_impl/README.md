@@ -289,8 +289,10 @@ let certs = get_certs_from_tls("example.com".to_string());
 | `registry` | OID ↔ C509 integer ID tables (§9.1, §9.2, §ext-encoding) |
 | `lder` | DER parsing and building primitives |
 | `lcbor` | CBOR encoding primitives |
-| `type2` | Type-2 (natively signed) certificate encoding (`f2`) |
+| `type2` | Type-2 (natively signed) certificate encoding and signing (`f2`) |
 | `type2_csr` | Type-2 (natively signed) CSR encoding (`r2`) |
+| `verify` | Type-2 signature verification (`v2`) |
+| `sm2` | SM2 signing and verification with SM3 and the default distinguishing ID |
 | `tester` | TLS client, file I/O, batch testing, round-trip harness |
 | `help` | Printing and diagnostic utilities |
 
