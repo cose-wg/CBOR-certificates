@@ -19,7 +19,7 @@
 # missing (the script warns if so).
 #
 # Usage:   ./setup.sh
-# After:   cargo build --release  &&  ./fetch_test_vectors.sh 02
+# After:   cargo build --release  &&  ./fetch_test_vectors.sh 03
 #
 # SECURITY NOTICE: installs build/test tooling only. Test credentials only;
 # never use generated vectors in production.
@@ -105,7 +105,7 @@ fi
 
 if [ "$ok" -eq 1 ]; then
     say "All system prerequisites satisfied."
-    say "Next:  cargo build --release  &&  ./fetch_test_vectors.sh 02"
+    say "Next:  cargo build --release  &&  ./fetch_test_vectors.sh 03"
 else
     die "Some prerequisites are missing (see warnings above)."
 fi

@@ -8,8 +8,8 @@
 #   ./fetch_test_vectors.sh [VERSION]
 #
 # Arguments:
-#   VERSION   Draft version number (default: 02, current draft)
-#             Examples: 01, 02, 00
+#   VERSION   Draft version number (default: 03, current draft)
+#             Examples: 01, 02, 03
 #
 # What this script does:
 #   1. Downloads draft-ietf-cose-c509-test-vectors-{VERSION}.xml from the
@@ -34,7 +34,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TV_DIR="${SCRIPT_DIR}/../test_vectors"
 EXTRACTOR="${SCRIPT_DIR}/extract_vectors.py"
 
-VERSION="${1:-02}"
+VERSION="${1:-03}"
 DRAFT_NAME="draft-ietf-cose-c509-test-vectors-${VERSION}"
 XML_FILENAME="${DRAFT_NAME}.xml"
 XML_URL="https://www.ietf.org/archive/id/${XML_FILENAME}"
