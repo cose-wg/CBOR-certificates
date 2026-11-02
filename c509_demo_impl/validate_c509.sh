@@ -75,7 +75,7 @@ case "${VERSION}" in
         L_FRP_TYPE2="3.11.3"
         L_CERT_XREF="3.4=3.3"
         L_KEY_XREF="4.1=3.1.1 4.17=3.1.1 4.18=3.1.1 4.19=3.1.1 4.21=3.1.1 4.22=4.20.1 8.1=3.3.1"
-        L_V2_GLOB="3.*.4_c509_selfsign_*"
+        L_V2_GLOB="*.4_c509_selfsign_*"
         L_V2_EXTRA=""
         L_DHSIG_KEY_0E="3.3.1"; L_DHSIG_CERT_0E="3.3.4_c509_selfsign_secp256r1"
         L_DHSIG_KEY_0F="3.5.1"; L_DHSIG_CERT_0F="3.5.4_c509_selfsign_secp384r1"
@@ -411,7 +411,8 @@ done
 TMPOUT="$(mktemp)"
 TMPDER="$(mktemp)"
 TMPCA="$(mktemp)"
-trap 'rm -f "${TMPOUT}" "${TMPDER}" "${TMPCA}"' EXIT
+TMPSIG="$(mktemp)"
+trap 'rm -f "${TMPOUT}" "${TMPDER}" "${TMPCA}" "${TMPSIG}"' EXIT
 
 run_c509() { local o="$1"; shift; "${BINARY}" "$@" > "${o}" 2>&1; }
 
@@ -585,13 +586,16 @@ for hex_file in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
     sec=$(echo "$bn" | sed -n 's/^v[0-9]*_section_\([^_]*\)_.*/\1/p')
     x509_sec="$(type3_to_x509_section "${sec}")"
 
-    # Try to find the matching .crt or .csr file
+    # Try to find the matching .crt or .csr file. A type-3 artwork may also sit
+    # in the X.509 certificate's own section (e.g. -03 §4.11.2, frp256v1).
     x509_is_csr=0
     if find_x509_crt_for_section "${x509_sec}"; then
         ref_src="${X509_CRT_FILE}"
     elif find_x509_csr_for_section "${x509_sec}"; then
         ref_src="${X509_CSR_FILE}"
         x509_is_csr=1
+    elif find_x509_crt_for_section "${sec}"; then
+        ref_src="${X509_CRT_FILE}"
     else
         log_skip "${bn}: no matching X.509 source for section ${x509_sec}"
         continue
@@ -775,9 +779,24 @@ try_f2() {
             # randomised and only the TBS matches. Test the stronger claim first.
             if [ "${actual_full}" = "${ietf_full}" ]; then
                 log_pass "${bn}: FULL match incl. signature (deterministic alg) — IETF ${_sec} ${flag_label}"
-            else
-                log_pass "${bn}: TBS fields 0–9 match IETF ${_sec} vector ${flag_label}"
+                matched=1
+                return 0
             fi
+            # Randomised signature: check that f2's own signature verifies
+            # (self-signed only — `v2` takes the signer key from the subject).
+            _sig_note=""
+            if [ -z "${_ca_flag}" ]; then
+                echo "8b${actual_full}" > "${TMPSIG}"
+                _vout="$("${BINARY}" v2 "${TMPSIG}" 2>&1)" && _vrc=0 || _vrc=$?
+                if [ "${_vrc}" -eq 0 ]; then
+                    _sig_note="; f2 signature verified"
+                elif ! echo "${_vout}" | grep -q "unsupported public-key algorithm"; then
+                    log_fail "${bn}: TBS matches but f2's signature does not verify ($(echo "${_vout}" | sed -n 's/.*VERIFY FAIL: //p'))"
+                    matched=1
+                    return 0
+                fi
+            fi
+            log_pass "${bn}: TBS fields 0–9 match IETF ${_sec} vector ${flag_label}${_sig_note}"
             matched=1
             return 0
         fi
@@ -847,12 +866,14 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
 
     # Reject key algorithms not supported by f2.
     # Supported: P-256/P-384/P-521, Ed25519, RSA (PKCS1v1.5+PSS),
-    #            brainpoolP256r1/P384r1/P512r1 (via OpenSSL),
-    #            Ed448 (via OpenSSL),
+    #            brainpoolP256r1/P384r1/P512r1, SM2, Ed448 (via OpenSSL),
+    #            frp256v1 (OID 1.2.250.1.223.101.256.1; OpenSSL cannot load
+    #            the key, so it is recognised from its ASN.1 structure),
     #            X25519/X448 (id-alg-unsigned; key not used for signing).
-    _key_algo=$(openssl pkey -in "${key_file}" -text -noout 2>/dev/null) || true
-    if ! echo "${_key_algo}" | grep -qE "prime256v1|P-256|secp384r1|secp521r1|ED25519|modulus|X25519|X448|brainpoolP256r1|brainpoolP384r1|brainpoolP512r1|ED448|SM2"; then
-        log_xfail "${bn} [Cat B — unsupported key type; f2 supports P-256/P-384/P-521/Ed25519/RSA/brainpool/Ed448/unsigned]"
+    _key_algo=$(openssl pkey -in "${key_file}" -text -noout 2>/dev/null) \
+        || _key_algo=$(openssl asn1parse -in "${key_file}" 2>/dev/null) || true
+    if ! echo "${_key_algo}" | grep -qE "prime256v1|P-256|secp384r1|secp521r1|ED25519|modulus|X25519|X448|brainpoolP256r1|brainpoolP384r1|brainpoolP512r1|ED448|SM2|1\.2\.250\.1\.223\.101\.256\.1"; then
+        log_xfail "${bn} [Cat B — unsupported key type; f2 supports P-256/P-384/P-521/Ed25519/RSA/brainpool/SM2/Ed448/frp256v1/unsigned]"
         continue
     fi
 
@@ -936,8 +957,9 @@ done
 # For each self-signed Type-2 cert vector, cryptographically verify the draft's
 # published signature (field 10) against the subject public key over the CBOR TBS
 # — the check that upgrades Type-2 from "encoding reproduced" to "signature
-# valid". Covers ECDSA P-256/384/521 and Ed25519 (pure-Rust); brainpool / RSA /
-# SM2 / Ed448 / X25519 / X448 are reported not-yet-implemented (SKIP, not FAIL).
+# valid". Covers ECDSA (P-256/384/521, brainpool, frp256v1), SM2, Ed25519, Ed448,
+# RSA PKCS#1 v1.5 and RSASSA-PSS (SHA-2 and SHAKE); a key type `v2` does not
+# support is reported as SKIP, not FAIL.
 # =============================================================================
 echo ""
 echo -e "${C_BOLD}>>> Section 7b: Type-2 cryptographic signature verification (v2 command)${C_RST}"
@@ -950,7 +972,8 @@ echo ""
 V2_PROBE="$("${BINARY}" v2 /dev/null 2>&1 || true)"
 case "${V2_PROBE}" in *VERIFY*) V2_OK=1 ;; *) V2_OK=0 ;; esac
 [ "${V2_OK}" -eq 1 ] || log_skip "Section 7b: this c509 binary has no 'v2' command — rebuild it (cargo build --bin c509, or run with --build). Skipping cryptographic verification."
-V2_FILES=( "${TV_DIR}/v${VERSION}_section_"${L_V2_GLOB}.cbor.hex )
+V2_FILES=( "${TV_DIR}/v${VERSION}_section_"${L_V2_GLOB}.cbor.hex
+            "${TV_DIR}/v${VERSION}_section_${L_FRP_TYPE2}_"*.cbor.hex )
 for _stem in ${L_V2_EXTRA}; do
     V2_FILES+=( "${TV_DIR}/v${VERSION}_section_${_stem}.cbor.hex" )
 done
@@ -1187,8 +1210,9 @@ echo "           pass — in the encoding and signature-verification phases. Eve
 echo "           XFAIL line above prints its own specific reason."
 echo "    SKIP   the check could not be run — either an input it needs is not"
 echo "           present, OR the tool does not yet support that algorithm."
-echo "           (Signature verification currently covers ECDSA P-256/P-384/P-521"
-echo "           and Ed25519; brainpool / RSA / SM2 / Ed448 are not yet wired.)"
+echo "           (Signature verification covers ECDSA over P-256/P-384/P-521,"
+echo "           brainpool and frp256v1, SM2, Ed25519, Ed448, RSA PKCS#1 v1.5"
+echo "           and RSASSA-PSS with SHA-2 or SHAKE.)"
 echo "    FAIL   a genuine, unexpected mismatch — a bug to fix."
 if [ "${VERSION}" = "01" ]; then
     echo ""

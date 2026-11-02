@@ -19,6 +19,7 @@ pub mod keys;
 pub mod extensions;
 pub mod conversion;
 pub mod tester;
+pub(crate) mod sm2;
 pub mod type2;
 pub mod type2_csr;
 pub mod verify;
