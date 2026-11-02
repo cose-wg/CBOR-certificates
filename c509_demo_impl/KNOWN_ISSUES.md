@@ -5,31 +5,36 @@ Reference implementation of draft-ietf-cose-cbor-encoded-cert, aligned with
 reference-only (no wire, CDDL, or registry-ID changes); see §"draft-21 alignment"
 under *Open Issues* for the per-PR audit.
 
-## Test Vector Status (default: draft-ietf-cose-c509-test-vectors-02)
+## Test Vector Status (default: draft-ietf-cose-c509-test-vectors-03)
 
-`validate_c509.sh` is **version-agnostic**: file pairing, the C509 type byte, and
-the hex comparisons transparently handle the draft-20 CBOR-array header
-(`0x8B` cert / `0x87` CSR), so it runs clean against draft-02 (default) and still
-against draft-01 (`--version 01`). It uses `od` (not `xxd`) so it needs no
-`vim-common`. Run `./validate_c509.sh` from this directory.
+`validate_c509.sh` runs against test-vectors -03 (default), -02 and -01
+(`--version 02` / `--version 01`). The section numbers of CSRs, CSR templates and
+cross-referenced keys and certificates differ between these versions and are
+defined per version in its "Draft layout" block. It handles the draft-20
+CBOR-array header (`0x8B` cert / `0x87` CSR) and uses `od` (not `xxd`). Run
+`./validate_c509.sh` from this directory.
 
-Latest run (2026-09-17, 201 tests total):
+Latest run (2026-11-02, 218 tests total):
 
 | Result | Count | Meaning |
 |--------|-------|---------|
-| PASS   | 123   | Tool output matches the official draft-02 vector exactly (byte-exact encode, verified signature, or byte-exact DER round-trip) |
-| XFAIL  | 70    | Expected failure — Cat A / Cat B / Cat V (see below) |
-| SKIP   | 8     | Check could not run — input absent, or algorithm not yet wired for signature verify (brainpool / RSA / SM2 / Ed448) |
+| PASS   | 130   | Tool output matches the official draft-03 vector exactly (byte-exact encode, verified signature, or byte-exact DER round-trip) |
+| XFAIL  | 71    | Expected failure — no X.509 DER equivalent, or a key `f2` cannot sign with (see below) |
+| SKIP   | 17    | Check could not run — `v2` not implemented for the key type (brainpool / RSA / SM2 / Ed448), or no X.509 counterpart to compare |
 | FAIL   | 0     | No unexpected failures |
 
-Of the 70 XFAILs, **68 are inherent** (not tool gaps) and **2 are temporary
-vector drift**: **Cat A** (59) type-2 natively-signed vectors have no X.509 DER
-to decode back to; the **CRT-template decode** entries (6) in §4 likewise have no
-DER equivalent (their lossless CBOR round-trip is tested in §9 instead); **Cat B**
-(3) are certs `f2` cannot sign as type-2 (an id-alg-unsigned X25519/X448
-end-entity, or the frp256v1 curve); **Cat V** (2) are the two brainpoolP512r1
-vectors frozen before draft PR #408 removed subjectDirectoryAttributes (see §2) —
-they clear once ≥-03 test vectors are regenerated.
+All 71 XFAILs are inherent (not tool gaps): **Cat A** (62) type-2 natively-signed
+vectors have no X.509 DER to decode back to; the **CRT-template decode** entries
+(8) in §4 likewise have no DER equivalent (their lossless CBOR round-trip is
+tested in §9 instead); **Cat B** (1) is the frp256v1 key, which OpenSSL cannot
+load. Against `--version 02` the run is 125 PASS / 68 XFAIL / 8 SKIP / 0 FAIL,
+including the two **Cat V** brainpoolP512r1 vectors whose subjectDirectoryAttributes
+encoding predates draft PR #408 (see §2).
+
+The 8-byte integer vectors of -03 (§8, §12, §13.4) are covered: the §8
+certificate's signature verifies (`v2`) and the §13.4 template round-trips. Their
+integer IDs have no OID, so they cannot be converted to X.509; `c` reports this as
+an error.
 
 The former draft-20 gaps are now **implemented**:
 - **`r2` type-2 CSR** — RFC 6955 DhSig (the peer cert's `0x8B` array header is
@@ -48,9 +53,11 @@ one expected divergence — the §8.7 `withcert` CSR, whose embedded certificate
 Filenames follow the pattern `v{VER}_section_{N.N.N}_{anchor}.{ext}` matching the
 section number in the corresponding draft version.
 
-The XFAIL classification in sections §2–§6 is driven by section number patterns:
+The XFAIL classification in sections §2–§6 is driven by section number patterns
+(values for -01/-02; the -03 values are in the "Draft layout" block of
+`validate_c509.sh`):
 - Section `*.4` and `3.11.3` → Type 2 natively-signed (Category A)
-- Section `10.*` → CRT templates (Category E1; §8 not implemented)
+- Section `10.*` → CRT templates (Category E1)
 - Type-2 content in any section (first byte `02`) → Category A
 
 Section §7 (Type-2 signing via `f2`) introduces new categories:
@@ -248,7 +255,7 @@ signed, no reference DER).
 implemented.  Test vectors at sections 10.1–10.3.
 Status: **planned**, lower priority.
 
-### 2. subjectDirectoryAttributes removed (draft PR #408) — FOLLOW-UP pending vector regen
+### 2. subjectDirectoryAttributes removed (draft PR #408) — RESOLVED by test-vectors -03
 
 The extension **Subject Directory Attributes** (C509 ext ID 24, OID 2.5.29.9)
 was removed from the registry by draft PR #408, which merged **after**
@@ -266,9 +273,9 @@ cases that carry this extension (§3.10.2 X.509→C509, §3.10.4 TBS) no longer
 match byte-exact and are marked **XFAIL Cat V** (vector drift) by
 `validate_c509.sh` (`is_vector_drift_xfail`).
 
-**FOLLOW-UP:** when post-#408 test-vectors (≥ -03) are released, remove
-`is_vector_drift_xfail` and its two call sites and confirm §3.10.x passes
-byte-exact against the regenerated vectors.
+Test-vectors -03 no longer contain the extension, and its brainpoolP512r1
+vectors (§4.10.2 X.509→C509, §4.10.4 TBS) match byte-exact. `is_vector_drift_xfail`
+now applies only to `--version 01` / `--version 02`.
 
 ### 3. Upstream review follow-ups (PR #402 — draft moved ahead) — OPEN
 

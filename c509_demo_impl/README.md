@@ -108,7 +108,7 @@ downloads, extracts, and validates against them automatically.
 
 | Option | Effect |
 |--------|--------|
-| `--version VER` | Test vector draft version to use (default: `02`, the current draft) |
+| `--version VER` | Test vector draft version to use (default: `03`, the current draft) |
 | `--refetch` | Force re-download of the XML even if already cached |
 | `--rebuild` | Force `cargo build` even if the binary is current |
 | `--verbose` | Print tool output for every failing test |
@@ -125,15 +125,15 @@ What it does internally:
    after their section number in the draft:
 
    ```
-   v01_section_3.3.2_x509_selfsign_secp256r1.crt
-   v01_section_3.3.3_c509_type_3_certificate_3.cbor.hex
+   v03_section_4.3.2_x509_selfsign_secp256r1.crt
+   v03_section_4.3.3_c509_type_3_certificate_3.cbor.hex
    ```
 
    OpenSSL verbose dumps embedded in the XML are automatically skipped.
 
 3. **Build** — runs `cargo build --bin c509` (incremental; usually a no-op).
 
-4. **Validate** — runs `validate_c509.sh` which exercises seven test sections:
+4. **Validate** — runs `validate_c509.sh`, which exercises these test sections:
 
    | Section | What is tested |
    |---------|---------------|
@@ -142,7 +142,14 @@ What it does internally:
    | §4 Decoding | C509 type-3 hex → X.509 DER, byte-exact match against source cert |
    | §5 Round-trip | X.509 DER → C509 → DER, byte-exact comparison |
    | §6 CSR round-trip | X.509 CSR → C509 → CSR, byte-exact comparison |
-   | §7 Type-2 signing | `f2` TBS verification: fields 0–9 match IETF type-2 vector exactly (sig skipped — RFC 6979 per-implementation) |
+   | §7 Type-2 signing | `f2`: fields 0–9 match the IETF type-2 vector (field 10 too for deterministic signature algorithms); CA-issued certificates are signed with the CA key |
+   | §7b Signature verification | `v2`: the signature of each self-signed type-2 vector verifies |
+   | §8 Type-2 CSR signing | `r2`: ECDSA (TBS), DhSig and unsigned CSRs (full) match the IETF vector |
+   | §9 CRT round-trip | certification request templates re-encode byte-exact |
+
+   The section numbers of the CSRs, templates and cross-referenced keys differ
+   between test-vector versions; they are set per version in the "Draft layout"
+   block of `validate_c509.sh`.
 
 5. **Report** — prints PASS / XFAIL / SKIP / FAIL counts plus a final
    PASS/FAIL banner.
@@ -155,51 +162,53 @@ If you need to run steps separately:
 # Download + extract only:
 ./fetch_test_vectors.sh [VERSION]
 
-# Validate only (binary must already be built; defaults to draft-02):
-./validate_c509.sh [--version 02] [--verbose]
+# Validate only (binary must already be built; defaults to draft-03):
+./validate_c509.sh [--version 03] [--verbose]
 
 # Extract only (XML already downloaded). Use the latest draft version:
 python3 extract_vectors.py \
-    --version 02 \
-    --xml ../test_vectors/draft-ietf-cose-c509-test-vectors-02.xml \
+    --version 03 \
+    --xml ../test_vectors/draft-ietf-cose-c509-test-vectors-03.xml \
     --outdir ../test_vectors/
 ```
 
-The `-02` set (`v02_section_*`) aligns with draft-ietf-cose-cbor-encoded-cert-20:
+The `-03` set (`v03_section_*`) aligns with draft-ietf-cose-cbor-encoded-cert-21:
 every C509 object carries its CBOR-array leading byte (`0x8B` cert / `0x87` CSR),
-and the tool emits exactly that form.
+and the tool emits exactly that form. The `-01` and `-02` sets also run
+(`--version 01` / `--version 02`).
 
-### Current results (`validate_c509.sh`, default draft-02)
-
-`validate_c509.sh` is **version-agnostic**: file pairing, the C509 type byte, and
-the hex comparisons all transparently handle the draft-20 CBOR-array header
-(`0x8B` / `0x87`), so the suite runs clean against draft-02 (default) and still
-against draft-01 (`--version 01`).
+### Current results (`validate_c509.sh`, default draft-03)
 
 ```
-PASS:  117   type-3 certs/CSRs (encode, decode, round-trip) + type-2 f2/r2 (incl. DhSig, withcert) + CRT round-trip
-XFAIL:  68   Cat A type-2 (no DER equiv) + CRT-template decode (no DER); Cat B f2 cannot sign
-SKIP:    4   no reference data (e.g. type-2 vector without a private key)
+PASS:  130   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
+             withcert, CA-issued X25519/X448), v2 signature verification, CRT round-trip
+XFAIL:  71   no X.509 DER equivalent (62 type-2, 8 CRT); f2 cannot sign frp256v1 (1)
+SKIP:   17   v2 not implemented for the key type (14); no X.509 counterpart to compare (3)
 FAIL:    0
 ```
 
-The 68 XFAILs are **inherent**, not tool gaps:
+The XFAILs are inherent, not tool gaps:
 
-- **Cat A** — type-2 (natively signed): the signature is over the CBOR TBS, so there
-  is no X.509 DER to decode back to. The §10 CRT templates are XFAIL'd in the decode
-  section for the same reason (their lossless CBOR round-trip is verified in §9).
-- **Cat B** — `f2` type-2 signing: unsupported key type, or a cert `f2` cannot encode
-  as type-2 (an id-alg-unsigned X25519/X448 end-entity cert, or the frp256v1 curve).
+- **Type 2** (natively signed): the signature is over the CBOR TBS, so there is no
+  X.509 DER to decode back to. CSR templates likewise have no DER form; their
+  lossless CBOR round-trip is verified in §9.
+- **frp256v1**: OpenSSL cannot load the key, so `f2` cannot sign with it.
 
-The draft-20 `r2` type-2-CSR path (RFC 6955 DhSig and the nested `bytes .cbor`
-`withcert` embedded cert) and CRT-template decode/round-trip are **implemented** and
-pass. (Running `--version 01` leaves the §8.7 `withcert` CSR as one expected
-draft-19-vs-20 divergence.)
+The SKIPs: `v2` verifies ECDSA P-256/P-384/P-521 and Ed25519 signatures, not RSA,
+brainpool, SM2 or Ed448; and the 8-byte-integer certificate and CSR have no X.509
+counterpart for `f2` / `r2` to start from (their signatures are verified by `v2`
+or not applicable).
 
-Type-2 signing (`f2`, §7) compares fields 0–9 (the TBS) byte-exactly; field 10 (the
-ECDSA/EdDSA signature) is excluded because different RFC 6979 implementations
-produce different r‖s values while both are valid. Supported: secp256r1, secp384r1,
-secp521r1, Ed25519. See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for the full breakdown.
+Type-2 signing (`f2`, §7) compares fields 0–9 (the TBS) byte-exactly, and also
+field 10 when the signature algorithm is deterministic (Ed25519, Ed448,
+RSA-PKCS#1 v1.5); ECDSA and RSA-PSS signatures differ per run while both are
+valid. `f2` signs with secp256r1, secp384r1, secp521r1, Ed25519, Ed448, RSA
+(PKCS#1 v1.5 and PSS), brainpoolP256r1/P384r1/P512r1 and SM2. See
+[KNOWN_ISSUES.md](KNOWN_ISSUES.md) for the full breakdown.
+
+Integer identifiers without a registered OID (e.g. the 8-byte attribute types and
+extension IDs of the -03 §8 certificate) cannot be converted to X.509; `c`
+reports this as an error (exit status 1).
 
 Round-trip mode (`l` / `ll` / `t`) is independent of the draft version and also
 passes on live TLS chains (4710/5000 public hosts lossless — the one by-design
