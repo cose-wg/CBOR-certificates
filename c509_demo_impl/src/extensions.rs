@@ -5,6 +5,7 @@
 //! registered extension types (draft §9.4) plus an RFC 9090 OID fallback for
 //! unknown extensions.
 
+use std::convert::TryFrom;
 use serde_cbor::Value;
 use asn1_rs::{Oid, ToDer};
 use log::{trace, warn};
@@ -917,7 +918,7 @@ fn parse_cbor_ext_cert_policies(extension_val: &Value, critical: bool) -> Vec<u8
                 match element {
                     Value::Integer(pol_id) => {
                         if can_specify { result_vec.push(lder_to_seq(wip)); wip = Vec::new(); }
-                        wip.push(map_cert_policy_id_to_oid(*pol_id as i64));
+                        wip.push(map_cert_policy_id_to_oid(cert_policy_id(*pol_id)));
                         can_specify = true;
                     }
                     Value::Bytes(raw_oid) => {
@@ -932,8 +933,8 @@ fn parse_cbor_ext_cert_policies(extension_val: &Value, critical: bool) -> Vec<u8
                                 let q_oid = match &specifiers[i] {
                                     Value::Bytes(b) => lder_to_generic(b.to_vec(), ASN1_OID),
                                     Value::Integer(pol_id) => {
-                                        if PQ_CPS == *pol_id as i64 { text_type = ASN1_IA5_STR; PQ_CPS_OID.to_der_vec().unwrap() }
-                                        else if PQ_UNOTICE == *pol_id as i64 { text_type = ASN1_UTF8_STR; PQ_UNOTICE_OID.to_der_vec().unwrap() }
+                                        if PQ_CPS == cert_policy_id(*pol_id) { text_type = ASN1_IA5_STR; PQ_CPS_OID.to_der_vec().unwrap() }
+                                        else if PQ_UNOTICE == cert_policy_id(*pol_id) { text_type = ASN1_UTF8_STR; PQ_UNOTICE_OID.to_der_vec().unwrap() }
                                         else { panic!("Unknown policy qualifier: {}", pol_id) }
                                     }
                                     _ => panic!("Expected OID for policy qualifier"),
@@ -1012,16 +1013,27 @@ fn map_key_purpose_id_to_oid(key_purpose_id: u64) -> Vec<u8> {
     }
 }
 
+/// A registered KeyPurposeId is a small non-negative integer; anything else
+/// (negative or 8-byte values) has no OID.
+fn key_purpose_id(id: i128) -> u64 {
+    u64::try_from(id).unwrap_or_else(|_| panic!("no OID is registered for C509 EKU ID {}", id))
+}
+
+/// Certificate policy and policy qualifier IDs that do not fit in an i64 have no OID.
+fn cert_policy_id(id: i128) -> i64 {
+    i64::try_from(id).unwrap_or_else(|_| panic!("no OID is registered for C509 certificate policy ID {}", id))
+}
+
 fn parse_cbor_ext_ext_key_usage(extension_val: &Value, critical: bool) -> Vec<u8> {
     let mut oid = EXT_EXT_KEY_USAGE_OID.to_der_vec().unwrap();
     if critical { oid.extend(ASN1_X509_CRITICAL.to_vec()); }
     let mut ext_val = Vec::new();
     match extension_val {
-        Value::Integer(id) => ext_val.push(map_key_purpose_id_to_oid(*id as u64)),
+        Value::Integer(id) => ext_val.push(map_key_purpose_id_to_oid(key_purpose_id(*id))),
         Value::Array(elements) => {
             for e in elements {
                 match e {
-                    Value::Integer(id) => ext_val.push(map_key_purpose_id_to_oid(*id as u64)),
+                    Value::Integer(id) => ext_val.push(map_key_purpose_id_to_oid(key_purpose_id(*id))),
                     Value::Bytes(b) => ext_val.push(lder_to_generic(b.to_vec(), ASN1_OID)),
                     _ => panic!("Error parsing EKU element: {:?}", e),
                 }
@@ -1244,7 +1256,9 @@ pub(crate) fn parse_cbor_extensions_inner(input: &Value) -> Vec<Vec<u8>> {
                 parsed_extensions_arr.push({
                     match &extension_array[i] {
                         Value::Integer(ext_type) => {
-                            let dummy = match ext_type.unsigned_abs() as u16 {
+                            // Match on the full value: narrowing it first would map an
+                            // unregistered 8-byte extension ID onto a registered one.
+                            let dummy = match ext_type.unsigned_abs() {
                                 1 => parse_cbor_ext_subject_key_id(&extension_array[i + 1], *ext_type < 0),
                                 2 => parse_cbor_ext_key_usage(&extension_array[i + 1], *ext_type < 0),
                                 3 => parse_cbor_ext_subject_alt_name(&extension_array[i + 1], *ext_type < 0),
@@ -1271,7 +1285,7 @@ pub(crate) fn parse_cbor_extensions_inner(input: &Value) -> Vec<Vec<u8>> {
                                 35 => reconstruct_as_identifiers(&EXT_AS_IDENTIFIERS_V2_OID, &extension_array[i + 1], *ext_type < 0),
                                 36 => parse_cbor_ext_ocsp_no_check(&extension_array[i + 1], *ext_type < 0),
                                 38 => parse_cbor_ext_tls_features(&extension_array[i + 1], *ext_type < 0),
-                                _ => panic!("Ext type {} out of scope!", ext_type),
+                                _ => panic!("no OID is registered for C509 extension ID {}", ext_type),
                             };
                             i += 2;
                             dummy
@@ -1305,4 +1319,36 @@ pub(crate) fn parse_cbor_extensions_inner(input: &Value) -> Vec<Vec<u8>> {
 /// used in TBSCertificate. For CSR extensionRequest use `parse_cbor_extensions_inner` directly.
 pub(crate) fn parse_cbor_extensions(input: &Value) -> Vec<u8> {
     lder_to_generic(lder_to_seq(parse_cbor_extensions_inner(input)), ASN1_INDEX_THREE)
+}
+
+#[cfg(test)]
+mod integer_id_tests {
+    use super::{cert_policy_id, key_purpose_id, parse_cbor_extensions_inner};
+    use serde_cbor::Value;
+
+    // 2^16 + 1 truncates to 1 (subjectKeyIdentifier) if narrowed to 16 bits.
+    #[test]
+    #[should_panic(expected = "no OID is registered for C509 extension ID")]
+    fn eight_byte_extension_id_is_not_narrowed() {
+        let exts = Value::Array(vec![Value::Integer((1i128 << 16) + 1), Value::Bytes(vec![0; 20])]);
+        parse_cbor_extensions_inner(&exts);
+    }
+
+    #[test]
+    #[should_panic(expected = "no OID is registered for C509 EKU ID")]
+    fn negative_eku_id_has_no_oid() {
+        key_purpose_id(-1);
+    }
+
+    #[test]
+    #[should_panic(expected = "no OID is registered for C509 certificate policy ID")]
+    fn policy_id_beyond_i64_has_no_oid() {
+        cert_policy_id(1i128 << 63);
+    }
+
+    #[test]
+    fn small_ids_map_unchanged() {
+        assert_eq!(key_purpose_id(1), 1);
+        assert_eq!(cert_policy_id(-1), -1);
+    }
 }

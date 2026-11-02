@@ -194,7 +194,9 @@ pub(crate) fn parse_cbor_name(input: &Value) -> Vec<u8> {
             for i in (0..name_elements.len()).step_by(2) {
                 let attr_type_and_val = match &name_elements[i] {
                     Value::Integer(attribute) => {
-                        let (oid, tag) = match attribute.unsigned_abs() as u32 {
+                        // Match on the full value: narrowing it first would map an
+                        // unregistered 8-byte attribute type onto a registered one.
+                        let (oid, tag) = match attribute.unsigned_abs() {
                             0 => (ATT_EMAIL_OID, ASN1_IA5_STR),
                             1 => (ATT_COMMON_NAME_OID, if *attribute < 0 { ASN1_PRINT_STR } else { ASN1_UTF8_STR }),
                             2 => (ATT_SUR_NAME_OID, if *attribute < 0 { ASN1_PRINT_STR } else { ASN1_UTF8_STR }),
@@ -224,7 +226,7 @@ pub(crate) fn parse_cbor_name(input: &Value) -> Vec<u8> {
                             28 => (ATT_USER_ID_OID, if *attribute < 0 { ASN1_PRINT_STR } else { ASN1_UTF8_STR }),
                             29 => (ATT_UNSTRUCTURED_NAME_OID, if *attribute < 0 { ASN1_PRINT_STR } else { ASN1_UTF8_STR }),
                             30 => (ATT_UNSTRUCTURED_ADDRESS_OID, if *attribute < 0 { ASN1_PRINT_STR } else { ASN1_UTF8_STR }),
-                            _ => panic!("Unknown attribute format: {}", attribute),
+                            _ => panic!("no OID is registered for C509 attribute type {}", attribute),
                         };
                         let value = match &name_elements[i + 1] {
                             Value::Text(text_value) => text_value.as_bytes(),
@@ -1007,4 +1009,24 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
     }
 
     Cert { der: input, cbor: output }
+}
+
+#[cfg(test)]
+mod integer_id_tests {
+    use super::parse_cbor_name;
+    use serde_cbor::Value;
+
+    #[test]
+    fn registered_attribute_type_decodes() {
+        let name = Value::Array(vec![Value::Integer(1), Value::Text("x".into())]);
+        assert!(!parse_cbor_name(&name).is_empty());
+    }
+
+    // 2^32 + 1 truncates to 1 (commonName) if the value is narrowed to 32 bits.
+    #[test]
+    #[should_panic(expected = "no OID is registered for C509 attribute type")]
+    fn eight_byte_attribute_type_is_not_narrowed() {
+        let name = Value::Array(vec![Value::Integer((1i128 << 32) + 1), Value::Text("x".into())]);
+        parse_cbor_name(&name);
+    }
 }

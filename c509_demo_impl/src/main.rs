@@ -12,6 +12,23 @@ use std::env::args;
 use env_logger::Env;
 use log::info;
 
+/// Decode C509 → X.509 DER/CSR for the `c` command. A C509 object that cannot
+/// be converted (e.g. one using integer IDs that have no OID) or is malformed is
+/// reported as an error with exit status 1, not as a panic.
+fn parse_c509_or_exit(bytes: Vec<u8>) -> c509::Cert {
+    let prev_hook = std::panic::take_hook();
+    std::panic::set_hook(Box::new(|_| {}));
+    let result = std::panic::catch_unwind(|| parse_c509_item(bytes));
+    std::panic::set_hook(prev_hook);
+    result.unwrap_or_else(|e| {
+        let msg = e.downcast_ref::<String>().map(String::as_str)
+            .or_else(|| e.downcast_ref::<&str>().copied())
+            .unwrap_or("unknown error");
+        eprintln!("c: cannot convert to X.509: {}", msg);
+        std::process::exit(1);
+    })
+}
+
 fn main() {
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     info!("Logger initialized!");
@@ -205,7 +222,7 @@ Commands:
                 .expect("c: hex decoding failed — check that the file contains valid hex");
             // parse_c509_item dispatches to parse_c509_cert (11 elements) or
             // parse_c509_csr (7 elements) based on the CBOR sequence length.
-            let res = vec![parse_c509_item(bytes)];
+            let res = vec![parse_c509_or_exit(bytes)];
             if write_output { write_x509_to_files(&res, &target_file); }
             res
         }
