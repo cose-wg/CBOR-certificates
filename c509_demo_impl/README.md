@@ -51,7 +51,7 @@ To install manually instead (Debian/Ubuntu package names shown):
 | Tool | Purpose | Install |
 |------|---------|---------|
 | `cargo` / `rustc` | Build the Rust binary | <https://rustup.rs> |
-| C toolchain + `pkg-config` + OpenSSL **dev** library | The crate links native OpenSSL (via the `openssl` crate) for brainpoolP256r1/P384r1/P512r1 and Ed448 Type-2 signing, so `cargo build` needs these to compile and link — this is the usual cause of a *"could not find OpenSSL"* build error | `apt-get install build-essential pkg-config libssl-dev` |
+| C toolchain + `pkg-config` + OpenSSL **dev** library | The crate links native OpenSSL (via the `openssl` crate) for Type-2 signing and verification with brainpoolP256r1/P384r1/P512r1, frp256v1, SM2 and Ed448, and for SHAKE, so `cargo build` needs these to compile and link — this is the usual cause of a *"could not find OpenSSL"* build error | `apt-get install build-essential pkg-config libssl-dev` |
 | `python3` + `lxml` | Extract XML test vectors (`fetch_test_vectors.sh`) | `apt-get install python3-lxml` |
 | `curl` | Download the draft XML | `apt-get install curl` |
 
@@ -142,7 +142,7 @@ What it does internally:
    | §4 Decoding | C509 type-3 hex → X.509 DER, byte-exact match against source cert |
    | §5 Round-trip | X.509 DER → C509 → DER, byte-exact comparison |
    | §6 CSR round-trip | X.509 CSR → C509 → CSR, byte-exact comparison |
-   | §7 Type-2 signing | `f2`: fields 0–9 match the IETF type-2 vector (field 10 too for deterministic signature algorithms); CA-issued certificates are signed with the CA key |
+   | §7 Type-2 signing | `f2`: fields 0–9 match the IETF type-2 vector (field 10 too for deterministic signature algorithms, otherwise `f2`'s own signature is verified with `v2`); CA-issued certificates are signed with the CA key |
    | §7b Signature verification | `v2`: the signature of each self-signed type-2 vector verifies |
    | §8 Type-2 CSR signing | `r2`: ECDSA (TBS), DhSig and unsigned CSRs (full) match the IETF vector |
    | §9 CRT round-trip | certification request templates re-encode byte-exact |
@@ -180,30 +180,40 @@ and the tool emits exactly that form. The `-01` and `-02` sets also run
 ### Current results (`validate_c509.sh`, default draft-03)
 
 ```
-PASS:  130   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
+PASS:  147   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
              withcert, CA-issued X25519/X448), v2 signature verification, CRT round-trip
-XFAIL:  71   no X.509 DER equivalent (62 type-2, 8 CRT); f2 cannot sign frp256v1 (1)
-SKIP:   17   v2 not implemented for the key type (14); no X.509 counterpart to compare (3)
+XFAIL:  70   no X.509 DER equivalent (62 type-2, 8 CRT)
+SKIP:    2   no X.509 counterpart to compare (8-byte integer certificate and CSR)
 FAIL:    0
 ```
 
-The XFAILs are inherent, not tool gaps:
+The XFAILs are inherent, not tool gaps: a type-2 (natively signed) object is
+signed over the CBOR TBS, so there is no X.509 DER to decode back to. CSR
+templates likewise have no DER form; their lossless CBOR round-trip is verified
+in §9.
 
-- **Type 2** (natively signed): the signature is over the CBOR TBS, so there is no
-  X.509 DER to decode back to. CSR templates likewise have no DER form; their
-  lossless CBOR round-trip is verified in §9.
-- **frp256v1**: OpenSSL cannot load the key, so `f2` cannot sign with it.
-
-The SKIPs: `v2` verifies ECDSA P-256/P-384/P-521 and Ed25519 signatures, not RSA,
-brainpool, SM2 or Ed448; and the 8-byte-integer certificate and CSR have no X.509
-counterpart for `f2` / `r2` to start from (their signatures are verified by `v2`
-or not applicable).
+The SKIPs: the 8-byte-integer certificate and CSR have no X.509 counterpart for
+`f2` / `r2` to start from; the certificate's signature is verified by `v2`.
 
 Type-2 signing (`f2`, §7) compares fields 0–9 (the TBS) byte-exactly, and also
 field 10 when the signature algorithm is deterministic (Ed25519, Ed448,
-RSA-PKCS#1 v1.5); ECDSA and RSA-PSS signatures differ per run while both are
-valid. `f2` signs with secp256r1, secp384r1, secp521r1, Ed25519, Ed448, RSA
-(PKCS#1 v1.5 and PSS), brainpoolP256r1/P384r1/P512r1 and SM2. See
+RSA-PKCS#1 v1.5). ECDSA, SM2 and RSA-PSS signatures differ per run, so for a
+self-signed certificate `f2`'s signature is verified with `v2` instead.
+
+`f2` and `v2` support:
+
+- ECDSA over secp256r1, secp384r1 and secp521r1 with SHA-256, SHA-384 and SHA-512
+  respectively;
+- ECDSA over brainpoolP256r1/P384r1/P512r1 and frp256v1 with SHA-1, SHA-2,
+  SHAKE128 or SHAKE256, as given by the signature algorithm;
+- SM2 with SM3 and the default distinguishing ID `1234567812345678`;
+- Ed25519 and Ed448;
+- RSA PKCS#1 v1.5 with SHA-1 or SHA-2, and RSASSA-PSS with SHA-2, SHAKE128 or
+  SHAKE256.
+
+`v2` verifies a self-signed certificate with its subject key; with
+`--issuer-point <hex>` it uses the given issuer key, which must use the same
+algorithm as the subject key and cannot be an RSA key. See
 [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for the full breakdown.
 
 Integer identifiers without a registered OID (e.g. the 8-byte attribute types and
@@ -234,10 +244,9 @@ exception is a `BMPString` `explicitText` that C509 normalises to UTF-8).
 | AS Identifiers with rdi field → RFC 9090 fallback | ✓ |
 | All registered extensions (§ext-encoding) | ✓ |
 | Batch TLS round-trip testing | ✓ |
-| C509 type-2 (natively signed) `f2` encode — secp256r1 / P-384 / P-521 / Ed25519 | ✓ |
-| C509 type-2 `f2` encode — Ed448 | — planned |
-| C509 type-2 `f2` encode — brainpool, SM2, FRP256v1, RSA | — not planned |
-| Certification Request Templates | — planned |
+| C509 type-2 (natively signed) `f2` encode — all signature algorithms listed above | ✓ |
+| C509 type-2 signature verification (`v2`) — all signature algorithms listed above | ✓ |
+| Certification Request Templates (parse and lossless re-encode) | ✓ |
 
 ## Library API
 
