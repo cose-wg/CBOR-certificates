@@ -71,7 +71,7 @@ One of the challenges with deploying a Public Key Infrastructure (PKI) for the I
 
 A more compact representation of X.509 certificates has been specified through the use of the Concise Binary Object Representation (CBOR, {{RFC8949}}). This CBOR encoding of X.509 certificates, referred to as C509 {{I-D.ietf-cose-cbor-encoded-cert}}, also enables reduced code complexity, code size, memory and CPU usage, while allowing compatibility with ordinary ASN.1 DER-encoded X.509 for use with legacy deployments. A "native" C509 encoding is specified, identical to the backwards compatible format except for the scope of the signature, suitable for very constrained greenfield deployments.
 
-The current specification adds to this work by specifying corresponding revokation related encoding and strucure.
+The current specification adds to this work by specifying corresponding revocation related encoding and structure.
 
 # Notational Conventions
 
