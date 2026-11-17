@@ -405,7 +405,7 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
         } else {
             // No parameters: emit the bare unwrapped ~oid. The CDDL
             // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
-            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            // one-element `[~oid]` array form.
             output.push(lcbor_bytes(oid_val));
         }
     }
@@ -450,7 +450,7 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
         } else {
             // No parameters: emit the bare unwrapped ~oid. The CDDL
             // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
-            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            // one-element `[~oid]` array form.
             output.push(lcbor_bytes(oid_val));
         }
         output.push(lcbor_bytes(spki_key));
@@ -617,8 +617,8 @@ pub fn parse_c509_item(cbor: Vec<u8>) -> Cert {
     if n == 7 {
         // CRT (C509CertificationRequestTemplate) has templateType = uint(0); a CSR
         // has c509CertificationRequestType = uint(2)/uint(3). Read the first field
-        // from the (possibly array-wrapped, draft-20) peeked value rather than the
-        // raw first byte — which in draft-20 is the 0x87 array header.
+        // from the peeked value rather than the raw first byte, which is the 0x87
+        // array header.
         let first_field = if peek.len() == 1 {
             if let Value::Array(arr) = &peek[0] { arr.first().cloned() } else { peek.first().cloned() }
         } else {
@@ -642,10 +642,10 @@ pub fn parse_c509_item(cbor: Vec<u8>) -> Cert {
 pub fn parse_c509_crt(cbor: Vec<u8>) -> Cert {
     use crate::lcbor::cbor_item_end;
     let mut fields: Vec<Vec<u8>> = Vec::with_capacity(7);
-    // draft-20: the CRT is a CBOR array (0x87 header). Skip the array header so
-    // the 7 inner fields are stored individually; `print_information` re-wraps them
-    // with `lcbor_array`, reproducing the original bytes exactly (a pre-20 bare
-    // sequence has no header — first byte 0x00 — and is walked from position 0).
+    // The template is a CBOR array (0x87 header). Skip the array header so the 7
+    // inner fields are stored individually; `print_information` re-wraps them with
+    // `lcbor_array`, reproducing the original bytes exactly. A bare sequence (no
+    // header) is walked from position 0.
     let mut pos = if !cbor.is_empty() && (cbor[0] >> 5) == 4 { 1 } else { 0 };
     for i in 0..7 {
         assert!(pos < cbor.len(), "parse_c509_crt: ran out of data at field {}", i);
@@ -750,10 +750,10 @@ pub fn parse_c509_csr(cbor: Vec<u8>) -> Cert {
                                     if *cert_val != Value::Null {
                                         // Embedded C509 certificate: decode back to DER
                                         let embedded_cbor = match cert_val {
-                                            // draft-20: bytes .cbor C509Certificate —
+                                            // bytes .cbor C509Certificate:
                                             // the byte string content is the CBOR cert.
                                             Value::Bytes(b) => b.clone(),
-                                            // draft-19 and earlier: the cert array placed
+                                            // Also accepted: the certificate array placed
                                             // directly (no bytes .cbor wrapper).
                                             Value::Array(arr) => {
                                                 let mut buf = Vec::new();
@@ -854,7 +854,7 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
         } else {
             // No parameters: emit the bare unwrapped ~oid. The CDDL
             // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
-            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            // one-element `[~oid]` array form.
             output.push(lcbor_bytes(oid_val));
         }
     }
@@ -918,7 +918,7 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
         } else {
             // No parameters: emit the bare unwrapped ~oid. The CDDL
             // `AlgorithmIdentifier = int / ~oid / [~oid, parameters]` has no
-            // one-element `[~oid]` array form (cose-wg/CBOR-certificates #414/#422).
+            // one-element `[~oid]` array form.
             output.push(lcbor_bytes(oid_val));
         }
         output.push(lcbor_bytes(subject_public_key));

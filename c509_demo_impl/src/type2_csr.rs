@@ -11,9 +11,8 @@
 //!
 //! For DhSigStatic, both the subject private key, the peer private key, and the
 //! peer's C509 type-2 certificate (for the KDF subject/issuer fields) are
-//! required.  The IETF test vectors use the peer's secp256r1/384r1/521r1 self-
-//! signed cert key (sections 3.3.1 / 3.5.1 / 3.6.1) as the peer key and
-//! sections 3.3.4 / 3.5.4 / 3.6.4 as the peer C509 cert.
+//! required.  The IETF test vectors use the self-signed secp256r1/384r1/521r1
+//! certificates and their keys as the peer.
 //!
 //! RFC 6955 KDF (for C509 type-2): K = Hash(subject_CBOR || ZZ || issuer_CBOR)
 //!   where subject_CBOR / issuer_CBOR are the raw CBOR bytes of the subject and
@@ -182,7 +181,7 @@ fn dhsig_p521(tbs: &[u8], subject_pem: &str, peer_pem: &str, peer_cert: &[u8]) -
 // ---------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------
-// Embedded cert conversion (Cat D fix)
+// Embedded cert conversion
 // ---------------------------------------------------------------------------
 
 /// Convert type-3 C509 certs embedded in CSR attributes to type-2.
@@ -216,7 +215,7 @@ fn cbor_copy_convert(data: &[u8], pos: usize, key_pem: &str, out: &mut Vec<u8>) 
     match major {
         // uint / negint / simple — header encodes everything
         0 | 1 | 7 => { out.extend_from_slice(&data[pos..hdr_end]); hdr_end }
-        // bstr — may be a draft-20 `bytes .cbor C509Certificate` wrapping an
+        // bstr — may be a `bytes .cbor C509Certificate` wrapping an
         // embedded type-3 cert (content starts 0x8B 0x03). Re-sign the inner cert
         // as type-2 and re-wrap it as bytes .cbor; otherwise copy verbatim.
         2 => {
@@ -289,7 +288,7 @@ fn recode_embedded_cert_as_type2(cert: &[u8], key_pem: &str) -> Vec<u8> {
 /// If issuer == 0xf6 (CBOR null, meaning self-signed "same as subject"), the
 /// returned issuer slice equals the subject slice.
 fn c509_subject_issuer(cert: &[u8]) -> (&[u8], &[u8]) {
-    // draft-20: the peer C509 certificate is a CBOR array (0x8B header). Skip the
+    // The peer C509 certificate is a CBOR array (0x8B header). Skip the
     // array header so the field walk below sees the 11 fields at the top level.
     // The RFC 6955 KDF uses the subject/issuer *field* bytes, which are identical
     // with or without the outer array header, so the derived MAC is unchanged.

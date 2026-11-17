@@ -12,7 +12,7 @@
 #   ./run_tests.sh [OPTIONS]
 #
 # Options:
-#   --version VER    Test vectors draft version (default: 03, current draft)
+#   --version VER    Test vectors draft version (default: 04)
 #   --refetch        Force re-download of the XML even if already cached
 #   --rebuild        Force cargo build even if the binary is current
 #   --verbose        Print tool output for every failing test
@@ -37,7 +37,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # ---------------------------------------------------------------------------
 # Parse arguments
 # ---------------------------------------------------------------------------
-VERSION="03"
+VERSION="04"
 REFETCH=0
 REBUILD=0
 VERBOSE=0

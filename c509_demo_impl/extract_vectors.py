@@ -11,16 +11,16 @@ Filenames encode both the draft version and the section number:
     v{VER}_section_{N.N.N}_{anchor_underscored}.{ext}
 
 For example:
-    v01_section_3.3.2_x509_selfsign_secp256r1.crt
-    v01_section_3.3.3_c509_type_3_certificate_3.cbor.hex
+    v04_section_3.3.2_x509_selfsign_secp256r1.crt
+    v04_section_3.3.3_c509_type_3_certificate_3.cbor.hex
 
 Multiple <artwork> blocks in the same section get a disambiguation suffix:
-    v01_section_3.3.4_c509_selfsign_secp256r1.cbor.hex   (plain hex)
-    v01_section_3.3.4_c509_selfsign_secp256r1_1.cbor.hex  (annotated hex)
+    v04_section_3.3.4_c509_selfsign_secp256r1.cbor.hex   (plain hex)
+    v04_section_3.3.4_c509_selfsign_secp256r1_1.cbor.hex  (annotated hex)
 
 Usage:
-    python3 extract_vectors.py --version 01 \\
-        --xml path/to/draft-ietf-cose-c509-test-vectors-01.xml \\
+    python3 extract_vectors.py --version 04 \\
+        --xml path/to/draft-ietf-cose-c509-test-vectors-04.xml \\
         --outdir path/to/test_vectors/
 
 Output extensions:
@@ -223,7 +223,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Extract C509 test vectors from an IETF XML draft, named by section."
     )
-    parser.add_argument("--version", default="01", help="Draft version number (e.g. 01)")
+    parser.add_argument("--version", default="04", help="Test-vector version number (e.g. 04)")
     parser.add_argument("--xml", required=True, help="Path to the XML file")
     parser.add_argument("--outdir", required=True, help="Output directory")
     args = parser.parse_args()

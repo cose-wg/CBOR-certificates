@@ -15,10 +15,8 @@ use crate::registry::*;
 use crate::help::*;
 use crate::conversion::{cbor_name, parse_cbor_name, cbor_opt_array, map_att_id_to_oid, uint_to_minimal_bytes, uint_to_implicit_der};
 
-// Subject Directory Attributes (ext ID 24, OID 2.5.29.9) was removed from the C509
-// extension registry (draft PR #408), so it is no longer *encoded* to the specific
-// int form (it now takes the generic raw-OID path). The *decoder* below is retained so
-// that legacy C509 / older test vectors carrying the int-24 form still round-trip.
+// Subject Directory Attributes (OID 2.5.29.9) has no registered C509 extension ID
+// and is encoded in the generic OID form. Integer ID 24 is accepted on decode only.
 fn parse_cbor_ext_subject_directory_attr(extension_val: &Value, critical: bool) -> Vec<u8> {
     let mut oid = EXT_SUBJECT_DIRECTORY_ATTR_OID.to_der_vec().unwrap();
     if critical { oid.extend(ASN1_X509_CRITICAL.to_vec()); }
@@ -664,9 +662,8 @@ pub(crate) fn cbor_ext_key_use(bs: &[u8], signed_nr_ext: i64) -> Vec<u8> {
     lcbor_uint(w)
 }
 
-// cbor_ext_sct removed: SCT List (OID 1.3.6.1.4.1.11129.2.4.2) is no longer a registered
-// C509 extension in draft-11. Certificates containing this extension are now encoded using
-// the raw OID-tagged extension path (lcbor_bytes(oid) + lcbor_bytes(extnValue)).
+// SCT List (OID 1.3.6.1.4.1.11129.2.4.2) has no registered C509 extension ID; it is
+// encoded in the generic OID form (lcbor_bytes(oid) + lcbor_bytes(extnValue)).
 
 
 fn parse_cbor_ext_subject_key_id(extension_val: &Value, critical: bool) -> Vec<u8> {
@@ -1268,9 +1265,7 @@ pub(crate) fn parse_cbor_extensions_inner(input: &Value) -> Vec<Vec<u8>> {
                                 7 => parse_cbor_ext_auth_key_id(&extension_array[i + 1], *ext_type < 0),
                                 8 => parse_cbor_ext_ext_key_usage(&extension_array[i + 1], *ext_type < 0),
                                 9 => parse_cbor_ext_auth_info(&extension_array[i + 1], *ext_type < 0),
-                                // ext ID 10 (SCT List) removed in draft-11; falls through to raw-OID path
-                                // ext ID 24 (Subject Directory Attributes) removed from the registry (draft PR
-                                // #408); decode-only tolerance for legacy int-24 encodings, never emitted.
+                                // ID 24 (Subject Directory Attributes) is unassigned: decode only, never emitted.
                                 24 => parse_cbor_ext_subject_directory_attr(&extension_array[i + 1], *ext_type < 0),
                                 25 => parse_cbor_ext_issuer_alt_name(&extension_array[i + 1], *ext_type < 0),
                                 26 => parse_cbor_ext_name_constraints(&extension_array[i + 1], *ext_type < 0),

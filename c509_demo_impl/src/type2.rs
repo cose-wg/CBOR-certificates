@@ -35,12 +35,10 @@ use crate::Cert;
 /// `privkey_pem`: PKCS#8 PEM private key (or the subject key for unsigned certs).
 /// `no_compression`: when true, store EC public keys uncompressed (04|x|y).
 /// `ca_der`: optional DER of the issuing CA's X.509 cert, required to recompute
-///   the Authority Key Identifier for CA-signed certs (Cat C AKI update).
+///   the Authority Key Identifier for CA-signed certs.
 ///
-/// Special cases:
-/// - id-alg-unsigned (sig alg = 5): field 10 = empty bstr; no signing key used.
-/// - RSASSA-PSS-SHAKE128/256: custom MGF not implemented; field 10 = empty bstr;
-///   fields 0–9 (TBS) are still correctly encoded.
+/// For id-alg-unsigned (sig alg = 5), field 10 is an empty bstr and no signing key
+/// is used.
 pub fn encode_x509_as_type2(
     der: Vec<u8>,
     privkey_pem: &str,

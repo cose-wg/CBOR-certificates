@@ -9,7 +9,7 @@
 #   ./validate_c509.sh [OPTIONS]
 #
 # Options:
-#   --version VER    Draft version to test against (default: 03, current draft).
+#   --version VER    Test-vector version to test against (default: 04).
 #   --fetch          Download and (re)extract test vectors before testing.
 #   --build          Force a cargo build even if the binary is up-to-date.
 #   --verbose        Show tool output on every failure.
@@ -24,6 +24,9 @@
 #   4.  Decoding    C509 type-3 hex → X.509 DER, byte-exact comparison
 #   5.  Round-trip  X.509 DER  → C509 → DER, byte-exact DER comparison
 #   6.  CSR r/t     X.509 CSR  → C509 → CSR, byte-exact DER comparison
+#   7.  Type-2 sign X.509 DER + key → type-2 C509 (f2), compared against the vectors
+#   7b. Type-2 ver. Signature verification of the type-2 vectors (v2)
+#   8.  Type-2 CSR  PKCS#10 + key → type-2 C509 CSR (r2), compared against the vectors
 #   9.  CRT r/t     C509 CertificationRequestTemplate CBOR → lossless re-encode
 #
 # =============================================================================
@@ -33,7 +36,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Argument parsing
 # ---------------------------------------------------------------------------
-VERSION="03"
+VERSION="04"
 DO_FETCH=0
 DO_BUILD=0
 VERBOSE=0
@@ -54,9 +57,9 @@ done
 # ---------------------------------------------------------------------------
 # Draft layout
 #
-# Test-vectors -03 reorganised the document, so the section numbers of the
-# CSRs, the CSR templates, and the cross-referenced keys and certificates
-# differ by version. Everything section-specific is defined here.
+# The section numbers of the CSRs, the CSR templates, and the cross-referenced
+# keys and certificates differ between test-vector versions. Everything
+# section-specific is defined here.
 #
 #   L_CSR_TOPS      top-level sections holding certification requests
 #   L_CRT_TOP       top-level section holding CSR templates
@@ -82,7 +85,7 @@ case "${VERSION}" in
         L_DHSIG_KEY_10="3.6.1"; L_DHSIG_CERT_10="3.6.4_c509_selfsign_secp521r1"
         L_EMB_KEY_SECTION="8.7"; L_EMB_KEY="3.14.1"
         ;;
-    *)
+    03)
         L_CSR_TOPS="10 12"
         L_CRT_TOP="13"
         L_FRP_TYPE2="4.11.3"
@@ -94,6 +97,19 @@ case "${VERSION}" in
         L_DHSIG_KEY_0F="4.5.1"; L_DHSIG_CERT_0F="4.5.4_c509_selfsign_secp384r1"
         L_DHSIG_KEY_10="4.6.1"; L_DHSIG_CERT_10="4.6.4_c509_selfsign_secp521r1"
         L_EMB_KEY_SECTION="10.7"; L_EMB_KEY="4.14.1"
+        ;;
+    *)
+        L_CSR_TOPS="9 11"
+        L_CRT_TOP="12"
+        L_FRP_TYPE2="3.11.3"
+        L_CERT_XREF="3.4=3.3"
+        L_KEY_XREF="3.4=3.3.1 4.1=3.1.1 4.17=3.1.1 4.18=3.1.1 4.19=3.1.1 4.21=3.1.1 4.22=4.20.1 7=3.3.1 8=3.3.1 9.1=3.3.1 9.2=3.5.1 9.6=3.12.1 9.7=3.12.1 11=3.3.1"
+        L_V2_GLOB="*.4_c509_selfsign_*"
+        L_V2_EXTRA="7.4_c509_type_2_certificate"
+        L_DHSIG_KEY_0E="3.3.1"; L_DHSIG_CERT_0E="3.3.4_c509_selfsign_secp256r1"
+        L_DHSIG_KEY_0F="3.5.1"; L_DHSIG_CERT_0F="3.5.4_c509_selfsign_secp384r1"
+        L_DHSIG_KEY_10="3.6.1"; L_DHSIG_CERT_10="3.6.4_c509_selfsign_secp521r1"
+        L_EMB_KEY_SECTION="9.7"; L_EMB_KEY="3.14.1"
         ;;
 esac
 
@@ -164,10 +180,8 @@ fi
 # Step 1 – build
 # ---------------------------------------------------------------------------
 echo -e "${C_BOLD}>>> Step 1: Build${C_RST}"
-# Rebuild when forced, when the binary is missing, OR when any source is newer
-# than the binary. The last case matters: a stale binary from an earlier commit
-# is otherwise reused silently, which e.g. runs a `c509` without the `v2` command
-# and turns Section 7b into a wall of confusing failures.
+# Rebuild when forced, when the binary is missing, or when a source file is
+# newer than the binary.
 NEED_BUILD=0
 if [ ! -x "${BINARY}" ]; then
     NEED_BUILD=1
@@ -233,38 +247,21 @@ is_xfail() {
         return 0
     fi
 
-    # DH-PoP (§9.1 Table 3 values 14–16) and X25519 PoP (§7.2 attr type 2) are
-    # now implemented. All sections 8.3–8.7.2 round-trip correctly.
-
-    # DH-PoP and X25519 PoP CSR decoding is now implemented (§7, §9.1 Table 3
-    # values 14–16): all sections 8.*.3 decode correctly.
-
     return 1
 }
 
 # ---------------------------------------------------------------------------
-# Vector-drift XFAIL: vectors whose *published* draft-02 encoding predates a
-# later normative change to the draft, so the reference implementation (which
-# tracks draft master) intentionally no longer reproduces them byte-exact.
-# These are expected divergences, not bugs.
-#
-#   section 3.10.x (brainpoolP512r1) carries the subjectDirectoryAttributes
-#   extension. That extension (C509 ext ID 24, OID 2.5.29.9) was REMOVED from
-#   the registry by draft PR #408, which merged AFTER test-vectors-02 was
-#   published. The encoder therefore emits the generic (~oid, bytes) form
-#   instead of the retired int-24 form, so its output no longer equals the
-#   int-24 encoding frozen in the -02 vectors (3.10.2 X.509→C509, 3.10.4 TBS).
-#   Decode of the legacy int-24 form is still supported.
-#
-# Applies to the -02 vectors only: test-vectors -03 removed the extension, and
-# its brainpoolP512r1 vectors (4.10.x) match byte-exact.
+# Vector-drift XFAIL (test-vectors -02 only): the brainpoolP512r1 certificate
+# of that set encodes subjectDirectoryAttributes with extension ID 24, which the
+# C509 registry does not assign. The encoder emits the generic (~oid, bytes)
+# form, so the X.509→C509 and TBS comparisons differ for that certificate.
 # ---------------------------------------------------------------------------
 is_vector_drift_xfail() {
     case "${VERSION}" in 00|01|02) ;; *) return 1 ;; esac
     case "$1" in
         v*_section_3.10.2_*|v*_section_3.10.4_*)
             XFAIL_CATEGORY="V"
-            XFAIL_REASON="subjectDirectoryAttributes (ext 24) removed by draft PR #408 after test-vectors-02; encoder now uses the generic ~oid form. Expected until vectors are regenerated (>= -03)."
+            XFAIL_REASON="the vector encodes subjectDirectoryAttributes with the unassigned extension ID 24; the encoder uses the generic ~oid form."
             return 0 ;;
     esac
     return 1
@@ -340,10 +337,8 @@ print(''.join(out).lower(), end='')
 extract_c509_hex_from_output() {
     # Capture the canonical C509 hex block, i.e. the one printed right after the
     # 'CBOR encoded ... (C509Certificate)' / '(C509CertificationRequest)' label.
-    # draft-20 dropped the leading '~' from that label (the unwrapped sequence is
-    # gone), so the tilde is optional here. The captured hex is the full C509
-    # array (0x8B / 0x87 header included); find_hex_match handles matching it to
-    # either an array-form (draft-20) or bare-sequence (pre-20) expected vector.
+    # The captured hex is the full C509 array (0x8B / 0x87 header included);
+    # find_hex_match also matches it against a bare-sequence expected vector.
     python3 -c "
 import sys, re
 text = open('$1').read()
@@ -354,7 +349,7 @@ if m:
         print(h, end=''); sys.exit(0)
 # Fallback: for CSRs the tool skips the detailed view and prints only the
 # 'COSE_C509 (C509CertData)' block, which is the C509 array wrapped in a CBOR
-# byte string (draft-20 'bytes .cbor C509CertificationRequest'). Strip that bstr
+# byte string ('bytes .cbor C509CertificationRequest'). Strip that bstr
 # header to recover the inner array (0x87...).
 m = re.search(r'COSE_C509 \(C509CertData\)[^\n]*\n((?:[0-9A-Fa-f][0-9A-Fa-f ]+\n)+)', text)
 if m:
@@ -429,10 +424,9 @@ is_dup_artwork() {
 find_hex_match() {
     local actual="$1"
     MATCHED_FILE=""
-    # Candidates: the hex exactly as emitted (draft-20 full C509 array, with its
-    # 0x8B cert / 0x87 CSR header) and the same hex with that header stripped (to
-    # match pre-20 "bare sequence" expected vectors). One candidate list makes the
-    # comparison version-agnostic across draft-01 (bare) and draft-02 (array) sets.
+    # Candidates: the hex exactly as emitted (the full C509 array, with its 0x8B
+    # cert / 0x87 CSR header) and the same hex with that header stripped, to match
+    # an expected vector given as a bare sequence.
     local cands="${actual}"
     case "${actual:0:2}" in 8b|87) cands="${cands} ${actual:2}" ;; esac
     local c key
@@ -448,12 +442,12 @@ find_hex_match() {
 
 # Return the C509 certificate/CSR type byte (00 template / 02 native / 03 DER-
 # equivalent), transparently skipping a leading CBOR array header (0x8B cert /
-# 0x87 CSR) as introduced in draft-20. Arg: path to a .cbor.hex file.
+# 0x87 CSR). Arg: path to a .cbor.hex file.
 c509_type_byte() {
     local h; h="$(head -c 4 "$1" | tr 'A-F' 'a-f')"
     case "${h:0:2}" in
         8b|87) echo "${h:2:2}" ;;   # array header -> type is the next byte
-        *)     echo "${h:0:2}" ;;   # bare sequence (pre-20)
+        *)     echo "${h:0:2}" ;;   # bare sequence
     esac
 }
 
@@ -554,7 +548,7 @@ for hex_file in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
     #   00 = CRT (C509CertificationRequestTemplate) — no X.509 DER equivalent; §9 covers it
     #   02 = type-2 natively signed — no X.509 DER equivalent
     #   03 = type-3 DER-equivalent — proceed with decoding
-    # (draft-20 prefixes the C509 array header 0x8B/0x87; skip it to read the type)
+    # (skip the C509 array header 0x8B/0x87 to read the type)
     first_byte="$(c509_type_byte "${hex_file}")"
     if [ "${first_byte}" = "00" ]; then
         log_xfail "${bn} [CRT — C509CertificationRequestTemplate has no X.509 DER equivalent; lossless CBOR round-trip tested in §9]"
@@ -587,7 +581,7 @@ for hex_file in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
     x509_sec="$(type3_to_x509_section "${sec}")"
 
     # Try to find the matching .crt or .csr file. A type-3 artwork may also sit
-    # in the X.509 certificate's own section (e.g. -03 §4.11.2, frp256v1).
+    # in the X.509 certificate's own section (frp256v1).
     x509_is_csr=0
     if find_x509_crt_for_section "${x509_sec}"; then
         ref_src="${X509_CRT_FILE}"
@@ -767,7 +761,7 @@ try_f2() {
         actual_full="$(extract_c509_hex_from_output "${TMPOUT}")"
         [ -z "${actual_full}" ] && continue
         produced=1
-        # tbs_hex walks the bare field sequence, so drop the draft-20 array header
+        # tbs_hex walks the bare field sequence, so drop the array header
         # (0x8B) — matching how ietf_full is normalised.
         [ "${actual_full:0:2}" = "8b" ] && actual_full="${actual_full:2}"
         [ "${#actual_full}" -lt 132 ] && continue
@@ -811,8 +805,7 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
     # Skip _1 duplicates (identical content, different filename suffix).
     is_dup_artwork "${type2_hex}" && continue
 
-    # Only process Type-2 vectors (type byte = 0x02 = CBOR uint(2); draft-20
-    # prefixes the 0x8B array header, so read the type past it).
+    # Only process Type-2 vectors (type byte 0x02, after the 0x8B array header).
     first_byte="$(c509_type_byte "${type2_hex}")"
     [ "${first_byte}" = "02" ] || continue
 
@@ -987,10 +980,64 @@ for type2_hex in "${V2_FILES[@]}"; do
         vdesc="$(echo "${vout}" | sed -n 's/.*VERIFY OK: //p')"
         log_pass "${bn}: signature cryptographically VERIFIED (${vdesc})"
     elif echo "${vout}" | grep -q "unsupported public-key algorithm"; then
-        log_skip "${bn}: v2 verify not yet implemented for this key type"
+        log_skip "${bn}: v2 does not support this key type"
     else
         vreason="$(echo "${vout}" | sed -n 's/.*VERIFY FAIL: //p')"
         log_fail "${bn}: cryptographic signature verification FAILED (${vreason})"
+    fi
+done
+
+# The remaining Type-2 objects: certification requests (signature verified with
+# the subject key) and CA-issued certificates (verified against the vector whose
+# subject equals the certificate's issuer). Unsigned objects (id-alg-unsigned)
+# and RFC 6955 DhSig requests carry no signature and are not counted here.
+for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
+    [ "${V2_OK}" -eq 1 ] || break
+    [ -f "${type2_hex}" ] || continue
+    bn="$(basename "${type2_hex}")"
+    is_dup_artwork "${type2_hex}" && continue
+    [ "$(c509_type_byte "${type2_hex}")" = "02" ] || continue
+    _seen=0
+    for _f in "${V2_FILES[@]}"; do
+        [ "${_f}" = "${type2_hex}" ] && _seen=1
+    done
+    [ "${_seen}" -eq 0 ] || continue
+
+    vout="$("${BINARY}" v2 "${type2_hex}" 2>&1)" && vrc=0 || vrc=$?
+    if [ "${vrc}" -eq 0 ]; then
+        vdesc="$(echo "${vout}" | sed -n 's/.*VERIFY OK: //p')"
+        log_pass "${bn}: signature cryptographically VERIFIED with the subject key (${vdesc})"
+        continue
+    fi
+    case "${vout}" in
+        *"no signature"*|*"truncated C509"*) continue ;;
+        *"not self-issued"*) ;;
+        *)  vreason="$(echo "${vout}" | sed -n 's/.*VERIFY FAIL: //p')"
+            log_fail "${bn}: cryptographic signature verification FAILED (${vreason})"
+            continue ;;
+    esac
+
+    _verified=0
+    _ireason=""
+    for _cand in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
+        [ "${_cand}" != "${type2_hex}" ] || continue
+        iout="$("${BINARY}" v2 "${type2_hex}" --issuer-cert "${_cand}" 2>&1)" && irc=0 || irc=$?
+        if [ "${irc}" -eq 0 ]; then
+            vdesc="$(echo "${iout}" | sed -n 's/.*VERIFY OK: //p')"
+            log_pass "${bn}: signature cryptographically VERIFIED against issuer $(basename "${_cand}") (${vdesc})"
+            _verified=1
+            break
+        fi
+        case "${iout}" in
+            *"issuer name mismatch"*|*"truncated C509"*) ;;
+            *) _ireason="$(echo "${iout}" | sed -n 's/.*VERIFY FAIL: //p') [issuer $(basename "${_cand}")]" ;;
+        esac
+    done
+    [ "${_verified}" -eq 0 ] || continue
+    if [ -n "${_ireason}" ]; then
+        log_fail "${bn}: cryptographic signature verification FAILED (${_ireason})"
+    else
+        log_skip "${bn}: issuer certificate is not among the test vectors"
     fi
 done
 
@@ -1040,8 +1087,7 @@ for type2_hex in "${CSR_FILES[@]}"; do
     # Skip _1 duplicates.
     is_dup_artwork "${type2_hex}" && continue
 
-    # Only type-2 vectors (type byte = 0x02 = CBOR uint(2); skip the draft-20
-    # 0x87 array header if present).
+    # Only type-2 vectors (type byte 0x02, after the 0x87 array header).
     first_byte="$(c509_type_byte "${type2_hex}")"
     [ "${first_byte}" = "02" ] || continue
 
@@ -1072,7 +1118,7 @@ for type2_hex in "${CSR_FILES[@]}"; do
     openssl req -in "${csr_pem_file}" -inform PEM -outform DER -out "${TMPDER}" 2>/dev/null \
         || { log_skip "${bn}: openssl cannot convert CSR to DER"; continue; }
 
-    # IETF vector (full, cleaned). Drop the draft-20 array header (0x87) so the
+    # IETF vector (full, cleaned). Drop the array header (0x87) so the
     # field-offset logic below and the comparison operate on the bare sequence.
     ietf_full="$(clean_hex < "${type2_hex}")"
     [ "${ietf_full:0:2}" = "87" ] && ietf_full="${ietf_full:2}"
@@ -1099,8 +1145,8 @@ for type2_hex in "${CSR_FILES[@]}"; do
         fi
         actual="$(extract_c509_hex_from_output "${TMPOUT}")"
         [ -z "${actual}" ] && continue
-        # Compare on the bare sequence (strip the tool's draft-20 0x87 header) so
-        # the check is version-agnostic vs. the normalised ietf_full above.
+        # Compare on the bare sequence (strip the tool's 0x87 header) so
+        # it matches the normalised ietf_full above.
         [ "${actual:0:2}" = "87" ] && actual="${actual:2}"
         [ -z "${mode_flag}" ] && flag_label="(compressed)" || flag_label="(uncompressed, -nc)"
         case "${sig_alg_byte}" in
@@ -1124,20 +1170,11 @@ for type2_hex in "${CSR_FILES[@]}"; do
     done
 
     if [ "${matched}" -eq 0 ]; then
-        if [ -n "${peer_cert_file}" ] || [ -n "${embedded_cert_key_file}" ]; then
-            # The r2 path for RFC 6955 DhSig (needs an array-form peer certificate)
-            # and for the "withcert" attribute (a nested type-2 cert that draft-20
-            # wraps as `bytes .cbor`) is not yet draft-20-complete in type2_csr.rs
-            # (the plain-ECDSA/unsigned r2 cases above pass). Known tool limitation.
-            log_xfail "${bn} [Cat D — r2 draft-20 support incomplete for DhSig array-form peer cert / nested embedded type-2 cert]"
-            [ "${VERBOSE}" -eq 1 ] && cat "${TMPOUT}"
-        else
-            log_fail "${bn}: output mismatch against IETF ${_sec} vector"
-            if [ "${VERBOSE}" -eq 1 ]; then
-                echo "    expected: ${ietf_full:0:60}..."
-                actual2="$(extract_c509_hex_from_output "${TMPOUT}")"
-                [ -n "${actual2}" ] && echo "    actual:   ${actual2:0:60}..."
-            fi
+        log_fail "${bn}: output mismatch against IETF ${_sec} vector"
+        if [ "${VERBOSE}" -eq 1 ]; then
+            echo "    expected: ${ietf_full:0:60}..."
+            actual2="$(extract_c509_hex_from_output "${TMPOUT}")"
+            [ -n "${actual2}" ] && echo "    actual:   ${actual2:0:60}..."
         fi
     fi
 done
@@ -1164,7 +1201,7 @@ for crt_hex in "${TV_DIR}/v${VERSION}_section_${L_CRT_TOP}."*.cbor.hex; do
     run_c509 "${TMPOUT}" c "${crt_hex}" || true
     actual="$(extract_crt_hex_from_output "${TMPOUT}")"
     # Compare on the bare sequence (strip the 0x87 array header from both): the
-    # tool always emits the draft-20 array form, while a draft-19 vector is bare.
+    # tool emits the array form, while a vector may be a bare sequence.
     [ "${actual:0:2}" = "87" ]   && actual="${actual:2}"
     [ "${expected:0:2}" = "87" ] && expected="${expected:2}"
 
@@ -1209,17 +1246,11 @@ echo "           through DER. Those same Type-2 vectors are still checked — an
 echo "           pass — in the encoding and signature-verification phases. Every"
 echo "           XFAIL line above prints its own specific reason."
 echo "    SKIP   the check could not be run — either an input it needs is not"
-echo "           present, OR the tool does not yet support that algorithm."
+echo "           present, or the tool does not support that algorithm."
 echo "           (Signature verification covers ECDSA over P-256/P-384/P-521,"
 echo "           brainpool and frp256v1, SM2, Ed25519, Ed448, RSA PKCS#1 v1.5"
 echo "           and RSASSA-PSS with SHA-2 or SHAKE.)"
 echo "    FAIL   a genuine, unexpected mismatch — a bug to fix."
-if [ "${VERSION}" = "01" ]; then
-    echo ""
-    echo "  Note (--version 01 only): the section 8.7 \"withcert\" CSR is an expected"
-    echo "  draft-19-vs-20 difference — its embedded certificate is bytes .cbor-wrapped"
-    echo "  only from draft-20 — so it will not match the older draft-19 vector."
-fi
 echo ""
 if [ "${FAIL}" -eq 0 ]; then
     echo -e "${C_PASS}${C_BOLD}  All tests passed or accounted for as expected failures.${C_RST}"

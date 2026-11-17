@@ -56,8 +56,7 @@ pub(crate) fn map_pk_id_to_oid(input: &Value) -> (Option<i64>, Vec<u8>) {
         },
         // Bare ~oid (no parameters): a CBOR byte string holding the OID value bytes
         // only (unwrapped RFC 9090 OID). Reconstruct AlgorithmIdentifier = SEQUENCE { OID }.
-        // This is the CDDL `~oid` form (cose-wg/CBOR-certificates #414/#422); the one-element
-        // `[~oid]` array below is kept only for tolerant decoding of legacy encoders.
+        // The one-element `[~oid]` array below is accepted on decode only.
         Value::Bytes(oid_val) => (None, lder_to_seq(vec![lder_to_generic(oid_val.to_vec(), ASN1_OID)])),
         Value::Array(arr) => {
             // RFC 9090 OID fallback (draft-ietf-cose-cbor-encoded-cert §2.3.3):
@@ -393,9 +392,8 @@ pub(crate) fn parse_cbor_sig_info(sig_alg: &Value, sig_val: &Value) -> (Vec<u8>,
             else { (lder_to_generic(lder_to_generic(oid, ASN1_OID), ASN1_SEQ), parsed_sig_val) }
         }
         // Bare ~oid (no parameters): OID value bytes only (unwrapped RFC 9090 OID).
-        // Reconstruct AlgorithmIdentifier = SEQUENCE { OID }. This is the CDDL `~oid`
-        // form (cose-wg/CBOR-certificates #414/#422); the one-element `[~oid]` array
-        // below is retained only for tolerant decoding of legacy encoders.
+        // Reconstruct AlgorithmIdentifier = SEQUENCE { OID }. The one-element `[~oid]`
+        // array below is accepted on decode only.
         Value::Bytes(oid_val) => { (lder_to_seq(vec![lder_to_generic(oid_val.to_vec(), ASN1_OID)]), sig_val_vec) }
         Value::Array(arr) => {
             // RFC 9090 OID fallback (draft-ietf-cose-cbor-encoded-cert §2.2):
@@ -469,9 +467,9 @@ mod alg_id_fallback_tests {
     //! registered C509 integer. The CDDL is
     //! `AlgorithmIdentifier = int / ~oid / [~oid, parameters]`, so the no-parameters
     //! form is a bare `~oid` (a CBOR byte string of OID value bytes), not a
-    //! one-element `[~oid]` array (cose-wg/CBOR-certificates #414/#422). These tests
+    //! one-element `[~oid]` array. These tests
     //! check that the decoder reconstructs `SEQUENCE { OID }` from the bare `~oid`,
-    //! reconstructs the same from a legacy `[~oid]` array (tolerant decode), and
+    //! reconstructs the same from a one-element `[~oid]` array (tolerant decode), and
     //! reconstructs `SEQUENCE { OID, params }` from `[~oid, params]`.
     use serde_cbor::Value;
 

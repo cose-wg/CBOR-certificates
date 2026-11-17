@@ -1,15 +1,10 @@
-//! Cryptographic verification of natively-signed C509 Type-2 certificates.
+//! Signature verification of natively-signed (Type-2) C509 certificates and
+//! certification requests.
 //!
-//! Complements `type2.rs` (which *produces* Type-2 objects): given a Type-2
-//! C509, reconstruct the CBOR TBS (concatenation of fields 0–9), take the signer
-//! public key (the subject public key for a self-signed cert, or an explicitly
-//! supplied issuer point), and cryptographically verify field 10
-//! (issuerSignatureValue) over the TBS.
-//!
-//! This upgrades the harness's Type-2 story from *structural* (the TBS bytes are
-//! reproduced) to *cryptographic* (the draft's published signature is valid) —
-//! the check that matters for the non-deterministic ECDSA vectors, whose
-//! signatures cannot be reproduced by re-encoding.
+//! The signature is verified over the CBOR TBS (the concatenation of fields 0–9
+//! of a certificate, 0–5 of a certification request). The signer key is the
+//! subject public key for a self-signed certificate or a certification request,
+//! and the issuer's public key for a CA-signed certificate.
 //!
 //! Supported signer keys and signature algorithms:
 //! - ECDSA over secp256r1/secp384r1/secp521r1 (RustCrypto);
@@ -33,6 +28,7 @@ use crate::lcbor::cbor_item_end;
 use crate::registry::{
     PK_BRAINPOOL256R1, PK_BRAINPOOL384R1, PK_BRAINPOOL512R1, PK_ED25519, PK_ED448,
     PK_FRP256V1, PK_RSA, PK_SECP256R, PK_SECP384R, PK_SECP521R, PK_SM2P256V1,
+    SIG_ALG_UNSIGNED, SIG_ECDHPOP_SHA256, SIG_ECDHPOP_SHA384, SIG_ECDHPOP_SHA512,
     SIG_ECDSA_SHA256, SIG_ECDSA_SHA384, SIG_ECDSA_SHA512, SIG_ED448,
     SIG_RSA_PSS_SHA256, SIG_RSA_PSS_SHA384, SIG_RSA_PSS_SHA512, SIG_RSA_PSS_SHAKE128,
     SIG_RSA_PSS_SHAKE256, SIG_RSA_V15_SHA1, SIG_RSA_V15_SHA256, SIG_RSA_V15_SHA384,
@@ -44,17 +40,27 @@ use crate::type2::{cbor_int_value, ecdsa_digest, frp256v1_group, pss_shake_param
 const SUPPORTED_KEYS: &str = "P-256, P-384, P-521, brainpoolP256r1, brainpoolP384r1, \
                               brainpoolP512r1, frp256v1, SM2, Ed25519, Ed448, RSA";
 
-/// Split a C509 certificate CBOR (bare 11-item sequence, or a draft-20 `0x8B`
-/// array(11)) into its 11 field byte-slices.
+/// Split a C509 certificate CBOR (`0x8B` array(11), or the bare 11-item
+/// sequence) into its 11 field byte-slices.
 fn split_c509_fields(cbor: &[u8]) -> Result<Vec<&[u8]>, String> {
+    split_fields(cbor, 0x8b, 11)
+}
+
+/// Split a C509 certification request CBOR (`0x87` array(7), or the bare
+/// 7-item sequence) into its 7 field byte-slices.
+fn split_c509_csr_fields(cbor: &[u8]) -> Result<Vec<&[u8]>, String> {
+    split_fields(cbor, 0x87, 7)
+}
+
+fn split_fields(cbor: &[u8], array_header: u8, count: usize) -> Result<Vec<&[u8]>, String> {
     let mut pos = 0;
-    if cbor.first() == Some(&0x8b) {
-        pos = 1; // skip the draft-20 array(11) header
+    if cbor.first() == Some(&array_header) {
+        pos = 1;
     }
-    let mut fields = Vec::with_capacity(11);
-    for _ in 0..11 {
+    let mut fields = Vec::with_capacity(count);
+    for _ in 0..count {
         if pos >= cbor.len() {
-            return Err("truncated C509: fewer than 11 CBOR fields".into());
+            return Err(format!("truncated C509: fewer than {} CBOR fields", count));
         }
         let end = cbor_item_end(cbor, pos);
         fields.push(&cbor[pos..end]);
@@ -115,39 +121,126 @@ pub fn verify_type2(cbor: &[u8], issuer_point: Option<&[u8]>) -> Result<String, 
 
     let sig_alg = cbor_int_value(fields[2]);
     let pk_alg = cbor_int_value(fields[7]);
+    check_signed(sig_alg)?;
+    // Without an issuer key the certificate must be self-issued: a null issuer
+    // ("same as subject") or an issuer equal to the subject.
+    if issuer_point.is_none() && fields[3] != [0xf6] && fields[3] != fields[6] {
+        return Err("verify: not self-issued (give the issuer certificate with --issuer-cert)".into());
+    }
+    check_supported_key(pk_alg)?;
+    let sig = bstr_payload(fields[10])?;
 
-    // Bail out with the "unsupported" message (which the harness maps to SKIP)
-    // BEFORE parsing the key/signature.
+    match issuer_point {
+        // An explicit issuer point is taken to use the subject key's algorithm.
+        Some(point) => {
+            if pk_alg == PK_RSA {
+                return Err("verify: an explicit issuer point is supported for EC keys only".into());
+            }
+            verify_with_key(&tbs, pk_alg, point, sig, sig_alg)
+        }
+        None => verify_with_key_field(&tbs, pk_alg, fields[8], sig, sig_alg),
+    }
+}
+
+/// Verify a CA-signed Type-2 C509 certificate against its issuer's C509
+/// certificate: the issuer's subject must equal the certificate's issuer, and
+/// the signature must verify under the issuer's subject public key.
+pub fn verify_type2_issued(cbor: &[u8], issuer_cbor: &[u8]) -> Result<String, String> {
+    let fields = split_c509_fields(cbor)?;
+    let issuer = split_c509_fields(issuer_cbor)?;
+
+    if cbor_int_value(fields[0]) != 2 {
+        return Err(format!(
+            "not a Type-2 (natively signed) certificate: field 0 = {}",
+            cbor_int_value(fields[0])
+        ));
+    }
+    // A null issuer means "same as subject" (self-signed).
+    if fields[3] == [0xf6] {
+        return Err("verify: issuer name mismatch (the certificate is self-issued)".into());
+    }
+    if fields[3] != issuer[6] {
+        return Err("verify: issuer name mismatch (not issued by the given certificate)".into());
+    }
+
+    let tbs: Vec<u8> = fields[..10].iter().flat_map(|f| f.iter().copied()).collect();
+    let sig_alg = cbor_int_value(fields[2]);
+    let issuer_pk_alg = cbor_int_value(issuer[7]);
+    check_signed(sig_alg)?;
+    check_supported_key(issuer_pk_alg)?;
+    let sig = bstr_payload(fields[10])?;
+    verify_with_key_field(&tbs, issuer_pk_alg, issuer[8], sig, sig_alg)
+}
+
+/// Verify the signature of a Type-2 C509 certification request with its own
+/// subject public key (proof of possession). The TBS is the concatenation of
+/// fields 0–5 (matches type2_csr.rs).
+pub fn verify_type2_csr(cbor: &[u8]) -> Result<String, String> {
+    let fields = split_c509_csr_fields(cbor)?;
+
+    if cbor_int_value(fields[0]) != 2 {
+        return Err(format!(
+            "not a Type-2 (natively signed) certification request: field 0 = {}",
+            cbor_int_value(fields[0])
+        ));
+    }
+
+    let tbs: Vec<u8> = fields[..6].iter().flat_map(|f| f.iter().copied()).collect();
+    let sig_alg = cbor_int_value(fields[1]);
+    let pk_alg = cbor_int_value(fields[3]);
+    check_signed(sig_alg)?;
+    check_supported_key(pk_alg)?;
+    let sig = bstr_payload(fields[6])?;
+    verify_with_key_field(&tbs, pk_alg, fields[4], sig, sig_alg)
+}
+
+/// Reject the algorithms that carry no signature to verify with a public key:
+/// id-alg-unsigned and the RFC 6955 Diffie-Hellman proof-of-possession MACs.
+fn check_signed(sig_alg: i64) -> Result<(), String> {
+    match sig_alg {
+        x if x == SIG_ALG_UNSIGNED => Err("verify: no signature (id-alg-unsigned)".into()),
+        x if x == SIG_ECDHPOP_SHA256 || x == SIG_ECDHPOP_SHA384 || x == SIG_ECDHPOP_SHA512 => {
+            Err("verify: no signature (Diffie-Hellman proof-of-possession MAC)".into())
+        }
+        _ => Ok(()),
+    }
+}
+
+/// Bail out with the "unsupported" message (which the harness maps to SKIP)
+/// before the key and signature are parsed.
+fn check_supported_key(pk_alg: i64) -> Result<(), String> {
     let supported = [
         PK_SECP256R, PK_SECP384R, PK_SECP521R, PK_BRAINPOOL256R1, PK_BRAINPOOL384R1,
         PK_BRAINPOOL512R1, PK_FRP256V1, PK_SM2P256V1, PK_ED25519, PK_ED448, PK_RSA,
     ];
-    if !supported.contains(&pk_alg) {
-        return Err(format!(
+    if supported.contains(&pk_alg) {
+        Ok(())
+    } else {
+        Err(format!(
             "verify: unsupported public-key algorithm id {} (supported: {})",
             pk_alg, SUPPORTED_KEYS
-        ));
+        ))
     }
+}
 
-    let sig = bstr_payload(fields[10])?;
-
+/// Verify `sig` over `tbs` with the signer's C509 public-key field (raw CBOR).
+fn verify_with_key_field(
+    tbs: &[u8], pk_alg: i64, key_field: &[u8], sig: &[u8], sig_alg: i64,
+) -> Result<String, String> {
     // An RSA key is a CBOR byte string (modulus, exponent 65537) or an array
-    // [modulus, exponent]; it is handled before the byte-string parsing below.
+    // [modulus, exponent]; every other key is a byte string.
     if pk_alg == PK_RSA {
-        if issuer_point.is_some() {
-            return Err("verify: an explicit issuer key is supported for EC keys only".into());
-        }
-        let (n, e) = rsa_key_components(fields[8])?;
-        return verify_rsa(&tbs, &n, &e, sig, sig_alg);
+        let (n, e) = rsa_key_components(key_field)?;
+        return verify_rsa(tbs, &n, &e, sig, sig_alg);
     }
+    verify_with_key(tbs, pk_alg, bstr_payload(key_field)?, sig, sig_alg)
+}
 
-    // Raw signer key material: subject key (self-signed) unless an issuer key
-    // is supplied. Left un-normalised here; each EC path applies the SEC1 fixup.
-    let signer_key: &[u8] = match issuer_point {
-        Some(k) => k,
-        None => bstr_payload(fields[8])?,
-    };
-
+/// Verify `sig` over `tbs` with a raw (non-RSA) signer key. The key is left
+/// un-normalised here; each EC path applies the SEC1 fixup.
+fn verify_with_key(
+    tbs: &[u8], pk_alg: i64, signer_key: &[u8], sig: &[u8], sig_alg: i64,
+) -> Result<String, String> {
     match pk_alg {
         x if x == PK_SECP256R => verify_ecdsa_p256(&tbs, signer_key, sig, sig_alg),
         x if x == PK_SECP384R => verify_ecdsa_p384(&tbs, signer_key, sig, sig_alg),

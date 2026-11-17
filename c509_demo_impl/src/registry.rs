@@ -5,8 +5,8 @@
 //! name types. Byte-array constants are pre-encoded DER OIDs and algorithm
 //! identifiers for the corresponding X.509 structures.
 //!
-//! **Keep in sync with `conversion.rs` (Rust) and `c509_registry.h` (C) whenever
-//! the draft algorithm/extension ID tables change.**
+//! **Keep in sync with `conversion.rs` whenever the draft algorithm/extension ID
+//! tables change.**
 use asn1_rs::{oid, Oid, ToDer};
 use crate::lder::*;
 
@@ -19,7 +19,7 @@ pub const SIG_ECDSA_SHA512:    i64 = 2;
 pub const SIG_ECDSA_SHAKE128:  i64 = 3;
 pub const SIG_ECDSA_SHAKE256:  i64 = 4;
 pub const SIG_ALG_UNSIGNED:    i64 = 5;
-pub const SIG_SM2_V15_SM3:     i64 = 8;  // draft-11: was 45 in old draft
+pub const SIG_SM2_V15_SM3:     i64 = 8;
 pub const SIG_ED25519:         i64 = 12;
 pub const SIG_ED448:           i64 = 13;
 pub const SIG_ECDHPOP_SHA256:  i64 = 14; // sa-ecdhPop-sha256-hmac-sha256 (RFC 6955)
@@ -39,7 +39,7 @@ pub const PK_RSA:           i64 = 0;
 pub const PK_SECP256R:      i64 = 1;
 pub const PK_SECP384R:      i64 = 2;
 pub const PK_SECP521R:      i64 = 3;
-pub const PK_SM2P256V1:     i64 = 6;  // draft-11: was 28 in old draft
+pub const PK_SM2P256V1:     i64 = 6;
 pub const PK_X25519:        i64 = 8;
 pub const PK_X448:          i64 = 9;
 pub const PK_ED25519:       i64 = 12;
@@ -69,9 +69,9 @@ pub const ATT_GENERATION_QUALIFIER: i64 = 15;
 pub const ATT_DN_QUALIFIER:        i64 = 16;
 pub const ATT_PSEUDONYM:           i64 = 17;
 pub const ATT_ORG_IDENTIFIER:      i64 = 18;
-pub const ATT_JUR_LOCALITY:        i64 = 19;  // draft-11: jurisdictionLocalityName
-pub const ATT_JUR_STATE:           i64 = 20;  // draft-11: jurisdictionStateOrProvinceName
-pub const ATT_JUR_COUNTRY:         i64 = 21;  // draft-11: jurisdictionCountryName
+pub const ATT_JUR_LOCALITY:        i64 = 19;  // jurisdictionLocalityName
+pub const ATT_JUR_STATE:           i64 = 20;  // jurisdictionStateOrProvinceName
+pub const ATT_JUR_COUNTRY:         i64 = 21;  // jurisdictionCountryName
 pub const ATT_DOMAIN_COMPONENT:    i64 = 22;
 pub const ATT_NAME:                i64 = 25;
 pub const ATT_TELEPHONE_NUMBER:    i64 = 26;
@@ -81,7 +81,6 @@ pub const ATT_UNSTRUCTURED_NAME:   i64 = 29;
 pub const ATT_UNSTRUCTURED_ADDRESS: i64 = 30;
 
 // ── Extension Registry (Section 9.4) ─────────────────────────────────────────
-// Note: SCT List (old ID 10) was removed from the registry in draft-11.
 pub const EXT_SUBJECT_KEY_ID:       u16 = 1;
 pub const EXT_KEY_USAGE:            u16 = 2;
 pub const EXT_SUBJECT_ALT_NAME:     u16 = 3;
@@ -91,8 +90,7 @@ pub const EXT_CERT_POLICIES:        u16 = 6;
 pub const EXT_AUTH_KEY_ID:          u16 = 7;
 pub const EXT_EXT_KEY_USAGE:        u16 = 8;
 pub const EXT_AUTH_INFO:            u16 = 9;
-// ext ID 24 (Subject Directory Attributes) removed from the registry (draft PR #408);
-// no longer emitted. Decode of the legacy int-24 form is still tolerated, see extensions.rs.
+// ID 24 is unassigned; it is accepted on decode only (see extensions.rs).
 pub const EXT_ISSUER_ALT_NAME:      u16 = 25;
 pub const EXT_NAME_CONSTRAINTS:     u16 = 26;
 pub const EXT_POLICY_MAPPINGS:      u16 = 27;
@@ -133,9 +131,8 @@ pub const CP_INDIVIDUAL_VALIDATION: i64 = 3;
 pub const CP_EXTENDED_VALIDATION:  i64 = 4;
 pub const CP_RESOURCE_PKI:         i64 = 7;
 pub const CP_RESOURCE_PKI_ALT:     i64 = 8;
-// RSP roles — draft-11: IDs 24-38 (was 10-17 in old draft).
-// The old OIDs (2.23.146.1.2.1.0 through .7) are now the v2 entries (odd IDs 25,27,29,31,33,35,37).
-// The v1 entries (even IDs 26,28,30,32,34,36,38) have new OIDs not yet widely deployed.
+// RSP roles: IDs 24-38. OIDs 2.23.146.1.2.1.0-.7 are CI (24) and the v2 entries (odd IDs 25-37).
+// The v1 entries (even IDs 26-38) are not mapped to OIDs here.
 pub const CP_RSP_CI:               i64 = 24;  // Certificate Issuer
 pub const CP_RSP_EUICC_V2:         i64 = 25;  // eUICC (v2, OID 2.23.146.1.2.1.1)
 pub const CP_RSP_EUICC:            i64 = 26;  // eUICC (v1, new OID — see draft Table 19)
@@ -277,7 +274,7 @@ pub const EXT_IP_ADDR_BLOCKS_V2_OID: Oid<'static> = oid!(1.3.6.1.5.5.7.1.28);
 pub const EXT_AS_IDENTIFIERS_V2_OID: Oid<'static> = oid!(1.3.6.1.5.5.7.1.29);
 pub const EXT_OCSP_NO_CHECK_OID:     Oid<'static> = oid!(1.3.6.1.5.5.7.48.1.5);
 pub const EXT_TLS_FEATURES_OID:      Oid<'static> = oid!(1.3.6.1.5.5.7.1.24);
-// SCT List OID kept for fallback raw-OID encoding (ext no longer registered in draft-11)
+// SCT List has no registered C509 extension ID; the OID is kept for the generic OID form.
 pub const EXT_SCT_LIST_OID:          Oid<'static> = oid!(1.3.6.1.4.1.11129.2.4.2);
 
 // Certificate policy OIDs
@@ -288,8 +285,7 @@ pub const CP_INDIVIDUAL_VALIDATION_OID: Oid<'static> = oid!(2.23.140.1.2.3);
 pub const CP_EXTENDED_VALIDATION_OID: Oid<'static> = oid!(2.23.140.1.1);
 pub const CP_RESOURCE_PKI_OID:       Oid<'static> = oid!(1.3.6.1.5.5.7.14.2);
 pub const CP_RESOURCE_PKI_ALT_OID:   Oid<'static> = oid!(1.3.6.1.5.5.7.14.3);
-// RSP OIDs: 2.23.146.1.2.1.{0-7} — draft-11 maps these to the v2 entries (IDs 24,25,27,29,31,33,35,37).
-// The v1 entries (IDs 26,28,30,32,34,36,38) use new OID sub-arcs not yet common in the wild.
+// RSP OIDs 2.23.146.1.2.1.{0-7} map to IDs 24,25,27,29,31,33,35,37 (CI and the v2 entries).
 
 // Policy qualifier OIDs
 pub const PQ_CPS_OID:     Oid<'static> = oid!(1.3.6.1.5.5.7.2.1);
@@ -472,12 +468,11 @@ pub fn att_map(oid: &[u8]) -> Option<i64> {
 }
 
 /// Maps a DER-encoded extension OID (value bytes) to a C509 extension ID.
-/// SCT List (old ID 10) is not registered in draft-11 and returns None.
+/// SCT List has no registered ID and returns None.
 pub fn ext_map(oid: &[u8]) -> Option<u16> {
     match oid {
         [0x55, 0x1D, rest @ ..] => match rest {
-            // 2.5.29.9 (subjectDirectoryAttributes) removed from the registry (draft PR
-            // #408): no specific int ID, so it encodes via the generic raw-OID path.
+            // 2.5.29.9 (subjectDirectoryAttributes) has no registered ID: generic OID form.
             [0x0E] => Some(EXT_SUBJECT_KEY_ID),
             [0x0F] => Some(EXT_KEY_USAGE),
             [0x11] => Some(EXT_SUBJECT_ALT_NAME),
@@ -529,8 +524,7 @@ pub fn cp_map(oid: &[u8]) -> Option<i64> {
             [0x03] => Some(CP_RESOURCE_PKI_ALT),
             _ => None,
         },
-        // RSP roles (OID arc 2.23.146.1.2.1.x) — draft-11: these map to the v2 entries (odd IDs).
-        // CI (arc .0) keeps ID 24. All others (.1 through .7) become the v2 variants.
+        // RSP roles (OID arc 2.23.146.1.2.1.x): arc .0 is CI (ID 24), arcs .1-.7 the v2 entries (odd IDs).
         [0x67, 0x81, 0x12, 0x01, 0x02, 0x01, rest @ ..] => match rest {
             [0x00] => Some(CP_RSP_CI),
             [0x01] => Some(CP_RSP_EUICC_V2),
@@ -626,7 +620,7 @@ pub fn map_cert_policy_id_to_oid(id: i64) -> Vec<u8> {
         CP_RSP_DP_PB_V2           => vec![0x67, 0x81, 0x12, 0x01, 0x02, 0x01, 0x05],
         CP_RSP_DS_TLS_V2          => vec![0x67, 0x81, 0x12, 0x01, 0x02, 0x01, 0x06],
         CP_RSP_DS_AUTH_V2         => vec![0x67, 0x81, 0x12, 0x01, 0x02, 0x01, 0x07],
-        // TODO: v1 RSP OIDs (IDs 26,28,30,32,34,36,38) use new sub-arcs from draft-11 Table 19
+        // TODO: the v1 RSP entries (IDs 26,28,30,32,34,36,38) are not mapped to OIDs.
         _ => panic!("Unknown certificate policy ID: {}", id),
     }
 }

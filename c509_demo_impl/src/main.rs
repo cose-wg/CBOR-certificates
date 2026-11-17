@@ -7,7 +7,7 @@ use c509::tester::*;
 use c509::help::*;
 use c509::type2::encode_x509_as_type2;
 use c509::type2_csr::encode_csr_as_type2;
-use c509::verify::verify_type2;
+use c509::verify::{verify_type2, verify_type2_csr, verify_type2_issued};
 use std::env::args;
 use env_logger::Env;
 use log::info;
@@ -55,7 +55,9 @@ Commands:
   r2 ... --embedded-cert-key <key.pem>     Re-sign embedded C509 certs in attrs as type-2
   r2 ... -nc                                Also store EC public keys uncompressed
   v2 <c509.cbor.hex>                        Cryptographically verify a Type-2 signature (self-signed)
+  v2 <c509.cbor.hex> --issuer-cert <issuer.cbor.hex>   Verify a CA-signed Type-2 against the issuer C509 certificate
   v2 <c509.cbor.hex> --issuer-point <hex>   Verify a CA-signed Type-2 with the issuer public key (same algorithm as the subject key; not RSA)
+  v2 <c509csr.cbor.hex>                     Verify the signature of a Type-2 certification request (subject key)
 ";
 
     let all_args: Vec<String> = args().collect();
@@ -77,6 +79,7 @@ Commands:
         let cbor = hex::decode(&hexstr)
             .unwrap_or_else(|e| panic!("v2: '{}' is not valid hex: {}", second_arg, e));
         let mut issuer_point: Option<Vec<u8>> = None;
+        let mut issuer_cert: Option<Vec<u8>> = None;
         let mut it = all_args.iter().skip(3);
         while let Some(a) = it.next() {
             if a == "--issuer-point" {
@@ -84,9 +87,25 @@ Commands:
                     issuer_point = Some(hex::decode(h.trim())
                         .unwrap_or_else(|e| panic!("v2: bad --issuer-point hex: {}", e)));
                 }
+            } else if a == "--issuer-cert" {
+                if let Some(path) = it.next() {
+                    let raw = std::fs::read_to_string(path)
+                        .unwrap_or_else(|e| panic!("v2: cannot read '{}': {}", path, e));
+                    let hexstr: String = raw.chars().filter(|c| c.is_ascii_hexdigit()).collect();
+                    issuer_cert = Some(hex::decode(&hexstr)
+                        .unwrap_or_else(|e| panic!("v2: '{}' is not valid hex: {}", path, e)));
+                }
             }
         }
-        match verify_type2(&cbor, issuer_point.as_deref()) {
+        // A certification request is the CBOR array(7); a certificate array(11).
+        let result = if cbor.first() == Some(&0x87) {
+            verify_type2_csr(&cbor)
+        } else if let Some(issuer) = issuer_cert.as_deref() {
+            verify_type2_issued(&cbor, issuer)
+        } else {
+            verify_type2(&cbor, issuer_point.as_deref())
+        };
+        match result {
             Ok(desc) => { println!("VERIFY OK: {}", desc); std::process::exit(0); }
             Err(reason) => { eprintln!("VERIFY FAIL: {}", reason); std::process::exit(1); }
         }

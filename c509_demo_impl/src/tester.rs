@@ -40,8 +40,7 @@ pub fn write_c509_to_files(certs: &[Cert], input_path: &str) {
         let suffix = if certs.len() > 1 { format!("_{}", i) } else { String::new() };
         let hex_path = format!("{}{}.cbor.hex", base, suffix);
         let mut hex_file = File::create(&hex_path).expect("write_c509_to_files: cannot create .cbor.hex");
-        // draft-20: the canonical C509Certificate is the full CBOR array (with the
-        // `8B` array(11) header); the unwrapped sequence ~C509Certificate is gone.
+        // A C509Certificate is the full CBOR array (with the `8B` array(11) header).
         for byte in lcbor_array(&cert.cbor) {
             let _ = write!(hex_file, "{:02X}", byte);
         }
@@ -328,7 +327,7 @@ pub fn print_information(certs: &[Cert], suppress_output: bool) {
     if suppress_output { return; }
 
     let der_total: u64 = certs.iter().map(|c| c.der.len() as u64).sum();
-    // draft-20: size counts the full C509Certificate array (incl. the `8B` header).
+    // The size counts the full C509Certificate array (incl. the `8B` header).
     let cbor_total: u64 = certs.iter().map(|c| lcbor_array(&c.cbor).len() as u64).sum();
     print_info(&[
         format!("Encoding certificate chain/bag with {} certificates", certs.len()),
@@ -337,8 +336,7 @@ pub fn print_information(certs: &[Cert], suppress_output: bool) {
     ]);
 
     for (i, cert) in certs.iter().enumerate() {
-        // draft-20: emit the full C509Certificate CBOR array (the `8B` header is
-        // part of the certificate; the unwrapped ~C509Certificate sequence is gone).
+        // Emit the full C509Certificate CBOR array (incl. the `8B` header).
         let cbor_bytes = lcbor_array(&cert.cbor);
         print_info(&[
             format!("Encoding certificate {} of {}", i + 1, certs.len()),
@@ -392,9 +390,9 @@ pub fn print_information(certs: &[Cert], suppress_output: bool) {
             std::process::exit(0);
         }
 
-        // draft-20: COSE_C509 = C509CertData / [2* C509CertData], where
+        // COSE_C509 = C509CertData / [2* C509CertData], where
         // C509CertData = bytes .cbor C509Certificate (a CBOR byte string wrapping the
-        // full cert array, was `.cborseq` in -19). Media type application/cose-c509+cbor.
+        // full cert array). Media type application/cose-c509+cbor.
         print_info(&[format!("CBOR COSE_C509 with {} certificates", certs.len())]);
         if certs.len() > 1 {
             let mut cose_c509: Vec<Vec<u8>> = Vec::new();
@@ -452,7 +450,7 @@ pub fn print_information(certs: &[Cert], suppress_output: bool) {
         print_vec("Brotli TLS_X509", &tls_x509_brotli);
 
         print_info(&[format!("TLS 1.3 Certificate message with {} certificates (C509)", certs.len())]);
-        // draft-20: TLS c509_data is the CBOR-encoded C509Certificate (the full array).
+        // TLS c509_data is the CBOR-encoded C509Certificate (the full array).
         let c509_ders: Vec<Vec<u8>> = certs.iter().map(|c| lcbor_array(&c.cbor)).collect();
         let tls_c509 = build_tls_cert_msg(c509_ders.iter().map(|v| v.as_slice()).collect());
         print_vec("TLS_C509", &tls_c509);

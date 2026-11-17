@@ -2,7 +2,7 @@
 
 Rust reference implementation of CBOR-encoded X.509 certificates (C509),
 tracking **[draft-ietf-cose-cbor-encoded-cert](https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/)**
-— aligned with **draft-21** (the version now in the RFC-publication pipeline).
+— aligned with **draft-21**.
 
 Converts, bidirectionally and losslessly, between standard X.509 DER
 certificates/CSRs and their compact C509 CBOR representation. Targets
@@ -84,6 +84,9 @@ cargo build --bin c509
 | `u <domain>` | Fetch TLS certificate chain, encode each cert to C509 |
 | `l <cert.der>` | Round-trip: X.509 → C509 → X.509, compare bytes |
 | `ll <domain …>` | Round-trip for one or more live TLS chains (parallel) |
+| `v2 <c509.cbor.hex>` | Verify the signature of a self-signed type-2 certificate or of a type-2 certification request (subject key) |
+| `v2 <c509.cbor.hex> --issuer-cert <issuer.cbor.hex>` | Verify a CA-issued type-2 certificate against the issuer's C509 certificate |
+| `v2 <c509.cbor.hex> --issuer-point <hex>` | Same, with the issuer's EC public key given directly (same algorithm as the subject key) |
 | `t <urllist.txt>` | Bulk round-trip from a URL list, results logged under `test_results/` |
 
 ```bash
@@ -108,7 +111,7 @@ downloads, extracts, and validates against them automatically.
 
 | Option | Effect |
 |--------|--------|
-| `--version VER` | Test vector draft version to use (default: `03`, the current draft) |
+| `--version VER` | Test vector draft version to use (default: `04`) |
 | `--refetch` | Force re-download of the XML even if already cached |
 | `--rebuild` | Force `cargo build` even if the binary is current |
 | `--verbose` | Print tool output for every failing test |
@@ -125,8 +128,8 @@ What it does internally:
    after their section number in the draft:
 
    ```
-   v03_section_4.3.2_x509_selfsign_secp256r1.crt
-   v03_section_4.3.3_c509_type_3_certificate_3.cbor.hex
+   v04_section_3.3.2_x509_selfsign_secp256r1.crt
+   v04_section_3.3.3_c509_type_3_certificate_3.cbor.hex
    ```
 
    OpenSSL verbose dumps embedded in the XML are automatically skipped.
@@ -143,7 +146,7 @@ What it does internally:
    | §5 Round-trip | X.509 DER → C509 → DER, byte-exact comparison |
    | §6 CSR round-trip | X.509 CSR → C509 → CSR, byte-exact comparison |
    | §7 Type-2 signing | `f2`: fields 0–9 match the IETF type-2 vector (field 10 too for deterministic signature algorithms, otherwise `f2`'s own signature is verified with `v2`); CA-issued certificates are signed with the CA key |
-   | §7b Signature verification | `v2`: the signature of each self-signed type-2 vector verifies |
+   | §7b Signature verification | `v2`: every signature in the type-2 vectors verifies — self-signed certificates and certification requests with the subject key, CA-issued certificates against the issuing certificate |
    | §8 Type-2 CSR signing | `r2`: ECDSA (TBS), DhSig and unsigned CSRs (full) match the IETF vector |
    | §9 CRT round-trip | certification request templates re-encode byte-exact |
 
@@ -162,38 +165,34 @@ If you need to run steps separately:
 # Download + extract only:
 ./fetch_test_vectors.sh [VERSION]
 
-# Validate only (binary must already be built; defaults to draft-03):
-./validate_c509.sh [--version 03] [--verbose]
+# Validate only (binary must already be built; defaults to test-vectors -04):
+./validate_c509.sh [--version 04] [--verbose]
 
-# Extract only (XML already downloaded). Use the latest draft version:
+# Extract only (XML already downloaded):
 python3 extract_vectors.py \
-    --version 03 \
-    --xml ../test_vectors/draft-ietf-cose-c509-test-vectors-03.xml \
+    --version 04 \
+    --xml ../test_vectors/draft-ietf-cose-c509-test-vectors-04.xml \
     --outdir ../test_vectors/
 ```
 
-The `-03` set (`v03_section_*`) aligns with draft-ietf-cose-cbor-encoded-cert-21:
-every C509 object carries its CBOR-array leading byte (`0x8B` cert / `0x87` CSR),
-and the tool emits exactly that form. The `-01` and `-02` sets also run
-(`--version 01` / `--version 02`).
+The `-03` and `-02` sets also run (`--version 03` / `--version 02`).
 
-### Current results (`validate_c509.sh`, default draft-03)
+### Current results (`validate_c509.sh`, test-vectors -04)
 
 ```
-PASS:  147   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
+PASS:  151   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
              withcert, CA-issued X25519/X448), v2 signature verification, CRT round-trip
 XFAIL:  70   no X.509 DER equivalent (62 type-2, 8 CRT)
 SKIP:    2   no X.509 counterpart to compare (8-byte integer certificate and CSR)
 FAIL:    0
 ```
 
-The XFAILs are inherent, not tool gaps: a type-2 (natively signed) object is
-signed over the CBOR TBS, so there is no X.509 DER to decode back to. CSR
-templates likewise have no DER form; their lossless CBOR round-trip is verified
-in §9.
+The XFAILs are inherent: a type-2 (natively signed) object is signed over the
+CBOR TBS, so there is no X.509 DER to decode back to. CSR templates likewise
+have no DER form; their lossless CBOR round-trip is verified in §9.
 
 The SKIPs: the 8-byte-integer certificate and CSR have no X.509 counterpart for
-`f2` / `r2` to start from; the certificate's signature is verified by `v2`.
+`f2` / `r2` to start from; their signatures are verified by `v2`.
 
 Type-2 signing (`f2`, §7) compares fields 0–9 (the TBS) byte-exactly, and also
 field 10 when the signature algorithm is deterministic (Ed25519, Ed448,
@@ -211,18 +210,23 @@ self-signed certificate `f2`'s signature is verified with `v2` instead.
 - RSA PKCS#1 v1.5 with SHA-1 or SHA-2, and RSASSA-PSS with SHA-2, SHAKE128 or
   SHAKE256.
 
-`v2` verifies a self-signed certificate with its subject key; with
-`--issuer-point <hex>` it uses the given issuer key, which must use the same
-algorithm as the subject key and cannot be an RSA key. See
-[KNOWN_ISSUES.md](KNOWN_ISSUES.md) for the full breakdown.
+`v2` verifies a self-signed certificate or a certification request with its
+subject key. A CA-issued certificate is verified with `--issuer-cert`, which
+checks that the issuer certificate's subject equals the certificate's issuer and
+verifies with that certificate's key; `--issuer-point <hex>` takes the issuer's
+EC public key directly, which must then use the subject key's algorithm.
+Unsigned objects (id-alg-unsigned) and Diffie-Hellman proof-of-possession
+requests carry no signature to verify. See [KNOWN_ISSUES.md](KNOWN_ISSUES.md)
+for limitations.
 
 Integer identifiers without a registered OID (e.g. the 8-byte attribute types and
-extension IDs of the -03 §8 certificate) cannot be converted to X.509; `c`
-reports this as an error (exit status 1).
+extension IDs of the 8-byte-integer certificate) cannot be converted to X.509;
+`c` reports this as an error (exit status 1).
 
-Round-trip mode (`l` / `ll` / `t`) is independent of the draft version and also
-passes on live TLS chains (4710/5000 public hosts lossless — the one by-design
-exception is a `BMPString` `explicitText` that C509 normalises to UTF-8).
+Round-trip mode (`l` / `ll` / `t`) is independent of the test vectors and also
+runs on live TLS chains: of 5000 public hosts sampled, 4710 chains round-trip
+losslessly, one certificate does not by design (a `BMPString` `explicitText`,
+which C509 normalises to UTF-8), and the remaining hosts were unreachable.
 
 ## Implemented features
 
@@ -234,7 +238,7 @@ exception is a `BMPString` `explicitText` that C509 normalises to UTF-8).
 | C509 type-3 CSR → PKCS#10 DER | ✓ |
 | ECDSA / EdDSA / RSA / RSA-PSS signature encoding | ✓ |
 | DH proof-of-possession (DhSigStatic, §9.1 values 14–16) | ✓ |
-| PrivateKeyPossessionStatement attribute, incl. draft-20 `bytes .cbor` embedded cert | ✓ |
+| PrivateKeyPossessionStatement attribute, incl. the `bytes .cbor` embedded certificate | ✓ |
 | EC point compression (FE/FD prefix, §2.3.4) | ✓ |
 | RFC 9090 OID fallback for unregistered algorithms (§2.2, §2.3.3) | ✓ |
 | SM2 / SM3 (Weierstrass curve, no external crate needed) | ✓ |
@@ -245,7 +249,7 @@ exception is a `BMPString` `explicitText` that C509 normalises to UTF-8).
 | All registered extensions (§ext-encoding) | ✓ |
 | Batch TLS round-trip testing | ✓ |
 | C509 type-2 (natively signed) `f2` encode — all signature algorithms listed above | ✓ |
-| C509 type-2 signature verification (`v2`) — all signature algorithms listed above | ✓ |
+| C509 type-2 signature verification (`v2`): self-signed and CA-issued certificates, certification requests — all signature algorithms listed above | ✓ |
 | Certification Request Templates (parse and lossless re-encode) | ✓ |
 
 ## Library API
@@ -291,7 +295,7 @@ let certs = get_certs_from_tls("example.com".to_string());
 | `lcbor` | CBOR encoding primitives |
 | `type2` | Type-2 (natively signed) certificate encoding and signing (`f2`) |
 | `type2_csr` | Type-2 (natively signed) CSR encoding (`r2`) |
-| `verify` | Type-2 signature verification (`v2`) |
+| `verify` | Type-2 signature verification of certificates and certification requests (`v2`) |
 | `sm2` | SM2 signing and verification with SM3 and the default distinguishing ID |
 | `tester` | TLS client, file I/O, batch testing, round-trip harness |
 | `help` | Printing and diagnostic utilities |
@@ -316,40 +320,14 @@ Bug reports and pull requests:
 
 ## Version history
 
-**v0.6.1** (2026-09) — draft-21 alignment (no wire changes)
-Re-labelled the tool to track **draft-ietf-cose-cbor-encoded-cert-21**, now the
-official version. The -20→-21 delta is entirely editorial/registry-comment/
-reference bookkeeping — no encoding, CDDL, or registry-ID changes — so the codec
-is unchanged and the -02 vector suite is unaffected. Every substantive v20→v21 PR
-was audited against the implementation (see `KNOWN_ISSUES.md` §"draft-21
-alignment"): #404 (serialNumber always-bstr), #408 (subjectDirectoryAttributes
-removed), #409 (RSA/unstructuredAddress DER-length comment fixes — correct by
-construction here), #410 (explicit ID ranges), #420 (keyUsage LSB-first), #421
-(type-2 attributeType non-negative — latent, unexercised), #422 (bare `~oid`
-AlgorithmIdentifier), #423/#419 (CR-attribute generic `~oid`), #424 (null-issuer
-octet-for-octet), #426/#430 (TLSA/c5u data description), #428 (RFC 8446→9846 TLS
-reference). All are already handled or need no code change.
-
-**v0.6.0** (2026-07) — draft-20 / RFC-track alignment
-Aligned the whole tool with **draft-ietf-cose-cbor-encoded-cert-20**: a C509
-certificate is now the full CBOR **array** (`0x8B` header) — the unwrapped
-`~C509Certificate` sequence is gone — and CSRs/templates carry the `0x87` array
-header; the COSE and TLS wrappings use `C509CertData = bytes .cbor
-C509Certificate`. Fixed the draft-20 `bytes .cbor` wrapping of the certificate
-embedded in a `PrivateKeyPossessionStatement` "withcert" CSR attribute (encode
-and decode), byte-exact against test-vectors-02 §8.7. Added the `-02` extraction
-path (`extract_vectors.py --version 02`). Round-trip validation passes on the
-`-02` vectors and on live TLS chains; decoders auto-detect the CBOR array vs. the
-legacy sequence, so `-19`-era inputs still parse.
-
-Earlier milestones:
-
-- Type-2 (natively signed) certificate and CSR encoding (`f2` / `r2`, including
-  RFC 6955 DhSig), and the draft test-vector validation harness (`run_tests.sh`).
-- DH proof-of-possession and `PrivateKeyPossessionStatement` decode; RFC 9090 OID
-  fallback for unregistered algorithms/curves; `parse_c509_item` cert-vs-CSR
-  auto-dispatch.
-- C509 → X.509 decoding direction, and batch round-trip testing over live TLS
-  (lossless on 4710/5000 sampled public hosts — the one by-design exception is a
-  `BMPString` `explicitText` that C509 normalises to UTF-8).
-- Initial release in 2021, tracking the early drafts.
+- **0.6.2** (2026-11) — test-vectors -04. Type-2 signing and signature
+  verification for every key type in the vectors; verification of CA-issued
+  certificates and of certification requests.
+- **0.6.1** (2026-09) — draft-21. Subject Directory Attributes is encoded in the
+  generic OID form; an AlgorithmIdentifier without parameters is a bare `~oid`.
+- **0.6.0** (2026-07) — draft-20. Certificates, certification requests and
+  templates are CBOR arrays; embedded certificates are `bytes .cbor`-wrapped.
+- **Earlier** — type-2 certificate and CSR encoding, the test-vector validation
+  suite, C509 → X.509 decoding, RFC 9090 OID fallback, Diffie-Hellman
+  proof-of-possession, batch round-trip testing over live TLS. Initial release
+  in 2021.
