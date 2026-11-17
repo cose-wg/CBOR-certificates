@@ -16,22 +16,22 @@
        Two types of C509 certificates are defined. One type is an invertible CBOR re-encoding of DER-encoded X.509 certificates with the signature field copied from the DER encoding. The other type is identical except that the signature is computed over the CBOR encoding instead of the DER encoding, thereby avoiding the use of ASN.1. Both types of certificates have the same semantics as X.509 while providing comparable size reduction. 
        This document also specifies CBOR-encoded data structures for certification requests and certification request templates, new COSE headers, as well as a TLS certificate type and a file format for C509. This document updates RFC 6698 by extending the TLSA selectors registry to include C509 certificates. 
     " name="description">
-<meta content="xml2rfc 3.34.1" name="generator">
+<meta content="xml2rfc 3.35.0" name="generator">
 <meta content="draft-ietf-cose-cbor-encoded-cert-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.1
-    Python 3.14.7
-    ConfigArgParse 1.7.7
+  xml2rfc 3.35.0
+    Python 3.14.10
+    ConfigArgParse 1.9.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.10
+    platformdirs 4.14.3
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.4
+    wcwidth 0.9.4
 -->
 <link href="draft-ietf-cose-cbor-encoded-cert.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1032,7 +1032,7 @@ svg {
   & :is([stroke="white"], [stroke^="#fff"]) {
     stroke: var(--background-color);
   }
-  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+  & :is([fill="black"], [fill^="#000"], :not([fill], [fill] *)) {
     fill: var(--text-color);
   }
   & :is([fill="white"], [fill^="#fff"]) {
@@ -1047,11 +1047,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">C509 Certificates</td>
-<td class="right">September 2026</td>
+<td class="right">November 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Preuß Mattsson, et al.</td>
-<td class="center">Expires 26 March 2027</td>
+<td class="center">Expires 21 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc6698" class="eref">6698</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-09-22" class="published">22 September 2026</time>
+<time datetime="2026-11-17" class="published">17 November 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-03-26">26 March 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-21">21 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1143,7 +1143,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 26 March 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 21 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1487,7 +1487,15 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
           <h4 id="name-signature">
 <a href="#section-3.1.3" class="section-number selfRef">3.1.3. </a><a href="#name-signature" class="section-name selfRef">signature</a>
           </h4>
-<p id="section-3.1.3-1">The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see <a href="#sigalg" class="auto internal xref">Section 8.14</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string.<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.3-1">The 'signature' field, containing the signature algorithm including parameters, is encoded as a CBOR int (see <a href="#sigalg" class="auto internal xref">Section 8.14</a>) if a corresponding integer value exists. Otherwise:<a href="#section-3.1.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.3-2.1">
+              <p id="section-3.1.3-2.1.1">If the 'parameters' field is absent, it is encoded as an unwrapped CBOR OID.<a href="#section-3.1.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.3-2.2">
+              <p id="section-3.1.3-2.2.1">If the 'parameters' field is present, it is encoded as an array containing an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> followed by the DER-encoded parameters as CBOR bytes.<a href="#section-3.1.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </section>
 </div>
 <div id="issuer">
@@ -1495,8 +1503,8 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
           <h4 id="name-issuer">
 <a href="#section-3.1.4" class="section-number selfRef">3.1.4. </a><a href="#name-issuer" class="section-name selfRef">issuer</a>
           </h4>
-<p id="section-3.1.4-1">In the general case, the list of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) tuple.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-rdnattrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In CBOR, all text strings are UTF-8 encoded and in natively signed C509 certificates all CBOR ints <span class="bcp14">SHALL</span> be non-negative. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. The value of the attributes serialNumber and countryName <span class="bcp14">SHALL</span> contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-1">In the general case, the list of 'RDNAttribute' is encoded as a CBOR array consisting of RDNAttribute elements. RelativeDistinguishedName with more than one AttributeTypeAndValue is not supported. Each RDNAttribute is CBOR-encoded as (type, value), either as an (int, SpecialText) pair or as a (~oid, bytes) pair.<a href="#section-3.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-2">In the former case, the absolute value of the int encodes the attribute type (see <a href="#fig-rdnattrtype" class="auto internal xref">Figure 10</a>) and the sign is used to represent the character string type in the X.509 certificate; positive for utf8String, negative for printableString. Attribute values which are always of type IA5String are unambiguously represented using a non-negative int. Examples include emailAddress and domainComponent (see <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span>). In natively signed C509 certificates, the 'attributeType' int <span class="bcp14">SHALL</span> be non-negative. In CBOR, all text strings are UTF-8 encoded. Text strings <span class="bcp14">SHALL</span> still adhere to any <span>[<a href="#RFC5280" class="cite xref">RFC5280</a>]</span> restrictions. The value of the attributes serialNumber and countryName <span class="bcp14">SHALL</span> contain only characters from the 74-character ASCII subset permitted by PrintableString. Additionally, the value of the countryName attribute <span class="bcp14">SHALL</span> have length 2. CBOR encoding is allowed for IA5String (if this is the only allowed type, e.g., emailAddress), printableString and utf8String, whereas the string types teletexString, universalString, and bmpString are not supported.<a href="#section-3.1.4-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-3">The text strings are further optimized as follows:<a href="#section-3.1.4-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.4-4.1">
@@ -1511,7 +1519,7 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
           </ul>
 <p id="section-3.1.4-5">The final encoding of the attribute value may therefore be text, bytes, or tag, i.e., SpecialText. If Name contains a single 'common name' attribute with attributeType = +1, it is for compactness encoded as just the SpecialText containing the single attribute value.<a href="#section-3.1.4-5" class="pilcrow">¶</a></p>
 <p id="section-3.1.4-6">In natively signed C509 certificates, bytes and tag 48 do not correspond to any predefined text string encoding and may also be used for other attribute types.<a href="#section-3.1.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.1.4-7">If the 'issuer' field is identical to the 'subject' field, e.g., in case of self-signed certificates, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.1.4-7">If and only if the 'issuer' field is octet-for-octet identical to the 'subject' field, as in the case of a self-issued certificate, then the 'issuer' field <span class="bcp14">MUST</span> be encoded as the CBOR simple value null (0xf6).<a href="#section-3.1.4-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="validity">
@@ -1535,8 +1543,16 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
           <h4 id="name-subjectpublickeyinfo">
 <a href="#section-3.1.7" class="section-number selfRef">3.1.7. </a><a href="#name-subjectpublickeyinfo" class="section-name selfRef">subjectPublicKeyInfo</a>
           </h4>
-<p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 8.15</a>) or as an array with an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> optionally followed by the parameters encoded as a CBOR byte string.<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.7-2">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except undefined (see <a href="#CRT" class="auto internal xref">Section 4.4</a>). This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.7-1">The 'AlgorithmIdentifier' field including parameters is encoded as the CBOR int 'subjectPublicKeyAlgorithm' (see <a href="#pkalg" class="auto internal xref">Section 8.15</a>) if a corresponding integer value exists. Otherwise:<a href="#section-3.1.7-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1.7-2.1">
+              <p id="section-3.1.7-2.1.1">If the 'parameters' field is absent, it is encoded as an unwrapped CBOR OID.<a href="#section-3.1.7-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.1.7-2.2">
+              <p id="section-3.1.7-2.2.1">If the 'parameters' field is present, it is encoded as an array containing an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span> followed by the DER-encoded parameters as CBOR bytes.<a href="#section-3.1.7-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.1.7-3">In general, the 'subjectPublicKey' BIT STRING value field is encoded as a CBOR byte string, but may be encoded as a CBOR item of any type except undefined (see <a href="#CRT" class="auto internal xref">Section 4.4</a>). This specification assumes the BIT STRING has zero unused bits, and the unused bits byte is omitted. For rsaEncryption and id-ecPublicKey, the encoding of subjectPublicKey is further optimized as described in <a href="#alg-encoding" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.7-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="issueruniqueid">
@@ -1647,7 +1663,7 @@ When converting back to X.509 format, in case of C509Certificate type 3 or C509C
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-7.1">
-            <p id="section-3.3-7.1.1">Key Usage (keyUsage). The 'KeyUsage' BIT STRING is interpreted as an unsigned integer in network byte order and encoded as a CBOR int. See <a href="#ext-field" class="auto internal xref">Section 3.1.10</a> for special encoding in case keyUsage is the only extension present.<a href="#section-3.3-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-7.1.1">Key Usage (keyUsage). The 'KeyUsage' BIT STRING (excluding the tag, length, leading 'unusedBits' byte, and trailing unused bits) is represented by the bit sequence 'b0 b1 ... bn', where b0 is the least-significant bit (LSB) and bn is the most-significant bit (MSB). Its integer value is given by: sum(i=0..n)(bi × 2^i). See <a href="#ext-field" class="auto internal xref">Section 3.1.10</a> for special encoding in case keyUsage is the only extension present.<a href="#section-3.3-7.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-8">
@@ -1788,7 +1804,7 @@ As specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>,
                 <p id="section-3.3-24.1.2.2.1">For id-on-SmtpUTF8Mailbox, the value is a CBOR text as specified in <span>[<a href="#RFC9598" class="cite xref">RFC9598</a>]</span>.<a href="#section-3.3-24.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-3.3-24.1.2.3">
-                <p id="section-3.3-24.1.2.3.1">For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in <span>[<a href="#I-D.ietf-lamps-macaddress-on" class="cite xref">I-D.ietf-lamps-macaddress-on</a>]</span>.<a href="#section-3.3-24.1.2.3.1" class="pilcrow">¶</a></p>
+                <p id="section-3.3-24.1.2.3.1">For id-on-MACAddress, the value is a CBOR byte string containing 6 octets for EUI-48 and 8 octets for EUI-64 as specified in <span>[<a href="#RFC10031" class="cite xref">RFC10031</a>]</span>.<a href="#section-3.3-24.1.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -1905,32 +1921,18 @@ As specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>,
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-42.1">
-            <p id="section-3.3-42.1.1">Subject Directory Attributes (subjectDirectoryAttributes). Encoded as attributes in issuer and subject with the difference that there can be more than one attributeValue.<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-42.1.1">AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>. If 'rdi' is not present, the extension value can be CBOR-encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, each subsequent ASId is encoded as the difference from the previous ASId.<a href="#section-3.3-42.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div class="lang-cddl sourcecode" id="section-3.3-43">
 <pre>
-   RDNAttributes = (
-     ( attributeType: int, attributeValue: [ + SpecialText] ) //
-     ( attributeType: ~oid, attributeValue: [+ bytes] )
-   )
-   SubjectDirectoryAttributes = [ + RDNAttributes ]
+   ASIdOrRange = uint / [min:uint, max:uint]
+   ASIdentifiers = [ + ASIdOrRange ] / null
 </pre><a href="#section-3.3-43" class="pilcrow">¶</a>
 </div>
 <ul class="normal">
 <li class="normal" id="section-3.3-44.1">
-            <p id="section-3.3-44.1.1">AS Identifiers (id-pe-autonomousSysIds). The X.509 extension AS Identifiers is specified in <span>[<a href="#RFC3779" class="cite xref">RFC3779</a>]</span>. If 'rdi' is not present, the extension value can be CBOR-encoded. Each ASId is encoded as a CBOR uint. With the exception of the first ASId, each subsequent ASId is encoded as the difference from the previous ASId.<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<div class="lang-cddl sourcecode" id="section-3.3-45">
-<pre>
-   ASIdOrRange = uint / [min:uint, max:uint]
-   ASIdentifiers = [ + ASIdOrRange ] / null
-</pre><a href="#section-3.3-45" class="pilcrow">¶</a>
-</div>
-<ul class="normal">
-<li class="normal" id="section-3.3-46.1">
-            <p id="section-3.3-46.1.1">AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in <span>[<a href="#RFC8360" class="cite xref">RFC8360</a>]</span>. The extension value is encoded exactly like in the extension "AS Identifiers".<a href="#section-3.3-46.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-44.1.1">AS Identifiers v2 (id-pe-autonomousSysIds-v2). The X.509 extension AS Identifiers v2 is specified in <span>[<a href="#RFC8360" class="cite xref">RFC8360</a>]</span>. The extension value is encoded exactly like in the extension "AS Identifiers".<a href="#section-3.3-44.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div id="example-encoding-of-extensions">
@@ -1980,13 +1982,10 @@ C509CertData = bytes .cbor C509Certificate
             <p id="section-3.4-8.1.1">application/cose-c509-cert+cbor (<a href="#cose-c509-cert" class="auto internal xref">Section 8.18.1</a>)<a href="#section-3.4-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.4-8.2">
-            <p id="section-3.4-8.2.1">application/cose-c509+cbor (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.4-8.3">
-            <p id="section-3.4-8.3.1">application/cose-c509+cbor; usage=chain (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.3.1" class="pilcrow">¶</a></p>
+            <p id="section-3.4-8.2.1">application/cose-c509+cbor; usage=chain (<a href="#cose-c509" class="auto internal xref">Section 8.18.2</a>)<a href="#section-3.4-8.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.4-9">When the application/cose-c509+cbor media type is used, the data is a CBOR-encoded <code>COSE_X509</code> with only one <code>C509CertData</code> element.  If the parameter "usage" is set to "chain", this data is a CBOR-encoded <code>COSE_X509</code> with at least one <code>C509CertData</code> element.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
+<p id="section-3.4-9">When the <code>application/cose-c509-cert+cbor</code> media type is used, the data is a <code>C509Certificate</code> structure containing a single certificate. When <code>application/cose-c509+cbor; usage=chain</code> media type is used, the data is a <code>COSE_C509</code> structure with at least two certificates.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
 <p id="section-3.4-10">As the contents of c5b, c5c, c5t, and c5u are untrusted input, the header parameters can be in either the protected or unprotected header bucket. The trust mechanism <span class="bcp14">MUST</span> process any certificates in the c5b, c5c, and c5u parameters as untrusted input. The presence of a self-signed certificate in the parameter <span class="bcp14">MUST NOT</span> cause the update of the set of trust anchors without appropriate authorization.<a href="#section-3.4-10" class="pilcrow">¶</a></p>
 <span id="name-c509-cose-header-parameters-2"></span><div id="iana-header">
 <table class="center" id="table-1">
@@ -2238,8 +2237,17 @@ DhSigStaticType = [
         <h3 id="name-certification-request-attri">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-certification-request-attri" class="section-name selfRef">Certification Request Attributes</a>
         </h3>
-<p id="section-4.3-1">The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no GeneralAttribute <span class="bcp14">SHALL</span> be encoded as an empty CBOR array.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">The remainder of this section specifies CBOR-encoded attributes for Certification Requests.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">The 'attributes' field specifies the attributes contained in a certification request. The 'attributes' field with no elements <span class="bcp14">SHALL</span> be encoded as an empty CBOR array.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">Each 'attributeType' is encoded either as a CBOR int (see <a href="#cratttype" class="auto internal xref">Section 8.7</a>) or as an unwrapped CBOR OID tag <span>[<a href="#RFC9090" class="cite xref">RFC9090</a>]</span>.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3-3.1">
+            <p id="section-4.3-3.1.1">If 'attributeType' is encoded as a CBOR int, it is followed by a CBOR item of any type other than undefined. The specific type of the item is determined by 'attributeType'.<a href="#section-4.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-3.2">
+            <p id="section-4.3-3.2.1">If 'attributeType' is encoded as an unwrapped CBOR OID tag, it is followed by the DER-encoded 'values' (Section 4.1 of <span>[<a href="#RFC2986" class="cite xref">RFC2986</a>]</span>) encoded as a CBOR byte string.<a href="#section-4.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.3-4">The remainder of this section specifies CBOR-encoded attributes for Certification Requests.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
 <div id="extension-request">
 <section id="section-4.3.1">
           <h4 id="name-extension-request">
@@ -2455,7 +2463,7 @@ ExtensionTemplate = (
         <h3 id="name-designated-expert-guidance">
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-designated-expert-guidance" class="section-name selfRef">Designated Expert Guidance</a>
         </h3>
-<p id="section-8.1-1">Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. Experts should take into account the expected usage of entries when approving point assignment. The length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval [-24, 23] have a 1-byte encoding, other values in the interval [-256, 255] have a 2-byte encoding, and the remaining values in the interval [-65536, 65535] have a 3-byte encoding.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-1">Reviewers are encouraged to get sufficient information for registration requests to ensure that the usage is not going to duplicate one that is already registered and that the point is likely to be used in deployments. Experts should take into account the expected usage of entries when approving point assignment. The length of the encoded value should be weighed against the number of code points left that encode to that size and how constrained the systems it will be used on are. Values in the interval [-24, 23] have a 1-byte encoding; other values in the interval [-256, 255] have a 2-byte encoding; other values in the interval [-65536, 65535] have a 3-byte encoding; other values in the interval [-2^32, 2^32 - 1] have a 5-byte encoding; and the remaining values in the interval [-2^64, 2^64 - 1] have a 9-byte encoding.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
 <p id="section-8.1-2">All assignments according to "IETF Review with Expert Review" are made on an "IETF Review" basis per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.8" class="relref">Section 4.8</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span> with "Expert Review" additionally required per <span><a href="https://rfc-editor.org/rfc/rfc8126#section-4.5" class="relref">Section 4.5</a> of [<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. The procedure for early IANA allocation of "standards track code points" defined in <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span> also applies. When such a procedure is used, IANA will ask the designated expert(s) to approve the early allocation before registration. In addition, working group chairs are encouraged to consult the expert(s) early during the process outlined in Section 3.1 of <span>[<a href="#RFC7120" class="cite xref">RFC7120</a>]</span>.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2464,7 +2472,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-certificate-types-regi">
 <a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-c509-certificate-types-regi" class="section-name selfRef">C509 Certificate Types Registry</a>
         </h3>
-<p id="section-8.2-1">IANA has created a new registry titled "C509 Certificate Types" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval [-24, 23], the registration procedure is "IETF Review with Expert Review". For all other values, the registration procedure is "Expert Review".  The initial contents of the registry are (see <a href="#version" class="auto internal xref">Section 3.1.1</a>):<a href="#section-8.2-1" class="pilcrow">¶</a></p>
+<p id="section-8.2-1">IANA has created a new registry titled "C509 Certificate Types" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Description, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. It is mandatory to specify content in all columns. For values in the interval [-24, 23], the registration procedure is "IETF Review with Expert Review", and for all other values, the registration procedure is "Expert Review". The initial contents of the registry are (see <a href="#version" class="auto internal xref">Section 3.1.1</a>):<a href="#section-8.2-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-types"></span><div id="fig-types">
 <figure id="figure-6">
           <div class="alignCenter art-text artwork" id="section-8.2-2.1">
@@ -2493,7 +2501,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-certification-request-">
 <a href="#section-8.3" class="section-number selfRef">8.3. </a><a href="#name-c509-certification-request-" class="section-name selfRef">C509 Certification Request Types Registry</a>
         </h3>
-<p id="section-8.3-1">IANA has created a new registry titled "C509 Certification Request Types" under the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
+<p id="section-8.3-1">IANA has created a new registry titled "C509 Certification Request Types" under the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Description, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certification-request-t"></span><div id="fig-csr-types">
 <figure id="figure-7">
           <div class="alignCenter art-text artwork" id="section-8.3-2.1">
@@ -2522,7 +2530,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-private-key-types-regi">
 <a href="#section-8.4" class="section-number selfRef">8.4. </a><a href="#name-c509-private-key-types-regi" class="section-name selfRef">C509 Private Key Types Registry</a>
         </h3>
-<p id="section-8.4-1">IANA has created a new registry titled "C509 Private Key Types" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Comments, subjectPrivateKey, and Reference, where Value is an integer, and the other columns are text strings. The subjectPrivateKey describes the encoding of the subject private key, see <a href="#private-key-structures" class="auto internal xref">Section 3.6</a>. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
+<p id="section-8.4-1">IANA has created a new registry titled "C509 Private Key Types" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Comments, subjectPrivateKey, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. The subjectPrivateKey describes the encoding of the subject private key, see <a href="#private-key-structures" class="auto internal xref">Section 3.6</a>. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".  The initial contents of the registry are:<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <span id="name-c509-private-key-types"></span><div id="fig-privkeys">
 <figure id="figure-8">
           <div class="alignCenter art-text artwork" id="section-8.4-2.1">
@@ -2550,7 +2558,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-certification-request-te">
 <a href="#section-8.5" class="section-number selfRef">8.5. </a><a href="#name-c509-certification-request-te" class="section-name selfRef">C509 Certification Request Templates Types Registry</a>
         </h3>
-<p id="section-8.5-1">IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509)". The columns of the registry are Value, Description, and Reference, where Value is an integer, and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.5-1" class="pilcrow">¶</a></p>
+<p id="section-8.5-1">IANA has created a new registry titled "C509 Certification Request Templates Types" under the new registry group "CBOR Encoded X.509 (C509)". The columns of the registry are Value, Description, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. All columns are mandatory. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.5-1" class="pilcrow">¶</a></p>
 <span id="name-c509-certification-request-tem"></span><div id="fig-temp-types">
 <figure id="figure-9">
           <div class="alignCenter art-text artwork" id="section-8.5-2.1">
@@ -2573,7 +2581,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-rdn-attributes-registr">
 <a href="#section-8.6" class="section-number selfRef">8.6. </a><a href="#name-c509-rdn-attributes-registr" class="section-name selfRef">C509 RDN Attributes Registry</a>
         </h3>
-<p id="section-8.6-1">IANA has created a new registry titled "C509 RDN Attributes" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and Reference, where Value is a non-negative integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For RDN Attributes specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If there is an OID defined, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the RDN Attribute is described. For values in the interval [0, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review".<a href="#section-8.6-1" class="pilcrow">¶</a></p>
+<p id="section-8.6-1">IANA has created a new registry titled "C509 RDN Attributes" in the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments and Reference, where Value is an integer in the interval [0, 2^63 - 1], and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For RDN Attributes specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If there is an OID defined, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the RDN Attribute is described. Values in the interval [32768, 65535] are reserved for Private Use, and values in the interval [65536, 2^63 - 1] are reserved for Future Use. For values in the interval [0, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.6-1" class="pilcrow">¶</a></p>
 <p id="section-8.6-2">The initial contents of the registry are:<a href="#section-8.6-2" class="pilcrow">¶</a></p>
 <span id="name-c509-rdn-attributes"></span><div id="fig-rdnattrtype">
 <figure id="figure-10">
@@ -2753,7 +2761,7 @@ ExtensionTemplate = (
 |    30 | Name:            Unstructured Address                     |
 |       | Identifiers:     unstructuredAddress                      |
 |       | OID:             1.2.840.113549.1.9.8                     |
-|       | DER:             06 0A 2A 86 48 86 F7 0D 01 09 08         |
+|       | DER:             06 09 2A 86 48 86 F7 0D 01 09 08         |
 |       | Comments:        RFC 2985                                 |
 +-------+-----------------------------------------------------------+
 </pre>
@@ -2769,7 +2777,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-cr-attributes-registry">
 <a href="#section-8.7" class="section-number selfRef">8.7. </a><a href="#name-c509-cr-attributes-registry" class="section-name selfRef">C509 CR Attributes Registry</a>
         </h3>
-<p id="section-8.7-1">IANA has created a new registry titled "C509 CR Attributes" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer, and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For CR Attributes specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the CR Attribute is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review".<a href="#section-8.7-1" class="pilcrow">¶</a></p>
+<p id="section-8.7-1">IANA has created a new registry titled "C509 CR Attributes" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, attributeValue, and Reference, where Value is an integer in the interval [-2^63, 2^63 - 1], and the other columns are text strings. Name and Identifiers are informal descriptions. The fields Name, OID, and DER are mandatory. For CR Attributes specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If OID is present, the OID is given in dotted decimal representation, and the DER column contains the hex string of the DER-encoded OID <span>[<a href="#X.690" class="cite xref">X.690</a>]</span>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the CR Attribute is described. Values in the interval [32768, 65535] are reserved for Private Use, and values in the interval [65536, 2^63 - 1] are reserved for Future Use. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.7-1" class="pilcrow">¶</a></p>
 <p id="section-8.7-2">The initial contents of the registry are:<a href="#section-8.7-2" class="pilcrow">¶</a></p>
 <span id="name-c509-crattributes"></span><div id="fig-crattrtype">
 <figure id="figure-11">
@@ -2812,7 +2820,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-extensions-registry">
 <a href="#section-8.8" class="section-number selfRef">8.8. </a><a href="#name-c509-extensions-registry" class="section-name selfRef">C509 Extensions Registry</a>
         </h3>
-<p id="section-8.8-1">IANA has created a new registry titled "C509 Extensions" under the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is a positive integer, and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For all other values the registration procedure is "Expert Review". For Extensions specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Extension is described. For values in the interval [1, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use.<a href="#section-8.8-1" class="pilcrow">¶</a></p>
+<p id="section-8.8-1">IANA has created a new registry titled "C509 Extensions" under the new registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, extensionValue, and Reference, where Value is an integer in the interval [1, 2^63 - 1], and the other columns are text strings. The fields Name, OID, DER, and extensionValue are mandatory. For Extensions specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Extension is described. Values in the interval [32768, 65535] are reserved for Private Use, and values in the interval [65536, 2^63 - 1] are reserved for Future Use. For values in the interval [1, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.8-1" class="pilcrow">¶</a></p>
 <p id="section-8.8-2">The initial contents of the registry are:<a href="#section-8.8-2" class="pilcrow">¶</a></p>
 <span id="name-c509-extensions"></span><div id="fig-extype">
 <figure id="figure-12">
@@ -2883,13 +2891,6 @@ ExtensionTemplate = (
 |       | DER:             06 08 2B 06 01 05 05 07 01 01            |
 |       | Comments:        RFC 5280                                 |
 |       | extensionValue:  AuthorityInfoAccessSyntax                |
-+-------+-----------------------------------------------------------+
-|    24 | Name:            Subject Directory Attributes             |
-|       | Identifiers:     subjectDirectoryAttributes               |
-|       | OID:             2.5.29.9                                 |
-|       | DER:             06 03 55 1D 09                           |
-|       | Comments:        RFC 5280                                 |
-|       | extensionValue:  SubjectDirectoryAttributes               |
 +-------+-----------------------------------------------------------+
 |    25 | Name:            Issuer Alternative Name                  |
 |       | Identifiers:     issuerAltName                            |
@@ -2995,7 +2996,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-certificate-policies-r">
 <a href="#section-8.9" class="section-number selfRef">8.9. </a><a href="#name-c509-certificate-policies-r" class="section-name selfRef">C509 Certificate Policies Registry</a>
         </h3>
-<p id="section-8.9-1">IANA has created a new registry titled "C509 Certificate Policies" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For all other values the registration procedure is "Expert Review". For Certificate Policies specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Certificate Policy is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use.<a href="#section-8.9-1" class="pilcrow">¶</a></p>
+<p id="section-8.9-1">IANA has created a new registry titled "C509 Certificate Policies" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer in the interval [-2^63, 2^63 - 1], and the other columns are text strings. The fields Name, OID, and DER are mandatory. For Certificate Policies specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Certificate Policy is described. Values in the interval [32768, 65535] are reserved for Private Use, and values in the interval [65536, 2^63 - 1] are reserved for Future Use. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review"， and for all other values the registration procedure is "Expert Review".<a href="#section-8.9-1" class="pilcrow">¶</a></p>
 <p id="section-8.9-2">The initial contents of the registry are:<a href="#section-8.9-2" class="pilcrow">¶</a></p>
 <span id="name-c509-certificate-policies"></span><div id="fig-cp">
 <figure id="figure-13">
@@ -3164,7 +3165,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-policies-qualifiers-re">
 <a href="#section-8.10" class="section-number selfRef">8.10. </a><a href="#name-c509-policies-qualifiers-re" class="section-name selfRef">C509 Policies Qualifiers Registry</a>
         </h3>
-<p id="section-8.10-1">IANA has created a new registry titled "C509 Policies Qualifiers" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Policy Qualifier is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review".<a href="#section-8.10-1" class="pilcrow">¶</a></p>
+<p id="section-8.10-1">IANA has created a new registry titled "C509 Policies Qualifiers" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. The fields Name, OID, and DER are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Policy Qualifier is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.10-1" class="pilcrow">¶</a></p>
 <p id="section-8.10-2">The initial contents of the registry are:<a href="#section-8.10-2" class="pilcrow">¶</a></p>
 <span id="name-c509-policies-qualifiers"></span><div id="fig-pq">
 <figure id="figure-14">
@@ -3198,7 +3199,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-information-access-reg">
 <a href="#section-8.11" class="section-number selfRef">8.11. </a><a href="#name-c509-information-access-reg" class="section-name selfRef">C509 Information Access Registry</a>
         </h3>
-<p id="section-8.11-1">IANA has created a new registry titled "C509 Information Access" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory.  If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Information Access is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".<a href="#section-8.11-1" class="pilcrow">¶</a></p>
+<p id="section-8.11-1">IANA has created a new registry titled "C509 Information Access" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. The fields Name, OID, and DER are mandatory.  If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Information Access is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.11-1" class="pilcrow">¶</a></p>
 <p id="section-8.11-2">The initial contents of the registry are:<a href="#section-8.11-2" class="pilcrow">¶</a></p>
 <span id="name-c509-information-accesses"></span><div id="fig-ia">
 <figure id="figure-15">
@@ -3262,7 +3263,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-extended-key-usages-re">
 <a href="#section-8.12" class="section-number selfRef">8.12. </a><a href="#name-c509-extended-key-usages-re" class="section-name selfRef">C509 Extended Key Usages Registry</a>
         </h3>
-<p id="section-8.12-1">IANA has created a new registry titled "C509 Extended Key Usages" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, and DER are mandatory. For Extended Key Usage specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Extended Key Usage is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". Values <span class="contact-name">≥</span> 32768 are reserved for Private Use. For all other values the registration procedure is "Expert Review".<a href="#section-8.12-1" class="pilcrow">¶</a></p>
+<p id="section-8.12-1">IANA has created a new registry titled "C509 Extended Key Usages" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, DER, Comments, and Reference, where Value is an integer in the interval [-2^63, 2^63 - 1], and the other columns are text strings. The fields Name, OID, and DER are mandatory. For Extended Key Usage specified only for CBOR encoded certificates where no OID is defined, the OID and DER fields are marked "N/A". If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Extended Key Usage is described. Values in the interval [32768, 65535] are reserved for Private Use, and values in the interval [65536, 2^63 - 1] are reserved for Future Use. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.12-1" class="pilcrow">¶</a></p>
 <p id="section-8.12-2">The initial contents of the registry are:<a href="#section-8.12-2" class="pilcrow">¶</a></p>
 <span id="name-c509-extended-key-usages"></span><div id="fig-eku">
 <figure id="figure-16">
@@ -3386,7 +3387,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-general-names-registry">
 <a href="#section-8.13" class="section-number selfRef">8.13. </a><a href="#name-c509-general-names-registry" class="section-name selfRef">C509 General Names Registry</a>
         </h3>
-<p id="section-8.13-1">IANA has created a new registry titled "C509 General Names" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer, and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the General Name is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review".<a href="#section-8.13-1" class="pilcrow">¶</a></p>
+<p id="section-8.13-1">IANA has created a new registry titled "C509 General Names" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Comments, GeneralNameValue, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. The fields Name and GeneralNameValue are mandatory. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the General Name is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review".<a href="#section-8.13-1" class="pilcrow">¶</a></p>
 <p id="section-8.13-2">The initial contents of the registry are:<a href="#section-8.13-2" class="pilcrow">¶</a></p>
 <span id="name-c509-general-names"></span><div id="fig-gn">
 <figure id="figure-17">
@@ -3396,7 +3397,7 @@ ExtensionTemplate = (
 | Value | General Name                                              |
 +=======+===========================================================+
 |    -3 | Name:             otherName with MACAddress               |
-|       | Comments:         TBD92(Use RFC I-D-lamps-macaddress-on)  |
+|       | Comments:         RFC 10031                               |
 |       |                   id-on-MACAddress                        |
 |       |                   (1.3.6.1.5.5.7.8.12)                    |
 |       |                   06 08 2B 06 01 05 05 07 08 0C           |
@@ -3457,7 +3458,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-signature-algorithms-r">
 <a href="#section-8.14" class="section-number selfRef">8.14. </a><a href="#name-c509-signature-algorithms-r" class="section-name selfRef">C509 Signature Algorithms Registry</a>
         </h3>
-<p id="section-8.14-1">IANA has created a new registry titled "C509 Signature Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm must be considered, see instruction in <a href="#pkalg" class="auto internal xref">Section 8.15</a>.  If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Signature Algorithm is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.14-1" class="pilcrow">¶</a></p>
+<p id="section-8.14-1">IANA has created a new registry titled "C509 Signature Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The registry includes both signature algorithms and non-signature proof-of-possession algorithms. The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. Alignment with the value of public key algorithm must be considered, see instruction in <a href="#pkalg" class="auto internal xref">Section 8.15</a>.  If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Signature Algorithm is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.14-1" class="pilcrow">¶</a></p>
 <span id="name-c509-signature-algorithms"></span><div id="fig-sigalgs">
 <figure id="figure-18">
           <div class="alignCenter art-text artwork" id="section-8.14-2.1">
@@ -3575,21 +3576,21 @@ ExtensionTemplate = (
 |       | Identifiers: sha256WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.11                        |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 0B 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    24 | Name:        RSASSA-PKCS1-v1_5 with SHA-384               |
 |       | Identifiers: sha384WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.12                        |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 0C 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    25 | Name:        RSASSA-PKCS1-v1_5 with SHA-512               |
 |       | Identifiers: sha512WithRSAEncryption                      |
 |       | OID:         1.2.840.113549.1.1.13                        |
 |       | Parameters:  NULL                                         |
-|       | DER:         30 0B 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |
+|       | DER:         30 0D 06 09 2A 86 48 86 F7 0D 01 01 0D 05 00 |
 |       | Comments:                                                 |
 +-------+-----------------------------------------------------------+
 |    26 | Name:        RSASSA-PSS with SHA-256                      |
@@ -3652,7 +3653,7 @@ ExtensionTemplate = (
         <h3 id="name-c509-public-key-algorithms-">
 <a href="#section-8.15" class="section-number selfRef">8.15. </a><a href="#name-c509-public-key-algorithms-" class="section-name selfRef">C509 Public Key Algorithms Registry</a>
         </h3>
-<p id="section-8.15-1">IANA has created a new registry titled "C509 Public Key Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer, and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value must be chosen equal to the value of signature algorithm, see <a href="#sigalg" class="auto internal xref">Section 8.14</a>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Public Key Algorithm is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review". For all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.15-1" class="pilcrow">¶</a></p>
+<p id="section-8.15-1">IANA has created a new registry titled "C509 Public Key Algorithms" under the registry group "CBOR Encoded X.509 (C509)". The fields of the registry are Value, Name, Identifiers, OID, Parameters, DER, Comments, and Reference, where Value is an integer in the interval [-32768, 32767], and the other columns are text strings. The fields Name, OID, Parameters, and DER are mandatory. If the public key can only be used with one signature algorithm and the OID of the public key algorithm is the same as the signature algorithm, then the value must be chosen equal to the value of signature algorithm, see <a href="#sigalg" class="auto internal xref">Section 8.14</a>. If it is not expected to be understood from the other information (e.g. the OID), then the Comments field must contain a reference to where the Public Key Algorithm is described. For values in the interval [-24, 23] the registration procedure is "IETF Review with Expert Review", and for all other values the registration procedure is "Expert Review". The initial contents of the registry are:<a href="#section-8.15-1" class="pilcrow">¶</a></p>
 <span id="name-c509-public-key-algorithms"></span><div id="fig-pkalgs">
 <figure id="figure-19">
           <div class="alignCenter art-text artwork" id="section-8.15-2.1">
@@ -4169,13 +4170,13 @@ case C509:
         <h3 id="name-tlsa-selectors-registry">
 <a href="#section-8.21" class="section-number selfRef">8.21. </a><a href="#name-tlsa-selectors-registry" class="section-name selfRef">TLSA Selectors Registry</a>
         </h3>
-<p id="section-8.21-1">This document registers the following entry in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters". The C509 certificate data, C509CertData, is defined in <a href="#cose-header-params" class="auto internal xref">Section 3.4</a>.<a href="#section-8.21-1" class="pilcrow">¶</a></p>
+<p id="section-8.21-1">This document registers the following entry in the "TLSA Selectors" registry in the registry group "DNS-Based Authentication of Named Entities (DANE) Parameters". The content is the CBOR-encoded C509Certificate which is defined in <a href="#message-fields" class="auto internal xref">Section 3.1</a>.<a href="#section-8.21-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-8.21-2">
 <pre>
 +-------+---------+------------------------+-------------------+
 | Value | Acronym |   Short Description    |     Reference     |
 +=======+=========+========================+===================+
-|  TBD7 |    C509 | C509 certificate data  | [[this document]] |
+|  TBD7 |    C509 |        C509Certificate | [[this document]] |
 +-------+---------+------------------------+-------------------+
 </pre><a href="#section-8.21-2" class="pilcrow">¶</a>
 </div>
@@ -4229,10 +4230,6 @@ case C509:
 <a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="I-D.ietf-lamps-macaddress-on">[I-D.ietf-lamps-macaddress-on]</dt>
-        <dd>
-<span class="refAuthor">Housley, R.</span>, <span class="refAuthor">Bonnell, C.</span>, <span class="refAuthor">Mandel, J.</span>, <span class="refAuthor">Okubo, T.</span>, and <span class="refAuthor">M. StJohns</span>, <span class="refTitle">"Media Access Control (MAC) Addresses in X.509 Certificates"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lamps-macaddress-on-07</span>, <time datetime="2026-03-12" class="refDate">12 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lamps-macaddress-on-07">https://datatracker.ietf.org/doc/html/draft-ietf-lamps-macaddress-on-07</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="POSIX">[POSIX]</dt>
         <dd>
 <span class="refTitle">"IEEE Standard for Information Technology--Portable Operating System Interface (POSIX(TM)) Base Specifications, Issue 7"</span>, <time datetime="2018-01" class="refDate">January 2018</time>, <span>&lt;<a href="https://pubs.opengroup.org/onlinepubs/9699919799/">https://pubs.opengroup.org/onlinepubs/9699919799/</a>&gt;</span>. </dd>
@@ -4364,6 +4361,10 @@ case C509:
 <dt id="RFC9883">[RFC9883]</dt>
         <dd>
 <span class="refAuthor">Housley, R.</span>, <span class="refTitle">"An Attribute for Statement of Possession of a Private Key"</span>, <span class="seriesInfo">RFC 9883</span>, <span class="seriesInfo">DOI 10.17487/RFC9883</span>, <time datetime="2025-10" class="refDate">October 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9883">https://www.rfc-editor.org/rfc/rfc9883</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC10031">[RFC10031]</dt>
+        <dd>
+<span class="refAuthor">Housley, R.</span>, <span class="refAuthor">Bonnell, C.</span>, <span class="refAuthor">Mandel, J.</span>, <span class="refAuthor">Okubo, T.</span>, and <span class="refAuthor">M. StJohns</span>, <span class="refTitle">"Media Access Control (MAC) Addresses in X.509 Certificates"</span>, <span class="seriesInfo">RFC 10031</span>, <span class="seriesInfo">DOI 10.17487/RFC10031</span>, <time datetime="2026-08" class="refDate">August 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc10031">https://www.rfc-editor.org/rfc/rfc10031</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SECG">[SECG]</dt>
         <dd>
@@ -5379,7 +5380,7 @@ h'6709C992919B49C48FD931D05C497D3865E6084C91DF3A4C7E781F418543B023
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-B-1">The authors want to thank Henk Birkholz, Mike Bishop, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Deb Cooley, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Gefei Li, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The authors want to thank Henk Birkholz, Mike Bishop, Mohamed Boucadair, Corey Bonnell, Carsten Bormann, Heng Cai, Deb Cooley, Roman Danyliw, Viktor Dukhovni, Paul Hoffman, Russ Housley, Christopher Inacio, Olle Johansson, Benjamin Kaduk, Ted Lemon, Gefei Li, Ilari Liusvaara, Laurence Lundblade, Francesca Palombini, Thomas Peterson, Michael Richardson, Stefan Santesson, Jim Schaad, Brian Sipos, Rene Struik, Ketan Talaulikar, Fraser Tweedale, Gunter Van de Velde, Éric Vyncke, and Paul Wouters for reviewing and commenting on intermediate versions of the draft.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
