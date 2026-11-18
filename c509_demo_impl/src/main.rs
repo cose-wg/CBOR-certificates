@@ -42,6 +42,7 @@ Commands:
   f  <cert.der> -w   Also write .cbor.hex sidecar file
   f  <cert.der> -wo  Write sidecar only; suppress stdout unless errors
   f  <cert.der> -nc  Encode EC public keys uncompressed (no FE/FD prefix)
+  f  <cert.der> --issuer-cert <issuer.der>   Take the ECDSA signature length from the issuer's key (CA-issued certificate)
   c  <c509.cbor.hex> Decode C509 hex → X.509 DER/CSR (stdout)
   c  <c509.cbor.hex> -w   Also write .crt and .pem files
   u  <domain>        Fetch TLS chain from domain, encode each cert
@@ -118,12 +119,19 @@ Commands:
     let mut no_compression  = false;
     let target_file = second_arg.clone();
 
+    let mut f_issuer_path: Option<String> = None;
     if first_arg == "c" || first_arg == "f" {
-        for arg in all_args.iter().skip(3) {
+        let mut skip_next = false;
+        for (i, arg) in all_args.iter().enumerate().skip(3) {
+            if skip_next { skip_next = false; continue; }
             match arg.as_str() {
                 "-w"  => write_output = true,
                 "-wo" => { write_output = true; suppress_output = true; }
                 "-nc" => no_compression = true,
+                "--issuer-cert" if first_arg == "f" => {
+                    f_issuer_path = all_args.get(i + 1).cloned();
+                    skip_next = true;
+                }
                 other => eprintln!("Warning: unknown flag '{}' ignored", other),
             }
         }
@@ -161,7 +169,19 @@ Commands:
         "f" => {
             let der = std::fs::read(second_arg)
                 .unwrap_or_else(|e| panic!("f: cannot read '{}': {}", second_arg, e));
-            let res = vec![parse_x509_item(der, no_compression)];
+            let res = match &f_issuer_path {
+                Some(p) => {
+                    let issuer = std::fs::read(p)
+                        .unwrap_or_else(|e| panic!("f: cannot read issuer cert '{}': {}", p, e));
+                    let signer = issuer_key_type(&der, &subject_key_types(&[issuer]));
+                    if signer.is_none() {
+                        eprintln!("f: '{}' is not the issuer of '{}', or its key type is not registered", p, second_arg);
+                        std::process::exit(1);
+                    }
+                    vec![parse_x509_cert_signed_by(der, no_compression, signer)]
+                }
+                None => vec![parse_x509_item(der, no_compression)],
+            };
             if write_output { write_c509_to_files(&res, &target_file); }
             res
         }
@@ -256,7 +276,7 @@ Commands:
                 .to_str().expect("l: filename is not valid UTF-8")
                 .split('_').next().unwrap_or("unknown")
                 .to_string();
-            vec![loop_on_x509_cert(der, &host, 0, 0).0]
+            vec![loop_on_x509_cert(der, &host, 0, 0, None).0]
         }
         "ll" => {
             if all_args.len() == 3 && std::path::Path::new(second_arg).exists() {

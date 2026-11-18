@@ -74,6 +74,7 @@ cargo build --bin c509
 | `f <cert.der> -w` | Same, also write `.cbor.hex` sidecar file |
 | `f <cert.der> -wo` | Write sidecar only, suppress stdout unless errors |
 | `f <cert.der> -nc` | Encode EC public keys uncompressed (no FE/FD prefix) |
+| `f <cert.der> --issuer-cert <issuer.der>` | Encode a CA-issued certificate with the ECDSA signature length taken from the issuer's key |
 | `f2 <cert.der> <key.pem>` | X.509 DER + PKCS#8 key → C509 type-2 (natively signed) hex |
 | `f2 <cert.der> <key.pem> -nc` | Same, store EC public key uncompressed |
 | `r2 <csr.der> <subj_key.pem>` | PKCS#10 DER → type-2 C509 CSR (ECDSA / unsigned) |

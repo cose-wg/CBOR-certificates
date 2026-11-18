@@ -110,12 +110,13 @@ pub fn get_certs_from_tls(domain_name: String) -> Vec<Cert> {
     let mut tls = rustls::Stream::new(&mut sess, &mut sock);
     tls.write_all(b"GET / HTTP/1.1").unwrap();
     tls.flush().unwrap();
-    tls.conn
+    let chain: Vec<Vec<u8>> = tls.conn
         .peer_certificates()
         .unwrap()
         .iter()
-        .map(|c| parse_x509_cert(c.0.clone()))
-        .collect()
+        .map(|c| c.0.clone())
+        .collect();
+    parse_x509_chain(&chain)
 }
 
 /// Connect to `domain_name:443`, round-trip each certificate (X.509 → C509 →
@@ -153,6 +154,13 @@ pub fn loop_on_certs_from_tls(domain_name: &String, no: i64) -> HostTestResult {
                 // cert in the chain gets a unique output filename suffix.
                 let mut cert_index: u8 = 0;
                 let mut failed_count = 0;
+                let chain: Vec<Vec<u8>> = tls.conn
+                    .peer_certificates()
+                    .unwrap_or_default()
+                    .iter()
+                    .map(|c| c.0.clone())
+                    .collect();
+                let keys = subject_key_types(&chain);
                 let certs: Vec<Cert> = tls.conn
                     .peer_certificates()
                     .unwrap_or_default()
@@ -160,7 +168,7 @@ pub fn loop_on_certs_from_tls(domain_name: &String, no: i64) -> HostTestResult {
                     .map(|c| {
                         cert_index += 1;
                         let (cert, success) =
-                            loop_on_x509_cert(c.0.clone(), domain_name.as_str(), no, cert_index);
+                            loop_on_x509_cert(c.0.clone(), domain_name.as_str(), no, cert_index, issuer_key_type(&c.0, &keys));
                         if !success { failed_count += 1; }
                         cert
                     })
@@ -186,9 +194,13 @@ pub fn loop_on_certs_from_tls(domain_name: &String, no: i64) -> HostTestResult {
 /// Returns `(cert, success)` where `success` is `true` iff the reconstructed
 /// DER matches the input byte-for-byte.  The output files are written to
 /// `../could_convert/` or `../failed_convert/` depending on the result.
-pub fn loop_on_x509_cert(input: Vec<u8>, host: &str, no: i64, sub_no: u8) -> (Cert, bool) {
+pub fn loop_on_x509_cert(input: Vec<u8>, host: &str, no: i64, sub_no: u8, signer_key: Option<i64>) -> (Cert, bool) {
     let original = input.clone();
-    let parsed = parse_x509_item(input, false);
+    // The issuer key type, when known, gives the ECDSA signature length of a certificate.
+    let parsed = match signer_key {
+        Some(_) => parse_x509_cert_signed_by(input, false, signer_key),
+        None => parse_x509_item(input, false),
+    };
 
     // Detect cert vs CSR by element count: 11 = certificate, 7 = CSR.
     let is_csr = parsed.cbor.len() == 7;

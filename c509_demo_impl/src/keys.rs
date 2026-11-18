@@ -551,3 +551,65 @@ mod alg_id_fallback_tests {
         assert_eq!(alg_id, SEQ_OID_NULL.to_vec());
     }
 }
+
+#[cfg(test)]
+mod ecdsa_length_tests {
+    //! Length of the C509 ECDSA signature value: each integer is padded to the
+    //! length of the signer's curve, also when both integers are shorter.
+    use crate::registry::*;
+
+    /// DER `SEQUENCE { INTEGER r, INTEGER s }` with two integers of `n` bytes
+    /// (first byte 0x01, so no sign padding).
+    fn der_sig(n: usize) -> Vec<u8> {
+        let int = [vec![0x02, n as u8, 0x01], vec![0x55; n - 1]].concat();
+        let body = [int.clone(), int].concat();
+        let mut out = vec![0x30];
+        if body.len() < 128 {
+            out.push(body.len() as u8);
+        } else {
+            out.extend([0x81, body.len() as u8]);
+        }
+        out.extend(body);
+        out
+    }
+
+    /// Length of the byte string inside the CBOR encoding.
+    fn value_len(cbor: &[u8]) -> usize {
+        match serde_cbor::from_slice::<serde_cbor::Value>(cbor).unwrap() {
+            serde_cbor::Value::Bytes(b) => b.len(),
+            other => panic!("not a byte string: {:?}", other),
+        }
+    }
+
+    #[test]
+    fn signer_curve_gives_the_length() {
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(31), Some(PK_SECP256R))), 64);
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(31), Some(PK_SECP384R))), 96);
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(64), Some(PK_SECP521R))), 132);
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(48), Some(PK_BRAINPOOL512R1))), 128);
+    }
+
+    #[test]
+    fn without_signer_the_smallest_curve_length_that_fits() {
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(31), None)), 64);
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(47), None)), 96);
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(65), None)), 132);
+    }
+
+    #[test]
+    fn signer_key_that_cannot_hold_the_integers_is_ignored() {
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(48), Some(PK_SECP256R))), 96);
+        assert_eq!(value_len(&super::cbor_ecdsa(&der_sig(32), Some(0))), 64);
+    }
+
+    #[test]
+    fn padding_is_leading_zeros() {
+        let cbor = super::cbor_ecdsa(&der_sig(31), Some(PK_SECP256R));
+        let value = match serde_cbor::from_slice::<serde_cbor::Value>(&cbor).unwrap() {
+            serde_cbor::Value::Bytes(b) => b,
+            _ => unreachable!(),
+        };
+        assert_eq!(&value[..2], &[0x00, 0x01]);
+        assert_eq!(&value[32..34], &[0x00, 0x01]);
+    }
+}

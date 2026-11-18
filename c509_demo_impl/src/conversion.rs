@@ -782,6 +782,59 @@ pub fn parse_x509_cert(der: Vec<u8>) -> Cert {
 /// Encodes an X.509 DER certificate into C509 CBOR representation.
 /// When `no_compression` is true, EC public keys are stored uncompressed (04-prefixed bytes).
 pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
+    parse_x509_cert_signed_by(input, no_compression, None)
+}
+
+/// The issuer name, the subject name (both as DER) and the C509 public-key
+/// algorithm of the subject key of an X.509 certificate; `None` if the
+/// certificate cannot be parsed.
+pub fn x509_names_and_key(der: &[u8]) -> Option<(Vec<u8>, Vec<u8>, Option<i64>)> {
+    catch_quiet(|| {
+        let certificate = lder_vec_len(der, ASN1_SEQ, 3);
+        let tbs = lder_vec_len(certificate[0], ASN1_SEQ, 8);
+        let spki = lder_vec_len(tbs[6], ASN1_SEQ, 2);
+        (tbs[3].to_vec(), tbs[5].to_vec(), pk_map(spki[0]))
+    })
+    .ok()
+}
+
+/// Maps the subject name (DER) of each certificate in `ders` to the C509
+/// public-key algorithm of its key. A name that occurs with different key
+/// algorithms is left out.
+pub fn subject_key_types(ders: &[Vec<u8>]) -> std::collections::HashMap<Vec<u8>, i64> {
+    let mut keys = std::collections::HashMap::new();
+    let mut ambiguous = std::collections::HashSet::new();
+    for der in ders {
+        if let Some((_, subject, Some(key))) = x509_names_and_key(der) {
+            if *keys.entry(subject.clone()).or_insert(key) != key {
+                ambiguous.insert(subject);
+            }
+        }
+    }
+    keys.retain(|subject, _| !ambiguous.contains(subject));
+    keys
+}
+
+/// The C509 public-key algorithm of the key that signed `cert_der`, looked up
+/// by issuer name in `keys` (see [`subject_key_types`]).
+pub fn issuer_key_type(cert_der: &[u8], keys: &std::collections::HashMap<Vec<u8>, i64>) -> Option<i64> {
+    let (issuer, _, _) = x509_names_and_key(cert_der)?;
+    keys.get(&issuer).copied()
+}
+
+/// Encodes the certificates of a chain (or any set that includes issuers),
+/// taking the length of each ECDSA signature value from the issuer's key when
+/// the issuer's certificate is among them.
+pub fn parse_x509_chain(ders: &[Vec<u8>]) -> Vec<Cert> {
+    let keys = subject_key_types(ders);
+    ders.iter().map(|der| parse_x509_cert_signed_by(der.clone(), false, issuer_key_type(der, &keys))).collect()
+}
+
+/// Encodes an X.509 DER certificate as [`parse_x509_cert`] does, with the
+/// C509 public-key algorithm of the issuer's key given when it is known. It
+/// determines the length of an ECDSA signature value; for a self-signed
+/// certificate the subject key is used and `signer_key` is not needed.
+pub fn parse_x509_cert_signed_by(input: Vec<u8>, no_compression: bool, signer_key: Option<i64>) -> Cert {
     trace!("Parsing X.509: {:02x?}", input);
     let mut output = Vec::new();
 
@@ -899,7 +952,7 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
     let signature_value = &signature_value[1..];
     if let Some(sig_type) = sig_map(signature_algorithm) {
         if [SIG_ECDSA_SHA1, SIG_ECDSA_SHA256, SIG_ECDSA_SHA384, SIG_ECDSA_SHA512, SIG_ECDSA_SHAKE128, SIG_ECDSA_SHAKE256, SIG_SM2_V15_SM3].contains(&sig_type) {
-            let signer = if issuer == subject { pk_map(spki_algorithm) } else { None };
+            let signer = if issuer == subject { pk_map(spki_algorithm) } else { signer_key };
             output.push(cbor_ecdsa(signature_value, signer));
         } else {
             output.push(lcbor_bytes(signature_value));

@@ -24,7 +24,7 @@ use rustc_serialize::base64::FromBase64;
 use serde_cbor::Value;
 use sha2::{Digest, Sha256};
 
-use crate::conversion::{parse_c509_cert, parse_x509_cert};
+use crate::conversion::{issuer_key_type, parse_c509_cert, parse_x509_cert_signed_by, subject_key_types};
 use crate::help::catch_quiet;
 use crate::lcbor::lcbor_array;
 use crate::registry::{att_map, ext_map};
@@ -170,7 +170,7 @@ fn certs_in_file(data: &[u8]) -> Vec<Vec<u8>> {
 // ── Per-certificate evaluation ───────────────────────────────────────────────
 
 /// Encode `der` to C509 and decode it back; classify the certificate.
-fn evaluate(der: Vec<u8>, source: String) -> CertStat {
+fn evaluate(der: Vec<u8>, source: String, signer_key: Option<i64>) -> CertStat {
     let fingerprint = hex::encode(Sha256::digest(&der));
     let mut stat = CertStat {
         fingerprint,
@@ -186,7 +186,7 @@ fn evaluate(der: Vec<u8>, source: String) -> CertStat {
         generic_alg: vec![],
     };
 
-    let encoded = match catch_quiet(|| parse_x509_cert(der.clone())) {
+    let encoded = match catch_quiet(|| parse_x509_cert_signed_by(der.clone(), false, signer_key)) {
         Ok(c) if c.cbor.len() == 11 => c,
         Ok(_) => {
             stat.failure = Some("encode: not a certificate".into());
@@ -362,13 +362,17 @@ pub fn run_hosts(list_path: &str, opt: &BatchOptions) {
                     .par_iter()
                     .map(|host| {
                         let outcome = match fetch_chain(host) {
-                            Ok(chain) => HostOutcome::Chain(
+                            Ok(chain) => HostOutcome::Chain({
+                                let keys = subject_key_types(&chain);
                                 chain
                                     .into_iter()
                                     .enumerate()
-                                    .map(|(i, der)| evaluate(der, format!("{}#{}", host, i)))
-                                    .collect(),
-                            ),
+                                    .map(|(i, der)| {
+                                        let signer = issuer_key_type(&der, &keys);
+                                        evaluate(der, format!("{}#{}", host, i), signer)
+                                    })
+                                    .collect::<Vec<CertStat>>()
+                            }),
                             Err(o) => o,
                         };
                         (host.clone(), outcome)
@@ -406,6 +410,9 @@ pub fn run_files(path: &str, opt: &BatchOptions) {
             ders.push((format!("{}#{}", name, i), der));
         }
     }
+    // The issuer of a certificate is looked up among all certificates read.
+    let all: Vec<Vec<u8>> = ders.iter().map(|(_, der)| der.clone()).collect();
+    let keys = subject_key_types(&all);
     info!("{} certificates in {} file(s)", ders.len(), files.len());
 
     let pool = rayon::ThreadPoolBuilder::new()
@@ -413,7 +420,14 @@ pub fn run_files(path: &str, opt: &BatchOptions) {
         .build()
         .expect("thread pool");
     let stats: Vec<CertStat> =
-        pool.install(|| ders.into_par_iter().map(|(src, der)| evaluate(der, src)).collect());
+        pool.install(|| {
+            ders.into_par_iter()
+                .map(|(src, der)| {
+                    let signer = issuer_key_type(&der, &keys);
+                    evaluate(der, src, signer)
+                })
+                .collect()
+        });
     // Each certificate is its own "chain"; chain statistics are not reported.
     let outcomes = stats
         .into_iter()
