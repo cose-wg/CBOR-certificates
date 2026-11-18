@@ -112,6 +112,12 @@ case "${VERSION}" in
         L_EMB_KEY_SECTION="9.7"; L_EMB_KEY="3.14.1"
         ;;
 esac
+# From test-vectors -05 the FRP256v1 type-2 certificate is in a .4 subsection
+# like the others.
+case "${VERSION}" in
+    00|01|02|03|04) ;;
+    *) L_FRP_TYPE2="none" ;;
+esac
 
 # ---------------------------------------------------------------------------
 # Paths

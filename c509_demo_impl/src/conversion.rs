@@ -528,7 +528,7 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
 
     if let Some(sig_type) = sig_map(sig_alg) {
         if [SIG_ECDSA_SHA1, SIG_ECDSA_SHA256, SIG_ECDSA_SHA384, SIG_ECDSA_SHA512, SIG_ECDSA_SHAKE128, SIG_ECDSA_SHAKE256, SIG_SM2_V15_SM3].contains(&sig_type) {
-            output.push(cbor_ecdsa(sig_val));
+            output.push(cbor_ecdsa(sig_val, pk_map(spki_alg)));
         } else if [SIG_ECDHPOP_SHA256, SIG_ECDHPOP_SHA384, SIG_ECDHPOP_SHA512].contains(&sig_type) {
             // dhsig sig = SEQUENCE { [keyRef: SEQUENCE { Name, INTEGER }], OCTET STRING { mac } }
             // C509 type-3: no keyRef → bytes(mac); with keyRef → [issuer, serial, mac_bytes]
@@ -899,7 +899,8 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
     let signature_value = &signature_value[1..];
     if let Some(sig_type) = sig_map(signature_algorithm) {
         if [SIG_ECDSA_SHA1, SIG_ECDSA_SHA256, SIG_ECDSA_SHA384, SIG_ECDSA_SHA512, SIG_ECDSA_SHAKE128, SIG_ECDSA_SHAKE256, SIG_SM2_V15_SM3].contains(&sig_type) {
-            output.push(cbor_ecdsa(signature_value));
+            let signer = if issuer == subject { pk_map(spki_algorithm) } else { None };
+            output.push(cbor_ecdsa(signature_value, signer));
         } else {
             output.push(lcbor_bytes(signature_value));
         }

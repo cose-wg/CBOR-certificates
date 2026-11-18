@@ -66,6 +66,13 @@ verify against the CA certificate. The CA certificate itself is unsigned
   decoding that form back to PKCS#10.
 - **Certificate policies.** The v1 RSP role entries (IDs 26, 28, 30, 32, 34, 36,
   38) are not mapped to OIDs; decoding one of them fails.
+- **ECDSA signature length in type 3.** Each signature integer is padded to the
+  length of the signer's curve. The curve is known for a self-signed
+  certificate and for a certification request. For a CA-issued certificate the
+  encoder uses the smallest curve length that holds both integers; that is
+  shorter than the signer's curve length in the rare case where both integers
+  of a signature fit a smaller curve (for example a P-521 signature whose
+  integers both fit 64 bytes). Decoding is not affected.
 - **ECDSA hash on the NIST curves.** For secp256r1/384r1/521r1 the hash is fixed
   by the curve (SHA-256/384/512); other combinations are not supported.
 - **SM2 distinguishing ID.** The OpenSSL EVP interface applies an empty

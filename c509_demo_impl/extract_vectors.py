@@ -182,13 +182,18 @@ def extract(xml_path: str, version: str, outdir: str):
         name_elem = section.find("{*}name")
         section_name = name_elem.text.strip() if name_elem is not None else anchor
 
-        # Direct <artwork> children only
-        artworks = [
-            child
-            for child in section
-            if isinstance(child.tag, str)
-            and etree.QName(child.tag).localname == "artwork"
-        ]
+        # <artwork> directly in the section, or in a <figure> directly in the
+        # section (as in XML generated from the markdown source); not those of
+        # subsections.
+        def _local(node):
+            return etree.QName(node.tag).localname if isinstance(node.tag, str) else ""
+
+        artworks = []
+        for child in section:
+            if _local(child) == "artwork":
+                artworks.append(child)
+            elif _local(child) == "figure":
+                artworks.extend(c for c in child if _local(c) == "artwork")
 
         for artwork in artworks:
             content = "".join(artwork.itertext())

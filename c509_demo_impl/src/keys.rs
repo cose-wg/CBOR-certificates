@@ -451,14 +451,37 @@ pub(crate) fn build_pss_params(hash_oid: &[u8], salt_len: u8) -> Vec<u8> {
 
 /// Converts a DER ECDSA signature SEQUENCE { INTEGER r, INTEGER s } into C509 form.
 ///
-/// C509 stores ECDSA as `r ‖ s` with both components zero-padded to the same length
-/// (the longer of the two), so the decoder can split the buffer at the midpoint.
-pub(crate) fn cbor_ecdsa(b: &[u8]) -> Vec<u8> {
+/// C509 stores ECDSA as `r ‖ s`, each integer zero-padded to the length given by
+/// the signer's curve (RFC 9053, Section 2.1), e.g. 32 bytes for P-256.
+///
+/// `signer_key`: the C509 public-key algorithm of the signing key, when it is
+/// known (a self-signed certificate, a certification request). Otherwise the
+/// length is the smallest curve length that holds both integers; this differs
+/// from the signer's curve length only if both integers of a signature on a
+/// larger curve happen to fit a smaller one.
+pub(crate) fn cbor_ecdsa(b: &[u8], signer_key: Option<i64>) -> Vec<u8> {
     let seq = lder_vec(b, ASN1_SEQ);
     let r = lder_uint(seq[0]).to_vec();
     let s = lder_uint(seq[1]).to_vec();
-    let max = std::cmp::max(r.len(), s.len());
-    lcbor_bytes(&[vec![0u8; max - r.len()], r, vec![0u8; max - s.len()], s].concat())
+    let longest = std::cmp::max(r.len(), s.len());
+    let len = signer_key
+        .and_then(ecdsa_int_len)
+        .filter(|n| *n >= longest)
+        .or_else(|| [32usize, 48, 64, 66].iter().copied().find(|n| *n >= longest))
+        .unwrap_or(longest);
+    lcbor_bytes(&[vec![0u8; len - r.len()], r, vec![0u8; len - s.len()], s].concat())
+}
+
+/// Length in bytes of one ECDSA (or SM2) signature integer for a C509
+/// public-key algorithm, or `None` if it is not a Weierstrass EC key.
+fn ecdsa_int_len(pk_type: i64) -> Option<usize> {
+    match pk_type {
+        PK_SECP256R | PK_SM2P256V1 | PK_BRAINPOOL256R1 | PK_FRP256V1 => Some(32),
+        PK_SECP384R | PK_BRAINPOOL384R1 => Some(48),
+        PK_BRAINPOOL512R1 => Some(64),
+        PK_SECP521R => Some(66),
+        _ => None,
+    }
 }
 
 #[cfg(test)]
