@@ -122,6 +122,7 @@ pub const EKU_CMC_CERT_AUTHORITY:     u64 = 15;
 pub const EKU_CMC_REG_AUTHORITY:      u64 = 16;
 pub const EKU_CMC_ARCHIVE_SERVER:     u64 = 17;
 pub const EKU_CMC_KEY_GEN_AUTHORITY:  u64 = 18;
+pub const EKU_WISUN_FAN_DEVICE:       u64 = 20;
 
 // ── Certificate Policies Registry (Section 9.6) ──────────────────────────────
 pub const CP_ANY_POLICY:           i64 = 0;
@@ -317,6 +318,7 @@ pub const EKU_CMC_CERT_AUTHORITY_OID:      Oid<'static> = oid!(1.3.6.1.5.5.7.3.2
 pub const EKU_CMC_REG_AUTHORITY_OID:       Oid<'static> = oid!(1.3.6.1.5.5.7.3.28);
 pub const EKU_CMC_ARCHIVE_SERVER_OID:      Oid<'static> = oid!(1.3.6.1.5.5.7.3.29);
 pub const EKU_CMC_KEY_GEN_AUTHORITY_OID:   Oid<'static> = oid!(1.3.6.1.5.5.7.3.32);
+pub const EKU_WISUN_FAN_DEVICE_OID:        Oid<'static> = oid!(1.3.6.1.4.1.45605.1);
 
 // Other name OIDs (for GeneralName)
 pub const OTHER_NAME_HW_MODULE_OID:    Oid<'static> = oid!(1.3.6.1.5.5.7.8.4);
@@ -557,6 +559,8 @@ pub fn eku_map(oid: &[u8]) -> Option<u64> {
     match oid {
         // anyExtendedKeyUsage
         [0x55, 0x1D, 0x25, 0x00] => Some(EKU_ANY),
+        // id-kp-wisun-fan-device (1.3.6.1.4.1.45605.1)
+        [0x2B, 0x06, 0x01, 0x04, 0x01, 0x82, 0xE4, 0x25, 0x01] => Some(EKU_WISUN_FAN_DEVICE),
         // id-kp (OID arc 1.3.6.1.5.5.7.3.x)
         [0x2B, 0x06, 0x01, 0x05, 0x05, 0x07, 0x03, rest @ ..] => match rest {
             [0x01] => Some(EKU_TLS_SERVER),

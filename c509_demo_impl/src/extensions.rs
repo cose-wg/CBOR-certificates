@@ -1006,6 +1006,7 @@ fn map_key_purpose_id_to_oid(key_purpose_id: u64) -> Vec<u8> {
         EKU_CMC_REG_AUTHORITY => EKU_CMC_REG_AUTHORITY_OID.to_der_vec().unwrap(),
         EKU_CMC_ARCHIVE_SERVER => EKU_CMC_ARCHIVE_SERVER_OID.to_der_vec().unwrap(),
         EKU_CMC_KEY_GEN_AUTHORITY => EKU_CMC_KEY_GEN_AUTHORITY_OID.to_der_vec().unwrap(),
+        EKU_WISUN_FAN_DEVICE => EKU_WISUN_FAN_DEVICE_OID.to_der_vec().unwrap(),
         _ => panic!("Unknown EKU ID: {}", key_purpose_id),
     }
 }
