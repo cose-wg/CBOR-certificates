@@ -47,7 +47,9 @@ Commands:
   u  <domain>        Fetch TLS chain from domain, encode each cert
   l  <cert.der>      Round-trip: X.509 → C509 → X.509, compare bytes
   ll <domain …>      Round-trip for one or more domains (parallel)
-  t  <urllist.txt>   Bulk round-trip test from a URL list file
+  t  <hostlist>      Batch test on the TLS chains of the listed hosts: round-trip and size statistics
+  tf <file-or-dir>   Same on certificates from files (DER, PEM, or text containing PEM blocks)
+                     t/tf flags: --jobs N --batch-size N --pause SECONDS --label TEXT --out DIR
   f2 <cert.der> <key.pem>                    Encode X.509 DER → Type-2 C509 hex
   f2 <cert.der> <key.pem> -nc               Also store EC public keys uncompressed
   r2 <csr.der> <subj_key.pem>               Encode PKCS#10 DER → Type-2 C509 CSR (signed with the subject key, or unsigned)
@@ -264,7 +266,14 @@ Commands:
             }
         }
         "u" => get_certs_from_tls(second_arg.clone()),
-        "t" => read_hosts_from_file(second_arg),
+        "t" => {
+            c509::batch::run_hosts(second_arg, &c509::batch::parse_batch_options(&all_args[3..]));
+            Vec::new()
+        }
+        "tf" => {
+            c509::batch::run_files(second_arg, &c509::batch::parse_batch_options(&all_args[3..]));
+            Vec::new()
+        }
         other => {
             eprintln!("Error: unknown command '{}'\n{}", other, USAGE);
             std::process::exit(1);

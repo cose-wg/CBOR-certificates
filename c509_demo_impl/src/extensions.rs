@@ -318,6 +318,80 @@ pub(crate) fn cbor_ext_as_identifiers(b: &[u8]) -> Vec<u8> {
     lcbor_array(&enc)
 }
 
+/// The two CBOR items (extensionID, extensionValue) for one X.509 extension,
+/// given as its DER `Extension` SEQUENCE. `sole`: it is the only extension.
+///
+/// The specific encoding (int extensionID) is used only if it decodes back to
+/// exactly the input; a registered extension whose value the specific encoding
+/// cannot represent, and any unregistered extension, uses the generic encoding
+/// (`~oid`, with the value wrapped in an array if the extension is critical).
+pub(crate) fn cbor_extension(e: &[u8], sole: bool) -> Vec<Vec<u8>> {
+    let extension = lder_vec(e, ASN1_SEQ);
+    assert!(extension.len() == 2 || extension.len() == 3, "Expected extension length 2 or 3");
+    let oid = lder(extension[0], ASN1_OID);
+    let critical = extension.len() == 3;
+    if critical {
+        assert!(lder(extension[1], ASN1_BOOL) == [0xff], "Expected critical == true");
+    }
+    let extn_value = lder(extension[extension.len() - 1], ASN1_OCTET_STR);
+    let sign: i64 = if critical { -1 } else { 1 };
+
+    match ext_map(oid) {
+        // AS identifiers with an 'rdi' field ([1]) have no specific encoding.
+        Some(ext_type)
+            if (ext_type == EXT_AS_IDENTIFIERS || ext_type == EXT_AS_IDENTIFIERS_V2)
+                && lder_vec(extn_value, ASN1_SEQ).iter().any(|item| !item.is_empty() && item[0] == 0xa1) => {}
+        Some(ext_type) => {
+            if let Some(value) = specific_extension_value(ext_type, extn_value, sign, extension[0], oid, e) {
+                if sole && ext_type == EXT_KEY_USAGE {
+                    // Collapsed by the caller into a single int carrying the sign.
+                    return vec![lcbor_int(ext_type as i64), cbor_ext_key_use(extn_value, sign)];
+                }
+                return vec![lcbor_int(sign * ext_type as i64), value];
+            }
+        }
+        None => print_warning("No C509 int registered for extension OID", extension[0], oid),
+    }
+    let value = lcbor_bytes(extn_value);
+    vec![lcbor_bytes(oid), if critical { lcbor_array(&[value]) } else { value }]
+}
+
+/// The specific CBOR encoding of a registered extension's value, or `None` if
+/// that encoding does not decode back to the input extension `e`.
+fn specific_extension_value(
+    ext_type: u16, extn_value: &[u8], sign: i64, oid_tlv: &[u8], oid: &[u8], e: &[u8],
+) -> Option<Vec<u8>> {
+    let value = catch_quiet(|| match ext_type {
+        EXT_SUBJECT_KEY_ID => lcbor_bytes(lder(extn_value, ASN1_OCTET_STR)),
+        EXT_KEY_USAGE => cbor_ext_key_use(extn_value, 2),
+        EXT_SUBJECT_ALT_NAME | EXT_ISSUER_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
+        EXT_BASIC_CONSTRAINTS => cbor_ext_bas_con(extn_value),
+        EXT_CRL_DIST_POINTS | EXT_FRESHEST_CRL => cbor_ext_crl_dist(extn_value),
+        EXT_CERT_POLICIES => cbor_ext_cert_policies(extn_value),
+        EXT_AUTH_KEY_ID => cbor_ext_auth_key_id(extn_value),
+        EXT_EXT_KEY_USAGE => cbor_ext_eku(extn_value),
+        EXT_AUTH_INFO | EXT_SUBJECT_INFO_ACCESS => cbor_ext_info_access(extn_value),
+        EXT_NAME_CONSTRAINTS => cbor_ext_name_constraints(extn_value),
+        EXT_POLICY_MAPPINGS => cbor_ext_policy_mappings(extn_value),
+        EXT_POLICY_CONSTRAINTS => cbor_ext_policy_constraints(extn_value),
+        EXT_INHIBIT_ANYPOLICY => cbor_ext_inhibit_any_policy(extn_value),
+        EXT_OCSP_NO_CHECK => lcbor_simple(CBOR_NULL),
+        EXT_TLS_FEATURES => cbor_ext_tls_features(extn_value),
+        EXT_IP_ADDR_BLOCKS | EXT_IP_ADDR_BLOCKS_V2 => cbor_ext_ip_addr_blocks(extn_value),
+        EXT_AS_IDENTIFIERS | EXT_AS_IDENTIFIERS_V2 => cbor_ext_as_identifiers(extn_value),
+        _ => cbor_store_only(extn_value, oid_tlv, oid),
+    })
+    .ok()?;
+
+    let pair = lcbor_array(&[lcbor_int(sign * ext_type as i64), value.clone()]);
+    let decoded = catch_quiet(|| {
+        let v: Value = serde_cbor::from_slice(&pair).expect("extension pair is valid CBOR");
+        parse_cbor_extensions_inner(&v)
+    })
+    .ok()?;
+    if decoded.len() == 1 && decoded[0] == e { Some(value) } else { None }
+}
+
 pub(crate) fn cbor_store_only(b: &[u8], v: &[u8], oid: &[u8]) -> Vec<u8> {
     print_warning("Warning, currently storing raw data for extension with oid", v, oid);
     lcbor_bytes(b)
@@ -699,7 +773,14 @@ fn parse_cbor_ext_key_usage(extension_val: &Value, critical: bool) -> Vec<u8> {
 fn parse_cbor_ext_subject_alt_name(extension_val: &Value, critical: bool) -> Vec<u8> {
     let mut oid = EXT_SUBJECT_ALT_NAME_OID.to_der_vec().unwrap();
     if critical { oid.extend(ASN1_X509_CRITICAL.to_vec()); }
-    lder_to_two_seq(oid, lder_to_generic(parse_cbor_general_name(extension_val), ASN1_OCTET_STR))
+    lder_to_two_seq(oid, lder_to_generic(general_names_seq(extension_val), ASN1_OCTET_STR))
+}
+
+/// GeneralNames for subjectAltName / issuerAltName: always a SEQUENCE, also for a
+/// single directoryName (which `parse_cbor_general_name` returns unwrapped).
+fn general_names_seq(extension_val: &Value) -> Vec<u8> {
+    let names = parse_cbor_general_name(extension_val);
+    if names.first() == Some(&ASN1_SEQ) { names } else { lder_to_seq(vec![names]) }
 }
 
 pub(crate) fn parse_cbor_general_name(extension_val: &Value) -> Vec<u8> {
@@ -1084,7 +1165,7 @@ fn parse_cbor_ext_auth_info(extension_val: &Value, critical: bool) -> Vec<u8> {
 fn parse_cbor_ext_issuer_alt_name(extension_val: &Value, critical: bool) -> Vec<u8> {
     let mut oid = EXT_ISSUER_ALT_NAME_OID.to_der_vec().unwrap();
     if critical { oid.extend(ASN1_X509_CRITICAL.to_vec()); }
-    lder_to_two_seq(oid, lder_to_generic(parse_cbor_general_name(extension_val), ASN1_OCTET_STR))
+    lder_to_two_seq(oid, lder_to_generic(general_names_seq(extension_val), ASN1_OCTET_STR))
 }
 
 fn parse_cbor_ext_freshest_crl(extension_val: &Value, critical: bool) -> Vec<u8> {
@@ -1290,12 +1371,21 @@ pub(crate) fn parse_cbor_extensions_inner(input: &Value) -> Vec<Vec<u8>> {
                             let this_oid = lder_to_generic(raw_ext_type_oid.to_vec(), ASN1_OID);
                             let mut current_idx = i + 1;
                             let mut critical_flag = Vec::new();
+                            // Also accepted: `true` before the value for a critical extension.
                             if let Some(Value::Bool(true)) = extension_array.get(current_idx) {
                                 critical_flag = ASN1_X509_CRITICAL.to_vec();
                                 current_idx += 1;
                             }
                             let ext_val = match extension_array.get(current_idx) {
                                 Some(Value::Bytes(raw_val)) => lder_to_generic(raw_val.to_vec(), ASN1_OCTET_STR),
+                                // A critical extension: the value wrapped in an array.
+                                Some(Value::Array(wrapped)) => match wrapped.as_slice() {
+                                    [Value::Bytes(raw_val)] => {
+                                        critical_flag = ASN1_X509_CRITICAL.to_vec();
+                                        lder_to_generic(raw_val.to_vec(), ASN1_OCTET_STR)
+                                    }
+                                    _ => panic!("Error parsing unknown extension value"),
+                                },
                                 _ => panic!("Error parsing unknown extension value"),
                             };
                             i = current_idx + 1;

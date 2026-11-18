@@ -76,21 +76,48 @@ verify against the CA certificate. The CA certificate itself is unsigned
 - **Integer identifiers without an OID** (for example the 8-byte attribute types
   and extension IDs of the 8-byte-integer certificate) cannot be converted to
   X.509; `c` reports an error.
-- **String types.** C509 normalises a `BMPString` `explicitText` in a
-  certificate policy to UTF-8, so such a certificate does not round-trip
-  byte-exact.
+- **Specific encodings not used.** An extension is encoded with its int
+  extensionID only if that encoding decodes back to the input; otherwise the
+  generic OID form is used, which is always lossless but larger. Extensions
+  that the batch test shows in the generic form although an int is registered
+  are certificate policies (e.g. an `explicitText` that is not a UTF8String or
+  an empty qualifier list), authority key identifiers, CRL
+  distribution points with a directoryName, and name constraints.
+
+## Certificates that cannot be represented as type 3
+
+A type-3 C509 certificate decodes to DER as RFC 5280 profiles it. An X.509
+certificate that deviates in a field without a generic form cannot be encoded
+losslessly; the tool reports an error or a mismatch. Seen in the batch test on
+CA certificates:
+
+- validity dates before 2050 encoded as GeneralizedTime, or a UTCTime without
+  seconds;
+- the `critical` flag of an extension encoded explicitly as FALSE;
+- a signature AlgorithmIdentifier in `tbsCertificate` that differs from the
+  outer one.
 
 ## Decode-only forms
 
-The decoder accepts two forms that the encoder never emits:
+The decoder accepts three forms that the encoder never emits:
 
 - Extension ID 24 for Subject Directory Attributes. The registry does not assign
   it; the encoder uses the generic OID form.
 - A one-element `[~oid]` array for an AlgorithmIdentifier without parameters.
   The encoder emits the bare `~oid`.
+- `true` between the `~oid` and the value of a critical extension in the generic
+  form. The encoder wraps the value in an array.
 
-## Round-trip on live TLS chains
+## Batch test on real certificates
 
-In a batch run over 5000 public hosts (May 2026), 4710 certificate chains
-round-trip losslessly. One certificate does not, by design (the `BMPString`
-case above). The remaining hosts timed out or were unreachable.
+`c509 tf` on the CA certificates in the CCADB (2026-11-18):
+
+| Corpus | Distinct certificates | Lossless | Not lossless | C509 / DER |
+|--------|----------------------|----------|--------------|------------|
+| Issued in the 2020s | 4284 | 4282 | 2 | 76.0% |
+| Issued in the 2010s | 4754 | 4722 | 32 | 77.5% |
+
+All 34 that are not lossless are of the kinds listed under "Certificates that
+cannot be represented as type 3". The ratio depends mainly on the key and
+signature sizes: about 57–60% for an EC key with an ECDSA signature, about 81%
+for an RSA-4096 key with an RSA signature.

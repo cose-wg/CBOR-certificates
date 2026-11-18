@@ -88,7 +88,7 @@ fn strip_extension<'a>(path: &'a str, suffixes: &[&str]) -> &'a str {
 /// # Panics
 /// Panics if the connection, TLS handshake, or certificate parsing fails.
 /// Build a rustls client config that trusts the webpki-roots CA bundle.
-fn tls_client_config() -> std::sync::Arc<rustls::ClientConfig> {
+pub(crate) fn tls_client_config() -> std::sync::Arc<rustls::ClientConfig> {
     let mut root_store = rustls::RootCertStore::empty();
     root_store.add_server_trust_anchors(webpki_roots::TLS_SERVER_ROOTS.0.iter().map(|ta| {
         rustls::OwnedTrustAnchor::from_subject_spki_name_constraints(

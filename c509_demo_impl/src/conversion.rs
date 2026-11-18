@@ -479,42 +479,7 @@ pub fn parse_x509_csr(input: Vec<u8>, no_compression: bool) -> Cert {
                 for ext_seq in &attr_vals {
                     let extensions = lder_vec(ext_seq, ASN1_SEQ);
                     for e in &extensions {
-                        let ext = lder_vec(e, ASN1_SEQ);
-                        let oid = lder(ext[0], ASN1_OID);
-                        let mut crit_sign: i64 = 1;
-                        if ext.len() == 3 { crit_sign = -1; }
-                        let extn_value = lder(ext[ext.len() - 1], ASN1_OCTET_STR);
-                        if let Some(ext_type) = ext_map(oid) {
-                            if extensions.len() == 1 && ext_type == EXT_KEY_USAGE {
-                                exts_vec.push(lcbor_int(ext_type as i64));
-                            } else {
-                                exts_vec.push(lcbor_int(crit_sign * ext_type as i64));
-                            }
-                            exts_vec.push(match ext_type {
-                                EXT_SUBJECT_KEY_ID => lcbor_bytes(lder(extn_value, ASN1_OCTET_STR)),
-                                EXT_KEY_USAGE => cbor_ext_key_use(extn_value, crit_sign * extensions.len() as i64),
-                                EXT_SUBJECT_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
-                                EXT_BASIC_CONSTRAINTS => cbor_ext_bas_con(extn_value),
-                                EXT_CRL_DIST_POINTS | EXT_FRESHEST_CRL => cbor_ext_crl_dist(extn_value),
-                                EXT_CERT_POLICIES => cbor_ext_cert_policies(extn_value),
-                                EXT_AUTH_KEY_ID => cbor_ext_auth_key_id(extn_value),
-                                EXT_EXT_KEY_USAGE => cbor_ext_eku(extn_value),
-                                EXT_AUTH_INFO | EXT_SUBJECT_INFO_ACCESS => cbor_ext_info_access(extn_value),
-                                EXT_ISSUER_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
-                                EXT_NAME_CONSTRAINTS => cbor_ext_name_constraints(extn_value),
-                                EXT_POLICY_MAPPINGS => cbor_ext_policy_mappings(extn_value),
-                                EXT_POLICY_CONSTRAINTS => cbor_ext_policy_constraints(extn_value),
-                                EXT_INHIBIT_ANYPOLICY => cbor_ext_inhibit_any_policy(extn_value),
-                                EXT_IP_ADDR_BLOCKS | EXT_IP_ADDR_BLOCKS_V2 => cbor_ext_ip_addr_blocks(extn_value),
-                                EXT_AS_IDENTIFIERS | EXT_AS_IDENTIFIERS_V2 => cbor_ext_as_identifiers(extn_value),
-                                _ => cbor_store_only(extn_value, ext[0], oid),
-                            });
-                        } else {
-                            print_warning("No C509 int registered for CSR extension OID", ext[0], oid);
-                            exts_vec.push(lcbor_bytes(oid));
-                            if crit_sign == -1 { exts_vec.push(lcbor_simple(CBOR_TRUE)); }
-                            exts_vec.push(lcbor_bytes(extn_value));
-                        }
+                        exts_vec.extend(cbor_extension(e, extensions.len() == 1));
                     }
                 }
                 full_attrs_vec.push(lcbor_int(0)); // extensionRequest attr type
@@ -926,73 +891,7 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
 
     let mut vec = Vec::new();
     for e in &extensions {
-        let extension = lder_vec(e, ASN1_SEQ);
-        assert!(extension.len() < 4, "Expected extension length 2 or 3");
-        let oid = lder(extension[0], ASN1_OID);
-        let mut crit_sign: i64 = 1;
-        if extension.len() == 3 {
-            assert!(lder(extension[1], ASN1_BOOL) == [0xff], "Expected critical == true");
-            crit_sign = -1;
-        }
-        let extn_value = lder(extension[extension.len() - 1], ASN1_OCTET_STR);
-
-        // For some registered extensions the CBOR encoding is conditional.
-        // Detect cases that must fall back to the RFC 9090 OID form even when
-        // the OID has a C509 integer registration.
-        //
-        // AS Identifiers (id-pe-autonomousSysIds, value 33) and v2 (value 35):
-        //   Draft §ext-encoding: "If 'rdi' is not present, the extension value
-        //   can be CBOR-encoded."  The 'rdi' field is context tag [1] (0xa1) in
-        //   the ASIdentifiers SEQUENCE.  When rdi IS present the extension MUST
-        //   use the OID fallback (§2.4 draft-ietf-cose-cbor-encoded-cert).
-        let force_oid_fallback = if let Some(et) = ext_map(oid) {
-            (et == EXT_AS_IDENTIFIERS || et == EXT_AS_IDENTIFIERS_V2) &&
-            lder_vec(extn_value, ASN1_SEQ).iter().any(|item| !item.is_empty() && item[0] == 0xa1)
-        } else { false };
-
-        if !force_oid_fallback {
-            if let Some(ext_type) = ext_map(oid) {
-                if extensions.len() == 1 && ext_type == EXT_KEY_USAGE {
-                    vec.push(lcbor_int(ext_type as i64));
-                } else {
-                    vec.push(lcbor_int(crit_sign * ext_type as i64));
-                }
-                vec.push(match ext_type {
-                    EXT_SUBJECT_KEY_ID => lcbor_bytes(lder(extn_value, ASN1_OCTET_STR)),
-                    EXT_KEY_USAGE => cbor_ext_key_use(extn_value, crit_sign * extensions.len() as i64),
-                    EXT_SUBJECT_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
-                    EXT_BASIC_CONSTRAINTS => cbor_ext_bas_con(extn_value),
-                    EXT_CRL_DIST_POINTS | EXT_FRESHEST_CRL => cbor_ext_crl_dist(extn_value),
-                    EXT_CERT_POLICIES => cbor_ext_cert_policies(extn_value),
-                    EXT_AUTH_KEY_ID => cbor_ext_auth_key_id(extn_value),
-                    EXT_EXT_KEY_USAGE => cbor_ext_eku(extn_value),
-                    EXT_AUTH_INFO | EXT_SUBJECT_INFO_ACCESS => cbor_ext_info_access(extn_value),
-                    EXT_ISSUER_ALT_NAME => cbor_general_names(extn_value, ASN1_SEQ, 2),
-                    EXT_NAME_CONSTRAINTS => cbor_ext_name_constraints(extn_value),
-                    EXT_POLICY_MAPPINGS => cbor_ext_policy_mappings(extn_value),
-                    EXT_POLICY_CONSTRAINTS => cbor_ext_policy_constraints(extn_value),
-                    EXT_INHIBIT_ANYPOLICY => cbor_ext_inhibit_any_policy(extn_value),
-                    EXT_OCSP_NO_CHECK => lcbor_simple(CBOR_NULL),
-                    EXT_TLS_FEATURES => cbor_ext_tls_features(extn_value),
-                    EXT_IP_ADDR_BLOCKS | EXT_IP_ADDR_BLOCKS_V2 => cbor_ext_ip_addr_blocks(extn_value),
-                    EXT_AS_IDENTIFIERS | EXT_AS_IDENTIFIERS_V2 => cbor_ext_as_identifiers(extn_value),
-                    _ => cbor_store_only(extn_value, extension[0], oid),
-                });
-            } else {
-                // RFC 9090 OID fallback (§2.4, §ext-encoding draft-ietf-cose-cbor-encoded-cert):
-                // ~oid (OID value bytes without tag) + optional CBOR_TRUE (critical) + extnValue bytes.
-                print_warning("No C509 int registered for extension OID", extension[0], oid);
-                vec.push(lcbor_bytes(oid));
-                if crit_sign == -1 { vec.push(lcbor_simple(CBOR_TRUE)); }
-                vec.push(lcbor_bytes(extn_value));
-            }
-        } else {
-            // Forced RFC 9090 OID fallback: registered OID but extension value
-            // cannot be CBOR-encoded (e.g. AS Identifiers with rdi present).
-            vec.push(lcbor_bytes(oid));
-            if crit_sign == -1 { vec.push(lcbor_simple(CBOR_TRUE)); }
-            vec.push(lcbor_bytes(extn_value));
-        }
+        vec.extend(cbor_extension(e, extensions.len() == 1));
     }
     output.push(cbor_opt_array(&vec, EXT_KEY_USAGE as u8));
 

@@ -5,6 +5,34 @@ use oid::prelude::*;
 use serde_cbor::Value;
 use std::io::Write;
 
+thread_local! {
+    static QUIET_PANIC: std::cell::Cell<bool> = std::cell::Cell::new(false);
+}
+static QUIET_HOOK: std::sync::Once = std::sync::Once::new();
+
+/// Run `f`; if it panics, return the panic message instead of unwinding
+/// further, and do not print it. Used where a conversion that cannot handle
+/// its input is an expected outcome with a fallback.
+pub(crate) fn catch_quiet<T>(f: impl FnOnce() -> T) -> Result<T, String> {
+    QUIET_HOOK.call_once(|| {
+        let default_hook = std::panic::take_hook();
+        std::panic::set_hook(Box::new(move |info| {
+            if !QUIET_PANIC.with(|q| q.get()) {
+                default_hook(info);
+            }
+        }));
+    });
+    let before = QUIET_PANIC.with(|q| q.replace(true));
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(f));
+    QUIET_PANIC.with(|q| q.set(before));
+    result.map_err(|e| {
+        e.downcast_ref::<String>()
+            .cloned()
+            .or_else(|| e.downcast_ref::<&str>().map(|s| s.to_string()))
+            .unwrap_or_else(|| "unknown error".into())
+    })
+}
+
 /// Interpret `b` as a big-endian unsigned integer and return its value as `u64`.
 ///
 /// # Panics

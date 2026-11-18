@@ -87,13 +87,14 @@ cargo build --bin c509
 | `v2 <c509.cbor.hex>` | Verify the signature of a self-signed type-2 certificate or of a type-2 certification request (subject key) |
 | `v2 <c509.cbor.hex> --issuer-cert <issuer.cbor.hex>` | Verify a CA-issued type-2 certificate against the issuer's C509 certificate |
 | `v2 <c509.cbor.hex> --issuer-point <hex>` | Same, with the issuer's EC public key given directly (same algorithm as the subject key) |
-| `t <urllist.txt>` | Bulk round-trip from a URL list, results logged under `test_results/` |
+| `t <hostlist>` | Batch test on the TLS certificate chains of the listed hosts (see [Batch test](#batch-test-on-real-certificates)) |
+| `tf <file-or-dir>` | Batch test on certificates from files |
 
 ```bash
 RUST_LOG=debug ./target/debug/c509 f cert.der   # verbose/diagnostic output
 ```
 
-> **Note:** Modes `l`, `ll`, and `t` require `could_convert/` and
+> **Note:** Modes `l` and `ll` require `could_convert/` and
 > `failed_convert/` directories to exist in the parent of `c509_demo_impl/`.
 > They are already present in the repository.
 
@@ -232,10 +233,54 @@ Integer identifiers without a registered OID (e.g. the 8-byte attribute types an
 extension IDs of the 8-byte-integer certificate) cannot be converted to X.509;
 `c` reports this as an error (exit status 1).
 
-Round-trip mode (`l` / `ll` / `t`) is independent of the test vectors and also
-runs on live TLS chains: of 5000 public hosts sampled, 4710 chains round-trip
-losslessly, one certificate does not by design (a `BMPString` `explicitText`,
-which C509 normalises to UTF-8), and the remaining hosts were unreachable.
+## Batch test on real certificates
+
+`t` and `tf` run the type-3 round-trip (X.509 → C509 → X.509) on many
+certificates and report, for the distinct certificates seen:
+
+- how many round-trip losslessly, and which do not;
+- the C509 size relative to the DER size: in total, as a distribution per
+  certificate, for end-entity and CA certificates, and per key and signature
+  algorithm; for hosts also per chain as sent;
+- the extensions, name attributes and algorithms that were encoded in the
+  generic OID form.
+
+```bash
+./fetch_batch_lists.py                    # host lists and CA certificates -> ../batch_lists/
+./target/debug/c509 tf ../batch_lists/ccadb_2020.csv --label "CCADB 2020s" > /dev/null
+./target/debug/c509 t  ../batch_lists/tranco_<ID>_top10000.txt \
+    --jobs 8 --batch-size 250 --pause 5 --label "Tranco <ID> top 10000" > /dev/null
+```
+
+| Input | Accepted form |
+|-------|---------------|
+| `t <hostlist>` | One host per line; `rank,domain` and `origin,rank` CSV lines and origins with a scheme are accepted |
+| `tf <file-or-dir>` | A DER file, a PEM file, any text containing PEM blocks (such as a CSV report), or a directory of such files |
+
+| Flag | Meaning | Default |
+|------|---------|---------|
+| `--jobs N` | Concurrent TLS connections | 8 |
+| `--batch-size N` | Hosts per batch | 250 |
+| `--pause S` | Seconds to wait between batches | 5 |
+| `--label TEXT` | Recorded in the summary, e.g. the source list and its date | |
+| `--out DIR` | Output directory | `test_results` |
+
+`t` opens one TLS connection per host (port 443, 10 s timeouts) and validates
+the chain against the Mozilla root set, so a host with an invalid chain counts
+as a failed handshake. The conversion prints diagnostics to stdout; redirect it.
+
+Output: `batch_<timestamp>.log` (summary), `batch_<timestamp>.csv` (one row per
+distinct certificate) and, for certificates that do not round-trip,
+`batch_<timestamp>_failed/<sha256>.der`.
+
+`fetch_batch_lists.py` downloads the inputs and writes `SOURCES.txt` with the
+URL, date, identifier and SHA-256 of each:
+
+| Source | Content |
+|--------|---------|
+| [Tranco](https://tranco-list.eu) | Research ranking of popular domains; every list has a permanent, citable ID. The first N domains are used. |
+| [CrUX top lists](https://github.com/zakird/crux-top-lists) | Chrome top-million origins, ranked in buckets. A seeded random sample outside the top 10,000 is used. |
+| [CCADB](https://www.ccadb.org/resources) | Root and intermediate CA certificates known to the browser root programmes, per decade of issuance. No network connections are needed to test them. |
 
 ## Implemented features
 
@@ -256,7 +301,7 @@ which C509 normalises to UTF-8), and the remaining hosts were unreachable.
 | X25519 / X448 / Ed25519 / Ed448 | ✓ |
 | AS Identifiers with rdi field → RFC 9090 fallback | ✓ |
 | All registered extensions (§ext-encoding) | ✓ |
-| Batch TLS round-trip testing | ✓ |
+| Batch test on TLS chains and certificate files, with size statistics | ✓ |
 | C509 type-2 (natively signed) `f2` encode — all signature algorithms listed above | ✓ |
 | C509 type-2 signature verification (`v2`): self-signed and CA-issued certificates, certification requests — all signature algorithms listed above | ✓ |
 | Certification Request Templates (parse and lossless re-encode) | ✓ |
@@ -306,7 +351,8 @@ let certs = get_certs_from_tls("example.com".to_string());
 | `type2_csr` | Type-2 (natively signed) CSR encoding (`r2`) |
 | `verify` | Type-2 signature verification of certificates and certification requests (`v2`) |
 | `sm2` | SM2 signing and verification with SM3 and the default distinguishing ID |
-| `tester` | TLS client, file I/O, batch testing, round-trip harness |
+| `tester` | TLS client, file I/O, single round-trip, output formatting |
+| `batch` | Batch test on TLS chains and certificate files (`t`, `tf`) |
 | `help` | Printing and diagnostic utilities |
 
 The binary entry point is `src/main.rs`; `src/bin/decode_cbor.rs` is a standalone
@@ -329,6 +375,8 @@ Bug reports and pull requests:
 
 ## Version history
 
+- **0.6.3** (2026-11) — batch test with size statistics (`t`, `tf`). SECG point
+  markers in natively signed objects. Wi-SUN FAN Device extended key usage.
 - **0.6.2** (2026-11) — test-vectors -04. Type-2 signing and signature
   verification for every key type in the vectors; verification of CA-issued
   certificates and of certification requests.

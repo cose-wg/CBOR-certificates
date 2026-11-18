@@ -332,15 +332,15 @@ pub const OTHER_NAME_USER_NOTICE_OID:       Oid<'static> = oid!(1.3.6.1.5.5.7.8.
 pub fn sig_map(alg_id: &[u8]) -> Option<i64> {
     let inner = lder(alg_id, ASN1_SEQ);
     match inner {
-        // Ed25519 / Ed448 — OID only, no params
-        [0x06, 0x03, 0x2B, 0x65, 0x70, ..] => Some(SIG_ED25519),
-        [0x06, 0x03, 0x2B, 0x65, 0x71, ..] => Some(SIG_ED448),
-        // ECDSA with hash
-        [0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, tail @ ..] => match tail.first() {
-            Some(0x01) => Some(SIG_ECDSA_SHA1),
-            Some(0x02) => Some(SIG_ECDSA_SHA256),
-            Some(0x03) => Some(SIG_ECDSA_SHA384),
-            Some(0x04) => Some(SIG_ECDSA_SHA512),
+        // Ed25519 / Ed448 — OID only. Parameters, if present, need the generic form.
+        [0x06, 0x03, 0x2B, 0x65, 0x70] => Some(SIG_ED25519),
+        [0x06, 0x03, 0x2B, 0x65, 0x71] => Some(SIG_ED448),
+        // ECDSA with hash — OID only. Parameters, if present, need the generic form.
+        [0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, tail @ ..] => match tail {
+            [0x01] => Some(SIG_ECDSA_SHA1),
+            [0x02] => Some(SIG_ECDSA_SHA256),
+            [0x03] => Some(SIG_ECDSA_SHA384),
+            [0x04] => Some(SIG_ECDSA_SHA512),
             _ => None,
         },
         // ECDSA-SHAKE (.20=32, .21=33), RSA-PSS-SHAKE (.1E=30, .1F=31),
