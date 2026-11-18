@@ -9,12 +9,12 @@ Reference implementation of draft-ietf-cose-cbor-encoded-cert, aligned with
 
 | Result | Count | Meaning |
 |--------|-------|---------|
-| PASS   | 151   | The tool reproduces the vector: byte-exact encoding, verified signature, or byte-exact DER round-trip |
-| XFAIL  | 70    | The check does not apply to the vector (see below) |
+| PASS   | 150   | The tool reproduces the vector: byte-exact encoding, verified signature, or byte-exact DER round-trip |
+| XFAIL  | 71    | The check does not apply to the vector, or the vector differs in a known way (see below) |
 | SKIP   | 2     | The check could not run (see below) |
 | FAIL   | 0     | |
 
-**XFAIL (70).** All are in the decoding check (C509 → X.509 DER), for objects
+**XFAIL (71).** 70 are in the decoding check (C509 → X.509 DER), for objects
 that have no X.509 DER form:
 
 - 62 type-2 (natively signed) certificates and certification requests. The
@@ -23,11 +23,17 @@ that have no X.509 DER form:
 - 8 certification request templates. Their lossless CBOR round-trip is checked
   in the template section.
 
+One is in the type-2 signing check: the natively signed certificate with a
+compressed secp256r1 key. The vector marks the key with `0xFD`; the draft
+specifies the SECG octets `0x02` / `0x03` for natively signed certificates, and
+`f2` emits `0x03`. Fields 0–8 are otherwise equal, and the key identifier and
+signature differ as a consequence. The vector's own signature verifies.
+
 **SKIP (2).** The 8-byte-integer certificate and certification request have no
 X.509 counterpart for `f2` / `r2` to start from. Their signatures are verified
 by `v2`, and the 8-byte-integer template round-trips.
 
-`--version 03` gives the same result. `--version 02` gives 145 PASS / 67 XFAIL /
+`--version 03` gives the same result. `--version 02` gives 144 PASS / 68 XFAIL /
 0 SKIP / 0 FAIL; two of its XFAILs are the brainpoolP512r1 certificate, which
 that set encodes with extension ID 24 (see "Decode-only forms").
 

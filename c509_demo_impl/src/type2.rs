@@ -26,7 +26,8 @@ use crate::registry::{
     SIG_ALG_UNSIGNED, SIG_ECDSA_SHA1, SIG_ECDSA_SHA256, SIG_ECDSA_SHA384, SIG_ECDSA_SHA512,
     SIG_ECDSA_SHAKE128, SIG_ECDSA_SHAKE256, SIG_RSA_V15_SHA1, SIG_RSA_V15_SHA256, SIG_RSA_V15_SHA384,
     SIG_RSA_V15_SHA512, SIG_RSA_PSS_SHA256, SIG_RSA_PSS_SHA384, SIG_RSA_PSS_SHA512,
-    SIG_RSA_PSS_SHAKE128, SIG_RSA_PSS_SHAKE256,
+    SIG_RSA_PSS_SHAKE128, SIG_RSA_PSS_SHAKE256, PK_BRAINPOOL256R1, PK_BRAINPOOL384R1,
+    PK_BRAINPOOL512R1, PK_FRP256V1, PK_SECP256R, PK_SECP384R, PK_SECP521R, PK_SM2P256V1,
 };
 use crate::Cert;
 
@@ -53,6 +54,9 @@ pub fn encode_x509_as_type2(
     // Field 0: type = 2 (natively signed).
     fields[0] = lcbor_uint(2);
 
+    // A natively signed certificate uses the SECG point markers.
+    fields[8] = native_point_marker(&fields[7], &fields[8]);
+
     // Recompute SKI = SHA-256(field7 || field8)[:20] and patch extensions.
     let new_ski = compute_type2_ski(&fields[7], &fields[8]);
     fields[9] = replace_ski_in_extensions(&fields[9], &new_ski);
@@ -61,7 +65,8 @@ pub fn encode_x509_as_type2(
     if let Some(ca_der_bytes) = ca_der {
         let ca_type3 = parse_x509_cert_nc(ca_der_bytes, no_compression);
         assert!(ca_type3.cbor.len() == 11, "expected 11 CBOR fields from CA cert");
-        let ca_ski = compute_type2_ski(&ca_type3.cbor[7], &ca_type3.cbor[8]);
+        let ca_key = native_point_marker(&ca_type3.cbor[7], &ca_type3.cbor[8]);
+        let ca_ski = compute_type2_ski(&ca_type3.cbor[7], &ca_key);
         fields[9] = replace_aki_in_extensions(&fields[9], &ca_ski);
     }
 
@@ -79,6 +84,38 @@ pub fn encode_x509_as_type2(
 
     fields[10] = sign_tbs(&tbs, privkey_pem, sig_alg);
     Cert { der: vec![], cbor: fields }
+}
+
+/// Give a compressed Weierstrass public key the point marker of a natively signed
+/// object: the SECG octets `0x02` / `0x03`. The type-3 encoder marks a key that
+/// it compressed with `0xFE` / `0xFD`, which tells a decoder to restore the
+/// uncompressed DER form; a natively signed object has no DER form.
+///
+/// `pk_alg` and `key` are the CBOR-encoded algorithm and key fields. Any other
+/// key is returned unchanged.
+pub(crate) fn native_point_marker(pk_alg: &[u8], key: &[u8]) -> Vec<u8> {
+    let mut out = key.to_vec();
+    // The algorithm is an int for a registered curve, the key a byte string.
+    if pk_alg.is_empty() || (pk_alg[0] >> 5) > 1 || (pk_alg[0] & 0x1f) > 26
+        || key.is_empty() || (key[0] >> 5) != 2
+    {
+        return out;
+    }
+    let weierstrass = [
+        PK_SECP256R, PK_SECP384R, PK_SECP521R, PK_SM2P256V1, PK_BRAINPOOL256R1,
+        PK_BRAINPOOL384R1, PK_BRAINPOOL512R1, PK_FRP256V1,
+    ];
+    if !weierstrass.contains(&cbor_int_value(pk_alg)) {
+        return out;
+    }
+    // First payload octet, after the byte-string header (1 or 2 octets here).
+    let marker = if key[0] & 0x1f < 24 { 1 } else { 2 };
+    match out.get(marker) {
+        Some(&crate::SECG_EVEN_COMPRESSED) => out[marker] = crate::SECG_EVEN,
+        Some(&crate::SECG_ODD_COMPRESSED) => out[marker] = crate::SECG_ODD,
+        _ => {}
+    }
+    out
 }
 
 /// Sign `tbs` with the key in `privkey_pem`, returning a CBOR bstr of the raw signature.

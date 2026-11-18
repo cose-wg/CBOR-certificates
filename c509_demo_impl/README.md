@@ -180,24 +180,33 @@ The `-03` and `-02` sets also run (`--version 03` / `--version 02`).
 ### Current results (`validate_c509.sh`, test-vectors -04)
 
 ```
-PASS:  151   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
+PASS:  150   type-3 certs/CSRs (encode, decode, round-trip), type-2 f2/r2 (incl. DhSig,
              withcert, CA-issued X25519/X448), v2 signature verification, CRT round-trip
-XFAIL:  70   no X.509 DER equivalent (62 type-2, 8 CRT)
+XFAIL:  71   no X.509 DER equivalent (62 type-2, 8 CRT); 1 point marker
 SKIP:    2   no X.509 counterpart to compare (8-byte integer certificate and CSR)
 FAIL:    0
 ```
 
-The XFAILs are inherent: a type-2 (natively signed) object is signed over the
-CBOR TBS, so there is no X.509 DER to decode back to. CSR templates likewise
-have no DER form; their lossless CBOR round-trip is verified in §9.
+The XFAILs: a type-2 (natively signed) object is signed over the CBOR TBS, so
+there is no X.509 DER to decode back to. CSR templates likewise have no DER
+form; their lossless CBOR round-trip is verified in §9. One type-2 signing
+check differs from its vector: the vector for the compressed secp256r1
+certificate marks the public key with `0xFD`, while `f2` emits the SECG octet
+`0x03` that the draft specifies for natively signed certificates.
 
 The SKIPs: the 8-byte-integer certificate and CSR have no X.509 counterpart for
 `f2` / `r2` to start from; their signatures are verified by `v2`.
 
 Type-2 signing (`f2`, §7) compares fields 0–9 (the TBS) byte-exactly, and also
 field 10 when the signature algorithm is deterministic (Ed25519, Ed448,
-RSA-PKCS#1 v1.5). ECDSA, SM2 and RSA-PSS signatures differ per run, so for a
+RSA-PKCS#1 v1.5). The other signatures cannot be compared: `f2` signs ECDSA on
+secp256r1/384r1/521r1 deterministically (RFC 6979), which the vectors do not,
+and its remaining ECDSA, SM2 and RSA-PSS signatures differ per run. For a
 self-signed certificate `f2`'s signature is verified with `v2` instead.
+
+In a natively signed certificate or certification request, a compressed
+Weierstrass public key carries the SECG octets `0x02` / `0x03`; `0xFE` / `0xFD`
+are used in type 3 only.
 
 `f2` and `v2` support:
 

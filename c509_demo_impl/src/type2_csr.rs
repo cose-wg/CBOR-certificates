@@ -28,7 +28,7 @@ use sha2::{Digest, Sha256, Sha384, Sha512};
 use crate::conversion::parse_x509_csr;
 use crate::lcbor::{lcbor_uint, lcbor_bytes, cbor_item_end};
 use crate::registry::{SIG_ALG_UNSIGNED, SIG_ECDHPOP_SHA256, SIG_ECDHPOP_SHA384, SIG_ECDHPOP_SHA512};
-use crate::type2::sign_tbs;
+use crate::type2::{native_point_marker, sign_tbs};
 use crate::Cert;
 
 type HmacSha256 = Hmac<Sha256>;
@@ -65,6 +65,10 @@ pub fn encode_csr_as_type2(
 
     // Field 0: type = 2 (natively signed).
     fields[0] = lcbor_uint(2);
+
+    // A natively signed request uses the SECG point markers, as a natively
+    // signed certificate does.
+    fields[4] = native_point_marker(&fields[3], &fields[4]);
 
     // TBS = concatenation of fields 0–5.
     let tbs: Vec<u8> = fields[..6].iter().flat_map(|f| f.iter().copied()).collect();
@@ -268,14 +272,17 @@ fn recode_embedded_cert_as_type2(cert: &[u8], key_pem: &str) -> Vec<u8> {
         pos = cbor_item_end(cert, pos);
         ends[i] = pos;
     }
-    // TBS = 0x02 (type-2) || fields 1–9 verbatim
+    // TBS = 0x02 (type-2) || fields 1–9, the key with the SECG point marker
+    let key = native_point_marker(&cert[starts[7]..ends[7]], &cert[starts[8]..ends[8]]);
     let mut tbs: Vec<u8> = vec![0x02];
-    for i in 1..10 { tbs.extend_from_slice(&cert[starts[i]..ends[i]]); }
+    for i in 1..10 {
+        if i == 8 { tbs.extend_from_slice(&key); } else { tbs.extend_from_slice(&cert[starts[i]..ends[i]]); }
+    }
     let sig_alg = crate::type2::cbor_int_value(&cert[starts[2]..ends[2]]);
     let new_sig = sign_tbs(&tbs, key_pem, sig_alg);
-    // Reassemble: array(11) header + 0x02 + fields 1–9 + new signature
-    let mut result = vec![0x8bu8, 0x02u8];
-    for i in 1..10 { result.extend_from_slice(&cert[starts[i]..ends[i]]); }
+    // Reassemble: array(11) header + TBS + new signature
+    let mut result = vec![0x8bu8];
+    result.extend_from_slice(&tbs);
     result.extend_from_slice(&new_sig);
     result
 }

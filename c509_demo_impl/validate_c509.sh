@@ -794,6 +794,27 @@ try_f2() {
             matched=1
             return 0
         fi
+        # Not a match. Note the one known difference: the vector marks a
+        # compressed key with 0xFE/0xFD, where a natively signed certificate
+        # uses the SECG octets 0x02/0x03. Fields 0–8 are then equal apart from
+        # that octet (later fields differ, as the key identifier covers the key).
+        if [ -z "${mode_flag}" ]; then
+            local ietf9 act9 pre8 mpos marker secg
+            ietf9="$(tbs_hex "${ietf_full}" 9)" || true
+            act9="$(tbs_hex "${actual_full}" 9)" || true
+            pre8="$(tbs_hex "${ietf_full}" 8)" || true
+            mpos=$(( ${#pre8} + 4 ))        # past the 2-octet byte-string header
+            marker="${ietf9:${mpos}:2}"
+            case "${marker}" in
+                fe) secg="02" ;;
+                fd) secg="03" ;;
+                *)  secg="" ;;
+            esac
+            if [ -n "${secg}" ] && [ -n "${act9}" ] \
+               && [ "${ietf9:0:${mpos}}${secg}${ietf9:$(( mpos + 2 ))}" = "${act9}" ]; then
+                marker_diff=1
+            fi
+        fi
     done
     return 0
 }
@@ -912,6 +933,7 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
     # Try both compression modes; compare TBS of each against IETF vector.
     matched=0
     produced=0            # did f2 emit any C509 output at all?
+    marker_diff=0         # does the vector differ only by its point marker?
     try_f2 "${key_file}"
 
     # A CA-issued certificate is signed with the CA's key, not the subject's
@@ -932,6 +954,11 @@ for type2_hex in "${TV_DIR}/v${VERSION}_section_"*.cbor.hex; do
         elif is_vector_drift_xfail "${bn}"; then
             log_xfail "${bn} [Cat ${XFAIL_CATEGORY}]"
             echo "         ${XFAIL_REASON}"
+        elif [ "${marker_diff}" -eq 1 ]; then
+            log_xfail "${bn} [Cat M — point marker]"
+            echo "         The vector marks the compressed public key with 0xFE/0xFD. A natively signed"
+            echo "         certificate uses the SECG octets 0x02/0x03 (draft-ietf-cose-cbor-encoded-cert,"
+            echo "         subjectPublicKey), which f2 emits; fields 0–8 are otherwise equal."
         else
             log_fail "${bn}: TBS mismatch against IETF ${_sec} vector"
             if [ "${VERBOSE}" -eq 1 ]; then
