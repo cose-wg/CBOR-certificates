@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-05T06:08:29.406855+00:00",
+  "timestamp": "2026-11-19T06:56:16.065542+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -7829,7 +7829,7 @@
       "title": "Wrong C509 to X509 encoding for otherName",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/289",
       "state": "OPEN",
-      "author": "smhmeier",
+      "author": "shmset",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [
@@ -7837,7 +7837,7 @@
       ],
       "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
       "createdAt": "2025-11-03T08:46:03Z",
-      "updatedAt": "2026-03-09T10:06:24Z",
+      "updatedAt": "2026-11-18T23:03:38Z",
       "closedAt": null,
       "comments": [
         {
@@ -7848,7 +7848,7 @@
           "updatedAt": "2025-11-03T09:30:26Z"
         },
         {
-          "author": "smhmeier",
+          "author": "shmset",
           "authorAssociation": "NONE",
           "body": "Thanks for the quick reply and report of the maintenance of the code! I would have created a PR but I'm unfamiliar with rust, but might look into it.",
           "createdAt": "2025-11-03T10:08:33Z",
@@ -7862,7 +7862,7 @@
           "updatedAt": "2025-11-03T12:31:14Z"
         },
         {
-          "author": "smhmeier",
+          "author": "shmset",
           "authorAssociation": "NONE",
           "body": "@gselander Quick ping for visibility. Seems that your comment arrived at the same time as my PR.",
           "createdAt": "2025-11-20T09:36:39Z",
@@ -7876,18 +7876,25 @@
           "updatedAt": "2026-01-27T10:36:30Z"
         },
         {
-          "author": "smhmeier",
+          "author": "shmset",
           "authorAssociation": "NONE",
           "body": "@emanjon Good point. I didn't think of that. I'll have a look at it once I get around it and will post my findings. ",
           "createdAt": "2026-02-20T15:15:33Z",
           "updatedAt": "2026-02-20T15:15:33Z"
         },
         {
-          "author": "smhmeier",
+          "author": "shmset",
           "authorAssociation": "NONE",
           "body": "@emanjon I did some investigation. The section 9.12 C509 General Names Registry specifies how the generalName should be encoded:\n```\n   +-------+-----------------------------------------------------------+\n   |     0 | Name:            otherName                                |\n   |       | Comments:                                                 |\n   |       | GeneralNameValue:  [ ~oid, bytes ]                        |\n   +-------+-----------------------------------------------------------+\n```\n\nThe ASN.1 definition for otherName is as follows:\n```\nOtherName ::= SEQUENCE {\n    type-id OBJECT IDENTIFIER,\n    value [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nSo the mapping is straight forward: [ type-id, value ]\n\nIn my testing I have this DER encoded otherName extension:\n```\nA0 47 06 08 2B 06 01 05 05 07 08 03 *A0 3B* 30 39 0C 30 36 37 65 61 63 65 61 66 36 31 32 62 36 64 30 64 30 64 38 37 31 38 61 66 38 64 38 30 38 31 39 37 65 61 64 31 61 63 35 38 31 36 31 39 38 64 30 61 06 05 67 81 05 0C 02\n```\nor more readable:\n```\n[0] (2 elem)\n  OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier|PKIX other name\n  [0]  (1 elem)\n    SEQUENCE (2 elem)\n      UTF8String: 67eaceaf612b6d0d0d8718af8d808197ead1ac5816198d0a\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n```\n\nCompare this to the (not fixed) variant of c509, especially the 59 bytes in the end:\n```\n00                             # unsigned(0)\n   82                             # array(2)\n      48                          # bytes(8)\n         2B06010505070803         # \"+\\u0006\\u0001\\u0005\\u0005\\u0007\\b\\u0003\"\n      58 3B                       # bytes(59)        \n\n30390C3036376561636561663631326236643064306438373138616638643830383139376561643161633538313631393864306106056781050C02\n```\nThe bytes should also encode the `[0] EXPLICIT ANY tag` as this is part of the ASN.1 definition of the otherName encoding. Therefore the specification is correct, but the implementation fails to add the bytes `*A0 3B*`.\n\nHope that made sense. I'll gladly elaborate more if required.",
           "createdAt": "2026-03-05T09:07:19Z",
           "updatedAt": "2026-03-05T09:07:19Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "A very late thanks for the analysis, and sorry for the late answer!\n\nOn the specification question: the `bytes` in `[ ~oid, bytes ]` hold the DER encoding of the `value` itself, without the `[0] EXPLICIT` wrapper. The test vectors show this: in draft-ietf-cose-c509-test-vectors-04, Section 3.6, the otherName `1.3.6.1.4.1.32473.1` with the value OCTET STRING `04 0A 22...` is encoded as `82 49 2B0601040181FD5901 4C 040A22...`, so the byte string starts with `04`, not with `A0`. The wrapper carries no information, it is always `[0] EXPLICIT`, it is dropped when encoding and restored when decoding. Your C509 output was correct; the fault was in the decoder, which restored a plain `SEQUENCE` instead of the two `[0]` tags. That is what #290 fixes, so issue and PR agree.\n\nOn the implementation: the same fix is in the reworked code on branch `c509-demo-impl-draft`, where this part moved from `main.rs` to `src/extensions.rs`. That branch reproduces Section 3.6 byte for byte in both directions, and a certificate like yours (a subject alternative name with a `permanentIdentifier` otherName and a `hardwareModuleName` otherName) round-trips byte for byte: the first is encoded as general name 0, the second as general name -1.\n\nIf you still have the possibility, could you please check your certificate against that branch? If it passes, #290 can be closed as superseded.",
+          "createdAt": "2026-11-18T23:03:38Z",
+          "updatedAt": "2026-11-18T23:03:38Z"
         }
       ]
     },
@@ -9483,7 +9490,7 @@
       "labels": [],
       "body": "Section 3.2.1 says elliptic curve public keys in Weierstrass form \"**may** be\npoint-compressed\", and defines the 0xfe/0xfd octets for the case where an\nuncompressed DER key is CBOR-encoded with compression. Compression is\ntherefore optional for type 3, and one X.509 certificate has two conformant\nC509 type 3 encodings that differ in bytes and length.\n\nThis is observable between the two WG documents. For the same kind of\ncertificate:\n\n* the Appendix A examples in this document **compress**, e.g. A.1 encodes the\n  subjectPublicKey as `58 21 FE B1 21 6A ...` (33 bytes, 0xFE marker);\n* draft-ietf-cose-c509-test-vectors-02 **does not compress**, e.g. its\n  Section 3.3 (secp256r1) encodes `58 41 04 F4 13 59 6A ...` (65 bytes,\n  uncompressed SEC1 point).\n\nBoth are correct per Section 3.2.1, and both invert to the same DER, so\nneither document is wrong. Three consequences seem worth considering:\n\n1. **Thumbprints.** c5t is computed over the C509 encoding, so two\n   conformant encoders produce different c5t values for the same\n   certificate. Anything keyed on c5t -- certificate pinning, caching,\n   deduplication, revocation matching by thumbprint -- can therefore\n   disagree between implementations that are both conformant. The same\n   applies to any deployment that hashes or compares the C509 bytes.\n\n2. **Test vectors as a conformance oracle.** An implementation that\n   compresses by default reproduces the Appendix A examples byte-for-byte\n   but \"fails\" the uncompressed EC cases in the test-vectors document, and\n   vice versa. In my implementation 7 of the 22 certificate cases in\n   draft-ietf-cose-c509-test-vectors-02 only match with compression\n   switched off; the other 15, and all decode directions, match either way.\n   Readers are likely to treat those vectors as pass/fail conformance\n   material.\n\n3. **Encoders need an explicit knob.** Because the choice is not derivable\n   from the input, a library cannot pick correctly on the caller's behalf;\n   it has to expose the option and the caller has to know which peer or\n   test suite expects which form.\n\nPossible resolutions, in decreasing order of strength:\n\n* make the choice deterministic for type 3 (either always compress\n  Weierstrass keys, or always preserve the form found in the DER) -- this\n  would make the type 3 encoding of a given certificate unique, which also\n  helps the serial number discussion in #403;\n* keep it optional but say explicitly in Section 3.2.1 that a certificate\n  may have more than one conformant type 3 encoding, and note the\n  consequence for c5t and for byte-level comparison;\n* at minimum, have draft-ietf-cose-c509-test-vectors state which choice its\n  vectors make, so implementers do not read a legitimate difference as a\n  defect.\n\nHappy to supply the encodings of any of the affected cases in both forms if\nthat is useful.",
       "createdAt": "2026-07-30T06:54:32Z",
-      "updatedAt": "2026-09-17T08:09:51Z",
+      "updatedAt": "2026-11-19T05:45:28Z",
       "closedAt": "2026-09-17T08:09:51Z",
       "comments": [
         {
@@ -9534,6 +9541,48 @@
           "body": "@gselander Thanks, PR #416 resolves the issue for me and I am happy for it to be merged.",
           "createdAt": "2026-09-15T11:09:58Z",
           "updatedAt": "2026-09-15T11:09:58Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hi @ligefeiBouncycastle! A late request: Do you have any record of which test vectors you were able to verify? Or a pointer to an implementation? Many thanks!\n",
+          "createdAt": "2026-11-17T17:30:18Z",
+          "updatedAt": "2026-11-17T17:30:18Z"
+        },
+        {
+          "author": "ligefeiBouncycastle",
+          "authorAssociation": "NONE",
+          "body": "Hi G\u00f6ran,\n\nMy comment above from August gives the results for -02. I have now run the current Bouncy Castle code against all 96 encoded examples in -04, and all of them pass.\n\nThe implementation is in the `org.bouncycastle.cbor.c509` and `org.bouncycastle.cert.c509` packages of https://github.com/bcgit/bc-java. David Hook updated it for -04 today. That update has not reached GitHub yet, but it is in the current beta (1.88-SNAPSHOT, jars and sources) at https://www.bouncycastle.org/betas.\n\nWhat I checked:\n\n- Certificates (Sections 2, 3, 4 and 8): each X.509 certificate converts to the published type 3 encoding byte for byte (3.4 with point compression, the others without). Each type 3 encoding converts back to the published DER byte for byte, and each type 2 encoding parses and re-encodes unchanged. All signatures verify in both forms; the Section 2 certificate is unsigned. Section 8's public key names an unknown curve, so I verified its signature with the Section 3.3 key.\n- Certification requests (Section 9): the same conversions pass for all seven (9.2 has no type 2 form), and the ECDSA signatures of 9.1 and 9.2 verify. I did not verify the proof-of-possession values of 9.3 to 9.5. 9.6 and 9.7 are unsigned.\n- Templates 12.1 to 12.3 parse and re-encode unchanged.\n- Sections 7, 11 and 12.4: the certificate, the request and the template parse and re-encode unchanged, and the signatures of 7 and 11 verify. Bouncy Castle accepts a code that no registry defines only in the natively signed forms. It reports the code under a stand-in OID in its own arc, and keeps an extension or attribute value under such a code as the CBOR item it was given. In a type 3 structure it rejects such a code, since there is no X.509 form to rebuild.\n\nSome observations on -04:\n\n1. Section 3.4.4: the natively signed certificate uses the point marker 0xFD. Section 3.2.1 of -21 says native certificates use 0x02, 0x03 and 0x04, so this should be 0x03. I raised this above in August; it is unchanged.\n2. Section 3.11.2 has an unrendered \"### C509 Type 3 Certificate\" heading, so the type 3 certificate has no section of its own.\n3. Sections 7, 11 and 12.4: none of the 8-byte values is registered, and the positive ones lie in [65536, 2^63 - 1], which -21 reserves for Future Use in each of these registries. Section 7 also has an unknown critical extension. It would help to say what a -21 implementation is expected to do with these vectors. Bouncy Castle now parses them and verifies the signatures, as above. A relying party would still have to reject the Section 7 certificate for its unknown critical extension, as RFC 5280 Section 4.2 requires.\n4. Many ECDSA signatures reuse the nonce. For example, all eight signatures made with the secp256r1 key of Section 3.3.1 have r = 8A25E8AA... This is harmless with published keys, but RFC 6979 would give reproducible signatures without it.\n5. The repository named in Section 1.3 has two Wi-SUN certificates that are not in the document. Both forms of each encode the Wi-SUN FAN Device EKU (1.3.6.1.4.1.45605.1) as `~oid`. -21 registers that EKU as value 20, so its Section 3.7 requires the int.\n\nBest regards,\nGefei",
+          "createdAt": "2026-11-18T05:46:39Z",
+          "updatedAt": "2026-11-18T05:46:39Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thank you, Gefei, this is very useful! And it is good to have a second independent implementation passing the -04 vectors.\n\nOn your observation 1, point marker in Section 3.4.4: I agree. Section 3.2.1 of -21 says native C509 certificates use the SECG octets 0x02, 0x03 and 0x04, and that 0xfe/0xfd are for the case where an uncompressed DER key is CBOR-encoded with point compression. Appendix A.1 of -21 follows that on a single certificate: A.1.1 (type 3) has `58 21 FE ...` and A.1.2 (natively signed) has `58 21 02 ...`. Section 3.4.4 of the test vectors is the outlier with `58 21 FD`.\n\nI propose we correct the test vector rather than touch the core draft: in the next version of the test vectors, Section 3.4.4 would use 0x03 for the subject public key. Any value computed over that field changes with it, so the certificate has to be re-signed. Section 3.4.3 (type 3) keeps 0xFD and is unchanged. No change to c509 draft is then needed.\n\n(For the record, the Rust implementation in this repository (branch c509-demo-impl-draft) had the same deviation: it reused the type 3 key encoding for natively signed certificates, so it reproduced 3.4.4 as published. Its verifier accepts both markers. I plan to change the encoder to emit 0x02/0x03 for natively signed certificates.)\n\nOn 4, nonce reuse: confirmed, the signatures made with the Section 3.3.1 key share the same r, including the X.509 signature in 3.3.3. If the vectors are regenerated for 3.4.4 anyway, we could consider using RFC 6979 signatures, since implementations that sign deterministically could reproduce ECDSA signatures byte for byte.\n\nOn 5, Wi-SUN FAN Device EKU: agreed, -21 registers value 20, so the int form is required. The Rust implementation was also missing that entry and now has it.\n\n@xipki  @gselander does correcting 3.4.4 in the next test-vectors version work for you? (And let the test implementation output an expected error on the current vector until then.)\n",
+          "createdAt": "2026-11-18T15:39:05Z",
+          "updatedAt": "2026-11-18T15:39:05Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thank you, Gefei! I\u2019ve updated the document to revision -05 and regenerated the test vectors.\n\nBoth the Internet-Draft (draft-ietf-cose-c509-test-vectors-05.md) and the raw test vector files (in the test-vectors-05 folder) are available at https://github.com/lijun-nio/id-c509-cert-test-vectors\n\n@ligefeiBouncycastle @highlunder, could you run your implementations against the -05 test vectors?",
+          "createdAt": "2026-11-18T20:55:20Z",
+          "updatedAt": "2026-11-18T20:55:20Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks, Lijun, for the quick turnaround on -05.\n\nI ran the Rust implementation (branch c509-demo-impl-draft) against the -05 source in your repository:\n\n- Section 3.4.4 now has `58 21 03`, and the implementation reproduces its to-be-signed fields byte for byte, including the key identifier.\n- All checks pass: 224 checks, 152 pass, 70 not applicable (type 2 objects and templates have no X.509 form to decode to), 2 skipped (no X.509 source for the 8-byte-integer objects), 0 fail.\n- The raw files in the test-vectors-05 folder also match in both directions (X.509 to type 3 and back) for all 39 certificates and certification requests that have an X.509 form, including the two Wi-SUN certificates and the CRL signer and OCSP requestor/responder certificates.\n\nThe new vectors also caught a bug on my side, which is fixed: in type 3, I padded the two integers of an ECDSA signature to the longer of the two instead of to the curve length. The new P-521 signature in Section 3.6, where both integers have a leading zero byte, exposed it (130 instead of 132 bytes). The earlier vectors never had such a signature. The encoder now takes the length from the signer's curve: the subject key for a self-signed certificate, the issuer's certificate otherwise.\n\n(A note for other implementers: the DER signature alone does not always tell the length, so a converter needs the issuer's key or certificate.)\n\nFrom my side this issue is resolved by -05.",
+          "createdAt": "2026-11-18T23:57:39Z",
+          "updatedAt": "2026-11-18T23:57:39Z"
+        },
+        {
+          "author": "xipki",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> 3\\. Section 7 also has an unknown critical extension\n\nThis test case is designed to test the critical extension with 8-byte ID.",
+          "createdAt": "2026-11-19T05:45:28Z",
+          "updatedAt": "2026-11-19T05:45:28Z"
         }
       ]
     },
@@ -17542,21 +17591,21 @@
       "id": "PR_kwDOCpt5cM71KwST",
       "title": "C509 RUST implementation, updated to draft20",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/402",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "highlunder",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
       "labels": [],
       "body": "This reworks the Rust reference implementation (c509_demo_impl) to track draft-ietf-cose-cbor-encoded-cert-20, splits the single-file main.rs (~4.4k lines) into modules, and adds tools to validate the tool against the official IETF test vectors.\r\n\r\nAll changes are contained in c509_demo_impl/ (2 commits).\r\n\r\nWhat changed\r\n\r\nDraft-20 alignment\r\n- A C509 certificate is the full CBOR array C509Certificate (0x8B array(11) header included); the unwrapped ~C509Certificate sequence is gone. CSRs and CR templates carry the 0x87 array(7) header.\r\n- COSE and TLS wrappings use C509CertData = bytes .cbor C509Certificate, including the certificate embedded in a PrivateKeyPossessionStatement \"withcert\" CSR attribute (encode and decode).\r\n- Decoders auto-detect the CBOR array vs. the legacy sequence, so pre-20 inputs still parse.\r\n\r\nModularization (was one main.rs)\r\nconversion (X.509 \u2194 C509), extensions, keys, registry (OID \u2194 C509 IDs), lder/lcbor (DER/CBOR primitives), type2 / type2_csr (natively-signed cert/CSR encoding: ECDSA, RFC 6955 DhSig, unsigned, embedded-cert re-signing), tester (TLS client + batch round-trip), help/lib.\r\n\r\nCoverage: type 3 (DER-equivalent) and type 2 (natively signed); EC point compression; RFC 9090 OID fallback; SM2/SM3, FRP256v1, brainpool, and the 25519/448 families. New README.md and KNOWN_ISSUES.md; crate bumped to 0.6.0; the stale README_software_prototype.md removed.\r\n\r\nHow to verify (against the official test vectors)\r\n\r\nPrerequisites: Rust/cargo, python3 + lxml (pip3 install lxml), curl, openssl, and coreutils (od).\r\n\r\nOne command (recommended)\r\n\r\ncd c509_demo_impl\r\n./run_tests.sh\r\n\r\nThis (1) downloads draft-ietf-cose-c509-test-vectors-02.xml, (2) extracts every vector (named by draft section number), (3) runs cargo build, and (4) runs the validation suite. Expected summary when using the draft-02 test vectors:\r\n\r\nPASS:  117\r\nXFAIL:  68\r\nSKIP:    4\r\nFAIL:    0\r\n\r\nExit code is 0 when every test passes or is an expected failure. The 68 XFAILs are inherent: type-2 (natively signed) vectors and CRT templates have no X.509 DER equivalent to decode back to, and a few keys f2 cannot natively sign (id-alg-unsigned X25519/X448 end-entity, frp256v1). The full breakdown is in c509_demo_impl/KNOWN_ISSUES.md.\r\n\r\nStep by step (equivalent)\r\n\r\ncd c509_demo_impl\r\n./fetch_test_vectors.sh 02                 # download + extract the -02 vectors -> ../test_vectors/\r\ncargo build --bin c509\r\n./validate_c509.sh --version 02 --verbose  # per-vector encode/decode/round-trip/type-2/CSR/CRT checks\r\n\r\nvalidate_c509.sh is version-agnostic (it transparently handles the draft-20 0x8B/0x87 array header), so --version 01 also runs against the draft-19 vector set; that leaves one expected draft-19-vs-20 divergence (the \u00a78.7 withcert CSR), noted in KNOWN_ISSUES.md.\r\n\r\nAd-hoc / round-trip (no vectors needed)\r\n\r\ncargo run -- f cert.der      # X.509 DER  -> C509 hex\r\ncargo run -- c c509.hex    # C509 hex   -> X.509 DER/CSR\r\ncargo run -- l cert.der       # round-trip: X.509 -> C509 -> X.509, byte-compare\r\ncargo run -- ll example.com   # round-trip a live TLS certificate chain\r\n\r\nRound-trip mode is draft-independent and, over public TLS, is lossless on 4710/5000 sampled hosts (the one by-design exception is a BMPString explicitText that C509 normalises to UTF-8).\r\n\r\nSee c509_demo_impl/README.md for the full CLI, the library API, and per-section details of the validation suite.",
       "createdAt": "2026-07-23T02:53:34Z",
-      "updatedAt": "2026-09-25T15:06:13Z",
+      "updatedAt": "2026-11-17T12:49:09Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "75b36e07d64c38de76916a345f00b513a97aece0",
       "headRepository": "cose-wg/CBOR-certificates",
       "headRefName": "c509-demo-impl-draft20",
       "headRefOid": "6f4165a8c0b24d83e70efbf769bf9203427075eb",
-      "closedAt": null,
+      "closedAt": "2026-11-17T12:49:08Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
