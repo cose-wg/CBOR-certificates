@@ -28,6 +28,7 @@ use crate::conversion::{issuer_key_type, parse_c509_cert, parse_x509_cert_signed
 use crate::help::catch_quiet;
 use crate::lcbor::lcbor_array;
 use crate::registry::{att_map, ext_map};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, OnceLock};
 
 const IO_TIMEOUT: Duration = Duration::from_secs(10);
@@ -186,14 +187,34 @@ fn unvalidated_client_config() -> Arc<rustls::ClientConfig> {
         .clone()
 }
 
-/// Fetch the certificate chain a TLS server presents on port 443. The chain is
-/// not validated.
-fn fetch_chain(host: &str) -> Result<Vec<Vec<u8>>, HostOutcome> {
-    let addr = (host, 443)
+/// Number of hosts that had no address and were reached as `www.<name>`.
+static WWW_FALLBACKS: AtomicUsize = AtomicUsize::new(0);
+
+/// The address of `host` for port 443.
+fn resolve(host: &str) -> Result<std::net::SocketAddr, String> {
+    (host, 443)
         .to_socket_addrs()
-        .map_err(|e| HostOutcome::Unreachable(format!("DNS: {}", e)))?
+        .map_err(|e| format!("DNS: {}", e))?
         .next()
-        .ok_or_else(|| HostOutcome::Unreachable("DNS: no address".into()))?;
+        .ok_or_else(|| "DNS: no address".to_string())
+}
+
+/// Fetch the certificate chain a TLS server presents on port 443. The chain is
+/// not validated. A name without an address is tried again as `www.<name>`,
+/// since a list of domains has many names that only serve under `www`.
+fn fetch_chain(listed: &str) -> Result<Vec<Vec<u8>>, HostOutcome> {
+    let www = format!("www.{}", listed);
+    let (host, addr) = match resolve(listed) {
+        Ok(addr) => (listed, addr),
+        Err(e) if listed.starts_with("www.") => return Err(HostOutcome::Unreachable(e)),
+        Err(e) => match resolve(&www) {
+            Ok(addr) => {
+                WWW_FALLBACKS.fetch_add(1, Ordering::Relaxed);
+                (www.as_str(), addr)
+            }
+            Err(_) => return Err(HostOutcome::Unreachable(e)),
+        },
+    };
     let mut sock = std::net::TcpStream::connect_timeout(&addr, IO_TIMEOUT)
         .map_err(|e| HostOutcome::Unreachable(format!("TCP: {}", e)))?;
     let _ = sock.set_read_timeout(Some(IO_TIMEOUT));
@@ -704,6 +725,10 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
         let _ = writeln!(w, "\nHosts");
         let _ = writeln!(w, "  listed:                   {}", total);
         let _ = writeln!(w, "  chain received:           {}", reached);
+        let _ = writeln!(
+            w, "  (names without an address that were tried as www.<name>: {})",
+            WWW_FALLBACKS.load(Ordering::Relaxed)
+        );
         let _ = writeln!(w, "  unreachable (DNS/TCP):    {}", unreachable.len());
         let _ = writeln!(w, "  TLS handshake failed:     {}", tls_failed.len());
         let _ = writeln!(

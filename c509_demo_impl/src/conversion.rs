@@ -138,10 +138,11 @@ pub fn parse_c509_cert(cbor: Vec<u8>) -> Cert {
         subject,
         parse_cbor_pub_key(&elements[8], subject_pka, subject_pka_oid),
     ];
-    // 'extensions' (CBOR null) means "no extensions" — per RFC 5280,
+    // An empty 'extensions' array means "no extensions" — per RFC 5280,
     // Extensions ::= SEQUENCE SIZE (1..MAX), so the [3] EXPLICIT field
     // must be omitted entirely rather than encoded as an empty SEQUENCE.
-    if elements[9] != Value::Null {
+    // CBOR null is accepted in the same sense.
+    if elements[9] != Value::Null && elements[9] != Value::Array(Vec::new()) {
         tbs_cert_vec.push(parse_cbor_extensions(&elements[9]));
     }
 
@@ -791,11 +792,29 @@ pub(crate) fn parse_x509_cert_nc(input: Vec<u8>, no_compression: bool) -> Cert {
 pub fn x509_names_and_key(der: &[u8]) -> Option<(Vec<u8>, Vec<u8>, Option<i64>)> {
     catch_quiet(|| {
         let certificate = lder_vec_len(der, ASN1_SEQ, 3);
-        let tbs = lder_vec_len(certificate[0], ASN1_SEQ, 8);
+        let tbs = x509_v3_tbs_fields(certificate[0]);
         let spki = lder_vec_len(tbs[6], ASN1_SEQ, 2);
         (tbs[3].to_vec(), tbs[5].to_vec(), pk_map(spki[0]))
     })
     .ok()
+}
+
+/// The fields of the `tbsCertificate` of an X.509 version 3 certificate: the
+/// seven mandatory ones and, if present, `extensions`. Panics for a
+/// certificate of another version and for one with `issuerUniqueID` or
+/// `subjectUniqueID`, which a C509 certificate cannot carry.
+fn x509_v3_tbs_fields(tbs: &[u8]) -> Vec<&[u8]> {
+    let fields = lder_vec(tbs, ASN1_SEQ);
+    assert!(
+        fields.first().map(|f| f[0]) == Some(0xa0),
+        "Not an X.509 version 3 certificate (no version field)"
+    );
+    assert!(fields.len() >= 7, "tbsCertificate has {} fields, expected 7 or 8", fields.len());
+    assert!(
+        fields.len() == 7 || (fields.len() == 8 && fields[7][0] == 0xa3),
+        "issuerUniqueID and subjectUniqueID are not supported"
+    );
+    fields
 }
 
 /// Maps the subject name (DER) of each certificate in `ders` to the C509
@@ -839,7 +858,7 @@ pub fn parse_x509_cert_signed_by(input: Vec<u8>, no_compression: bool, signer_ke
     let mut output = Vec::new();
 
     let certificate = lder_vec_len(&input, ASN1_SEQ, 3);
-    let tbs_certificate = lder_vec_len(certificate[0], ASN1_SEQ, 8);
+    let tbs_certificate = x509_v3_tbs_fields(certificate[0]);
     let version = lder(tbs_certificate[0], 0xa0);
     let serial_number = lder_uint(tbs_certificate[1]);
     let signature_algorithm = certificate[1];
@@ -852,7 +871,11 @@ pub fn parse_x509_cert_signed_by(input: Vec<u8>, no_compression: bool, signer_ke
     let subject_public_key_info = lder_vec_len(tbs_certificate[6], ASN1_SEQ, 2);
     let spki_algorithm = subject_public_key_info[0];
     let subject_public_key = lder(subject_public_key_info[1], ASN1_BIT_STR);
-    let extensions = lder_vec(lder(tbs_certificate[7], 0xa3), ASN1_SEQ);
+    // 'extensions' is optional; an omitted field is an empty CBOR array.
+    let extensions = match tbs_certificate.get(7) {
+        Some(field) => lder_vec(lder(field, 0xa3), ASN1_SEQ),
+        None => Vec::new(),
+    };
     let signature_value = lder(certificate[2], ASN1_BIT_STR);
 
     assert!(lder(version, ASN1_INT)[0] == 2, "Expected X.509 v3!");
