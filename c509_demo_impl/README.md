@@ -266,9 +266,10 @@ certificates and report, for the distinct certificates seen:
 | `--label TEXT` | Recorded in the summary, e.g. the source list and its date | |
 | `--out DIR` | Output directory | `test_results` |
 
-`t` opens one TLS connection per host (port 443, 10 s timeouts) and validates
-the chain against the Mozilla root set, so a host with an invalid chain counts
-as a failed handshake. The conversion prints diagnostics to stdout; redirect it.
+`t` opens one TLS connection per host (port 443, 10 s timeouts, 30 s for the
+whole handshake) and converts the chain the host sends. The chain is not
+validated, so expired, self-signed and privately issued certificates are
+included. The conversion prints diagnostics to stdout; redirect it.
 
 Output: `batch_<timestamp>.log` (summary), `batch_<timestamp>.csv` (one row per
 distinct certificate) and, for certificates that do not round-trip,

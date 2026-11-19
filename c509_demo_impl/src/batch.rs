@@ -28,7 +28,7 @@ use crate::conversion::{issuer_key_type, parse_c509_cert, parse_x509_cert_signed
 use crate::help::catch_quiet;
 use crate::lcbor::lcbor_array;
 use crate::registry::{att_map, ext_map};
-use crate::tester::tls_client_config;
+use std::sync::{Arc, OnceLock};
 
 const IO_TIMEOUT: Duration = Duration::from_secs(10);
 /// Time limit for a whole TLS handshake.
@@ -127,7 +127,59 @@ pub fn host_from_line(line: &str) -> Option<String> {
     if host.is_empty() { None } else { Some(host) }
 }
 
-/// Fetch the certificate chain a TLS server presents on port 443.
+/// Accepts every certificate chain and handshake signature. The batch test
+/// converts the certificates a server sends; it does not rely on them.
+struct AcceptAnyChain;
+
+impl rustls::client::ServerCertVerifier for AcceptAnyChain {
+    fn verify_server_cert(
+        &self,
+        _end_entity: &rustls::Certificate,
+        _intermediates: &[rustls::Certificate],
+        _server_name: &rustls::ServerName,
+        _scts: &mut dyn Iterator<Item = &[u8]>,
+        _ocsp_response: &[u8],
+        _now: std::time::SystemTime,
+    ) -> Result<rustls::client::ServerCertVerified, rustls::Error> {
+        Ok(rustls::client::ServerCertVerified::assertion())
+    }
+
+    fn verify_tls12_signature(
+        &self,
+        _message: &[u8],
+        _cert: &rustls::Certificate,
+        _dss: &rustls::internal::msgs::handshake::DigitallySignedStruct,
+    ) -> Result<rustls::client::HandshakeSignatureValid, rustls::Error> {
+        Ok(rustls::client::HandshakeSignatureValid::assertion())
+    }
+
+    fn verify_tls13_signature(
+        &self,
+        _message: &[u8],
+        _cert: &rustls::Certificate,
+        _dss: &rustls::internal::msgs::handshake::DigitallySignedStruct,
+    ) -> Result<rustls::client::HandshakeSignatureValid, rustls::Error> {
+        Ok(rustls::client::HandshakeSignatureValid::assertion())
+    }
+}
+
+/// TLS client configuration without chain validation.
+fn unvalidated_client_config() -> Arc<rustls::ClientConfig> {
+    static CONFIG: OnceLock<Arc<rustls::ClientConfig>> = OnceLock::new();
+    CONFIG
+        .get_or_init(|| {
+            Arc::new(
+                rustls::ClientConfig::builder()
+                    .with_safe_defaults()
+                    .with_custom_certificate_verifier(Arc::new(AcceptAnyChain))
+                    .with_no_client_auth(),
+            )
+        })
+        .clone()
+}
+
+/// Fetch the certificate chain a TLS server presents on port 443. The chain is
+/// not validated.
 fn fetch_chain(host: &str) -> Result<Vec<Vec<u8>>, HostOutcome> {
     let addr = (host, 443)
         .to_socket_addrs()
@@ -141,7 +193,7 @@ fn fetch_chain(host: &str) -> Result<Vec<Vec<u8>>, HostOutcome> {
 
     let name = rustls::ServerName::try_from(host)
         .map_err(|e| HostOutcome::TlsFailure(format!("invalid name: {:?}", e)))?;
-    let mut sess = rustls::ClientConnection::new(tls_client_config(), name)
+    let mut sess = rustls::ClientConnection::new(unvalidated_client_config(), name)
         .map_err(|e| HostOutcome::TlsFailure(format!("{:?}", e)))?;
     // The handshake is driven step by step, so that it ends when the time
     // limit is reached or when the connection makes no progress.
@@ -599,8 +651,8 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
         let _ = writeln!(w, "  unreachable (DNS/TCP):    {}", unreachable.len());
         let _ = writeln!(w, "  TLS handshake failed:     {}", tls_failed.len());
         let _ = writeln!(
-            w, "  (the handshake validates the chain against the Mozilla root set, so hosts \
-               with an invalid chain are in the last line)"
+            w, "  (the chain is not validated; a host is in the last line when the handshake \
+               itself fails)"
         );
     }
     let _ = writeln!(w, "\nCertificates");

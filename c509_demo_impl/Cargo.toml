@@ -23,7 +23,7 @@ num-bigint = "0.4"
 oid = "0.2"
 regex = "1"
 rustc-serialize = "0.3"
-rustls = "0.20"
+rustls = { version = "0.20", features = ["dangerous_configuration"] }
 secp256k1 = "0.29.0"
 webpki-roots = "0.22"
 bit_reverse = "0.1.8"
