@@ -16,7 +16,7 @@ use std::fs::File;
 use std::io::Write;
 use std::net::ToSocketAddrs;
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use log::info;
 use rayon::prelude::*;
@@ -31,6 +31,8 @@ use crate::registry::{att_map, ext_map};
 use crate::tester::tls_client_config;
 
 const IO_TIMEOUT: Duration = Duration::from_secs(10);
+/// Time limit for a whole TLS handshake.
+const HANDSHAKE_TIMEOUT: Duration = Duration::from_secs(30);
 
 /// How a batch is run and labelled.
 pub struct BatchOptions {
@@ -141,8 +143,30 @@ fn fetch_chain(host: &str) -> Result<Vec<Vec<u8>>, HostOutcome> {
         .map_err(|e| HostOutcome::TlsFailure(format!("invalid name: {:?}", e)))?;
     let mut sess = rustls::ClientConnection::new(tls_client_config(), name)
         .map_err(|e| HostOutcome::TlsFailure(format!("{:?}", e)))?;
+    // The handshake is driven step by step, so that it ends when the time
+    // limit is reached or when the connection makes no progress.
+    let fail = |e: String| HostOutcome::TlsFailure(e);
+    let deadline = Instant::now() + HANDSHAKE_TIMEOUT;
     while sess.is_handshaking() {
-        sess.complete_io(&mut sock).map_err(|e| HostOutcome::TlsFailure(e.to_string()))?;
+        if Instant::now() > deadline {
+            return Err(fail("handshake: time limit reached".into()));
+        }
+        let mut progress = false;
+        if sess.wants_write() {
+            sess.write_tls(&mut sock).map_err(|e| fail(e.to_string()))?;
+            progress = true;
+        }
+        if sess.wants_read() {
+            match sess.read_tls(&mut sock) {
+                Ok(0) => return Err(fail("connection closed during the handshake".into())),
+                Ok(_) => progress = true,
+                Err(e) => return Err(fail(e.to_string())),
+            }
+            sess.process_new_packets().map_err(|e| fail(format!("{:?}", e)))?;
+        }
+        if !progress {
+            return Err(fail("handshake: no progress".into()));
+        }
     }
     Ok(sess.peer_certificates().unwrap_or_default().iter().map(|c| c.0.clone()).collect())
 }
