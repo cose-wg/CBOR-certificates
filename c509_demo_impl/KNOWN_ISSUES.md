@@ -139,10 +139,14 @@ The decoder accepts three forms that the encoder never emits:
 | CCADB CA certificates issued in the 2010s | 4754 | 4722 | 32 | 77.5% |
 | CSCA master list (passport-signer CA certificates) | 609 | 607 | 2 | 77.5% |
 | Matter production PAA roots | 72 | 72 | 0 | 47.3% |
+| TLS chains of 100,000 domains sampled from the Open PageRank top 10 million | 83632 | 83567 | 65 | 76.6% |
 
-All 41 that are not lossless are of the kinds listed under "Certificates that
+All 106 that are not lossless are of the kinds listed under "Certificates that
 cannot be represented as type 3". The ratio depends mainly on the key and
 signature sizes: about 57–61% for a CA certificate with an EC key and an ECDSA
 signature, about 81% with an RSA-4096 key and an RSA signature. End-entity TLS
 certificates carry an SCT list (RFC 6962), on average about 320 bytes that C509
-does not reduce; without it they are at 69–73%.
+does not reduce; without it they are at 69–73%. The number of bytes saved is
+close to constant, about 300 per certificate. A subjectAltName with very many
+long names can make the C509 encoding larger than the DER (one certificate in
+the sample, with 506 names).

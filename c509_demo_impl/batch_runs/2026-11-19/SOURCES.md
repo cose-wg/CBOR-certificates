@@ -4,12 +4,13 @@ Results: [RESULTS.md](RESULTS.md).
 
 ## Tool
 
-- `c509` 0.6.3, commit `314b9846` of branch `c509-demo-impl-draft`
+- `c509` 0.6.3, commit `983588aa` of branch `c509-demo-impl-draft`
   (`cargo build --bin c509`, rustc 1.99.1).
 - TLS: rustls 0.20.9 (pinned in `Cargo.lock`). The chain a host sends is
   converted as it is; it is not validated.
-- The host runs were made with commit `674ca66e` and `--keep-certs`. The tables
-  were then produced with `314b9846` from the certificates those runs saved.
+- The host runs were made with `--keep-certs` and earlier commits of the same
+  day. The tables were then produced with `983588aa` from the certificates
+  those runs saved.
 
 ## Inputs
 
@@ -21,6 +22,8 @@ Results: [RESULTS.md](RESULTS.md).
 | `ccadb_2020.csv` (not stored here, 8 MB) | Same report, `NotBeforeDecade=2020`, downloaded 2026-11-18; 4,288 certificates | `9765274f978d4c85466634c79c23a204d3078f6979ec565970a1dbb72b5365e4` |
 | `matter_paa_71a00964.pem` (not stored here) | `project-chip/connectedhomeip` commit `71a0096499ea451414e5a4de71b1dc80f918a81d`, `credentials/production/paa-root-certs/*.der`; 72 certificates | `7a44f4e7d1ca9f96212792e59729177cfb9594b8fe30d8b78c19aef91d33a66f` |
 | `csca_master_list.pem` (not stored here) | CSCA master list published by the German BSI, `DE_ML_2026-10-01-11-50-52.ml`, downloaded 2026-11-19; 609 certificates | `7bba77a50ff1ac4f09de15d012cb174ae7323ef32c1b52828c7a1a6d18e2f32e` (ZIP as downloaded: `a0d2b448d8a2ef383c66991897c970ab2f0494173d33ef0d55195127dae08a6a`) |
+
+| `opr_*.txt` (six files, in this directory) | Open PageRank list of the top 10 million domains, <https://keywordseverywhere.com/openpagerank/top-domains>, `top10milliondomains.csv.zip` (data of 2026-10-01), downloaded 2026-11-19 (not stored here, 123 MB; SHA-256 `20a0060517d63fde9aea27a37f790c7ba156577743b6e80c9068121944235cc7`); sample drawn with `sample_openpagerank.py`, seed 1 | see below |
 
 The CrUX sample is 5,000 of the 982,953 distinct hosts of https origins ranked
 below the top 10,000: the hosts are sorted and sampled with Python
@@ -51,6 +54,27 @@ since a later run meets other certificates:
 The publicly trusted ones among them can be found by fingerprint in a
 certificate transparency search.
 
+The sample of 100,000 domains is in six files, one per stratum:
+
+| File | Domains | Drawn from | SHA-256 of the file |
+|------|---------|------------|---------------------|
+| `opr_rank_1-100k.txt` | 20,000 | ranks 1–100,000 | `2db8e4e13bbe1645613c6b6f55f059bd14c8542aa52c6b5e68d1d0c2b0db5236` |
+| `opr_rank_100k-1m.txt` | 20,000 | ranks 100,001–1,000,000 | `1dbfd0414af4599b6bf481a4800e164b32fd57e2d052420c8b6640c645cf6dff` |
+| `opr_rank_1m-3m.txt` | 20,000 | ranks 1,000,001–3,000,000 | `4f775e02a0df40ef4b5d4ed50562e2f8aeca9f33beb6f0bf34ea86235189f04a` |
+| `opr_rank_3m-10m.txt` | 20,000 | ranks 3,000,001–10,000,000 | `39c6a8ecb6067739ac07a8ad7c8e18b0ccef5d0dbacea5807677e6471b665437` |
+| `opr_public.txt` | 10,000 | public-sector and academic suffixes (380 suffixes, at most 39 domains each) | `eb2d6b56b5b8ce1535019159d5d66a0afebee44905b205de5a51fed8dcdda24f` |
+| `opr_cctld.txt` | 10,000 | country-code top-level domains (248, at most 43 domains each) | `358f8cc837b8cc0a48cc58c2d33433966dc959ad805d571e17c59cf7ea4b3b12` |
+
+Within a stratum the domains are taken in the order of
+SHA-256("1:<domain>"), so the draw does not depend on a random number
+generator; `sample_openpagerank.py` describes the strata. The 15,000 names of
+the Tranco and CrUX lists above were left out. The list itself, with its ranks
+and scores, is not stored here.
+
+The 83,632 distinct certificates that these hosts sent are not listed. The
+SHA-256 of their fingerprint list (lower-case hex, one per line, sorted) is
+`056533c5cec5794759d459adb516b6f910e7961abf56756dfb828b950eb5ebaa`.
+
 The Matter roots are the production Product Attestation Authority certificates
 as stored in the Matter SDK repository, which takes them from the Distributed
 Compliance Ledger of the Connectivity Standards Alliance.
@@ -71,10 +95,16 @@ cd c509_demo_impl
     --ccadb "2010,2020" \
     --matter --matter-commit 71a0096499ea451414e5a4de71b1dc80f918a81d \
     --csca
+./sample_openpagerank.py top10milliondomains.csv.zip --out ../batch_lists/openpagerank \
+    --per-stratum 20000 --seed 1 \
+    --exclude ../batch_lists/tranco_V38GN_top10000.txt \
+              ../batch_lists/crux_a67d0c8f_sample5000_seed1.txt
 ```
 
-This writes the inputs and a `SOURCES.txt` with the hashes to `../batch_lists/`.
-The two host lists and the Matter bundle it produces are identical to the ones
+`fetch_batch_lists.py` writes the inputs and a `SOURCES.txt` with the hashes to
+`../batch_lists/`; `sample_openpagerank.py` takes the downloaded Open PageRank
+list and writes the six `opr_*.txt` files.
+The host lists and the Matter bundle they produce are identical to the ones
 used here. The CSCA master list is replaced by its publisher from time to time;
 `--csca-url` selects another version.
 
@@ -92,11 +122,14 @@ R=../batch_results
     --jobs 16 --batch-size 250 --pause 2 --keep-certs --out $R/tranco > /dev/null
 ./target/debug/c509 t $B/crux_a67d0c8f_sample5000_seed1.txt \
     --jobs 16 --batch-size 250 --pause 2 --keep-certs --out $R/crux > /dev/null
+# and the same for each of the six opr_*.txt files
 ```
 
 The file runs give the same result every time. The host runs depend on when and
 from where they are made: servers renew and change their certificates, and
 reachability differs between networks. The host runs of 2026-11-19 were made
-from a network in Stockholm, Sweden. `--keep-certs` saves the certificates of a
+from a network in Stockholm, Sweden. In the runs on the sample, the hosts whose
+name lookup failed with a temporary error were tried once more afterwards,
+8 at a time. `--keep-certs` saves the certificates of a
 host run, and `c509 tf` on that directory repeats the conversion without new
 connections.

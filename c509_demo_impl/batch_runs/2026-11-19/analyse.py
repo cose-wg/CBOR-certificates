@@ -6,17 +6,26 @@ breaks the DER size into components (names, key, signature, extensions). Prints
 Markdown tables. Only the Python standard library is used.
 
 usage: analyse.py <results-dir> <batch_lists-dir> <tranco-certs-dir> <crux-certs-dir>
+                  [<sample-certs-dir>]
 
   results-dir        has one directory per set (tranco, crux, ccadb_2020,
-                     ccadb_2010, csca, matter_paa) with the batch_*.csv of `c509 t`
+                     ccadb_2010, csca, matter_paa and, with the fifth argument,
+                     opr_<stratum> and opr_all) with the batch_*.csv of `c509 t`
                      or `c509 tf`
   batch_lists-dir    has the inputs written by fetch_batch_lists.py
   *-certs-dir        the batch_*_certs directory of a host run made with
                      --keep-certs
+  sample-certs-dir   all certificates of the runs on the Open PageRank sample,
+                     in one directory
 """
 import base64, collections, csv, glob, hashlib, os, re, statistics, sys
 
 FINAL, LISTS, TRANCO_CERTS, CRUX_CERTS = sys.argv[1:5]
+OPR_CERTS = sys.argv[5] if len(sys.argv) > 5 else None
+OPR_STRATA = (("opr_rank_1-100k", "ranks 1-100,000"), ("opr_rank_100k-1m", "ranks 100,001-1 million"),
+              ("opr_rank_1m-3m", "ranks 1-3 million"), ("opr_rank_3m-10m", "ranks 3-10 million"),
+              ("opr_public", "public sector and academic"), ("opr_cctld", "country-code domains"))
+_opr_cache = {}
 csv.field_size_limit(10 ** 9)
 
 OIDS = {
@@ -109,7 +118,15 @@ def pems(path):
 
 
 def ders_of(name):
-    if name == "tranco" or name == "crux":
+    if name.startswith("opr_"):
+        if not _opr_cache:
+            for p in glob.glob(os.path.join(OPR_CERTS, "*.der")):
+                _opr_cache[os.path.basename(p)[:-4]] = open(p, "rb").read()
+        table = sorted(glob.glob(os.path.join(FINAL, name, "batch_*.csv")))[-1]
+        for r in csv.DictReader(open(table)):
+            if r["sha256"] in _opr_cache:
+                yield _opr_cache[r["sha256"]]
+    elif name == "tranco" or name == "crux":
         for p in glob.glob(os.path.join(TRANCO_CERTS if name == "tranco" else CRUX_CERTS, "*.der")):
             yield open(p, "rb").read()
     else:
@@ -188,7 +205,10 @@ def corr(xs, ys):
     return sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / (sx * sy) if sx and sy else float("nan")
 
 
-sets = {name: load(name) for name in ("tranco", "crux", "ccadb_2020", "ccadb_2010", "csca", "matter_paa")}
+names = ["tranco", "crux", "ccadb_2020", "ccadb_2010", "csca", "matter_paa"]
+if OPR_CERTS:
+    names += [s for s, _ in OPR_STRATA] + ["opr_all"]
+sets = {name: load(name) for name in names}
 ee = lambda rows: [r for r in rows if r["role"] == "EE"]
 ca = lambda rows: [r for r in rows if r["role"] == "CA"]
 web_ee = ee(sets["tranco"]) + ee(sets["crux"])
@@ -198,68 +218,80 @@ groups = [("Tranco end-entity", ee(sets["tranco"])), ("CrUX end-entity", ee(sets
           ("Tranco CA", ca(sets["tranco"])), ("CrUX CA", ca(sets["crux"])),
           ("CCADB 2020s", sets["ccadb_2020"]), ("CCADB 2010s", sets["ccadb_2010"]),
           ("CSCA", sets["csca"]), ("Matter PAA", sets["matter_paa"])]
+ee_groups = [("Tranco end-entity", ee(sets["tranco"])), ("CrUX end-entity", ee(sets["crux"]))]
+all_ee = list(web_ee)
+if OPR_CERTS:
+    sample = [("Sample, %s, end-entity" % label, ee(sets[s])) for s, label in OPR_STRATA]
+    sample += [("Sample, all strata, end-entity", ee(sets["opr_all"])), ("Sample, all strata, CA", ca(sets["opr_all"]))]
+    groups += sample
+    ee_groups += sample[:-1]
+    all_ee += [r for s, _ in OPR_STRATA for r in ee(sets[s])] + ee(sets["opr_all"])
 percentile_table("C509 / DER per certificate (%)", groups, "ratio", "%.1f")
 percentile_table("Bytes saved per certificate (DER - C509)", groups, "saved", "%d")
 percentile_table("DER size (bytes)", groups, "der", "%d")
 
-# Web end-entity certificates with the SCT list left out of both sizes.
-for r in web_ee:
+def end_entity_sections(title, web_ee):
+
+    print("\n### End-entity certificates, %s (%d), by ratio band" % (title, len(web_ee)))
+    s = sorted(web_ee, key=lambda r: r["ratio"])
+    n = len(s)
+    bands = [("best 5%", s[:n // 20]), ("5-25%", s[n // 20:n // 4]), ("middle 50%", s[n // 4:3 * n // 4]),
+             ("75-95%", s[3 * n // 4:19 * n // 20]), ("worst 5%", s[19 * n // 20:])]
+    for label, rows in bands:
+        profile(label, rows)
+
+    print("\n### End-entity certificates, %s, by key and signature" % title)
+    print("\n| Key / signature | n | median ratio | p10 | p90 | median DER | median saved |")
+    print("|---|---|---|---|---|---|---|")
+    by = collections.defaultdict(list)
+    for r in web_ee:
+        by["%s / %s" % (r["key"], r["signature"])].append(r)
+    for k, rows in sorted(by.items(), key=lambda kv: -len(kv[1]))[:8]:
+        v = [r["ratio"] for r in rows]
+        print("| %s | %d | %.1f | %.1f | %.1f | %d | %d |" % (k, len(rows), statistics.median(v), pct(v, 10), pct(v, 90),
+              statistics.median(r["der"] for r in rows), statistics.median(r["saved"] for r in rows)))
+
+    print("\n### End-entity certificates, %s, by number of SAN names" % title)
+    print("\n| SAN names | n | median ratio | median DER | median saved |")
+    print("|---|---|---|---|---|")
+    for lo, hi in ((0, 1), (2, 2), (3, 5), (6, 20), (21, 100), (101, 10 ** 6)):
+        rows = [r for r in web_ee if lo <= r["comp"]["san_names"] <= hi]
+        if rows:
+            print("| %s | %d | %.1f | %d | %d |" % ("%d-%d" % (lo, hi) if hi < 10 ** 6 else "%d+" % lo, len(rows),
+                  statistics.median(r["ratio"] for r in rows), statistics.median(r["der"] for r in rows),
+                  statistics.median(r["saved"] for r in rows)))
+
+    print("\n### End-entity certificates, %s, by issuer (top 10)" % title)
+    print("\n| Issuer | n | median ratio | median DER | median saved | main key |")
+    print("|---|---|---|---|---|---|")
+    by = collections.defaultdict(list)
+    for r in web_ee:
+        by[r["comp"]["issuer_org"][:36]].append(r)
+    for k, rows in sorted(by.items(), key=lambda kv: -len(kv[1]))[:10]:
+        mk = collections.Counter(r["key"] for r in rows).most_common(1)[0]
+        print("| %s | %d | %.1f | %d | %d | %s %d%% |" % (k, len(rows), statistics.median(r["ratio"] for r in rows),
+              statistics.median(r["der"] for r in rows), statistics.median(r["saved"] for r in rows),
+              mk[0], round(100.0 * mk[1] / len(rows))))
+
+    print("\n### Correlation with the ratio (end-entity certificates, %s)\n" % title)
+    ys = [r["ratio"] for r in web_ee]
+    for label, f in (("share of key + signature bytes in DER", lambda r: (r["comp"]["spki"] + r["comp"]["sigvalue"]) / r["der"]),
+                     ("share of SCT list bytes", lambda r: r["comp"].get("sct", 0) / r["der"]),
+                     ("share of SAN bytes", lambda r: r["comp"].get("san", 0) / r["der"]),
+                     ("share of key + signature + SCT + SAN", lambda r: (r["comp"]["spki"] + r["comp"]["sigvalue"] + r["comp"].get("sct", 0) + r["comp"].get("san", 0)) / r["der"]),
+                     ("DER size", lambda r: r["der"]),
+                     ("bytes saved", lambda r: r["saved"])):
+        print("- %s: r = %.2f" % (label, corr([f(r) for r in web_ee], ys)))
+
+
+
+for r in all_ee:
     sd, sc = int(r["sct_der_bytes"]), int(r["sct_c509_bytes"])
     r["ratio_nosct"] = 100.0 * (r["c509"] - sc) / (r["der"] - sd)
-percentile_table("Web end-entity certificates, SCT list not counted (%)",
-                 [("Tranco end-entity", ee(sets["tranco"])), ("CrUX end-entity", ee(sets["crux"]))],
-                 "ratio_nosct", "%.1f")
-
-print("\n### Web end-entity certificates (Tranco + CrUX, %d) by ratio band" % len(web_ee))
-s = sorted(web_ee, key=lambda r: r["ratio"])
-n = len(s)
-bands = [("best 5%", s[:n // 20]), ("5-25%", s[n // 20:n // 4]), ("middle 50%", s[n // 4:3 * n // 4]),
-         ("75-95%", s[3 * n // 4:19 * n // 20]), ("worst 5%", s[19 * n // 20:])]
-for label, rows in bands:
-    profile(label, rows)
-
-print("\n### Web end-entity certificates by key and signature")
-print("\n| Key / signature | n | median ratio | p10 | p90 | median DER | median saved |")
-print("|---|---|---|---|---|---|---|")
-by = collections.defaultdict(list)
-for r in web_ee:
-    by["%s / %s" % (r["key"], r["signature"])].append(r)
-for k, rows in sorted(by.items(), key=lambda kv: -len(kv[1]))[:8]:
-    v = [r["ratio"] for r in rows]
-    print("| %s | %d | %.1f | %.1f | %.1f | %d | %d |" % (k, len(rows), statistics.median(v), pct(v, 10), pct(v, 90),
-          statistics.median(r["der"] for r in rows), statistics.median(r["saved"] for r in rows)))
-
-print("\n### Web end-entity certificates by number of SAN names")
-print("\n| SAN names | n | median ratio | median DER | median saved |")
-print("|---|---|---|---|---|")
-for lo, hi in ((0, 1), (2, 2), (3, 5), (6, 20), (21, 100), (101, 10 ** 6)):
-    rows = [r for r in web_ee if lo <= r["comp"]["san_names"] <= hi]
-    if rows:
-        print("| %s | %d | %.1f | %d | %d |" % ("%d-%d" % (lo, hi) if hi < 10 ** 6 else "%d+" % lo, len(rows),
-              statistics.median(r["ratio"] for r in rows), statistics.median(r["der"] for r in rows),
-              statistics.median(r["saved"] for r in rows)))
-
-print("\n### Web end-entity certificates by issuer (top 10)")
-print("\n| Issuer | n | median ratio | median DER | median saved | main key |")
-print("|---|---|---|---|---|---|")
-by = collections.defaultdict(list)
-for r in web_ee:
-    by[r["comp"]["issuer_org"][:36]].append(r)
-for k, rows in sorted(by.items(), key=lambda kv: -len(kv[1]))[:10]:
-    mk = collections.Counter(r["key"] for r in rows).most_common(1)[0]
-    print("| %s | %d | %.1f | %d | %d | %s %d%% |" % (k, len(rows), statistics.median(r["ratio"] for r in rows),
-          statistics.median(r["der"] for r in rows), statistics.median(r["saved"] for r in rows),
-          mk[0], round(100.0 * mk[1] / len(rows))))
-
-print("\n### Correlation with the ratio (web end-entity certificates)\n")
-ys = [r["ratio"] for r in web_ee]
-for label, f in (("share of key + signature bytes in DER", lambda r: (r["comp"]["spki"] + r["comp"]["sigvalue"]) / r["der"]),
-                 ("share of SCT list bytes", lambda r: r["comp"].get("sct", 0) / r["der"]),
-                 ("share of SAN bytes", lambda r: r["comp"].get("san", 0) / r["der"]),
-                 ("share of key + signature + SCT + SAN", lambda r: (r["comp"]["spki"] + r["comp"]["sigvalue"] + r["comp"].get("sct", 0) + r["comp"].get("san", 0)) / r["der"]),
-                 ("DER size", lambda r: r["der"]),
-                 ("bytes saved", lambda r: r["saved"])):
-    print("- %s: r = %.2f" % (label, corr([f(r) for r in web_ee], ys)))
+percentile_table("End-entity certificates of TLS servers, SCT list not counted (%)", ee_groups, "ratio_nosct", "%.1f")
+end_entity_sections("Tranco + CrUX", web_ee)
+if OPR_CERTS:
+    end_entity_sections("sample of 100,000 domains", ee(sets["opr_all"]))
 
 print("\n### CA certificates (Tranco, CrUX, CCADB; %d) by ratio band" % len(all_ca))
 s = sorted(all_ca, key=lambda r: r["ratio"])

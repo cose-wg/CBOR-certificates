@@ -271,7 +271,8 @@ certificates and report, for the distinct certificates seen:
 `t` opens one TLS connection per host (port 443, 10 s timeouts, 30 s for the
 whole handshake) and converts the chain the host sends. The chain is not
 validated, so expired, self-signed and privately issued certificates are
-included. The conversion prints diagnostics to stdout; redirect it.
+included. A name without an address is tried once more as `www.<name>`. The
+conversion prints diagnostics to stdout; redirect it.
 
 Output: `batch_<timestamp>.log` (summary), `batch_<timestamp>.csv` (one row per
 distinct certificate) and, for certificates that do not round-trip,
@@ -292,6 +293,7 @@ run, the host lists used, their identifiers, the commands and the results
 | [CCADB](https://www.ccadb.org/resources) | Root and intermediate CA certificates known to the browser root programmes, per decade of issuance. No network connections are needed to test them. |
 | [Matter PAA roots](https://github.com/project-chip/connectedhomeip/tree/master/credentials/production/paa-root-certs) | Production device-attestation root certificates of Matter (`--matter`). |
 | [CSCA master list](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html) | Passport-signer CA certificates of many countries, as published by the German BSI (`--csca`). Fetched from the publisher, not redistributed here; its signature is not verified. |
+| [Open PageRank top 10 million](https://keywordseverywhere.com/openpagerank/top-domains) | Domains ranked by links in the Common Crawl web graph. `sample_openpagerank.py` draws a stratified host sample from the downloaded list: four rank bands and two strata balanced over public-sector and academic suffixes and over country-code top-level domains. |
 
 ## Implemented features
 

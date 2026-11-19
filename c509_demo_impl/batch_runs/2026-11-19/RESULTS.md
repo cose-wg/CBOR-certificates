@@ -16,17 +16,21 @@ commands: [SOURCES.md](SOURCES.md).
 | CCADB CA certificates issued in the 2010s | 4,754 | 4,722 | 32 | 77.5% |
 | CSCA master list (passport-signer CA certificates) | 609 | 607 | 2 | 77.5% |
 | Matter production PAA roots | 72 | 72 | 0 | 47.3% |
+| TLS chains of 100,000 domains sampled from the Open PageRank top 10 million | 83,632 | 83,567 | 65 | 76.6% |
 
-All 41 certificates that are not lossless deviate from the RFC 5280 profile
+The last set is described in "Sample of 100,000 domains" below; the other
+sections cover the first six sets unless they say otherwise.
+
+All 106 certificates that are not lossless deviate from the RFC 5280 profile
 in a way that a type 3 certificate cannot express:
 
-| Reason | Tranco | CCADB 2020s | CCADB 2010s | CSCA |
-|--------|--------|-------------|-------------|------|
-| X.509 version 1 | 5 | | | |
-| Negative serial number | | | | 2 |
-| Validity time encoding (GeneralizedTime before 2050, UTCTime without seconds) | | 2 | 23 | |
-| `critical` encoded explicitly as FALSE | | | 6 | |
-| Signature algorithm in `tbsCertificate` differs from the outer one | | | 3 | |
+| Reason | Tranco | CCADB 2020s | CCADB 2010s | CSCA | Sample of 100,000 |
+|--------|--------|-------------|-------------|------|-------------------|
+| X.509 version 1 | 5 | | | | 64 |
+| Negative serial number | | | | 2 | 1 |
+| Validity time encoding (GeneralizedTime before 2050, UTCTime without seconds) | | 2 | 23 | | |
+| `critical` encoded explicitly as FALSE | | | 6 | | |
+| Signature algorithm in `tbsCertificate` differs from the outer one | | | 3 | | |
 
 ## Hosts
 
@@ -197,9 +201,92 @@ The difference between issuers follows from the key type they issue for: the
 median is 66.4% for an issuer whose certificates are 94% P-256 and 80.2% for
 one whose certificates are 98% RSA-2048.
 
+## Sample of 100,000 domains
+
+100,000 domains from the Open PageRank list of the top 10 million, in six
+strata (see [SOURCES.md](SOURCES.md) for the draw). A domain without an
+address was tried as `www.<domain>`.
+
+| Stratum | Hosts | Chain received | Tried as `www.` | Unreachable | TLS handshake failed |
+|---------|-------|----------------|-----------------|-------------|----------------------|
+| Ranks 1–100,000 | 20,000 | 18,564 | 676 | 1,235 | 201 |
+| Ranks 100,001–1 million | 20,000 | 17,874 | 357 | 1,806 | 320 |
+| Ranks 1–3 million | 20,000 | 17,387 | 249 | 2,245 | 368 |
+| Ranks 3–10 million | 20,000 | 16,605 | 183 | 2,946 | 449 |
+| Public sector and academic | 10,000 | 6,980 | 520 | 2,782 | 238 |
+| Country-code domains | 10,000 | 7,567 | 185 | 2,281 | 152 |
+| All | 100,000 | 84,977 | 2,170 | 13,295 | 1,728 |
+
+1,136 hosts whose name lookup failed with a temporary error were tried a
+second time; 20 of them then gave a chain, which is included above.
+
+| Stratum | Distinct certificates | Lossless | Not lossless | C509 / DER | End-entity, SCT list not counted |
+|---------|----------------------|----------|--------------|------------|----------------------------------|
+| Ranks 1–100,000 | 18,709 | 18,706 | 3 | 77.3% | 71.0% |
+| Ranks 100,001–1 million | 17,926 | 17,909 | 17 | 76.1% | 69.4% |
+| Ranks 1–3 million | 17,451 | 17,429 | 22 | 76.4% | 70.0% |
+| Ranks 3–10 million | 16,655 | 16,636 | 19 | 76.5% | 70.1% |
+| Public sector and academic | 6,996 | 6,982 | 14 | 77.7% | 71.9% |
+| Country-code domains | 7,700 | 7,694 | 6 | 76.1% | 69.5% |
+| All strata, duplicates removed | 83,632 | 83,567 | 65 | 76.6% | 70.1% |
+
+Of the 83,567 lossless certificates, 82,796 are end-entity certificates and
+771 are CA certificates (77.0%). 269 end-entity certificates have no SCT list.
+
+C509 / DER per end-entity certificate, in percent:
+
+| Stratum | Certificates | min | p5 | p10 | p25 | median | p75 | p90 | p95 | p99 | max |
+|---------|--------------|-----|----|-----|-----|--------|-----|-----|-----|-----|-----|
+| Ranks 1–100,000 | 18,262 | 63.3 | 65.8 | 66.0 | 66.8 | 77.8 | 80.5 | 83.1 | 84.8 | 90.6 | 97.8 |
+| Ranks 100,001–1 million | 17,514 | 40.8 | 65.8 | 66.1 | 66.7 | 77.5 | 79.7 | 82.4 | 83.8 | 89.8 | 99.8 |
+| Ranks 1–3 million | 17,090 | 41.0 | 65.9 | 66.2 | 66.9 | 77.7 | 79.7 | 82.5 | 83.7 | 89.3 | 100.3 |
+| Ranks 3–10 million | 16,303 | 63.5 | 66.0 | 66.3 | 67.0 | 77.8 | 79.6 | 82.5 | 83.5 | 88.1 | 99.3 |
+| Public sector and academic | 6,673 | 59.7 | 66.1 | 66.3 | 67.3 | 78.1 | 80.9 | 82.4 | 83.6 | 86.6 | 98.2 |
+| Country-code domains | 7,438 | 63.4 | 65.7 | 65.9 | 66.6 | 77.6 | 79.2 | 82.0 | 83.4 | 88.7 | 94.8 |
+| All strata | 82,796 | 40.8 | 65.9 | 66.1 | 66.8 | 77.7 | 80.1 | 82.5 | 83.7 | 89.2 | 100.3 |
+| All strata, SCT list not counted | 82,796 | 40.8 | 52.1 | 52.7 | 53.9 | 72.3 | 74.5 | 78.6 | 80.1 | 88.0 | 100.4 |
+
+The distribution is the same in every stratum: neither the rank of a domain
+nor its kind changes it. Bytes saved per end-entity certificate: 5th
+percentile 283, median 303, 95th percentile 334.
+
+By key and signature (end-entity certificates, all strata):
+
+| Key, signature | Certificates | Median C509 / DER | p10 | p90 | Median DER size | Median bytes saved |
+|----------------|--------------|-------------------|-----|-----|-----------------|--------------------|
+| RSA-2048, RSA SHA-256 | 40,426 | 78.7% | 77.6% | 83.1% | 1,329 | 286 |
+| P-256, ECDSA SHA-256 | 18,691 | 66.4% | 65.6% | 67.6% | 908 | 305 |
+| P-256, ECDSA SHA-384 | 15,631 | 67.0% | 66.1% | 68.9% | 925 | 306 |
+| RSA-4096, RSA SHA-256 | 4,761 | 81.9% | 81.4% | 84.8% | 1,568 | 284 |
+| P-384, ECDSA SHA-384 | 1,349 | 67.0% | 66.0% | 72.2% | 965 | 318 |
+| RSA-3072, RSA SHA-256 | 728 | 80.2% | 79.6% | 84.0% | 1,438 | 286 |
+
+By number of names in subjectAltName:
+
+| Names | Certificates | Median C509 / DER | Median DER size | Median bytes saved |
+|-------|--------------|-------------------|-----------------|--------------------|
+| 0–1 | 18,537 | 77.2% | 1,257 | 306 |
+| 2 | 51,179 | 77.8% | 1,280 | 304 |
+| 3–5 | 6,003 | 78.7% | 1,336 | 284 |
+| 6–20 | 4,241 | 81.0% | 1,510 | 287 |
+| 21–100 | 2,682 | 86.4% | 2,206 | 297 |
+| more than 100 | 154 | 93.5% | 4,687 | 306 |
+
+With up to five names the ratio largely follows the key type of the certificates in
+the group, which is why the first rows differ from the table for Tranco and
+CrUX above; from six names on, the names themselves decide it.
+
+One certificate is larger as C509 than as DER: 16,638 bytes against 16,580.
+It has 506 names in subjectAltName. A dNSName costs two bytes besides the name
+in DER (tag and length). In C509 it costs the general name type and the text
+string header: two bytes for a name of up to 23 characters, three for a longer
+one. 383 of the 506 names are longer, which outweighs the bytes saved in the
+rest of the certificate. Two more certificates of over 14,000 bytes save
+less than 60 bytes.
+
 These tables are produced by `analyse.py` in this directory from the result
 tables and the certificates:
 
 ```bash
-./analyse.py <results-dir> <batch_lists-dir> <tranco-certs-dir> <crux-certs-dir>
+./analyse.py <results-dir> <batch_lists-dir> <tranco-certs-dir> <crux-certs-dir> [<sample-certs-dir>]
 ```
