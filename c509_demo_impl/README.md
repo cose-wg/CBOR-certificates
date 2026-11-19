@@ -250,7 +250,8 @@ certificates and report, for the distinct certificates seen:
 ./fetch_batch_lists.py                    # host lists and CA certificates -> ../batch_lists/
 ./target/debug/c509 tf ../batch_lists/ccadb_2020.csv --label "CCADB 2020s" > /dev/null
 ./target/debug/c509 t  ../batch_lists/tranco_<ID>_top10000.txt \
-    --jobs 8 --batch-size 250 --pause 5 --label "Tranco <ID> top 10000" > /dev/null
+    --jobs 8 --batch-size 250 --pause 5 --keep-certs --label "Tranco <ID> top 10000" > /dev/null
+./fetch_batch_lists.py --tranco-id <ID> --crux-commit <SHA>    # the same host lists again
 ```
 
 | Input | Accepted form |
@@ -265,6 +266,7 @@ certificates and report, for the distinct certificates seen:
 | `--pause S` | Seconds to wait between batches | 5 |
 | `--label TEXT` | Recorded in the summary, e.g. the source list and its date | |
 | `--out DIR` | Output directory | `test_results` |
+| `--keep-certs` | Save every distinct certificate as `batch_<timestamp>_certs/<sha256>.der` | off |
 
 `t` opens one TLS connection per host (port 443, 10 s timeouts, 30 s for the
 whole handshake) and converts the chain the host sends. The chain is not
@@ -273,16 +275,23 @@ included. The conversion prints diagnostics to stdout; redirect it.
 
 Output: `batch_<timestamp>.log` (summary), `batch_<timestamp>.csv` (one row per
 distinct certificate) and, for certificates that do not round-trip,
-`batch_<timestamp>_failed/<sha256>.der`.
+`batch_<timestamp>_failed/<sha256>.der`. The summary gives the sizes of
+end-entity certificates with and without an SCT list (RFC 6962), and for those
+with one also the sizes with that extension left out of both encodings.
 
 `fetch_batch_lists.py` downloads the inputs and writes `SOURCES.txt` with the
-URL, date, identifier and SHA-256 of each:
+URL, pinning identifier and SHA-256 of each. With `--tranco-id` and
+`--crux-commit` it fetches the same host lists again. `batch_runs/` holds, per
+run, the host lists used, their identifiers, the commands and the results
+(latest: [batch_runs/2026-11-19/RESULTS.md](batch_runs/2026-11-19/RESULTS.md)).
 
 | Source | Content |
 |--------|---------|
 | [Tranco](https://tranco-list.eu) | Research ranking of popular domains; every list has a permanent, citable ID. The first N domains are used. |
 | [CrUX top lists](https://github.com/zakird/crux-top-lists) | Chrome top-million origins, ranked in buckets. A seeded random sample outside the top 10,000 is used. |
 | [CCADB](https://www.ccadb.org/resources) | Root and intermediate CA certificates known to the browser root programmes, per decade of issuance. No network connections are needed to test them. |
+| [Matter PAA roots](https://github.com/project-chip/connectedhomeip/tree/master/credentials/production/paa-root-certs) | Production device-attestation root certificates of Matter (`--matter`). |
+| [CSCA master list](https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/ElekAusweise/CSCA/GermanMasterList.html) | Passport-signer CA certificates of many countries, as published by the German BSI (`--csca`). Fetched from the publisher, not redistributed here; its signature is not verified. |
 
 ## Implemented features
 

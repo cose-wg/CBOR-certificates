@@ -105,9 +105,9 @@ verify against the CA certificate. The CA certificate itself is unsigned
 
 A type-3 C509 certificate decodes to DER as RFC 5280 profiles it. An X.509
 certificate that deviates in a field without a generic form cannot be encoded
-losslessly; the tool reports an error or a mismatch. Seen in the batch test on
-CA certificates:
+losslessly; the tool reports an error or a mismatch. Seen in the batch test:
 
+- an X.509 version 1 certificate;
 - validity dates before 2050 encoded as GeneralizedTime, or a UTCTime without
   seconds;
 - a negative serial number;
@@ -128,14 +128,21 @@ The decoder accepts three forms that the encoder never emits:
 
 ## Batch test on real certificates
 
-`c509 tf` on the CA certificates in the CCADB (2026-11-18):
+`c509 t` / `c509 tf` on 2026-11-19 (details in
+[batch_runs/2026-11-19/RESULTS.md](batch_runs/2026-11-19/RESULTS.md)):
 
-| Corpus | Distinct certificates | Lossless | Not lossless | C509 / DER |
-|--------|----------------------|----------|--------------|------------|
-| Issued in the 2020s | 4284 | 4282 | 2 | 76.0% |
-| Issued in the 2010s | 4754 | 4722 | 32 | 77.5% |
+| Set | Distinct certificates | Lossless | Not lossless | C509 / DER |
+|-----|----------------------|----------|--------------|------------|
+| TLS chains of the Tranco top 10,000 | 7941 | 7936 | 5 | 78.4% |
+| TLS chains of 5,000 hosts sampled from CrUX | 4894 | 4894 | 0 | 76.0% |
+| CCADB CA certificates issued in the 2020s | 4284 | 4282 | 2 | 76.0% |
+| CCADB CA certificates issued in the 2010s | 4754 | 4722 | 32 | 77.5% |
+| CSCA master list (passport-signer CA certificates) | 609 | 607 | 2 | 77.5% |
+| Matter production PAA roots | 72 | 72 | 0 | 47.3% |
 
-All 34 that are not lossless are of the kinds listed under "Certificates that
+All 41 that are not lossless are of the kinds listed under "Certificates that
 cannot be represented as type 3". The ratio depends mainly on the key and
-signature sizes: about 57–60% for an EC key with an ECDSA signature, about 81%
-for an RSA-4096 key with an RSA signature.
+signature sizes: about 57–61% for a CA certificate with an EC key and an ECDSA
+signature, about 81% with an RSA-4096 key and an RSA signature. End-entity TLS
+certificates carry an SCT list (RFC 6962), on average about 320 bytes that C509
+does not reduce; without it they are at 69–73%.
