@@ -46,6 +46,8 @@ pub struct BatchOptions {
     pub label: String,
     /// Output directory.
     pub out_dir: String,
+    /// Save every distinct certificate, not only those that do not round-trip.
+    pub keep_certs: bool,
 }
 
 impl Default for BatchOptions {
@@ -56,11 +58,12 @@ impl Default for BatchOptions {
             pause_secs: 5,
             label: String::new(),
             out_dir: "test_results".to_string(),
+            keep_certs: false,
         }
     }
 }
 
-/// Parse `--jobs N --batch-size N --pause S --label TEXT --out DIR`.
+/// Parse `--jobs N --batch-size N --pause S --label TEXT --out DIR --keep-certs`.
 pub fn parse_batch_options(args: &[String]) -> BatchOptions {
     let mut opt = BatchOptions::default();
     let mut it = args.iter();
@@ -76,6 +79,7 @@ pub fn parse_batch_options(args: &[String]) -> BatchOptions {
             "--pause" => opt.pause_secs = value("--pause").parse().expect("--pause: not a number"),
             "--label" => opt.label = value("--label"),
             "--out" => opt.out_dir = value("--out"),
+            "--keep-certs" => opt.keep_certs = true,
             other => eprintln!("Warning: unknown flag '{}' ignored", other),
         }
     }
@@ -98,6 +102,10 @@ struct CertStat {
     generic_ext: Vec<String>,
     generic_att: Vec<String>,
     generic_alg: Vec<String>,
+    /// Size of the SCT list extension in the DER and in the C509 encoding
+    /// (0: the certificate has none).
+    sct_der: usize,
+    sct_c509: usize,
 }
 
 /// What happened for one host.
@@ -260,6 +268,8 @@ fn evaluate(der: Vec<u8>, source: String, signer_key: Option<i64>) -> CertStat {
         generic_ext: vec![],
         generic_att: vec![],
         generic_alg: vec![],
+        sct_der: 0,
+        sct_c509: 0,
     };
 
     let encoded = match catch_quiet(|| parse_x509_cert_signed_by(der.clone(), false, signer_key)) {
@@ -336,11 +346,46 @@ fn classify(fields: &[Vec<u8>], stat: &mut CertStat) {
                     // basicConstraints: -2 means cA = false.
                     stat.is_ca = !matches!(pair.get(1), Some(Value::Integer(-2)));
                 }
-                Some(Value::Bytes(oid)) => stat.generic_ext.push(oid_text(oid)),
+                Some(Value::Bytes(oid)) => {
+                    if oid.as_slice() == &SCT_LIST_OID[2..] {
+                        stat.sct_c509 = pair
+                            .iter()
+                            .map(|item| serde_cbor::to_vec(item).map(|v| v.len()).unwrap_or(0))
+                            .sum();
+                        stat.sct_der = der_extension_len(&stat.der, &SCT_LIST_OID);
+                    }
+                    stat.generic_ext.push(oid_text(oid));
+                }
                 _ => {}
             }
         }
     }
+}
+
+/// DER encoding of the OID of the SCT list extension (RFC 6962).
+const SCT_LIST_OID: [u8; 12] = [0x06, 0x0A, 0x2B, 0x06, 0x01, 0x04, 0x01, 0xD6, 0x79, 0x02, 0x04, 0x02];
+
+/// Length of the `Extension` SEQUENCE in `der` that starts with the OID
+/// encoding `oid`, or 0 if there is none.
+fn der_extension_len(der: &[u8], oid: &[u8]) -> usize {
+    let at = match der.windows(oid.len()).position(|w| w == oid) {
+        Some(at) => at,
+        None => return 0,
+    };
+    // The SEQUENCE header directly before the OID: 30 LL, 30 81 LL or 30 82 LL LL.
+    let header = |n: usize| -> Option<usize> {
+        if at < n || der[at - n] != 0x30 {
+            return None;
+        }
+        let content = match n {
+            2 if der[at - 1] < 0x80 => der[at - 1] as usize,
+            3 if der[at - 2] == 0x81 => der[at - 1] as usize,
+            4 if der[at - 3] == 0x82 => ((der[at - 2] as usize) << 8) | der[at - 1] as usize,
+            _ => return None,
+        };
+        if content >= oid.len() && at + content <= der.len() { Some(n + content) } else { None }
+    };
+    header(4).or_else(|| header(3)).or_else(|| header(2)).unwrap_or(0)
 }
 
 fn alg_oid(v: &Value) -> String {
@@ -600,6 +645,9 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
     let mut all = SizeGroup::default();
     let mut ee = SizeGroup::default();
     let mut ca = SizeGroup::default();
+    let mut ee_with_sct = SizeGroup::default();
+    let mut ee_sct_removed = SizeGroup::default();
+    let mut ee_no_sct = SizeGroup::default();
     let mut by_alg: BTreeMap<String, SizeGroup> = BTreeMap::new();
     let mut ext_count: BTreeMap<String, usize> = BTreeMap::new();
     let mut att_count: BTreeMap<String, usize> = BTreeMap::new();
@@ -614,6 +662,14 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
         }
         all.add(s.der.len(), s.c509_len);
         if s.is_ca { ca.add(s.der.len(), s.c509_len) } else { ee.add(s.der.len(), s.c509_len) }
+        if !s.is_ca {
+            if s.sct_der > 0 {
+                ee_with_sct.add(s.der.len(), s.c509_len);
+                ee_sct_removed.add(s.der.len() - s.sct_der, s.c509_len - s.sct_c509);
+            } else {
+                ee_no_sct.add(s.der.len(), s.c509_len);
+            }
+        }
         let role = if s.is_ca { "CA" } else { "EE" };
         by_alg
             .entry(format!("{} {} key, {} sig", role, s.key, s.sig))
@@ -667,6 +723,10 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
     let _ = writeln!(w, "{}", ee.row("end-entity"));
     let _ = writeln!(w, "{}", ca.row("CA"));
     let _ = writeln!(w);
+    let _ = writeln!(w, "{}", ee_no_sct.row("end-entity without an SCT list"));
+    let _ = writeln!(w, "{}", ee_with_sct.row("end-entity with an SCT list"));
+    let _ = writeln!(w, "{}", ee_sct_removed.row("  the same, SCT list not counted"));
+    let _ = writeln!(w);
     for (name, group) in by_alg.iter_mut() {
         let _ = writeln!(w, "{}", group.row(name));
     }
@@ -709,6 +769,14 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
             let _ = std::fs::write(format!("{}/{}.der", dir, s.fingerprint), &s.der);
         }
     }
+    if opt.keep_certs {
+        let dir = format!("{}_certs", base);
+        std::fs::create_dir_all(&dir).expect("cannot create the certificate directory");
+        let _ = writeln!(w, "\nAll distinct certificates saved in {}", dir);
+        for (s, _) in &certs {
+            let _ = std::fs::write(format!("{}/{}.der", dir, s.fingerprint), &s.der);
+        }
+    }
     if !unreachable.is_empty() || !tls_failed.is_empty() {
         let _ = writeln!(w, "\nHosts without a chain");
         for (h, e) in unreachable.iter().chain(tls_failed.iter()) {
@@ -721,17 +789,18 @@ fn summarise(input: &str, outcomes: Vec<(String, HostOutcome)>, opt: &BatchOptio
     let _ = writeln!(
         csv,
         "sha256,first_source,occurrences,role,key,signature,der_bytes,c509_bytes,lossless,\
-         generic_extensions,generic_attributes,failure"
+         generic_extensions,generic_attributes,failure,sct_der_bytes,sct_c509_bytes"
     );
     for (s, n) in &certs {
         let _ = writeln!(
-            csv, "{},{},{},{},{},{},{},{},{},{},{},{}",
+            csv, "{},{},{},{},{},{},{},{},{},{},{},{},{},{}",
             s.fingerprint, s.source, n,
             if s.is_ca { "CA" } else { "EE" },
             s.key, s.sig, s.der.len(), s.c509_len,
             s.failure.is_none(),
             s.generic_ext.join(";"), s.generic_att.join(";"),
-            s.failure.as_deref().unwrap_or("").replace(',', ";")
+            s.failure.as_deref().unwrap_or("").replace(',', ";"),
+            s.sct_der, s.sct_c509
         );
     }
 

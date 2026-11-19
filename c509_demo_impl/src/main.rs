@@ -50,7 +50,7 @@ Commands:
   ll <domain …>      Round-trip for one or more domains (parallel)
   t  <hostlist>      Batch test on the TLS chains of the listed hosts: round-trip and size statistics
   tf <file-or-dir>   Same on certificates from files (DER, PEM, or text containing PEM blocks)
-                     t/tf flags: --jobs N --batch-size N --pause SECONDS --label TEXT --out DIR
+                     t/tf flags: --jobs N --batch-size N --pause SECONDS --label TEXT --out DIR --keep-certs
   f2 <cert.der> <key.pem>                    Encode X.509 DER → Type-2 C509 hex
   f2 <cert.der> <key.pem> -nc               Also store EC public keys uncompressed
   r2 <csr.der> <subj_key.pem>               Encode PKCS#10 DER → Type-2 C509 CSR (signed with the subject key, or unsigned)
