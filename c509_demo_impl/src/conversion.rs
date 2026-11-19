@@ -856,6 +856,7 @@ pub fn parse_x509_cert_signed_by(input: Vec<u8>, no_compression: bool, signer_ke
     let signature_value = lder(certificate[2], ASN1_BIT_STR);
 
     assert!(lder(version, ASN1_INT)[0] == 2, "Expected X.509 v3!");
+    assert!(lder(tbs_certificate[1], ASN1_INT)[0] & 0x80 == 0, "Negative serial number");
     output.push(lcbor_uint(C509_TYPE_X509_ENCODED as u64));
     output.push(lcbor_bytes(serial_number));
 

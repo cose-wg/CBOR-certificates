@@ -86,6 +86,13 @@ verify against the CA certificate. The CA certificate itself is unsigned
 - **Integer identifiers without an OID** (for example the 8-byte attribute types
   and extension IDs of the 8-byte-integer certificate) cannot be converted to
   X.509; `c` reports an error.
+- **Algorithm identifiers in the generic form.** A registered int is used for a
+  public key or signature algorithm only if the AlgorithmIdentifier is exactly
+  the one the int stands for. Otherwise the generic `[~oid, parameters]` form
+  is used, which is lossless but larger: EC keys with explicit curve
+  parameters, RSA keys without the NULL parameter, ECDSA with a NULL
+  parameter, and RSASSA-PSS with parameters other than the registered sets.
+  The ECDSA signature value is then kept in its DER form.
 - **Specific encodings not used.** An extension is encoded with its int
   extensionID only if that encoding decodes back to the input; otherwise the
   generic OID form is used, which is always lossless but larger. Extensions
@@ -103,6 +110,7 @@ CA certificates:
 
 - validity dates before 2050 encoded as GeneralizedTime, or a UTCTime without
   seconds;
+- a negative serial number;
 - the `critical` flag of an extension encoded explicitly as FALSE;
 - a signature AlgorithmIdentifier in `tbsCertificate` that differs from the
   outer one.

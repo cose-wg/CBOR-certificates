@@ -330,6 +330,20 @@ pub const OTHER_NAME_USER_NOTICE_OID:       Oid<'static> = oid!(1.3.6.1.5.5.7.8.
 
 /// Maps a DER-encoded signature AlgorithmIdentifier to a C509 signature algorithm ID.
 pub fn sig_map(alg_id: &[u8]) -> Option<i64> {
+    // The registered integer stands for one exact AlgorithmIdentifier. Any other
+    // encoding of the same algorithm (e.g. different or absent parameters) needs
+    // the generic form.
+    let id = sig_map_by_oid(alg_id)?;
+    let (canonical, _) = crate::keys::parse_cbor_sig_info(
+        &serde_cbor::Value::Integer(id as i128),
+        &serde_cbor::Value::Bytes(Vec::new()),
+    );
+    if canonical == alg_id { Some(id) } else { None }
+}
+
+/// The C509 signature algorithm ID registered for the OID (and, for RSASSA-PSS,
+/// the hash) of a DER-encoded AlgorithmIdentifier, without checking parameters.
+fn sig_map_by_oid(alg_id: &[u8]) -> Option<i64> {
     let inner = lder(alg_id, ASN1_SEQ);
     match inner {
         // Ed25519 / Ed448 — OID only. Parameters, if present, need the generic form.
@@ -390,16 +404,23 @@ pub fn pk_map(alg_id: &[u8]) -> Option<i64> {
     let components = lder_vec(alg_id, ASN1_SEQ);
     if components.is_empty() { return None; }
     let oid = lder(components[0], ASN1_OID);
+    // A registered type stands for one exact AlgorithmIdentifier: no parameters
+    // for the RFC 8410 keys, NULL for RSA, a named curve for EC. Anything else
+    // needs the generic form.
     match oid {
-        [0x2B, 0x65, 0x6E] => Some(PK_X25519),
-        [0x2B, 0x65, 0x6F] => Some(PK_X448),
-        [0x2B, 0x65, 0x70] => Some(PK_ED25519),
-        [0x2B, 0x65, 0x71] => Some(PK_ED448),
+        [0x2B, 0x65, 0x6E] if components.len() == 1 => Some(PK_X25519),
+        [0x2B, 0x65, 0x6F] if components.len() == 1 => Some(PK_X448),
+        [0x2B, 0x65, 0x70] if components.len() == 1 => Some(PK_ED25519),
+        [0x2B, 0x65, 0x71] if components.len() == 1 => Some(PK_ED448),
         // rsaEncryption
-        [0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01] => Some(PK_RSA),
+        [0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01]
+            if components.len() == 2 && components[1] == ASN1_NULL => Some(PK_RSA),
         // ecPublicKey — distinguish by curve OID
         [0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01] => {
-            if components.len() < 2 { return None; }
+            if components.len() != 2 { return None; }
+            // Explicit curve parameters (a SEQUENCE, not a named curve) have no
+            // registered type; the generic AlgorithmIdentifier form is used.
+            if components[1].first() != Some(&ASN1_OID) { return None; }
             let curve = lder(components[1], ASN1_OID);
             match curve {
                 [0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07] => Some(PK_SECP256R),
@@ -626,5 +647,57 @@ pub fn map_cert_policy_id_to_oid(id: i64) -> Vec<u8> {
         CP_RSP_DS_AUTH_V2         => vec![0x67, 0x81, 0x12, 0x01, 0x02, 0x01, 0x07],
         // TODO: the v1 RSP entries (IDs 26,28,30,32,34,36,38) are not mapped to OIDs.
         _ => panic!("Unknown certificate policy ID: {}", id),
+    }
+}
+
+#[cfg(test)]
+mod exact_alg_id_tests {
+    //! A registered integer is used only for the exact AlgorithmIdentifier it
+    //! stands for; other encodings of the same algorithm get the generic form.
+    use super::*;
+
+    const RSA_NULL: [u8; 15] = [0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01, 0x05, 0x00];
+    const RSA_NO_PARAMS: [u8; 13] = [0x30, 0x0B, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x01];
+    const EC_P256: [u8; 21] = [
+        0x30, 0x13, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01,
+        0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07,
+    ];
+    // id-ecPublicKey with explicit parameters (an empty SEQUENCE stands in for ECParameters).
+    const EC_EXPLICIT: [u8; 13] = [0x30, 0x0B, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x02, 0x01, 0x30, 0x00];
+    const ECDSA_SHA1: [u8; 11] = [0x30, 0x09, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x01];
+    const ECDSA_SHA1_NULL: [u8; 13] = [0x30, 0x0B, 0x06, 0x07, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x01, 0x05, 0x00];
+    const ECDSA_SHA256: [u8; 12] = [0x30, 0x0A, 0x06, 0x08, 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x04, 0x03, 0x02];
+    const RSA_SHA256_NULL: [u8; 15] = [0x30, 0x0D, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B, 0x05, 0x00];
+    const RSA_SHA256_NO_PARAMS: [u8; 13] = [0x30, 0x0B, 0x06, 0x09, 0x2A, 0x86, 0x48, 0x86, 0xF7, 0x0D, 0x01, 0x01, 0x0B];
+
+    #[test]
+    fn public_key_types() {
+        assert_eq!(pk_map(&RSA_NULL), Some(PK_RSA));
+        assert_eq!(pk_map(&RSA_NO_PARAMS), None);
+        assert_eq!(pk_map(&EC_P256), Some(PK_SECP256R));
+        assert_eq!(pk_map(&EC_EXPLICIT), None);
+    }
+
+    #[test]
+    fn signature_algorithms() {
+        assert_eq!(sig_map(&ECDSA_SHA1), Some(SIG_ECDSA_SHA1));
+        assert_eq!(sig_map(&ECDSA_SHA1_NULL), None);
+        assert_eq!(sig_map(&ECDSA_SHA256), Some(SIG_ECDSA_SHA256));
+        assert_eq!(sig_map(&RSA_SHA256_NULL), Some(SIG_RSA_V15_SHA256));
+        assert_eq!(sig_map(&RSA_SHA256_NO_PARAMS), None);
+    }
+
+    #[test]
+    fn rsassa_pss_parameters() {
+        use asn1_rs::ToDer;
+        let hash = HASH_SHA256_OID.to_der_vec().unwrap();
+        let alg = |params: Vec<u8>| {
+            let oid = [vec![0x06, 0x09], SIG_RSA_PSS_SHA256_OID.as_bytes().to_vec()].concat();
+            let body = [oid, params].concat();
+            [vec![0x30, body.len() as u8], body].concat()
+        };
+        // Salt length 32 is the registered encoding; any other needs the generic form.
+        assert_eq!(sig_map(&alg(crate::keys::build_pss_params(&hash, 32))), Some(SIG_RSA_PSS_SHA256));
+        assert_eq!(sig_map(&alg(crate::keys::build_pss_params(&hash, 20))), None);
     }
 }
