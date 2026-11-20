@@ -322,9 +322,8 @@ pub const EKU_WISUN_FAN_DEVICE_OID:        Oid<'static> = oid!(1.3.6.1.4.1.45605
 
 // Other name OIDs (for GeneralName)
 pub const OTHER_NAME_HW_MODULE_OID:    Oid<'static> = oid!(1.3.6.1.5.5.7.8.4);
-pub const OTHER_NAME_PERMANENT_ID_OID: Oid<'static> = oid!(1.3.6.1.5.5.7.8.9);
-pub const OTHER_NAME_SMTP_UTF8_MAILBOX_OID: Oid<'static> = oid!(1.3.6.1.5.5.7.8.12);
-pub const OTHER_NAME_USER_NOTICE_OID:       Oid<'static> = oid!(1.3.6.1.5.5.7.8.11);
+pub const OTHER_NAME_SMTP_UTF8_MAILBOX_OID: Oid<'static> = oid!(1.3.6.1.5.5.7.8.9);
+pub const OTHER_NAME_MAC_ADDRESS_OID: Oid<'static> = oid!(1.3.6.1.5.5.7.8.12);
 
 // ── Lookup functions ──────────────────────────────────────────────────────────
 

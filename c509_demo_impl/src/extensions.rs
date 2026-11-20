@@ -792,8 +792,8 @@ pub(crate) fn parse_cbor_general_name(extension_val: &Value) -> Vec<u8> {
                 general_name_arr.push(match &general_name[i] {
                     Value::Integer(gn_field) => match gn_field {
                         -1 => parse_cbor_general_name_hw_module(&general_name[i + 1]),
-                        -2 => parse_cbor_general_name_permanent_id(&general_name[i + 1]),
-                        -3 => parse_cbor_general_name_user_notice(&general_name[i + 1]),
+                        -2 => parse_cbor_general_name_smtp_utf8_mailbox(&general_name[i + 1]),
+                        -3 => parse_cbor_general_name_mac_address(&general_name[i + 1]),
                         0 => match &general_name[i + 1] {
                             Value::Array(other_name_array) => {
                                 let oid = match &other_name_array[0] {
@@ -861,15 +861,15 @@ fn parse_cbor_general_name_hw_module(hw_module: &Value) -> Vec<u8> {
     lder_to_gen_seq(outer, ASN1_INDEX_ZERO)
 }
 
-fn parse_cbor_general_name_permanent_id(val: &Value) -> Vec<u8> {
-    let mut outer = vec![OTHER_NAME_PERMANENT_ID_OID.to_der_vec().unwrap()];
-    let s = match val { Value::Text(s) => s.as_bytes().to_vec(), _ => panic!("Expected text for permanentIdentifier") };
+fn parse_cbor_general_name_smtp_utf8_mailbox(val: &Value) -> Vec<u8> {
+    let mut outer = vec![OTHER_NAME_SMTP_UTF8_MAILBOX_OID.to_der_vec().unwrap()];
+    let s = match val { Value::Text(s) => s.as_bytes().to_vec(), _ => panic!("Expected text for SmtpUTF8Mailbox") };
     outer.push(lder_to_generic(lder_to_generic(s, ASN1_UTF8_STR), ASN1_INDEX_ZERO));
     lder_to_gen_seq(outer, ASN1_INDEX_ZERO)
 }
 
-fn parse_cbor_general_name_user_notice(val: &Value) -> Vec<u8> {
-    let mut outer = vec![OTHER_NAME_SMTP_UTF8_MAILBOX_OID.to_der_vec().unwrap()];
+fn parse_cbor_general_name_mac_address(val: &Value) -> Vec<u8> {
+    let mut outer = vec![OTHER_NAME_MAC_ADDRESS_OID.to_der_vec().unwrap()];
     match val {
         Value::Text(s) => {
             let utf8_str = lder_to_generic(s.as_bytes().to_vec(), ASN1_UTF8_STR);
