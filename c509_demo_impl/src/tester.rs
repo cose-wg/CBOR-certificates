@@ -38,13 +38,63 @@ pub fn write_c509_to_files(certs: &[Cert], input_path: &str) {
     for (i, cert) in certs.iter().enumerate() {
         let base = strip_extension(input_path, &[".crt", ".pem"]);
         let suffix = if certs.len() > 1 { format!("_{}", i) } else { String::new() };
-        let hex_path = format!("{}{}.cbor.hex", base, suffix);
-        let mut hex_file = File::create(&hex_path).expect("write_c509_to_files: cannot create .cbor.hex");
-        // A C509Certificate is the full CBOR array (with the `8B` array(11) header).
-        for byte in lcbor_array(&cert.cbor) {
-            let _ = write!(hex_file, "{:02X}", byte);
+        write_c509_file(cert, &format!("{}{}.cbor.hex", base, suffix));
+    }
+}
+
+/// Write the C509 encoding of `cert` to `path`: binary CBOR if the name ends
+/// in `.cbor` or `.bin`, hex text otherwise.
+pub fn write_c509_file(cert: &Cert, path: &str) {
+    let mut file = File::create(path)
+        .unwrap_or_else(|e| panic!("cannot create '{}': {}", path, e));
+    // A C509 certificate or certification request is the full CBOR array.
+    let cbor = lcbor_array(&cert.cbor);
+    if path.ends_with(".cbor") || path.ends_with(".bin") {
+        file.write_all(&cbor).expect("write CBOR");
+        info!("Wrote C509 CBOR to {}", path);
+    } else {
+        for byte in cbor {
+            let _ = write!(file, "{:02X}", byte);
         }
-        info!("Wrote C509 hex to {}", hex_path);
+        info!("Wrote C509 hex to {}", path);
+    }
+}
+
+/// Read a C509 object from a file that holds it as binary CBOR or as hex text
+/// (white space allowed). Returns `None` if a text file is not valid hex.
+pub fn read_c509_file(path: &str) -> Option<Vec<u8>> {
+    let raw = std::fs::read(path).unwrap_or_else(|e| panic!("cannot read '{}': {}", path, e));
+    // Hex text is printable ASCII; a CBOR array starts with a byte above 0x7F.
+    if raw.iter().any(|b| !b.is_ascii() || (b.is_ascii_control() && !b.is_ascii_whitespace())) {
+        return Some(raw);
+    }
+    let text: String = raw.iter().map(|b| *b as char).filter(|c| !c.is_whitespace()).collect();
+    hex::decode(text).ok()
+}
+
+/// Whether a decoded item is a certification request (7 C509 fields) and not
+/// a certificate (11).
+fn is_csr(cert: &Cert) -> bool {
+    cert.cbor.len() == 7
+}
+
+/// Write the X.509 encoding of `cert` to `path`: PEM if the name ends in
+/// `.pem`, DER otherwise.
+pub fn write_x509_file(cert: &Cert, path: &str) {
+    let mut file = File::create(path).unwrap_or_else(|e| panic!("cannot create '{}': {}", path, e));
+    if path.ends_with(".pem") {
+        let label = if is_csr(cert) { "CERTIFICATE REQUEST" } else { "CERTIFICATE" };
+        writeln!(file, "-----BEGIN {}-----", label).expect("write PEM");
+        let b64 = cert.der.to_base64(STANDARD);
+        for chunk in b64.as_bytes().chunks(64) {
+            file.write_all(chunk).expect("write PEM");
+            writeln!(file).expect("write PEM");
+        }
+        writeln!(file, "-----END {}-----", label).expect("write PEM");
+        info!("Wrote X.509 PEM to {}", path);
+    } else {
+        file.write_all(&cert.der).expect("write DER");
+        info!("Wrote X.509 DER to {}", path);
     }
 }
 
@@ -54,21 +104,10 @@ pub fn write_x509_to_files(certs: &[Cert], input_path: &str) {
         let base = strip_extension(input_path, &[".cbor.hex"]);
         let suffix = if certs.len() > 1 { format!("_{}", i) } else { String::new() };
 
-        let crt_path = format!("{}{}.crt", base, suffix);
-        let mut crt_file = File::create(&crt_path).expect("write_x509_to_files: cannot create .crt");
-        crt_file.write_all(&cert.der).expect("write_x509_to_files: cannot write DER");
-        info!("Wrote X.509 DER to {}", crt_path);
-
-        let pem_path = format!("{}{}.pem", base, suffix);
-        let mut pem_file = File::create(&pem_path).expect("write_x509_to_files: cannot create .pem");
-        writeln!(pem_file, "-----BEGIN CERTIFICATE-----").expect("write .pem");
-        let b64 = cert.der.to_base64(STANDARD);
-        for chunk in b64.as_bytes().chunks(64) {
-            pem_file.write_all(chunk).expect("write .pem");
-            writeln!(pem_file).expect("write .pem");
-        }
-        writeln!(pem_file, "-----END CERTIFICATE-----").expect("write .pem");
-        info!("Wrote X.509 PEM to {}", pem_path);
+        // DER as .crt for a certificate and .csr for a certification request.
+        let der_ext = if is_csr(cert) { "csr" } else { "crt" };
+        write_x509_file(cert, &format!("{}{}.{}", base, suffix, der_ext));
+        write_x509_file(cert, &format!("{}{}.pem", base, suffix));
     }
 }
 

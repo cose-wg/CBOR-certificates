@@ -41,10 +41,13 @@ Commands:
   f  <cert.der>      Encode X.509 DER → C509 hex (stdout)
   f  <cert.der> -w   Also write .cbor.hex sidecar file
   f  <cert.der> -wo  Write sidecar only; suppress stdout unless errors
+  f  <cert.der> -o <out>   Write the C509 certificate to this file and do not print it:
+                     binary CBOR if the name ends in .cbor or .bin, hex otherwise
   f  <cert.der> -nc  Encode EC public keys uncompressed (no FE/FD prefix)
   f  <cert.der> --issuer-cert <issuer.der>   Take the ECDSA signature length from the issuer's key (CA-issued certificate)
-  c  <c509.cbor.hex> Decode C509 hex → X.509 DER/CSR (stdout)
-  c  <c509.cbor.hex> -w   Also write .crt and .pem files
+  c  <c509.cbor.hex> Decode C509 (hex or binary CBOR file) → X.509 DER/CSR (stdout)
+  c  <c509.cbor.hex> -w   Also write .crt (.csr for a certification request) and .pem files
+  c  <c509.cbor.hex> -o <out>   Write the X.509 encoding to this file (PEM if it ends in .pem, else DER) and do not print it
   u  <domain>        Fetch TLS chain from domain, encode each cert
   l  <cert.der>      Round-trip: X.509 → C509 → X.509, compare bytes
   ll <domain …>      Round-trip for one or more domains (parallel)
@@ -53,10 +56,12 @@ Commands:
                      t/tf flags: --jobs N --batch-size N --pause SECONDS --label TEXT --out DIR --keep-certs
   f2 <cert.der> <key.pem>                    Encode X.509 DER → Type-2 C509 hex
   f2 <cert.der> <key.pem> -nc               Also store EC public keys uncompressed
+  f2 ... -o <out>                           Write to this file (.cbor or .bin: binary CBOR; else hex) and do not print
   r2 <csr.der> <subj_key.pem>               Encode PKCS#10 DER → Type-2 C509 CSR (signed with the subject key, or unsigned)
   r2 <csr.der> <subj_key.pem> <peer_key.pem> --peer-cert <cert.cbor.hex>  DhSigStatic (RFC 6955)
   r2 ... --embedded-cert-key <key.pem>     Re-sign embedded C509 certs in attrs as type-2
   r2 ... -nc                                Also store EC public keys uncompressed
+  r2 ... -o <out>                           Write to this file (.cbor or .bin: binary CBOR; else hex) and do not print
   v2 <c509.cbor.hex>                        Cryptographically verify a Type-2 signature (self-signed)
   v2 <c509.cbor.hex> --issuer-cert <issuer.cbor.hex>   Verify a CA-signed Type-2 against the issuer C509 certificate
   v2 <c509.cbor.hex> --issuer-point <hex>   Verify a CA-signed Type-2 with the issuer public key (same algorithm as the subject key; not RSA)
@@ -76,11 +81,8 @@ Commands:
     // v2: cryptographically verify a Type-2 C509 signature. Handled early — it
     // reads a hex file and exits, rather than flowing through the Cert pipeline.
     if first_arg == "v2" {
-        let raw = std::fs::read_to_string(second_arg)
-            .unwrap_or_else(|e| panic!("v2: cannot read '{}': {}", second_arg, e));
-        let hexstr: String = raw.chars().filter(|c| c.is_ascii_hexdigit()).collect();
-        let cbor = hex::decode(&hexstr)
-            .unwrap_or_else(|e| panic!("v2: '{}' is not valid hex: {}", second_arg, e));
+        let cbor = read_c509_file(second_arg)
+            .unwrap_or_else(|| panic!("v2: '{}' is neither binary CBOR nor valid hex", second_arg));
         let mut issuer_point: Option<Vec<u8>> = None;
         let mut issuer_cert: Option<Vec<u8>> = None;
         let mut it = all_args.iter().skip(3);
@@ -92,11 +94,8 @@ Commands:
                 }
             } else if a == "--issuer-cert" {
                 if let Some(path) = it.next() {
-                    let raw = std::fs::read_to_string(path)
-                        .unwrap_or_else(|e| panic!("v2: cannot read '{}': {}", path, e));
-                    let hexstr: String = raw.chars().filter(|c| c.is_ascii_hexdigit()).collect();
-                    issuer_cert = Some(hex::decode(&hexstr)
-                        .unwrap_or_else(|e| panic!("v2: '{}' is not valid hex: {}", path, e)));
+                    issuer_cert = Some(read_c509_file(path)
+                        .unwrap_or_else(|| panic!("v2: '{}' is neither binary CBOR nor valid hex", path)));
                 }
             }
         }
@@ -119,6 +118,8 @@ Commands:
     let mut no_compression  = false;
     let target_file = second_arg.clone();
 
+    // -o <path>: write the result to this file and do not print it.
+    let mut out_path: Option<String> = None;
     let mut f_issuer_path: Option<String> = None;
     if first_arg == "c" || first_arg == "f" {
         let mut skip_next = false;
@@ -130,6 +131,11 @@ Commands:
                 "-nc" => no_compression = true,
                 "--issuer-cert" if first_arg == "f" => {
                     f_issuer_path = all_args.get(i + 1).cloned();
+                    skip_next = true;
+                }
+                "-o" => {
+                    out_path = Some(all_args.get(i + 1).cloned().unwrap_or_else(|| panic!("-o needs a file name")));
+                    suppress_output = true;
                     skip_next = true;
                 }
                 other => eprintln!("Warning: unknown flag '{}' ignored", other),
@@ -147,6 +153,11 @@ Commands:
                     f2_ca_path = all_args.get(i + 1).cloned();
                     skip_next = true;
                 }
+                "-o" => {
+                    out_path = Some(all_args.get(i + 1).cloned().unwrap_or_else(|| panic!("-o needs a file name")));
+                    suppress_output = true;
+                    skip_next = true;
+                }
                 other => eprintln!("Warning: unknown flag '{}' ignored", other),
             }
         }
@@ -155,11 +166,16 @@ Commands:
     if first_arg == "r2" {
         let flag_start = if all_args.len() >= 5 && !all_args[4].starts_with('-') { 5 } else { 4 };
         let mut skip_next = false;
-        for arg in all_args.iter().skip(flag_start) {
+        for (i, arg) in all_args.iter().enumerate().skip(flag_start) {
             if skip_next { skip_next = false; continue; }
             match arg.as_str() {
                 "-nc" => no_compression = true,
                 "--peer-cert" | "--embedded-cert-key" => skip_next = true, // value consumed later
+                "-o" => {
+                    out_path = Some(all_args.get(i + 1).cloned().unwrap_or_else(|| panic!("-o needs a file name")));
+                    suppress_output = true;
+                    skip_next = true;
+                }
                 other => eprintln!("Warning: unknown flag '{}' ignored", other),
             }
         }
@@ -183,6 +199,7 @@ Commands:
                 None => vec![parse_x509_item(der, no_compression)],
             };
             if write_output { write_c509_to_files(&res, &target_file); }
+            if let Some(p) = &out_path { write_c509_file(&res[0], p); }
             res
         }
         "f2" => {
@@ -198,7 +215,9 @@ Commands:
             let ca_der = f2_ca_path.as_ref().map(|p| {
                 std::fs::read(p).unwrap_or_else(|e| panic!("f2: cannot read CA cert '{}': {}", p, e))
             });
-            vec![encode_x509_as_type2(der, &pem, no_compression, ca_der)]
+            let res = vec![encode_x509_as_type2(der, &pem, no_compression, ca_der)];
+            if let Some(p) = &out_path { write_c509_file(&res[0], p); }
+            res
         }
         "r2" => {
             if all_args.len() < 4 {
@@ -249,22 +268,30 @@ Commands:
             let embedded_cert_key_pem: Option<String> = embedded_cert_key_path.map(|p|
                 std::fs::read_to_string(p)
                     .unwrap_or_else(|e| panic!("r2: cannot read embedded cert key '{}': {}", p, e)));
-            vec![encode_csr_as_type2(der, &subj_pem, peer_pem_owned.as_deref(),
-                                     peer_cert_owned.as_deref(),
-                                     embedded_cert_key_pem.as_deref(),
-                                     no_compression)]
+            let res = vec![encode_csr_as_type2(der, &subj_pem, peer_pem_owned.as_deref(),
+                                               peer_cert_owned.as_deref(),
+                                               embedded_cert_key_pem.as_deref(),
+                                               no_compression)];
+            if let Some(p) = &out_path { write_c509_file(&res[0], p); }
+            res
         }
         "c" => {
             let raw = std::fs::read(second_arg)
                 .unwrap_or_else(|e| panic!("c: cannot read '{}': {}", second_arg, e));
-            let hex_str = String::from_utf8(cleanup(raw))
-                .expect("c: hex file is not valid UTF-8");
-            let bytes = hex::decode(hex_str.trim())
-                .expect("c: hex decoding failed — check that the file contains valid hex");
+            // Binary CBOR starts with a byte above 0x7F; anything else is hex text.
+            let bytes = if raw.iter().any(|b| !b.is_ascii()) {
+                raw
+            } else {
+                let hex_str = String::from_utf8(cleanup(raw))
+                    .expect("c: hex file is not valid UTF-8");
+                hex::decode(hex_str.trim())
+                    .expect("c: hex decoding failed — check that the file contains valid hex")
+            };
             // parse_c509_item dispatches to parse_c509_cert (11 elements) or
             // parse_c509_csr (7 elements) based on the CBOR sequence length.
             let res = vec![parse_c509_or_exit(bytes)];
             if write_output { write_x509_to_files(&res, &target_file); }
+            if let Some(p) = &out_path { write_x509_file(&res[0], p); }
             res
         }
         "l" => {

@@ -73,6 +73,7 @@ cargo build --bin c509
 | `f <cert.der>` | X.509 DER → C509 type-3 hex (stdout) |
 | `f <cert.der> -w` | Same, also write `.cbor.hex` sidecar file |
 | `f <cert.der> -wo` | Write sidecar only, suppress stdout unless errors |
+| `f <cert.der> -o <out>` | Write the C509 certificate to the named file and do not print it: binary CBOR if the name ends in `.cbor` or `.bin`, hex otherwise |
 | `f <cert.der> -nc` | Encode EC public keys uncompressed (no FE/FD prefix) |
 | `f <cert.der> --issuer-cert <issuer.der>` | Encode a CA-issued certificate with the ECDSA signature length taken from the issuer's key |
 | `f2 <cert.der> <key.pem>` | X.509 DER + PKCS#8 key → C509 type-2 (natively signed) hex |
@@ -80,8 +81,10 @@ cargo build --bin c509
 | `r2 <csr.der> <subj_key.pem>` | PKCS#10 DER → type-2 C509 CSR (ECDSA / unsigned) |
 | `r2 … <peer_key.pem> --peer-cert <hex>` | type-2 CSR with DhSigStatic proof-of-possession (RFC 6955) |
 | `r2 … --embedded-cert-key <key.pem>` | Also re-sign any embedded C509 certs in attributes as type-2 |
-| `c <c509.cbor.hex>` | C509 hex → X.509 DER/CSR (auto-detects cert vs CSR) |
-| `c <c509.cbor.hex> -w` | Same, also write `.crt` / `.pem` files |
+| `f2 … -o <out>`, `r2 … -o <out>` | Same for a type-2 certificate or certification request |
+| `c <c509-file>` | C509 (hex or binary CBOR file) → X.509 DER/CSR (auto-detects cert vs CSR) |
+| `c <c509.cbor.hex> -w` | Same, also write the DER (`.crt` for a certificate, `.csr` for a certification request) and a `.pem` file |
+| `c <c509.cbor.hex> -o <out>` | Write the X.509 encoding to the named file (PEM if the name ends in `.pem`, DER otherwise) and do not print it |
 | `u <domain>` | Fetch TLS certificate chain, encode each cert to C509 |
 | `l <cert.der>` | Round-trip: X.509 → C509 → X.509, compare bytes |
 | `ll <domain …>` | Round-trip for one or more live TLS chains (parallel) |
@@ -288,7 +291,7 @@ run, the host lists used, their identifiers, the commands and the results
 
 | Source | Content |
 |--------|---------|
-| [Tranco](https://tranco-list.eu) | Research ranking of popular domains; every list has a permanent, citable ID. The first N domains are used. |
+| [Tranco](https://tranco-list.eu) | Research ranking of popular domains; a list can be cited by its ID. The first N domains are used. |
 | [CrUX top lists](https://github.com/zakird/crux-top-lists) | Chrome top-million origins, ranked in buckets. A seeded random sample outside the top 10,000 is used. |
 | [CCADB](https://www.ccadb.org/resources) | Root and intermediate CA certificates known to the browser root programmes, per decade of issuance. No network connections are needed to test them. |
 | [Matter PAA roots](https://github.com/project-chip/connectedhomeip/tree/master/credentials/production/paa-root-certs) | Production device-attestation root certificates of Matter (`--matter`). |
