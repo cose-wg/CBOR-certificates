@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-11-19T06:56:16.065542+00:00",
+  "timestamp": "2026-11-22T06:09:50.129698+00:00",
   "repo": "cose-wg/CBOR-certificates",
   "labels": [
     {
@@ -2131,9 +2131,17 @@
       ],
       "body": "Test the encoding on a large amount of certificates, hopefully millions. Alexa million is behind a paywall but there are other lists available. This will also give information on what need to be supported and not.\r\n\r\nSummary of 1M lists: https://hackertarget.com/top-million-site-list-download/\r\n\r\nCisco Umbrella 1M: http://s3-us-west-1.amazonaws.com/umbrella-static/index.html\r\n\r\nThe Majestic Million: http://s3-us-west-1.amazonaws.com/umbrella-static/index.html\r\n\r\nTanco List: https://tranco-list.eu/\r\n",
       "createdAt": "2021-01-21T08:03:11Z",
-      "updatedAt": "2024-12-19T11:04:50Z",
+      "updatedAt": "2026-11-19T13:00:58Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Digging into the issue backlog with some Claude-assisted testing:\n\nI ran the Rust implementation (branch `c509-demo-impl-draft`) on seven sets of real certificates on 19 November. Each certificate is encoded as a type 3 C509 certificate and decoded again; \"lossless\" means the decoded DER is identical to the input.\n\n| Set | Distinct certificates | Lossless | C509 / DER |\n|---|---|---|---|\n| TLS chains of 100,000 domains sampled from the Open PageRank top 10 million | 83,632 | 83,567 | 76.6% |\n| TLS chains of the Tranco top 10,000 | 7,941 | 7,936 | 78.4% |\n| TLS chains of 5,000 hosts sampled from the CrUX top million | 4,894 | 4,894 | 76.0% |\n| CCADB CA certificates issued in the 2020s | 4,284 | 4,282 | 76.0% |\n| CCADB CA certificates issued in the 2010s | 4,754 | 4,722 | 77.5% |\n| CSCA master list published by the German BSI (passport-signer CA certificates) | 609 | 607 | 77.5% |\n| Matter production PAA roots | 72 | 72 | 47.3% |\n\nOn the lists suggested above: Umbrella and Majestic are two of the five rankings that the Tranco list combines (list V38GN: CrUX, Farsight, Majestic, Cloudflare Radar and Umbrella over 30 days), and a Tranco list can be cited by its ID, so I used that. The only list I found that goes beyond a million names is the Open PageRank top 10 million; the sample of 100,000 is drawn from it in six strata: four rank bands down to rank 10 million, plus public-sector/academic and country-code domains. So this is about 106,000 certificates, not millions. The results are so uniform across the strata that I do not expect a larger web sample to change them.\n\nSome observations:\n\n- **The saving is close to constant: about 300 bytes per certificate, whatever its size.** In the sample of 100,000, 90% of the end-entity certificates save between 283 and 334 bytes. So the ratio is decided by how large the certificate is, that is, by the content C509 carries, as it is: the key, the signature, the SCT list and the names.\n- **Neither the rank of a site nor its kind matters.** The six strata are all between 76.1% and 77.7%, with the same distribution.\n- **Reduced most: small EC certificates.** End-entity certificates with a P-256 key and an ECDSA signature are at 66\u201367% (median DER size about 900 bytes). The Matter roots (P-256, ECDSA, short names, few extensions, 392\u2013529 bytes) are all below 50%.\n- **Reduced least: RSA and many names.** An RSA-2048 key and signature are about 550 bytes that no encoding reduces; those certificates are at a median of 79\u201380%, RSA-4096 at 82\u201383%. From about six names in subjectAltName the names take over: a median of 81% with 6\u201320 names, 86\u201387% with 21\u2013100, about 94% with more than 100.\n- **The SCT list dominates web certificates.** Practically every end-entity certificate from a TLS server carries one (all but 277 of 95,045). In the Tranco and CrUX sets, it is on average 306\u2013327 bytes, 23\u201324% of the DER certificate, and it has no registered C509 extension, so it passes through unchanged in the generic form. With the SCT list taken out of both sizes, the end-entity certificates are at 69\u201373% instead of 76\u201378%.\n- **The 106 certificates that are not lossless all deviate from the RFC 5280 profile** in a way type 3 cannot express: X.509 version 1 (69), a negative serial number (3), validity times in a non-profile encoding (25), `critical` encoded explicitly as FALSE (6), and a signature algorithm in `tbsCertificate` that differs from the outer one (3).\n- **Everything else is covered by the generic forms**, at a cost in size: EC keys with explicit curve parameters (172 of the passport-signer certificates), RSASSA-PSS with parameters other than the registered sets, and extensions without a registered ID.\n- **One outlier worth mentioning: one certificate is larger as C509 than as DER** (16,638 against 16,580 bytes). It has 506 dNSNames. A dNSName costs two bytes besides the name in DER; in C509 it costs the general name type and the text string header, which is three bytes once the name has 24 characters or more, and 383 of the 506 do.\n\nThe inputs are pinned (Tranco list ID, CrUX commit, the sampled host lists, fingerprint lists of the certificates tested or, for the sample of 100,000, a hash of that list, Matter repository commit, master-list date and hash), and the commands, full tables and percentiles are in [`c509_demo_impl/batch_runs/2026-11-19/`](https://github.com/cose-wg/CBOR-certificates/tree/c509-demo-impl-draft/c509_demo_impl/batch_runs/2026-11-19) on the branch, so the test can be repeated. The TLS chains were converted as sent, without validating them.\n\nI suggest we consider this enough to close the issue, unless we want to keep it open for further discussion.",
+          "createdAt": "2026-11-19T13:00:58Z",
+          "updatedAt": "2026-11-19T13:00:58Z"
+        }
+      ]
     },
     {
       "number": 86,
@@ -4061,7 +4069,7 @@
       "id": "I_kwDOCpt5cM6BkpJZ",
       "title": "Clarifying the encoding of otherName with BundleEID",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/161",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "highlunder",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
@@ -4070,8 +4078,8 @@
       ],
       "body": "In the table C509 General Names Registry we have included \"otherName with BundleEID\" with the following value:\r\neid-structure from RFC 9171 \r\n\r\nThe specification provided in RFC 9171 seems to be more elaborate than the ASN.1 format provided in RFC 9174. We need to clarify which X.509 data that can be expected, and decide how we want to represent it in the target CBOR format.\r\n\r\nRFC 9171 (https://www.rfc-editor.org/rfc/rfc9171.html) specifies the eid-structure as follows:\r\n\r\neid-structure = [\r\n     uri-code: uint,\r\n     SSP: any\r\n   ]\r\n\r\nSSP: [\r\n       nodenum: uint,\r\n       servicenum: uint\r\n     ]\r\n\r\nMore info is given by encoding considerations:\r\nFor transmission as a BP endpoint ID, the scheme-specific part of a URI of the dtn scheme SHALL be represented as a CBOR text string unless the EID's SSP is \"none\", in which case the SSP SHALL be represented as a CBOR unsigned integer with the value zero. For all other purposes, URIs of the dtn scheme are encoded exclusively in US-ASCII characters.\r\n\r\nRFC 9174 (https://datatracker.ietf.org/doc/html/rfc9174) specifies BundleEID as follows:\r\n\r\nid-on-bundleEID OBJECT IDENTIFIER ::= { id-on 11 }\r\n-- Same encoding as GeneralName of uniformResourceIdentifier\r\nBundleEID ::= IA5String\r\n\r\nAnd gives the following example of a hexadecimal form of the DER encoding of the otherName:\r\n\r\na01c06082b0601050507080ba010160e64746e3a2f2f6578616d706c652f\r\n\r\n  0  28: [0] {\r\n  2   8:   OBJECT IDENTIFIER '1 3 6 1 5 5 7 8 11'\r\n 12  16:   [0] {\r\n 14  14:     IA5String 'dtn://example/'\r\n       :     }\r\n       :   }\r\n",
       "createdAt": "2024-03-07T13:28:34Z",
-      "updatedAt": "2025-01-14T10:58:01Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-20T14:19:46Z",
+      "closedAt": "2026-11-20T14:19:45Z",
       "comments": [
         {
           "author": "highlunder",
@@ -4156,6 +4164,13 @@
           "body": "That is okay, a generic translator should be able to encode the URI IA5text into the c509 as a generic OID-labeled other name. The compressed form can be deferred and removed from this draft.",
           "createdAt": "2024-12-19T23:58:07Z",
           "updatedAt": "2024-12-19T23:58:07Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This was resolved by removing the BundleEID entry from the C509 General Names Registry (commit 178c7de9, \"defer to separate draft\"); draft -21 has no specific encoding for it. An otherName with id-on-bundleEID is therefore carried in the generic form, `[0, [~oid, bytes]]`, with the value as the DER-encoded IA5String of RFC 9174.",
+          "createdAt": "2026-11-20T14:19:45Z",
+          "updatedAt": "2026-11-20T14:19:45Z"
         }
       ]
     },
@@ -7828,7 +7843,7 @@
       "id": "I_kwDOCpt5cM7Vc1nQ",
       "title": "Wrong C509 to X509 encoding for otherName",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/289",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "shmset",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -7837,8 +7852,8 @@
       ],
       "body": "While testing the Rust encoding tool with `cargo r l`, I noticed that one of the certificates could not be encoded and reconstructed. The encoding for the `Extension > GeneralName > OtherName` seems to be wrong, in my case this was a `PermanentIdentifer`. \n\nThe DER encoded value of the x509 certificate is:\n```\nSEQUENCE: (2 elem)\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    [0] : (1 elem)\n      SEQUENCE: (2 elem)\n        UTF8String: c85...\n        OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0]: (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0] : (1 elem)\n      SEQUENCE : (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nAfter encoding it to CBOR and back, the value is this:\n```\nSEQUENCE: (2 elem)\n  SEQUENCE : (2 elem)\n    OBJECT_IDENTIFIER 1.3.6.1.5.5.7.8.3|permanentIdentifier\n    SEQUENCE: (2 elem)\n      UTF8String: c85...\n      OBJECT_IDENTIFIER: 2.23.133.12.2\n  [0] : (2 elem)\n    OBJECT_IDENTIFIER: 1.3.6.1.5.5.7.8.4|hwModuleName\n    [0]: (1 elem)\n      SEQUENCE: (2 elem)\n        OBJECT_IDENTIFIER: 2.23.133.1.2\n        OCTET_STRING: (57 byte)|4942...\n```\n\nIt seem the value of `otherName` is correctly encoded structure is not for the `permanentIdentifier`. The `hwModuleName` however is correct. From RFC 5280:\n```\n   OtherName ::= SEQUENCE {\n        type-id    OBJECT IDENTIFIER,\n        value      [0] EXPLICIT ANY DEFINED BY type-id }\n```\n\nI created another certificate to confirm this in Python, which resulted in the same behaviour described above. \n\nExtension creation:\n```python\ncustom_oid = x509.ObjectIdentifier(\"1.2.3.4.5.6\")\nother_name_asn = OctetString( b\"custom-identifier\")\nother_name = x509.OtherName(custom_oid, other_name_asn.dump())\ncert_builder = cert_builder.add_extension(\n    x509.SubjectAlternativeName([\n        other_name\n    ]), critical=False)\n```\n\nI'm unsure if the problem is in the X509 to C509 conversion or when converting it back. ",
       "createdAt": "2025-11-03T08:46:03Z",
-      "updatedAt": "2026-11-18T23:03:38Z",
-      "closedAt": null,
+      "updatedAt": "2026-11-20T13:19:34Z",
+      "closedAt": "2026-11-20T13:19:34Z",
       "comments": [
         {
           "author": "gselander",
@@ -7895,6 +7910,20 @@
           "body": "A very late thanks for the analysis, and sorry for the late answer!\n\nOn the specification question: the `bytes` in `[ ~oid, bytes ]` hold the DER encoding of the `value` itself, without the `[0] EXPLICIT` wrapper. The test vectors show this: in draft-ietf-cose-c509-test-vectors-04, Section 3.6, the otherName `1.3.6.1.4.1.32473.1` with the value OCTET STRING `04 0A 22...` is encoded as `82 49 2B0601040181FD5901 4C 040A22...`, so the byte string starts with `04`, not with `A0`. The wrapper carries no information, it is always `[0] EXPLICIT`, it is dropped when encoding and restored when decoding. Your C509 output was correct; the fault was in the decoder, which restored a plain `SEQUENCE` instead of the two `[0]` tags. That is what #290 fixes, so issue and PR agree.\n\nOn the implementation: the same fix is in the reworked code on branch `c509-demo-impl-draft`, where this part moved from `main.rs` to `src/extensions.rs`. That branch reproduces Section 3.6 byte for byte in both directions, and a certificate like yours (a subject alternative name with a `permanentIdentifier` otherName and a `hardwareModuleName` otherName) round-trips byte for byte: the first is encoded as general name 0, the second as general name -1.\n\nIf you still have the possibility, could you please check your certificate against that branch? If it passes, #290 can be closed as superseded.",
           "createdAt": "2026-11-18T23:03:38Z",
           "updatedAt": "2026-11-18T23:03:38Z"
+        },
+        {
+          "author": "shmset",
+          "authorAssociation": "NONE",
+          "body": "@highlunder No worries! Stuff happens.\n\nTo check that it works, I did the following:\n1. Grabbed the newest version from GitHub\n2. Built the binary `cargo build`\n3. Converted the `pem` to `der\n```bash\nopenssl x509 -in test_cert.pem -outform DER -out test_cert.der\n```\n4. Converted `x509` to `c509`\n```bash\n./target/debug/c509 f test_cert.der -w\n```\n5. Converted back\n```bash\n./target/debug/c509 c test_cert.der.cbor.hex -w\n```\n6. Diffed:\n```bash\ndiff test_cert.pem test_cert.der.pem\n```\nAnd it was identical. \n\nI haven't given it much more thought. But feel free to close my PR if this is sufficient for you!\n\n",
+          "createdAt": "2026-11-20T08:31:38Z",
+          "updatedAt": "2026-11-20T08:31:38Z"
+        },
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> 6. Diffed:\n> \n> diff test_cert.pem test_cert.der.pem\n> And it was identical.\n> \n> I haven't given it much more thought. But feel free to close my PR if this is sufficient for you!\n\nGreat, thank you!",
+          "createdAt": "2026-11-20T13:19:34Z",
+          "updatedAt": "2026-11-20T13:19:34Z"
         }
       ]
     },
@@ -8214,7 +8243,7 @@
       "id": "I_kwDOCpt5cM7e6T94",
       "title": "c509_demo_impl should write to file for later use",
       "url": "https://github.com/cose-wg/CBOR-certificates/issues/300",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "dgtlrift",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -8223,9 +8252,17 @@
       ],
       "body": "c509_demo_impl should include flag to write the converted file to new target file destination for future processing/testing.",
       "createdAt": "2025-12-17T17:39:17Z",
-      "updatedAt": "2026-03-09T10:06:24Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2026-11-20T14:13:49Z",
+      "closedAt": "2026-11-20T14:13:49Z",
+      "comments": [
+        {
+          "author": "highlunder",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, thank you; a good reminder to add an explicit destination flag.\n\nThe implementation on branch `c509-demo-impl-draft` can now write its output to a file of your choice:\n\n- `c509 f <cert.der> -o <out>` writes the type 3 C509 certificate to the named file: binary CBOR if the name ends in `.cbor` or `.bin`, hex otherwise. `f2 \u2026 -o` and `r2 \u2026 -o` do the same for a natively signed certificate and certification request.\n- `c509 c <file> -o <out>` writes the decoded X.509 certificate or certification request: PEM if the name ends in `.pem`, DER otherwise. The input may be hex or binary CBOR.\n- `-w` prints the result and also writes it next to the input, named after it: `c509 f server.der -w` writes `server.der.cbor.hex`; `c509 c server.cbor.hex -w` writes `server.crt` (or `server.csr` for a certification request) and `server.pem`. `-wo` writes the same files without printing.",
+          "createdAt": "2026-11-20T14:13:49Z",
+          "updatedAt": "2026-11-20T14:13:49Z"
+        }
+      ]
     },
     {
       "number": 301,
@@ -9490,7 +9527,7 @@
       "labels": [],
       "body": "Section 3.2.1 says elliptic curve public keys in Weierstrass form \"**may** be\npoint-compressed\", and defines the 0xfe/0xfd octets for the case where an\nuncompressed DER key is CBOR-encoded with compression. Compression is\ntherefore optional for type 3, and one X.509 certificate has two conformant\nC509 type 3 encodings that differ in bytes and length.\n\nThis is observable between the two WG documents. For the same kind of\ncertificate:\n\n* the Appendix A examples in this document **compress**, e.g. A.1 encodes the\n  subjectPublicKey as `58 21 FE B1 21 6A ...` (33 bytes, 0xFE marker);\n* draft-ietf-cose-c509-test-vectors-02 **does not compress**, e.g. its\n  Section 3.3 (secp256r1) encodes `58 41 04 F4 13 59 6A ...` (65 bytes,\n  uncompressed SEC1 point).\n\nBoth are correct per Section 3.2.1, and both invert to the same DER, so\nneither document is wrong. Three consequences seem worth considering:\n\n1. **Thumbprints.** c5t is computed over the C509 encoding, so two\n   conformant encoders produce different c5t values for the same\n   certificate. Anything keyed on c5t -- certificate pinning, caching,\n   deduplication, revocation matching by thumbprint -- can therefore\n   disagree between implementations that are both conformant. The same\n   applies to any deployment that hashes or compares the C509 bytes.\n\n2. **Test vectors as a conformance oracle.** An implementation that\n   compresses by default reproduces the Appendix A examples byte-for-byte\n   but \"fails\" the uncompressed EC cases in the test-vectors document, and\n   vice versa. In my implementation 7 of the 22 certificate cases in\n   draft-ietf-cose-c509-test-vectors-02 only match with compression\n   switched off; the other 15, and all decode directions, match either way.\n   Readers are likely to treat those vectors as pass/fail conformance\n   material.\n\n3. **Encoders need an explicit knob.** Because the choice is not derivable\n   from the input, a library cannot pick correctly on the caller's behalf;\n   it has to expose the option and the caller has to know which peer or\n   test suite expects which form.\n\nPossible resolutions, in decreasing order of strength:\n\n* make the choice deterministic for type 3 (either always compress\n  Weierstrass keys, or always preserve the form found in the DER) -- this\n  would make the type 3 encoding of a given certificate unique, which also\n  helps the serial number discussion in #403;\n* keep it optional but say explicitly in Section 3.2.1 that a certificate\n  may have more than one conformant type 3 encoding, and note the\n  consequence for c5t and for byte-level comparison;\n* at minimum, have draft-ietf-cose-c509-test-vectors state which choice its\n  vectors make, so implementers do not read a legitimate difference as a\n  defect.\n\nHappy to supply the encodings of any of the affected cases in both forms if\nthat is useful.",
       "createdAt": "2026-07-30T06:54:32Z",
-      "updatedAt": "2026-11-19T05:45:28Z",
+      "updatedAt": "2026-11-19T11:45:52Z",
       "closedAt": "2026-09-17T08:09:51Z",
       "comments": [
         {
@@ -9583,6 +9620,13 @@
           "body": "> 3\\. Section 7 also has an unknown critical extension\n\nThis test case is designed to test the critical extension with 8-byte ID.",
           "createdAt": "2026-11-19T05:45:28Z",
           "updatedAt": "2026-11-19T05:45:28Z"
+        },
+        {
+          "author": "ligefeiBouncycastle",
+          "authorAssociation": "NONE",
+          "body": "Hi Lijun,\n\nThanks for the quick update. I ran the current Bouncy Castle code against -05, and it needed no change. \n\nOn the changes:\n\n- Section 3.4.4 now uses 0x03. The certificate parses, re-encodes unchanged, and its signature verifies.\n- Across test-vectors-05, the ECDSA and SM2 signatures now all have different r values. The only repeat is expected: the type 3 certificates of 3.3 and 3.4 carry the same signature, since both encode the X.509 certificate of 3.3.\n- The two Wi-SUN certificates now encode the Wi-SUN FAN Device EKU as the int 20 in both forms. With that, both convert from X.509 to the published type 3 encoding byte for byte.\n- Section 3.11: the type 3 certificate now has a section of its own (3.11.3) when I render the Markdown with kramdown-rfc and xml2rfc.\n\ntest-vectors-05 also has three new certificates that are not in the document: crl-signer, ocsp-requestor and ocsp-responder. They pass the same checks, and their signatures verify with the CA key of Section 2.\n\nThank you also for the acknowledgment.\n\nBest regards,\nGefei",
+          "createdAt": "2026-11-19T11:45:52Z",
+          "updatedAt": "2026-11-19T11:45:52Z"
         }
       ]
     },
@@ -9852,6 +9896,32 @@
           "body": "Napilbalh\n\nnapilbalh@gmail.com\n",
           "createdAt": "2026-10-27T23:57:27Z",
           "updatedAt": "2026-10-27T23:57:27Z"
+        }
+      ]
+    },
+    {
+      "number": 433,
+      "id": "I_kwDOCpt5cM8AAAABhDAqxQ",
+      "title": "Repo admin/maintenance: clean-up of old git repo branches",
+      "url": "https://github.com/cose-wg/CBOR-certificates/issues/433",
+      "state": "OPEN",
+      "author": "highlunder",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [
+        "separate from core spec"
+      ],
+      "body": "Title says it all. We should have a short sync to decide which, if any, of the old branches should stay and which could be removed.",
+      "createdAt": "2026-11-20T13:50:06Z",
+      "updatedAt": "2026-11-20T15:15:45Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "We can delete all draft-related branches. I think we should merge the implementation-related branches with master.",
+          "createdAt": "2026-11-20T15:15:45Z",
+          "updatedAt": "2026-11-20T15:15:45Z"
         }
       ]
     }
@@ -13929,7 +13999,7 @@
       "id": "PR_kwDOCpt5cM6xLZFX",
       "title": "fix wrong otherName C509 to X509 encoding",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/290",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "shmset",
       "authorAssociation": "NONE",
       "assignees": [],
@@ -13938,18 +14008,26 @@
       ],
       "body": "Fix wrong encoding of the X509 extension of a `GeneralName` of type `otherName`.\r\n\r\nEdit: There does not seem to be a set of tests beside running it manually.\r\n\r\nFixes #289 ",
       "createdAt": "2025-11-03T12:31:48Z",
-      "updatedAt": "2026-06-30T07:12:49Z",
+      "updatedAt": "2026-11-20T13:51:59Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "7d35c1dfb1fd43c3eaf6443e21d758abf2236292",
       "headRepository": "shmset/CBOR-certificates",
       "headRefName": "fix-othername-decoding",
       "headRefOid": "d0e5a375c8337f88187f6c220e8c8209f2687b8d",
-      "closedAt": null,
+      "closedAt": "2026-11-20T13:51:59Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "shmset",
+          "authorAssociation": "NONE",
+          "body": "This has been fixed in branch https://github.com/cose-wg/CBOR-certificates/tree/c509-demo-impl-draft\r\n\r\nSee https://github.com/cose-wg/CBOR-certificates/issues/289 for details.",
+          "createdAt": "2026-11-20T13:51:59Z",
+          "updatedAt": "2026-11-20T13:51:59Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -18433,25 +18511,47 @@
       "id": "PR_kwDOCpt5cM8AAAABMgZ00w",
       "title": "revocation: fix two spelling errors in the introduction",
       "url": "https://github.com/cose-wg/CBOR-certificates/pull/432",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "shlee1223",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "Hi, and thank you for your work on the C509 drafts.\n\nWhile reading draft-cose-cbor-revocation-management I noticed two small spelling errors in one sentence of the introduction, so I took the liberty of fixing them.\n\n- \"revokation\" \u2192 \"revocation\"\n- \"strucure\" \u2192 \"structure\"\n\nNo other changes. Please feel free to adjust or close if you'd rather handle this differently.",
       "createdAt": "2026-11-03T08:37:50Z",
-      "updatedAt": "2026-11-03T08:37:54Z",
+      "updatedAt": "2026-11-20T15:11:29Z",
       "baseRepository": "cose-wg/CBOR-certificates",
       "baseRefName": "master",
       "baseRefOid": "75b36e07d64c38de76916a345f00b513a97aece0",
       "headRepository": "shlee1223/CBOR-certificates",
       "headRefName": "fix/revocation-typos",
       "headRefOid": "aa8d4d30303b22021b634895eab12bb3da7208ca",
-      "closedAt": null,
+      "closedAt": "2026-11-20T15:11:29Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hi @shlee1223! Thanks for showing interest. This draft  is actually obsolete. There is a new draft about revocation of C509 which is being discussed in the IETF COSE Working Group, see:\r\n\r\nhttps://datatracker.ietf.org/doc/draft-liao-cose-c509-revocation/\r\n\r\nI you are interested in supporting that draft to become a standard, this is an excellent opportunity. It was discussed in IETF 127 in San Fransisco this week and the COSE WG is looking for more input to adopt the draft as a work item in the WG. An email to the working group mailing list is sufficient. Let me know if you are interested and I will guide you to how you can influence this work.\r\n\r\nG\u00f6ran",
+          "createdAt": "2026-11-20T12:44:30Z",
+          "updatedAt": "2026-11-20T12:44:30Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I removed the old revocation draft from this directory (it is still in the archive).",
+          "createdAt": "2026-11-20T12:48:12Z",
+          "updatedAt": "2026-11-20T12:48:12Z"
+        },
+        {
+          "author": "gselander",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Closing this since work on revocation has continued in a different draft.",
+          "createdAt": "2026-11-20T15:11:29Z",
+          "updatedAt": "2026-11-20T15:11:29Z"
+        }
+      ],
       "reviews": []
     }
   ]
